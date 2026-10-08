@@ -11,7 +11,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * This is borrowed from 1.20 - it renders a button but with a single texture sheet, rather than individual button textures
@@ -19,13 +19,13 @@ import net.minecraft.resources.ResourceLocation;
 public class LegacyImageButton extends Button
 {
     public static final int SIZE = 256;
-    protected final ResourceLocation texture;
+    protected final Identifier texture;
     protected final int xTexStart;
     protected final int yTexStart;
     protected final int yDiffTex;
     private final boolean silent;
 
-    public LegacyImageButton(int x, int y, int width, int height, int xTexStart, int yTexStart, int yDiffTex, boolean silent, ResourceLocation texture, Button.OnPress onPress, Component label)
+    public LegacyImageButton(int x, int y, int width, int height, int xTexStart, int yTexStart, int yDiffTex, boolean silent, Identifier texture, Button.OnPress onPress, Component label)
     {
         super(x, y, width, height, label, onPress, DEFAULT_NARRATION);
         this.xTexStart = xTexStart;

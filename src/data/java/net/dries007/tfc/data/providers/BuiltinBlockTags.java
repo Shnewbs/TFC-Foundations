@@ -20,7 +20,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagBuilder;
@@ -439,7 +439,7 @@ public class BuiltinBlockTags extends TagsProvider<Block> implements Accessors
         tag(STONES_SPIKE).add(TFCBlocks.ROCK_BLOCKS, Rock.BlockType.SPIKE);
         tag(STONES_PRESSURE_PLATES)
             .add(TFCBlocks.ROCK_BLOCKS, Rock.BlockType.PRESSURE_PLATE)
-            .addOptionalTag(ResourceLocation.withDefaultNamespace("stone_pressure_plates"));
+            .addOptionalTag(Identifier.withDefaultNamespace("stone_pressure_plates"));
         tag(STONES_LOOSE)
             .add(TFCBlocks.ROCK_BLOCKS, Rock.BlockType.LOOSE)
             .add(TFCBlocks.ROCK_BLOCKS, Rock.BlockType.MOSSY_LOOSE);

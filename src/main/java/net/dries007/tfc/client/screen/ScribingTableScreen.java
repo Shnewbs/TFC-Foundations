@@ -15,7 +15,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.AnvilMenu;
@@ -34,7 +34,7 @@ import net.dries007.tfc.util.Helpers;
 
 public class ScribingTableScreen extends ItemCombinerScreen<ScribingTableContainer>
 {
-    private static final ResourceLocation TEXTURE = Helpers.identifier("textures/gui/scribing_table.png");
+    private static final Identifier TEXTURE = Helpers.identifier("textures/gui/scribing_table.png");
     // Time in ticks
     private static final float ITEM_ROTATE_TIME = 50f;
 

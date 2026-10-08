@@ -12,7 +12,7 @@ import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -30,7 +30,7 @@ import net.dries007.tfc.util.Helpers;
 
 public class NutritionScreen extends TFCContainerScreen<Container>
 {
-    public static final ResourceLocation TEXTURE = Helpers.identifier("textures/gui/player_nutrition.png");
+    public static final Identifier TEXTURE = Helpers.identifier("textures/gui/player_nutrition.png");
 
     public NutritionScreen(Container container, Inventory playerInventory, Component name)
     {

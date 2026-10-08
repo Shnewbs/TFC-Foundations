@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -22,7 +22,7 @@ import net.dries007.tfc.compat.emi.EmiHelpers;
 
 public class EmiSimplePotRecipe extends EmiBasePotRecipe<SimplePotRecipe>
 {
-    public EmiSimplePotRecipe(ResourceLocation id, SimplePotRecipe recipe)
+    public EmiSimplePotRecipe(Identifier id, SimplePotRecipe recipe)
     {
         super(id, recipe, 113, 80);
         List<Ingredient> ing = recipe.getItemIngredients();

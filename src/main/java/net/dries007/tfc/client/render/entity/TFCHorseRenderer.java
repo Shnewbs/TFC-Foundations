@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.entity.AbstractHorseRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.layers.HorseArmorLayer;
 import net.minecraft.client.renderer.entity.layers.HorseMarkingLayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.animal.horse.Variant;
 
@@ -23,7 +23,7 @@ import net.dries007.tfc.util.Helpers;
 
 public class TFCHorseRenderer extends AbstractHorseRenderer<Horse, HorseModel<Horse>>
 {
-    private static final Map<Variant, ResourceLocation> LOCATION_BY_VARIANT = Util.make(Maps.newEnumMap(Variant.class), (map) -> {
+    private static final Map<Variant, Identifier> LOCATION_BY_VARIANT = Util.make(Maps.newEnumMap(Variant.class), (map) -> {
         map.put(Variant.WHITE, Helpers.identifierMC("textures/entity/horse/horse_white.png"));
         map.put(Variant.CREAMY, Helpers.identifierMC("textures/entity/horse/horse_creamy.png"));
         map.put(Variant.CHESTNUT, Helpers.identifierMC("textures/entity/horse/horse_chestnut.png"));
@@ -41,7 +41,7 @@ public class TFCHorseRenderer extends AbstractHorseRenderer<Horse, HorseModel<Ho
     }
 
     @Override
-    public ResourceLocation getTextureLocation(Horse horse)
+    public Identifier getTextureLocation(Horse horse)
     {
         return LOCATION_BY_VARIANT.get(horse.getVariant());
     }

@@ -7,16 +7,16 @@
 package net.dries007.tfc.common.blocks.rotation;
 
 import java.util.function.Supplier;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 
 public class AxleBlock extends AbstractShaftAxleBlock
 {
     private final Supplier<? extends WindmillBlock> windmill;
-    private final ResourceLocation textureLocation;
+    private final Identifier textureLocation;
 
-    public AxleBlock(ExtendedProperties properties, Supplier<? extends WindmillBlock> windmill, ResourceLocation textureLocation)
+    public AxleBlock(ExtendedProperties properties, Supplier<? extends WindmillBlock> windmill, Identifier textureLocation)
     {
         super(properties);
 
@@ -25,7 +25,7 @@ public class AxleBlock extends AbstractShaftAxleBlock
     }
 
     @Override
-    public ResourceLocation getAxleTextureLocation()
+    public Identifier getAxleTextureLocation()
     {
         return textureLocation;
     }

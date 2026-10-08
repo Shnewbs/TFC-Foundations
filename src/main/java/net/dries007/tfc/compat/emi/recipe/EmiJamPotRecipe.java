@@ -8,14 +8,14 @@ package net.dries007.tfc.compat.emi.recipe;
 
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import net.dries007.tfc.common.recipes.JamPotRecipe;
 import net.dries007.tfc.compat.emi.EmiHelpers;
 
 public class EmiJamPotRecipe extends EmiBasePotRecipe<JamPotRecipe>
 {
-    public EmiJamPotRecipe(ResourceLocation id, JamPotRecipe recipe)
+    public EmiJamPotRecipe(Identifier id, JamPotRecipe recipe)
     {
         super(id, recipe, 113, 80);
         inputs.addAll(groupSimilar(recipe.getItemIngredients(), EmiIngredient::of, Object::equals));

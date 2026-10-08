@@ -13,7 +13,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -32,14 +32,14 @@ public class LoomRecipe implements INoopInputRecipe, IRecipePredicate<ItemStack>
         SizedIngredient.FLAT_CODEC.fieldOf("ingredient").forGetter(c -> c.ingredient),
         ItemStackProvider.CODEC.fieldOf("result").forGetter(c -> c.result),
         Codec.INT.fieldOf("steps").forGetter(c -> c.steps),
-        ResourceLocation.CODEC.fieldOf("texture").forGetter(c -> c.inProgressTexture)
+        Identifier.CODEC.fieldOf("texture").forGetter(c -> c.inProgressTexture)
     ).apply(i, LoomRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, LoomRecipe> STREAM_CODEC = StreamCodec.composite(
         SizedIngredient.STREAM_CODEC, c -> c.ingredient,
         ItemStackProvider.STREAM_CODEC, c -> c.result,
         ByteBufCodecs.VAR_INT, c -> c.steps,
-        ResourceLocation.STREAM_CODEC, c -> c.inProgressTexture,
+        Identifier.STREAM_CODEC, c -> c.inProgressTexture,
         LoomRecipe::new
     );
 
@@ -52,9 +52,9 @@ public class LoomRecipe implements INoopInputRecipe, IRecipePredicate<ItemStack>
     private final SizedIngredient ingredient;
     private final ItemStackProvider result;
     private final int steps;
-    private final ResourceLocation inProgressTexture;
+    private final Identifier inProgressTexture;
 
-    public LoomRecipe(SizedIngredient ingredient, ItemStackProvider result, int steps, ResourceLocation inProgressTexture)
+    public LoomRecipe(SizedIngredient ingredient, ItemStackProvider result, int steps, Identifier inProgressTexture)
     {
         this.ingredient = ingredient;
         this.result = result;
@@ -89,7 +89,7 @@ public class LoomRecipe implements INoopInputRecipe, IRecipePredicate<ItemStack>
         return ingredient.count();
     }
 
-    public ResourceLocation getInProgressTexture()
+    public Identifier getInProgressTexture()
     {
         return inProgressTexture;
     }

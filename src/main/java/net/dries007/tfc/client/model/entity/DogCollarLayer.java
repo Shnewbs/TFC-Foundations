@@ -10,14 +10,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import net.dries007.tfc.common.entities.livestock.pet.Dog;
 import net.dries007.tfc.util.Helpers;
 
 public class DogCollarLayer extends RenderLayer<Dog, DogModel>
 {
-    private static final ResourceLocation WOLF_COLLAR_LOCATION = Helpers.identifierMC("textures/entity/wolf/wolf_collar.png");
+    private static final Identifier WOLF_COLLAR_LOCATION = Helpers.identifierMC("textures/entity/wolf/wolf_collar.png");
 
     public DogCollarLayer(RenderLayerParent<Dog, DogModel> renderer)
     {

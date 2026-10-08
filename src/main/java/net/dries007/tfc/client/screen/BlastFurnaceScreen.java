@@ -9,7 +9,7 @@ package net.dries007.tfc.client.screen;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.fluids.FluidStack;
 
@@ -24,7 +24,7 @@ import net.dries007.tfc.util.tooltip.Tooltips;
 
 public class BlastFurnaceScreen extends BlockEntityScreen<BlastFurnaceBlockEntity, BlastFurnaceContainer>
 {
-    private static final ResourceLocation BLAST_FURNACE = Helpers.identifier("textures/gui/blast_furnace.png");
+    private static final Identifier BLAST_FURNACE = Helpers.identifier("textures/gui/blast_furnace.png");
 
     public BlastFurnaceScreen(BlastFurnaceContainer container, Inventory playerInventory, Component name)
     {

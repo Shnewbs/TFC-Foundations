@@ -16,7 +16,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
@@ -68,7 +68,7 @@ public class SewingTableScreen extends TFCContainerScreen<SewingTableContainer>
         }
     }
 
-    public static final ResourceLocation TEXTURE = Helpers.identifier("textures/gui/sewing.png");
+    public static final Identifier TEXTURE = Helpers.identifier("textures/gui/sewing.png");
     private static final int X_OFFSET = 10;
     private static final int Y_OFFSET = 16;
     private static final int RECIPES_PER_PAGE = 16;

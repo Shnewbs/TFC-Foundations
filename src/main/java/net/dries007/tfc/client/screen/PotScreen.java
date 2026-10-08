@@ -13,7 +13,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -33,7 +33,7 @@ import net.dries007.tfc.util.tooltip.Tooltips;
 
 public class PotScreen extends BlockEntityScreen<PotBlockEntity, PotContainer>
 {
-    private static final ResourceLocation BACKGROUND = Helpers.identifier("textures/gui/fire_pit_cooking_pot.png");
+    private static final Identifier BACKGROUND = Helpers.identifier("textures/gui/fire_pit_cooking_pot.png");
 
     public PotScreen(PotContainer container, Inventory playerInventory, Component name)
     {

@@ -18,7 +18,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -42,7 +42,7 @@ public record BlockIngredient(Either<ImmutableSet<Block>, TagKey<Block>> either)
 
     public static final StreamCodec<RegistryFriendlyByteBuf, BlockIngredient> STREAM_CODEC = ByteBufCodecs.either(
         StreamCodecs.BLOCK.apply(ByteBufCodecs.list()).map(ImmutableSet::copyOf, List::copyOf),
-        ResourceLocation.STREAM_CODEC.map(k -> TagKey.create(Registries.BLOCK, k), TagKey::location)
+        Identifier.STREAM_CODEC.map(k -> TagKey.create(Registries.BLOCK, k), TagKey::location)
     ).map(BlockIngredient::new, BlockIngredient::either);
 
     public static BlockIngredient of(TagKey<Block> tag)

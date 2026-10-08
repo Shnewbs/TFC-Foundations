@@ -22,7 +22,7 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -42,7 +42,7 @@ public class EmiGlassworkingRecipe extends BasicRecipe<GlassworkingRecipe>
     private @Nullable PageControlsWidget pageControls;
 
 
-    public EmiGlassworkingRecipe(ResourceLocation id, GlassworkingRecipe recipe)
+    public EmiGlassworkingRecipe(Identifier id, GlassworkingRecipe recipe)
     {
         super(EmiIntegration.GLASSWORKING, id, 175, 30);
         inputs.add(EmiIngredient.of(recipe.batchItem()));

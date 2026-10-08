@@ -24,7 +24,7 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -250,7 +250,7 @@ public class PlantBlockModel implements IDynamicBakedModel, IUnbakedGeometry<Pla
     }
 
     @Override
-    public void resolveParents(Function<ResourceLocation, UnbakedModel> modelGetter, IGeometryBakingContext context)
+    public void resolveParents(Function<Identifier, UnbakedModel> modelGetter, IGeometryBakingContext context)
     {
         dormant.resolveParents(modelGetter);
         sprouting.resolveParents(modelGetter);

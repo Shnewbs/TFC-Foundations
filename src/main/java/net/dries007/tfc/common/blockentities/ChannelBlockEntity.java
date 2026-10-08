@@ -11,7 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.state.BlockState;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -52,7 +52,7 @@ public class ChannelBlockEntity extends TFCBlockEntity
     private int numFlows = 0;
 
     /*** Fluid to render */
-    private ResourceLocation fluid = ResourceLocation.fromNamespaceAndPath("", "");
+    private Identifier fluid = Identifier.fromNamespaceAndPath("", "");
 
     private boolean recursionVisiting = false;
 
@@ -64,7 +64,7 @@ public class ChannelBlockEntity extends TFCBlockEntity
     /**
      * @return The fluid to render. If the channel has no flow, returns the last fluid.
      */
-    public ResourceLocation getFluid()
+    public Identifier getFluid()
     {
         return fluid;
     }
@@ -85,7 +85,7 @@ public class ChannelBlockEntity extends TFCBlockEntity
     }
 
     public void setLinkProperties(Pair<Direction, Byte> flowSource, boolean isConnectedToAnotherChannel, int numFlows,
-                                  ResourceLocation fluid)
+                                  Identifier fluid)
     {
         this.flowSource = Optional.of(flowSource);
         this.isConnectedToAnotherChannel = isConnectedToAnotherChannel;
@@ -215,7 +215,7 @@ public class ChannelBlockEntity extends TFCBlockEntity
             ? Optional.of(Pair.of(Helpers.DIRECTIONS[flowSourceByte], flowSourceDistance))
             : Optional.empty();
 
-        fluid = ResourceLocation.parse(nbt.getString("texture"));
+        fluid = Identifier.parse(nbt.getString("texture"));
         super.loadAdditional(nbt, provider);
     }
 

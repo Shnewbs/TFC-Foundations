@@ -37,7 +37,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.Bootstrap;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.Item;
@@ -197,7 +197,7 @@ public final class SelfTests
      */
     public static boolean validateBlockLootTables(MinecraftServer server, List<Block> blocks, Logger logger)
     {
-        final Collection<ResourceLocation> lootTables = server
+        final Collection<Identifier> lootTables = server
             .reloadableRegistries()
             .get()
             .registryOrThrow(Registries.LOOT_TABLE)

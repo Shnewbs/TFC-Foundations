@@ -13,7 +13,7 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonParseException;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.GsonHelper;
@@ -24,7 +24,7 @@ import net.dries007.tfc.util.Helpers;
 
 public class StarsReloadListener extends SimplePreparableReloadListener<JsonElement>
 {
-    private static final ResourceLocation ID = Helpers.identifier("stars.json");
+    private static final Identifier ID = Helpers.identifier("stars.json");
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final Gson GSON = new Gson();
 

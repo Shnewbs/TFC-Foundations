@@ -8,7 +8,7 @@ package net.dries007.tfc.common.blocks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -30,14 +30,14 @@ public class TFCBellBlock extends BellBlock implements IForgeBlockExtension, Ent
 {
     private final ExtendedProperties properties;
     private final float pitch;
-    private final ResourceLocation textureLocation;
+    private final Identifier textureLocation;
 
     public TFCBellBlock(ExtendedProperties properties, float pitch, String textureLocation)
     {
         this(properties, pitch, Helpers.identifier("entity/bell/" + textureLocation));
     }
 
-    public TFCBellBlock(ExtendedProperties properties, float pitch, ResourceLocation textureLocation)
+    public TFCBellBlock(ExtendedProperties properties, float pitch, Identifier textureLocation)
     {
         super(properties.properties());
         this.properties = properties;
@@ -45,7 +45,7 @@ public class TFCBellBlock extends BellBlock implements IForgeBlockExtension, Ent
         this.textureLocation = textureLocation;
     }
 
-    public ResourceLocation getTextureLocation()
+    public Identifier getTextureLocation()
     {
         return textureLocation;
     }

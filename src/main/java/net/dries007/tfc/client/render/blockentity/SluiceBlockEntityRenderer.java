@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -107,7 +107,7 @@ public class SluiceBlockEntityRenderer implements BlockEntityRenderer<SluiceBloc
 
         FluidType attributes = fluid.getFluidType();
         IClientFluidTypeExtensions extension = IClientFluidTypeExtensions.of(attributes);
-        ResourceLocation texture = extension.getStillTexture();
+        Identifier texture = extension.getStillTexture();
         TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(RenderHelpers.BLOCKS_ATLAS).apply(texture);
         final int color = Helpers.isFluid(fluid, TFCTags.Fluids.ANY_INFINITE_WATER) ? TFCColors.getWaterColor(sluice.getBlockPos()) : RenderHelpers.getFluidColor(fluid);
 

@@ -7,7 +7,7 @@
 package net.dries007.tfc.compat.emi.recipe;
 
 import dev.emi.emi.api.stack.EmiStack;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import net.dries007.tfc.common.recipes.LoomRecipe;
 import net.dries007.tfc.compat.emi.EmiHelpers;
@@ -15,7 +15,7 @@ import net.dries007.tfc.compat.emi.EmiIntegration;
 
 public class EmiLoomRecipe extends AutoLayoutRecipe<LoomRecipe>
 {
-    public EmiLoomRecipe(ResourceLocation id, LoomRecipe recipe)
+    public EmiLoomRecipe(Identifier id, LoomRecipe recipe)
     {
         super(EmiIntegration.LOOM, id, recipe);
         init(recipe);

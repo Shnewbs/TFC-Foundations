@@ -10,7 +10,7 @@ import java.util.List;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -30,7 +30,7 @@ import net.dries007.tfc.util.Helpers;
 
 public class AnvilScreen extends BlockEntityScreen<AnvilBlockEntity, AnvilContainer>
 {
-    public static final ResourceLocation BACKGROUND = Helpers.identifier("textures/gui/anvil.png");
+    public static final Identifier BACKGROUND = Helpers.identifier("textures/gui/anvil.png");
 
     public AnvilScreen(AnvilContainer container, Inventory playerInventory, Component name)
     {

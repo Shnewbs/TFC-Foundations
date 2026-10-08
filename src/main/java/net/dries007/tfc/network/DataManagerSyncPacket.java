@@ -14,7 +14,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 
 import net.dries007.tfc.util.data.DataManager;
@@ -32,7 +32,7 @@ public record DataManagerSyncPacket(List<Entry<?>> values) implements CustomPack
 
     private static <T> StreamCodec<RegistryFriendlyByteBuf, Entry<T>> streamCodec(DataManager<T> manager)
     {
-        return ByteBufCodecs.<RegistryFriendlyByteBuf, ResourceLocation, T, Map<ResourceLocation, T>>map(HashMap::new, ResourceLocation.STREAM_CODEC, manager.streamCodec())
+        return ByteBufCodecs.<RegistryFriendlyByteBuf, Identifier, T, Map<Identifier, T>>map(HashMap::new, Identifier.STREAM_CODEC, manager.streamCodec())
             .map(e -> new Entry<>(manager, e), e -> e.values);
     }
 
@@ -62,7 +62,7 @@ public record DataManagerSyncPacket(List<Entry<?>> values) implements CustomPack
 
     record Entry<T>(
         DataManager<T> manager,
-        Map<ResourceLocation, T> values
+        Map<Identifier, T> values
     ) {
         Entry(DataManager<T> manager)
         {

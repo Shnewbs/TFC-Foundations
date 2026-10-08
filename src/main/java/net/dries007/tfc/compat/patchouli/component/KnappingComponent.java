@@ -9,7 +9,7 @@ package net.dries007.tfc.compat.patchouli.component;
 import java.util.Arrays;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import org.jetbrains.annotations.Nullable;
@@ -23,7 +23,7 @@ import net.dries007.tfc.util.data.KnappingPattern;
 
 public class KnappingComponent extends RecipeComponent<KnappingRecipe>
 {
-    public static void render(GuiGraphics graphics, IComponentRenderContext context, int mouseX, int mouseY, KnappingRecipe recipe, ItemStack resultStack, @Nullable ResourceLocation highTexture, @Nullable ResourceLocation lowTexture, int x0, int y0)
+    public static void render(GuiGraphics graphics, IComponentRenderContext context, int mouseX, int mouseY, KnappingRecipe recipe, ItemStack resultStack, @Nullable Identifier highTexture, @Nullable Identifier lowTexture, int x0, int y0)
     {
         graphics.blit(PatchouliIntegration.TEXTURE, x0, y0, 0, 0, 116, 90, 256, 256);
 
@@ -53,7 +53,7 @@ public class KnappingComponent extends RecipeComponent<KnappingRecipe>
         context.renderItemStack(graphics, 95, 37, mouseX, mouseY, resultStack);
     }
 
-    private static void drawSquare(GuiGraphics graphics, @Nullable ResourceLocation texture, int x0, int y0, int x, int y)
+    private static void drawSquare(GuiGraphics graphics, @Nullable Identifier texture, int x0, int y0, int x, int y)
     {
         if (texture != null)
         {
@@ -89,8 +89,8 @@ public class KnappingComponent extends RecipeComponent<KnappingRecipe>
         if (recipe == null || inputs == null) return;
 
         final ItemStack input = inputs[(context.getTicksInBook() / 20) % inputs.length];
-        final ResourceLocation highTexture = KnappingScreen.getHighTexture(input);
-        final ResourceLocation lowTexture = KnappingScreen.getLowTexture(recipe.knappingType().get(), input);
+        final Identifier highTexture = KnappingScreen.getHighTexture(input);
+        final Identifier lowTexture = KnappingScreen.getLowTexture(recipe.knappingType().get(), input);
         final ItemStack resultStack = recipe.getResultItem(null);
 
         renderSetup(graphics);

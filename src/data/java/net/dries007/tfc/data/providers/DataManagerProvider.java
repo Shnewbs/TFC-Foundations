@@ -14,7 +14,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.util.Helpers;
@@ -24,7 +24,7 @@ public abstract class DataManagerProvider<T> implements DataProvider
 {
     private final DataManager<T> manager;
     private final CompletableFuture<HolderLookup.Provider> lookup;
-    private final ImmutableMap.Builder<ResourceLocation, T> elements;
+    private final ImmutableMap.Builder<Identifier, T> elements;
     private final PackOutput.PathProvider path;
     protected final CompletableFuture<?> contentDone;
 
@@ -48,7 +48,7 @@ public abstract class DataManagerProvider<T> implements DataProvider
     {
         return beforeRun().thenCompose(provider -> {
             addData(provider);
-            final Map<ResourceLocation, T> map = elements.buildOrThrow();
+            final Map<Identifier, T> map = elements.buildOrThrow();
             manager.bindValues(map);
             contentDone.complete(null);
             return CompletableFuture.allOf(map.entrySet()
@@ -74,7 +74,7 @@ public abstract class DataManagerProvider<T> implements DataProvider
         add(Helpers.identifier(name.toLowerCase(Locale.ROOT)), value);
     }
 
-    protected final void add(ResourceLocation name, T value)
+    protected final void add(Identifier name, T value)
     {
         elements.put(name, value);
     }

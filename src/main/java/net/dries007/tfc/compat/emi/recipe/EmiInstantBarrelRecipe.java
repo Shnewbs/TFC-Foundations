@@ -13,7 +13,7 @@ import dev.emi.emi.api.widget.SlotWidget;
 import dev.emi.emi.api.widget.TextWidget;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -34,7 +34,7 @@ public class EmiInstantBarrelRecipe extends AutoLayoutRecipe<InstantBarrelRecipe
     private final ItemStackProvider outputProvider;
     private @Nullable SlotWidget itemInputSlot;
 
-    public EmiInstantBarrelRecipe(ResourceLocation id, InstantBarrelRecipe recipe)
+    public EmiInstantBarrelRecipe(Identifier id, InstantBarrelRecipe recipe)
     {
         super(EmiIntegration.BARREL, id, recipe);
         outputProvider = recipe.getOutputItem();

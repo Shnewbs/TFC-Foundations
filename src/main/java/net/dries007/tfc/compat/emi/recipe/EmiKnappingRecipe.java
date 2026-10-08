@@ -21,7 +21,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -40,7 +40,7 @@ public class EmiKnappingRecipe extends BasicRecipe<KnappingRecipe>
     private final SizedIngredient inputItem;
     private final PatternWidget pattern;
 
-    public EmiKnappingRecipe(EmiRecipeCategory category, ResourceLocation id, KnappingRecipe recipe)
+    public EmiKnappingRecipe(EmiRecipeCategory category, Identifier id, KnappingRecipe recipe)
     {
         super(category, id, 250, 250);
 
@@ -88,8 +88,8 @@ public class EmiKnappingRecipe extends BasicRecipe<KnappingRecipe>
         private final KnappingType knappingType;
         private final ItemStack[] stacks;
         private @Nullable ItemStack displayStack;
-        private @Nullable ResourceLocation high;
-        private @Nullable ResourceLocation low;
+        private @Nullable Identifier high;
+        private @Nullable Identifier low;
         private long lastGenerate = 0;
         private int displayIndex;
 
@@ -151,7 +151,7 @@ public class EmiKnappingRecipe extends BasicRecipe<KnappingRecipe>
             }
         }
 
-        private void drawTex(@Nullable ResourceLocation location, GuiGraphics draw, int xp, int yp)
+        private void drawTex(@Nullable Identifier location, GuiGraphics draw, int xp, int yp)
         {
             if (location != null)
             {

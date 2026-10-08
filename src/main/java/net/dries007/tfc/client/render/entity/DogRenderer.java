@@ -9,7 +9,7 @@ package net.dries007.tfc.client.render.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.client.model.entity.DogCollarLayer;
@@ -19,7 +19,7 @@ import net.dries007.tfc.util.Helpers;
 
 public class DogRenderer extends SimpleMobRenderer<Dog, DogModel>
 {
-    private static final ResourceLocation WOLF_TAME_LOCATION = Helpers.identifierMC("textures/entity/wolf/wolf_tame.png");
+    private static final Identifier WOLF_TAME_LOCATION = Helpers.identifierMC("textures/entity/wolf/wolf_tame.png");
 
     public DogRenderer(EntityRendererProvider.Context ctx)
     {

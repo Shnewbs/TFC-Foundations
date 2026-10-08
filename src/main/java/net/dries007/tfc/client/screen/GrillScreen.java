@@ -8,7 +8,7 @@ package net.dries007.tfc.client.screen;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 import net.dries007.tfc.client.RenderHelpers;
@@ -20,7 +20,7 @@ import net.dries007.tfc.util.Helpers;
 
 public class GrillScreen extends BlockEntityScreen<GrillBlockEntity, GrillContainer>
 {
-    private static final ResourceLocation BACKGROUND = Helpers.identifier("textures/gui/fire_pit_grill.png");
+    private static final Identifier BACKGROUND = Helpers.identifier("textures/gui/fire_pit_grill.png");
 
     public GrillScreen(GrillContainer container, Inventory playerInventory, Component name)
     {

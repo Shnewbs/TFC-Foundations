@@ -13,7 +13,7 @@ import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -30,8 +30,8 @@ import net.dries007.tfc.util.rotation.Rotation;
 
 public class TripHammerBlockEntityRenderer implements BlockEntityRenderer<TripHammerBlockEntity>
 {
-    public static final ResourceLocation ROD_TEXTURE = Helpers.identifier("block/wood/planks/oak");
-    public static final Map<Item, ResourceLocation> HAMMER_TEXTURES = RenderHelpers.mapOf(map -> TFCItems.METAL_ITEMS.entrySet()
+    public static final Identifier ROD_TEXTURE = Helpers.identifier("block/wood/planks/oak");
+    public static final Map<Item, Identifier> HAMMER_TEXTURES = RenderHelpers.mapOf(map -> TFCItems.METAL_ITEMS.entrySet()
         .stream()
         .filter(e -> e.getValue().containsKey(Metal.ItemType.HAMMER))
         .forEach(e -> map.accept(e.getValue().get(Metal.ItemType.HAMMER), Helpers.identifier("block/metal/smooth/" + e.getKey().getSerializedName()))));
@@ -47,7 +47,7 @@ public class TripHammerBlockEntityRenderer implements BlockEntityRenderer<TripHa
             return;
 
         final ItemStack item = hammer.getInventory().getStackInSlot(0);
-        final ResourceLocation hammerTexture = HAMMER_TEXTURES.get(item.getItem());
+        final Identifier hammerTexture = HAMMER_TEXTURES.get(item.getItem());
         if (hammerTexture == null)
         {
             return;

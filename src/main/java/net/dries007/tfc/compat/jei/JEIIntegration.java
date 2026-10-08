@@ -28,7 +28,7 @@ import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
@@ -144,14 +144,14 @@ public final class JEIIntegration implements IModPlugin
 
     private static final Map<KnappingType, RecipeType<RecipeHolder<KnappingRecipe>>> KNAPPING_TYPES = new HashMap<>();
 
-    public static RecipeType<RecipeHolder<KnappingRecipe>> getKnappingType(Map.Entry<ResourceLocation, KnappingType> entry)
+    public static RecipeType<RecipeHolder<KnappingRecipe>> getKnappingType(Map.Entry<Identifier, KnappingType> entry)
     {
         return KNAPPING_TYPES.computeIfAbsent(entry.getValue(), key -> type(entry.getKey().getPath() + "_knapping", KnappingRecipe.class));
     }
 
     private static <T extends Recipe<?>> RecipeType<RecipeHolder<T>> type(String name, Class<T> kind)
     {
-        return RecipeType.createRecipeHolderType(ResourceLocation.fromNamespaceAndPath(TerraFirmaCraft.MOD_ID, name));
+        return RecipeType.createRecipeHolderType(Identifier.fromNamespaceAndPath(TerraFirmaCraft.MOD_ID, name));
     }
 
     private static <C extends RecipeInput, T extends Recipe<C>> List<RecipeHolder<T>> recipes(Supplier<net.minecraft.world.item.crafting.RecipeType<T>> type)
@@ -179,7 +179,7 @@ public final class JEIIntegration implements IModPlugin
     }
 
     @Override
-    public ResourceLocation getPluginUid()
+    public Identifier getPluginUid()
     {
         return Helpers.identifier("jei");
     }

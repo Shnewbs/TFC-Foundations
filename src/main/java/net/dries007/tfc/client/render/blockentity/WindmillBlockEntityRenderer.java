@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -40,7 +40,7 @@ import net.dries007.tfc.util.Helpers;
 public class WindmillBlockEntityRenderer implements BlockEntityRenderer<WindmillBlockEntity>
 {
     public static final Map<Item, Provider<Function<BlockEntityRendererProvider.Context, WindmillBladeModel>>> BLADE_MODELS = RenderHelpers.mapOf(map -> {
-        final ResourceLocation defaultTexture = Helpers.identifier("textures/entity/misc/windmill_blade.png");
+        final Identifier defaultTexture = Helpers.identifier("textures/entity/misc/windmill_blade.png");
         final Function<BlockEntityRendererProvider.Context, WindmillBladeModel> defaultModel = defaultModelFactory();
 
         TFCItems.WINDMILL_BLADES.forEach((color, item) -> map.accept(item, new Provider<>(defaultTexture, color, defaultModel)));
@@ -139,7 +139,7 @@ public class WindmillBlockEntityRenderer implements BlockEntityRenderer<Windmill
 
             final int color = provider.color == DyeColor.WHITE ? -1 : provider.color.getTextureDiffuseColor();
             final WindmillBladeModel bladeModel = provider.model;
-            final ResourceLocation bladeTexture = provider.texture;
+            final Identifier bladeTexture = provider.texture;
 
             stack.pushPose();
 
@@ -176,7 +176,7 @@ public class WindmillBlockEntityRenderer implements BlockEntityRenderer<Windmill
      * Provides a model, or a factory for a model, along with other rendering info on a per-item basis.
      */
     public record Provider<T>(
-        ResourceLocation texture,
+        Identifier texture,
         DyeColor color,
         T model
     ) {}

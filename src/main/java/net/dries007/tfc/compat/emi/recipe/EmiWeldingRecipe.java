@@ -11,7 +11,7 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.SlotWidget;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.recipes.WeldingRecipe;
@@ -23,7 +23,7 @@ public class EmiWeldingRecipe extends AutoLayoutRecipe<WeldingRecipe>
 {
     private final int tier;
 
-    public EmiWeldingRecipe(ResourceLocation id, WeldingRecipe recipe)
+    public EmiWeldingRecipe(Identifier id, WeldingRecipe recipe)
     {
         super(EmiIntegration.WELDING, id, recipe);
         tier = recipe.getTier();

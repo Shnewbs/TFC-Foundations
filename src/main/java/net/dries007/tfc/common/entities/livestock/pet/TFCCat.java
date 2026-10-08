@@ -16,7 +16,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -67,7 +67,7 @@ public class TFCCat extends TamableMammal
         super.createGenes(tag, male);
         if (male instanceof TFCCat maleCat)
         {
-            final ResourceLocation variant = BuiltInRegistries.CAT_VARIANT.getKey(random.nextBoolean() ? maleCat.getVariant() : getVariant());
+            final Identifier variant = BuiltInRegistries.CAT_VARIANT.getKey(random.nextBoolean() ? maleCat.getVariant() : getVariant());
             if (variant != null)
                 tag.putString("variant", variant.toString());
         }
@@ -79,7 +79,7 @@ public class TFCCat extends TamableMammal
         super.applyGenes(tag, baby);
         if (baby instanceof TFCCat cat)
         {
-            final ResourceLocation variant = ResourceLocation.tryParse(EntityHelpers.getStringOrDefault(tag, "variant", CatVariant.BLACK.toString()));
+            final Identifier variant = Identifier.tryParse(EntityHelpers.getStringOrDefault(tag, "variant", CatVariant.BLACK.toString()));
             if (variant != null)
                 BuiltInRegistries.CAT_VARIANT.getHolder(variant).ifPresent(cat::setVariant);
         }
@@ -128,7 +128,7 @@ public class TFCCat extends TamableMammal
         this.entityData.set(DATA_VARIANT, type);
     }
 
-    public ResourceLocation getTextureLocation()
+    public Identifier getTextureLocation()
     {
         return getVariant().texture();
     }
@@ -137,7 +137,7 @@ public class TFCCat extends TamableMammal
     public void addAdditionalSaveData(CompoundTag tag)
     {
         super.addAdditionalSaveData(tag);
-        ResourceLocation key = BuiltInRegistries.CAT_VARIANT.getKey(this.getVariant());
+        Identifier key = BuiltInRegistries.CAT_VARIANT.getKey(this.getVariant());
         if (key != null)
         {
             tag.putString("variant", key.toString());
@@ -150,7 +150,7 @@ public class TFCCat extends TamableMammal
         super.readAdditionalSaveData(tag);
         if (tag.contains("variant", Tag.TAG_STRING))
         {
-            Optional.ofNullable(ResourceLocation.tryParse(tag.getString("variant")))
+            Optional.ofNullable(Identifier.tryParse(tag.getString("variant")))
                 .flatMap(BuiltInRegistries.CAT_VARIANT::getHolder)
                 .ifPresent(this::setVariant);
         }

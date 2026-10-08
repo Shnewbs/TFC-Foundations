@@ -17,7 +17,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
@@ -56,7 +56,7 @@ public enum IngameOverlays
     FAMILIARITY(IngameOverlays::renderFamiliarity),
     ;
 
-    private final ResourceLocation id;
+    private final Identifier id;
     final LayeredDraw.Layer overlay;
 
     IngameOverlays(LayeredDraw.Layer overlay)
@@ -65,17 +65,17 @@ public enum IngameOverlays
         this.overlay = overlay;
     }
 
-    public static final ResourceLocation TEXTURE = Helpers.identifier("textures/gui/icons/overlay.png");
-    public static final ResourceLocation INK_TEXTURE = Helpers.identifier("textures/misc/ink_splatter.png");
-    public static final ResourceLocation GLOW_INK_TEXTURE = Helpers.identifier("textures/misc/glow_ink_splatter.png");
+    public static final Identifier TEXTURE = Helpers.identifier("textures/gui/icons/overlay.png");
+    public static final Identifier INK_TEXTURE = Helpers.identifier("textures/misc/ink_splatter.png");
+    public static final Identifier GLOW_INK_TEXTURE = Helpers.identifier("textures/misc/glow_ink_splatter.png");
     final static int HEALTH_TEXT_SHADOW_COLOR = new Color(104,0,0).getRGB();
 
-    private static final ResourceLocation VANILLA_HEALTH = VanillaGuiLayers.PLAYER_HEALTH;
-    private static final ResourceLocation VANILLA_MOUNT_HEALTH = VanillaGuiLayers.VEHICLE_HEALTH;
-    private static final ResourceLocation VANILLA_FOOD = VanillaGuiLayers.FOOD_LEVEL;
-    private static final ResourceLocation VANILLA_EXP = VanillaGuiLayers.EXPERIENCE_BAR;
-    private static final ResourceLocation VANILLA_EXP_LEVEL = VanillaGuiLayers.EXPERIENCE_LEVEL;
-    private static final ResourceLocation VANILLA_JUMP = VanillaGuiLayers.JUMP_METER;
+    private static final Identifier VANILLA_HEALTH = VanillaGuiLayers.PLAYER_HEALTH;
+    private static final Identifier VANILLA_MOUNT_HEALTH = VanillaGuiLayers.VEHICLE_HEALTH;
+    private static final Identifier VANILLA_FOOD = VanillaGuiLayers.FOOD_LEVEL;
+    private static final Identifier VANILLA_EXP = VanillaGuiLayers.EXPERIENCE_BAR;
+    private static final Identifier VANILLA_EXP_LEVEL = VanillaGuiLayers.EXPERIENCE_LEVEL;
+    private static final Identifier VANILLA_JUMP = VanillaGuiLayers.JUMP_METER;
 
     public static void registerOverlays(RegisterGuiLayersEvent event)
     {
@@ -92,7 +92,7 @@ public enum IngameOverlays
         top(event, CHISEL);
     }
 
-    private static void above(RegisterGuiLayersEvent event, ResourceLocation vanilla, IngameOverlays overlay)
+    private static void above(RegisterGuiLayersEvent event, Identifier vanilla, IngameOverlays overlay)
     {
         event.registerAbove(vanilla, overlay.id, overlay.overlay);
     }
@@ -104,7 +104,7 @@ public enum IngameOverlays
 
     public static void checkGuiOverlays(RenderGuiLayerEvent.Pre event)
     {
-        final ResourceLocation id = event.getName();
+        final Identifier id = event.getName();
         if (enableThisOrThat(id, TFCConfig.CLIENT.enableHungerBar.get(), FOOD.id, VANILLA_FOOD) || enableThisOrThat(id, TFCConfig.CLIENT.enableHealthBar.get(), HEALTH.id, VANILLA_HEALTH) || enableThisOrThat(id, TFCConfig.CLIENT.enableHealthBar.get(), MOUNT_HEALTH.id, VANILLA_MOUNT_HEALTH))
         {
             event.setCanceled(true);
@@ -119,12 +119,12 @@ public enum IngameOverlays
         }
     }
 
-    private static boolean enableThisOrThat(ResourceLocation id, boolean config, ResourceLocation myOverlay, ResourceLocation vanillaOverlay)
+    private static boolean enableThisOrThat(Identifier id, boolean config, Identifier myOverlay, Identifier vanillaOverlay)
     {
         return (config && id.equals(vanillaOverlay)) || (!config && id.equals(myOverlay));
     }
 
-    private static boolean disableIfFalse(ResourceLocation id, boolean config, ResourceLocation myOverlay)
+    private static boolean disableIfFalse(Identifier id, boolean config, Identifier myOverlay)
     {
         return id.equals(myOverlay) && !config;
     }
@@ -467,7 +467,7 @@ public enum IngameOverlays
         }
     }
 
-    private static void renderTextureOverlay(GuiGraphics graphics, ResourceLocation location, float alpha)
+    private static void renderTextureOverlay(GuiGraphics graphics, Identifier location, float alpha)
     {
         final Minecraft mc = Minecraft.getInstance();
         final int screenWidth = mc.getWindow().getGuiScaledWidth();

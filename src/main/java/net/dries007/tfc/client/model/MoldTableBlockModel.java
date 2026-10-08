@@ -28,7 +28,7 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -177,9 +177,9 @@ public class MoldTableBlockModel implements IDynamicBakedModel, IUnbakedGeometry
         {
             BuiltInRegistries.ITEM.getTagOrEmpty(TFCTags.Items.USABLE_IN_MOLD_TABLE).forEach(
                 (item) -> {
-                    ResourceLocation moldLocation = BuiltInRegistries.ITEM.getKey(item.value());
+                    Identifier moldLocation = BuiltInRegistries.ITEM.getKey(item.value());
                     ModelResourceLocation modelLocation = RenderHelpers.modelId(
-                        ResourceLocation.fromNamespaceAndPath(
+                        Identifier.fromNamespaceAndPath(
                             moldLocation.getNamespace(),
                             "block/mold/" + moldLocation.getPath()
                         )

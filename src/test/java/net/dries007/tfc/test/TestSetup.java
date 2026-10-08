@@ -35,7 +35,7 @@ import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.data.tags.VanillaBlockTagsProvider;
 import net.minecraft.data.tags.VanillaItemTagsProvider;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagBuilder;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.crafting.Recipe;
@@ -131,7 +131,7 @@ public interface TestSetup
                 }
 
                 @Override
-                public void accept(ResourceLocation id, Recipe<?> recipe, @Nullable AdvancementHolder advancement, ICondition... conditions)
+                public void accept(Identifier id, Recipe<?> recipe, @Nullable AdvancementHolder advancement, ICondition... conditions)
                 {
                     holders.add(new RecipeHolder<>(id, recipe));
                 }
@@ -177,9 +177,9 @@ public interface TestSetup
             )));
     }
 
-    record TagResolver<T>(Map<ResourceLocation, TagBuilder> builder, Registry<T> registry)
+    record TagResolver<T>(Map<Identifier, TagBuilder> builder, Registry<T> registry)
     {
-        Stream<Holder<T>> resolve(ResourceLocation id)
+        Stream<Holder<T>> resolve(Identifier id)
         {
             return Objects.requireNonNull(builder.get(id), () -> "No tag for " + id + " in registry " + registry.key().location())
                 .build()
@@ -192,7 +192,7 @@ public interface TestSetup
         }
     }
 
-    class TagMap extends LinkedHashMap<ResourceLocation, TagBuilder>
+    class TagMap extends LinkedHashMap<Identifier, TagBuilder>
     {
         @Override
         public void clear() {} // No-op

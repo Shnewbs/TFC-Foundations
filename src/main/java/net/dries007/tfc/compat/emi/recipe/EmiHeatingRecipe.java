@@ -19,7 +19,7 @@ import dev.emi.emi.api.widget.TextureWidget;
 import dev.emi.emi.api.widget.Widget;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 
@@ -36,7 +36,7 @@ public class EmiHeatingRecipe extends AutoLayoutRecipe<HeatingRecipe>
     protected final float temperature;
     protected final boolean outputsSolid;
 
-    public EmiHeatingRecipe(ResourceLocation id, HeatingRecipe recipe)
+    public EmiHeatingRecipe(Identifier id, HeatingRecipe recipe)
     {
         super(EmiIntegration.HEATING, id, recipe);
         temperature = recipe.getTemperature();

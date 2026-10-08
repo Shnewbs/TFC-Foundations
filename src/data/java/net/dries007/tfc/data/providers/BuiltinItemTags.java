@@ -23,7 +23,7 @@ import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.data.tags.VanillaItemTagsProvider;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagBuilder;
@@ -938,13 +938,13 @@ public class BuiltinItemTags extends TagsProvider<Item> implements Accessors
 
         ItemTagAppender addAllColors(String itemName)
         {
-            for (DyeColor c : Helpers.DYE_COLORS) add(itemOf(ResourceLocation.withDefaultNamespace(c.getSerializedName() + "_" + itemName)));
+            for (DyeColor c : Helpers.DYE_COLORS) add(itemOf(Identifier.withDefaultNamespace(c.getSerializedName() + "_" + itemName)));
             return this;
         }
 
         ItemTagAppender addNotWhite(String itemName)
         {
-            for (DyeColor c : Helpers.DYE_COLORS_NOT_WHITE) add(itemOf(ResourceLocation.withDefaultNamespace(c.getSerializedName() + "_" + itemName)));
+            for (DyeColor c : Helpers.DYE_COLORS_NOT_WHITE) add(itemOf(Identifier.withDefaultNamespace(c.getSerializedName() + "_" + itemName)));
             return this;
         }
 

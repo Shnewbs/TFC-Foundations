@@ -18,7 +18,7 @@ import dev.emi.emi.api.widget.Widget;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -42,7 +42,7 @@ public class EmiSealedBarrelRecipe extends AutoLayoutRecipe<SealedBarrelRecipe>
     private @Nullable ItemStackProvider onSeal;
     private @Nullable ItemStackProvider onUnseal;
 
-    public EmiSealedBarrelRecipe(ResourceLocation id, SealedBarrelRecipe recipe)
+    public EmiSealedBarrelRecipe(Identifier id, SealedBarrelRecipe recipe)
     {
         super(EmiIntegration.BARREL, id, recipe);
         infinite = recipe.isInfinite();

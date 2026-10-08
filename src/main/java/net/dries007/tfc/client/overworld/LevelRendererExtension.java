@@ -43,7 +43,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
@@ -84,21 +84,21 @@ public class LevelRendererExtension extends DimensionSpecialEffects.OverworldEff
 
     // Most of this is copied from LevelRenderer
 
-    private static final ResourceLocation[] RAIN_LOCATIONS = new ResourceLocation[] {
+    private static final Identifier[] RAIN_LOCATIONS = new Identifier[] {
         Helpers.identifier("textures/environment/rain_0.png"),
         Helpers.identifier("textures/environment/rain_1.png"),
         Helpers.identifier("textures/environment/rain_2.png"),
         Helpers.identifier("textures/environment/rain_3.png"),
     };
 
-    private static final ResourceLocation[] SNOW_LOCATIONS = new ResourceLocation[] {
+    private static final Identifier[] SNOW_LOCATIONS = new Identifier[] {
         Helpers.identifier("textures/environment/snow_0.png"),
         Helpers.identifier("textures/environment/snow_1.png"),
         Helpers.identifier("textures/environment/snow_2.png"),
         Helpers.identifier("textures/environment/snow_3.png"),
     };
-    private static final ResourceLocation MOON_LOCATION = ResourceLocation.withDefaultNamespace("textures/environment/moon_phases.png");
-    private static final ResourceLocation SUN_LOCATION = ResourceLocation.withDefaultNamespace("textures/environment/sun.png");
+    private static final Identifier MOON_LOCATION = Identifier.withDefaultNamespace("textures/environment/moon_phases.png");
+    private static final Identifier SUN_LOCATION = Identifier.withDefaultNamespace("textures/environment/sun.png");
 
     private static final float RAIN_MAX_ANGLE = 20 * Mth.DEG_TO_RAD;
     private static final float SNOW_MAX_ANGLE = 30 * Mth.DEG_TO_RAD;

@@ -17,7 +17,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -52,16 +52,16 @@ public class AnvilRecipe implements ISimpleRecipe<AnvilRecipe.Inventory>
             .toList();
     }
 
-    private static final BiMap<ResourceLocation, AnvilRecipe> CACHE = IndirectHashCollection.createForRecipeId(TFCRecipeTypes.ANVIL);
+    private static final BiMap<Identifier, AnvilRecipe> CACHE = IndirectHashCollection.createForRecipeId(TFCRecipeTypes.ANVIL);
 
     @Nullable
-    public static AnvilRecipe byId(ResourceLocation id)
+    public static AnvilRecipe byId(Identifier id)
     {
         return CACHE.get(id);
     }
 
     @Nullable
-    public static ResourceLocation getId(AnvilRecipe recipe)
+    public static Identifier getId(AnvilRecipe recipe)
     {
         return CACHE.inverse().get(recipe);
     }

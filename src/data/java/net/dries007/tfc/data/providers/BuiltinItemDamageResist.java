@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import net.dries007.tfc.common.items.TFCItems;
@@ -46,10 +46,10 @@ public class BuiltinItemDamageResist extends DataManagerProvider<ItemDamageResis
     private void add(String name, float piercing, float slashing, float crushing)
     {
         add(name + "_armor", new ItemDamageResistance(Ingredient.of(
-            itemOf(ResourceLocation.withDefaultNamespace(name + "_helmet")),
-            itemOf(ResourceLocation.withDefaultNamespace(name + "_chestplate")),
-            itemOf(ResourceLocation.withDefaultNamespace(name + "_leggings")),
-            itemOf(ResourceLocation.withDefaultNamespace(name + "_boots"))
+            itemOf(Identifier.withDefaultNamespace(name + "_helmet")),
+            itemOf(Identifier.withDefaultNamespace(name + "_chestplate")),
+            itemOf(Identifier.withDefaultNamespace(name + "_leggings")),
+            itemOf(Identifier.withDefaultNamespace(name + "_boots"))
         ), new PhysicalDamage(piercing, slashing, crushing)));
     }
 

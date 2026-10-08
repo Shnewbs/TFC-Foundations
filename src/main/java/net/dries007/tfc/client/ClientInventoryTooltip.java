@@ -9,7 +9,7 @@ package net.dries007.tfc.client;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 import net.dries007.tfc.common.blocks.TooltipBlock;
@@ -17,7 +17,7 @@ import net.dries007.tfc.util.Helpers;
 
 public class ClientInventoryTooltip implements ClientTooltipComponent
 {
-    public static final ResourceLocation TEXTURE_LOCATION = Helpers.identifier("textures/gui/device_image_tooltip.png");
+    public static final Identifier TEXTURE_LOCATION = Helpers.identifier("textures/gui/device_image_tooltip.png");
 
     private final TooltipBlock.Instance tooltip;
 

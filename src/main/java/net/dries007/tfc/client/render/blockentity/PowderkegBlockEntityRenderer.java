@@ -13,14 +13,14 @@ import net.dries007.tfc.common.blocks.devices.PowderkegBlock;
 import net.dries007.tfc.util.Helpers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class PowderkegBlockEntityRenderer implements BlockEntityRenderer<PowderkegBlockEntity>
 {
-    private static final ResourceLocation GUNPOWDERTEXTURE = Helpers.identifier("block/powder/gunpowder");
+    private static final Identifier GUNPOWDERTEXTURE = Helpers.identifier("block/powder/gunpowder");
 
     @Override
     public void render(PowderkegBlockEntity powderkeg, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay)

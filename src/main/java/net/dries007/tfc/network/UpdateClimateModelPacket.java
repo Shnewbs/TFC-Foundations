@@ -9,7 +9,7 @@ package net.dries007.tfc.network;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 
 import net.dries007.tfc.client.ClientHelpers;
@@ -20,7 +20,7 @@ import net.dries007.tfc.util.tracker.WorldTracker;
 public record UpdateClimateModelPacket(ClimateModel model) implements CustomPacketPayload
 {
     public static final CustomPacketPayload.Type<UpdateClimateModelPacket> TYPE = PacketHandler.type("update_climate_model");
-    public static final StreamCodec<ByteBuf, UpdateClimateModelPacket> CODEC = ResourceLocation.STREAM_CODEC.<ClimateModel>dispatch(
+    public static final StreamCodec<ByteBuf, UpdateClimateModelPacket> CODEC = Identifier.STREAM_CODEC.<ClimateModel>dispatch(
         c -> ClimateModels.REGISTRY.getKey(c.type()),
         id -> ClimateModels.REGISTRY.getOptional(id).orElseGet(ClimateModels.BIOME_BASED).codec()
     ).map(UpdateClimateModelPacket::new, c -> c.model);

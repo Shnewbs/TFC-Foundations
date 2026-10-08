@@ -10,7 +10,7 @@ import java.util.Optional;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Instrument;
 import net.minecraft.world.item.Instruments;
 import net.minecraft.world.item.ItemStack;
@@ -203,12 +203,12 @@ public interface KnappingRecipes extends Recipes
         knapping(BuiltinKnappingTypes.GOAT_HORN, pattern, output, true, instrument.location().getPath() + "_goat_horn");
     }
 
-    private void knapping(ResourceLocation knappingType, String[] pattern, ItemLike output, boolean defaultOn, int count)
+    private void knapping(Identifier knappingType, String[] pattern, ItemLike output, boolean defaultOn, int count)
     {
         knapping(knappingType, pattern, new ItemStack(output, count), defaultOn, null);
     }
 
-    private void knapping(ResourceLocation knappingType, String[] pattern, ItemStack output, boolean defaultOn, @Nullable String name)
+    private void knapping(Identifier knappingType, String[] pattern, ItemStack output, boolean defaultOn, @Nullable String name)
     {
         final KnappingRecipe recipe = new KnappingRecipe(KnappingType.MANAGER.getCheckedReference(knappingType), KnappingPattern.from(defaultOn, pattern), Optional.empty(), output);
         if (name == null)

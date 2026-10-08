@@ -27,7 +27,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryOps;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -46,19 +46,19 @@ public class DataManager<T> extends SimpleJsonResourceReloadListener
     private final Codec<T> codec;
     private final @Nullable StreamCodec<RegistryFriendlyByteBuf, T> streamCodec;
 
-    private Map<ResourceLocation, T> byKey = Map.of();
-    private Map<T, ResourceLocation> toKey = Map.of();
+    private Map<Identifier, T> byKey = Map.of();
+    private Map<T, Identifier> toKey = Map.of();
 
-    private final Codec<Reference<T>> byIdCodec = ResourceLocation.CODEC.xmap(this::getReference, Reference::id);
-    private final StreamCodec<ByteBuf, Reference<T>> byIdStreamCodec = ResourceLocation.STREAM_CODEC.map(this::getReference, Reference::id);
+    private final Codec<Reference<T>> byIdCodec = Identifier.CODEC.xmap(this::getReference, Reference::id);
+    private final StreamCodec<ByteBuf, Reference<T>> byIdStreamCodec = Identifier.STREAM_CODEC.map(this::getReference, Reference::id);
 
-    private final Map<ResourceLocation, Reference<T>> references = new HashMap<>();
+    private final Map<Identifier, Reference<T>> references = new HashMap<>();
     private final Object referencesLock = new Object();
 
     /**
      * Create a {@link DataManager} that is not synced to client
      */
-    public DataManager(ResourceLocation domain, Codec<T> codec)
+    public DataManager(Identifier domain, Codec<T> codec)
     {
         this(domain, codec, null);
     }
@@ -66,7 +66,7 @@ public class DataManager<T> extends SimpleJsonResourceReloadListener
     /**
      * Create a {@link DataManager} that is synced to client
      */
-    public DataManager(ResourceLocation domain, Codec<T> codec, @Nullable StreamCodec<RegistryFriendlyByteBuf, T> streamCodec)
+    public DataManager(Identifier domain, Codec<T> codec, @Nullable StreamCodec<RegistryFriendlyByteBuf, T> streamCodec)
     {
         super(GSON, domain.getNamespace() + "/" + domain.getPath());
 
@@ -79,13 +79,13 @@ public class DataManager<T> extends SimpleJsonResourceReloadListener
      * @return An element of this data manager, by id. Returns {@code null} if the element does not exist.
      */
     @Nullable
-    public T get(ResourceLocation id)
+    public T get(Identifier id)
     {
         return byKey.get(id);
     }
 
     @Nullable
-    public ResourceLocation getId(T value)
+    public Identifier getId(T value)
     {
         return toKey.get(value);
     }
@@ -93,12 +93,12 @@ public class DataManager<T> extends SimpleJsonResourceReloadListener
     /**
      * @return An element of this data manager, by id. Throws an exception if the element does not exist.
      */
-    public T getOrThrow(ResourceLocation id)
+    public T getOrThrow(Identifier id)
     {
         return Objects.requireNonNull(byKey.get(id));
     }
 
-    public ResourceLocation getIdOrThrow(T value)
+    public Identifier getIdOrThrow(T value)
     {
         return Objects.requireNonNull(toKey.get(value));
     }
@@ -109,7 +109,7 @@ public class DataManager<T> extends SimpleJsonResourceReloadListener
      * <p>
      * This method can be called concurrently from i.e. recipe loading.
      */
-    public Reference<T> getReference(ResourceLocation id)
+    public Reference<T> getReference(Identifier id)
     {
         final Reference<T> ref;
         synchronized(referencesLock)
@@ -122,12 +122,12 @@ public class DataManager<T> extends SimpleJsonResourceReloadListener
     /**
      * Returns a reference to an element of this data manager, by id, only if the element already exists and is loaded.
      */
-    public Reference<T> getCheckedReference(ResourceLocation id)
+    public Reference<T> getCheckedReference(Identifier id)
     {
         return references.computeIfAbsent(id, key -> new Reference<>(key, getOrThrow(id)));
     }
 
-    public Map<ResourceLocation, T> getElements()
+    public Map<Identifier, T> getElements()
     {
         return byKey;
     }
@@ -182,7 +182,7 @@ public class DataManager<T> extends SimpleJsonResourceReloadListener
      * Updates the data manager with the state of the networked elements. Only called on physical client connecting to a physical server,
      * and in test environments where we want to create values from external data.
      */
-    public void bindValues(Map<ResourceLocation, T> elements)
+    public void bindValues(Map<Identifier, T> elements)
     {
         // Sync received from physical server
         byKey = ImmutableMap.copyOf(elements);
@@ -200,13 +200,13 @@ public class DataManager<T> extends SimpleJsonResourceReloadListener
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> elements, ResourceManager resourceManagerIn, ProfilerFiller profilerIn)
+    protected void apply(Map<Identifier, JsonElement> elements, ResourceManager resourceManagerIn, ProfilerFiller profilerIn)
     {
-        final ImmutableMap.Builder<ResourceLocation, T> builder = ImmutableMap.builder();
+        final ImmutableMap.Builder<Identifier, T> builder = ImmutableMap.builder();
         final RegistryOps<JsonElement> ops = getRegistryLookup().createSerializationContext(JsonOps.INSTANCE);
-        for (Map.Entry<ResourceLocation, JsonElement> entry : elements.entrySet())
+        for (Map.Entry<Identifier, JsonElement> entry : elements.entrySet())
         {
-            final ResourceLocation id = entry.getKey();
+            final Identifier id = entry.getKey();
             try
             {
                 builder.put(id, codec.parse(ops, entry.getValue()).getOrThrow(JsonParseException::new));
@@ -228,8 +228,8 @@ public class DataManager<T> extends SimpleJsonResourceReloadListener
     {
         synchronized (referencesLock)
         {
-            final List<ResourceLocation> unboundReferences = new ArrayList<>();
-            for (Map.Entry<ResourceLocation, Reference<T>> entry : references.entrySet())
+            final List<Identifier> unboundReferences = new ArrayList<>();
+            for (Map.Entry<Identifier, Reference<T>> entry : references.entrySet())
             {
                 final T value = get(entry.getKey());
                 if (value == null)
@@ -255,16 +255,16 @@ public class DataManager<T> extends SimpleJsonResourceReloadListener
 
     public static class Reference<T> implements Supplier<T>
     {
-        private final ResourceLocation id;
+        private final Identifier id;
         private Optional<T> value;
 
-        Reference(ResourceLocation id, @Nullable T value)
+        Reference(Identifier id, @Nullable T value)
         {
             this.id = id;
             this.value = Optional.ofNullable(value);
         }
 
-        public ResourceLocation id()
+        public Identifier id()
         {
             return id;
         }

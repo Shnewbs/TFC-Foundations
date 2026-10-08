@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 
 import net.dries007.tfc.common.entities.livestock.horse.TFCChestedHorse;
@@ -24,13 +24,13 @@ import net.dries007.tfc.util.Helpers;
 
 public class HorseChestLayer<T extends TFCChestedHorse, M extends EntityModel<T>> extends RenderLayer<T, M>
 {
-    public static void registerChest(Item item, ResourceLocation location)
+    public static void registerChest(Item item, Identifier location)
     {
         MAP.put(item, location);
     }
 
-    private static final Map<Item, ResourceLocation> MAP = new HashMap<>();
-    private static final ResourceLocation DEFAULT_CHEST_TEXTURE = Helpers.identifier("textures/entity/chest/horse/oak.png");
+    private static final Map<Item, Identifier> MAP = new HashMap<>();
+    private static final Identifier DEFAULT_CHEST_TEXTURE = Helpers.identifier("textures/entity/chest/horse/oak.png");
 
     private final M model;
 
@@ -53,7 +53,7 @@ public class HorseChestLayer<T extends TFCChestedHorse, M extends EntityModel<T>
         }
     }
 
-    private ResourceLocation getTexture(T entity)
+    private Identifier getTexture(T entity)
     {
         final Item item = entity.getChestItem().getItem();
         if (MAP.containsKey(item))

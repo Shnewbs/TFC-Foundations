@@ -10,7 +10,7 @@ import java.util.Map;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -23,8 +23,8 @@ import net.dries007.tfc.util.Helpers;
 
 public class BowlBlockEntityRenderer implements BlockEntityRenderer<BowlBlockEntity>
 {
-    private static final ResourceLocation FALLBACK = Helpers.identifier("block/powder/salt");
-    private static final Map<Item, ResourceLocation> TEXTURES = RenderHelpers.mapOf(map -> {
+    private static final Identifier FALLBACK = Helpers.identifier("block/powder/salt");
+    private static final Map<Item, Identifier> TEXTURES = RenderHelpers.mapOf(map -> {
         TFCItems.POWDERS.forEach((type, item) -> map.accept(item, item.getId().withPrefix("block/")));
         TFCItems.ORE_POWDERS.forEach((type, item) -> map.accept(item, item.getId().withPrefix("block/")));
         map.accept(() -> Items.REDSTONE, Helpers.identifier("block/powder/redstone"));
@@ -38,7 +38,7 @@ public class BowlBlockEntityRenderer implements BlockEntityRenderer<BowlBlockEnt
      * <p>
      * This function is safe to call during parallel mod loading, though care must be taken to so only on the client.
      */
-    public static synchronized void addPowderTexture(Item item, ResourceLocation texLoc)
+    public static synchronized void addPowderTexture(Item item, Identifier texLoc)
     {
         TEXTURES.put(item, texLoc);
     }
@@ -52,7 +52,7 @@ public class BowlBlockEntityRenderer implements BlockEntityRenderer<BowlBlockEnt
             return;
         }
 
-        final ResourceLocation texture = TEXTURES.getOrDefault(item.getItem(), FALLBACK);
+        final Identifier texture = TEXTURES.getOrDefault(item.getItem(), FALLBACK);
 
         final float y = Mth.map(item.getCount(), 0, BowlBlockEntity.MAX_POWDER, 0.5f, 2f);
 

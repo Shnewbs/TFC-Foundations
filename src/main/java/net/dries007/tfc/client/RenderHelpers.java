@@ -46,7 +46,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.FastColor.ARGB32;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -82,7 +82,7 @@ public final class RenderHelpers
      * Name controlled via resources/META-INF/enumextensions.json
      */
     public static final ItemDisplayContext PLACED_ITEM_CONTEXT = ItemDisplayContext.valueOf("TFC_PLACED_ITEM");
-    @SuppressWarnings("deprecation") public static final ResourceLocation BLOCKS_ATLAS = TextureAtlas.LOCATION_BLOCKS;
+    @SuppressWarnings("deprecation") public static final Identifier BLOCKS_ATLAS = TextureAtlas.LOCATION_BLOCKS;
     public static final Button.CreateNarration NARRATION = Supplier::get;
 
     public static <K, V, S extends Supplier<? extends K>> Map<K, V> mapOf(Consumer<BiConsumer<S, V>> factory)
@@ -100,7 +100,7 @@ public final class RenderHelpers
         return ModelResourceLocation.standalone(Helpers.identifier(id));
     }
 
-    public static ModelResourceLocation modelId(ResourceLocation id)
+    public static ModelResourceLocation modelId(Identifier id)
     {
         return ModelResourceLocation.standalone(id);
     }
@@ -123,17 +123,17 @@ public final class RenderHelpers
         return Minecraft.getInstance().getTextureAtlas(BLOCKS_ATLAS).apply(MissingTextureAtlasSprite.getLocation());
     }
 
-    public static TextureAtlasSprite blockTexture(ResourceLocation textureLocation)
+    public static TextureAtlasSprite blockTexture(Identifier textureLocation)
     {
         return Minecraft.getInstance().getTextureAtlas(BLOCKS_ATLAS).apply(textureLocation);
     }
 
-    public static ResourceLocation animalTexture(String name)
+    public static Identifier animalTexture(String name)
     {
         return Helpers.identifier("textures/entity/animal/" + name + ".png");
     }
 
-    public static <T> ResourceLocation getGenderedTexture(GenderedRenderAnimal animal, String name)
+    public static <T> Identifier getGenderedTexture(GenderedRenderAnimal animal, String name)
     {
         return animal.displayMaleCharacteristics()
             ? animalTexture(name + "_male")
@@ -594,14 +594,14 @@ public final class RenderHelpers
 
     public static void renderFluidFace(PoseStack poseStack, FluidStack fluidStack, MultiBufferSource buffers, int color, float minX, float minZ, float maxX, float maxZ, float y, int packedOverlay, int packedLight)
     {
-        final ResourceLocation texture = IClientFluidTypeExtensions.of(fluidStack.getFluid()).getStillTexture(fluidStack);
+        final Identifier texture = IClientFluidTypeExtensions.of(fluidStack.getFluid()).getStillTexture(fluidStack);
         final TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(RenderHelpers.BLOCKS_ATLAS).apply(texture);
         final VertexConsumer buffer = buffers.getBuffer(RenderType.entityTranslucentCull(BLOCKS_ATLAS));
 
         renderTexturedFace(poseStack.last(), buffer, color, minX, minZ, maxX, maxZ, y, packedOverlay, packedLight, sprite);
     }
 
-    public static void renderTexturedFace(PoseStack poseStack, MultiBufferSource buffers, int color, float minX, float minZ, float maxX, float maxZ, float y, int packedOverlay, int packedLight, ResourceLocation texture)
+    public static void renderTexturedFace(PoseStack poseStack, MultiBufferSource buffers, int color, float minX, float minZ, float maxX, float maxZ, float y, int packedOverlay, int packedLight, Identifier texture)
     {
         final VertexConsumer buffer = buffers.getBuffer(RenderType.solid());
         final TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(RenderHelpers.BLOCKS_ATLAS).apply(texture);
@@ -653,7 +653,7 @@ public final class RenderHelpers
         return true;
     }
 
-    public static ResourceLocation getTextureForAge(TFCAnimal animal, ResourceLocation young, ResourceLocation old)
+    public static Identifier getTextureForAge(TFCAnimal animal, Identifier young, Identifier old)
     {
         return animal.getAgeType() == Age.OLD ? old : young;
     }
@@ -695,7 +695,7 @@ public final class RenderHelpers
     }
 
     /**
-     * Copied from {@link GuiGraphics#blit(ResourceLocation, int, int, int, int, int, int)} but with explicit arguments for {@code minU, maxU, minV, maxV}.
+     * Copied from {@link GuiGraphics#blit(Identifier, int, int, int, int, int, int)} but with explicit arguments for {@code minU, maxU, minV, maxV}.
      */
     public static void blit(GuiGraphics stack, int x, int y, int width, int height, float minU, float maxU, float minV, float maxV)
     {
@@ -704,7 +704,7 @@ public final class RenderHelpers
 
 
     /**
-     * Copied from {@link GuiGraphics#innerBlit(ResourceLocation, int, int, int, int, int, float, float, float, float, float, float, float, float)} because it's private.
+     * Copied from {@link GuiGraphics#innerBlit(Identifier, int, int, int, int, int, float, float, float, float, float, float, float, float)} because it's private.
      */
     public static void blit(Matrix4f pose, int x1, int x2, int y1, int y2, int blitOffset, float minU, float maxU, float minV, float maxV)
     {

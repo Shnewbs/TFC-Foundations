@@ -13,7 +13,7 @@ import net.minecraft.client.model.RaftModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.BoatRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.vehicle.Boat;
 
 import net.dries007.tfc.client.RenderHelpers;
@@ -26,21 +26,21 @@ public class TFCBoatRenderer extends BoatRenderer
         return RenderHelpers.layerId("boat/" + name);
     }
 
-    private final Pair<ResourceLocation, ListModel<Boat>> location;
+    private final Pair<Identifier, ListModel<Boat>> location;
 
     public TFCBoatRenderer(EntityRendererProvider.Context context, String name)
     {
         this(context, Pair.of(Helpers.identifier("textures/entity/boat/" + name + ".png"), name.equals("palm") ? new RaftModel(context.bakeLayer(boatName(name))) : new BoatModel(context.bakeLayer(boatName(name)))));
     }
 
-    public TFCBoatRenderer(EntityRendererProvider.Context context, Pair<ResourceLocation, ListModel<Boat>> pair)
+    public TFCBoatRenderer(EntityRendererProvider.Context context, Pair<Identifier, ListModel<Boat>> pair)
     {
         super(context, false);
         this.location = pair;
     }
 
     @Override
-    public Pair<ResourceLocation, ListModel<Boat>> getModelWithLocation(Boat boat)
+    public Pair<Identifier, ListModel<Boat>> getModelWithLocation(Boat boat)
     {
         return location;
     }

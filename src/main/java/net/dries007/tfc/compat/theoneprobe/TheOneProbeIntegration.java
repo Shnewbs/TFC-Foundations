@@ -8,7 +8,7 @@ package net.dries007.tfc.compat.theoneprobe;
 
 import java.util.function.Function;
 import mcjty.theoneprobe.api.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -38,11 +38,11 @@ public class TheOneProbeIntegration implements Function<ITheOneProbe, Void>
         return null;
     }
 
-    private void register(ITheOneProbe top, ResourceLocation name, BlockEntityTooltip tooltip, Class<? extends Block> blockClass)
+    private void register(ITheOneProbe top, Identifier name, BlockEntityTooltip tooltip, Class<? extends Block> blockClass)
     {
         top.registerProvider(new IProbeInfoProvider() {
             @Override
-            public ResourceLocation getID()
+            public Identifier getID()
             {
                 return name;
             }
@@ -58,7 +58,7 @@ public class TheOneProbeIntegration implements Function<ITheOneProbe, Void>
         });
     }
 
-    private void register(ITheOneProbe top, ResourceLocation name, EntityTooltip tooltip, Class<? extends Entity> entityClass)
+    private void register(ITheOneProbe top, Identifier name, EntityTooltip tooltip, Class<? extends Entity> entityClass)
     {
         top.registerEntityProvider(new IProbeInfoEntityProvider() {
             @Override

@@ -7,11 +7,11 @@
 package net.dries007.tfc.util.registry;
 
 import java.util.function.Supplier;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 /**
- * A wrapper that provides both {@link Supplier} of the specific type, and {@link ResourceLocation} id access to the underlying
+ * A wrapper that provides both {@link Supplier} of the specific type, and {@link Identifier} id access to the underlying
  * holder object, but while removing the double-generic of {@link DeferredHolder}
  * <p>
  * This is typically either used as the receiver type for a method that does not need access to the underlying holder or registry
@@ -24,7 +24,7 @@ public interface IdHolder<T> extends Supplier<T>
 {
     DeferredHolder<? super T, T> holder();
 
-    default ResourceLocation getId()
+    default Identifier getId()
     {
         return holder().getId();
     }

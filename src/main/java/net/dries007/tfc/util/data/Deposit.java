@@ -14,7 +14,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -29,19 +29,19 @@ import net.dries007.tfc.util.collections.IndirectHashCollection;
 public record Deposit(
     Ingredient ingredient,
     ResourceKey<LootTable> lootTable,
-    List<ResourceLocation> modelStages
+    List<Identifier> modelStages
 ) implements IRecipePredicate<ItemStack>
 {
     public static final Codec<Deposit> CODEC = RecordCodecBuilder.create(i -> i.group(
         Ingredient.CODEC.fieldOf("ingredient").forGetter(c -> c.ingredient),
         ResourceKey.codec(Registries.LOOT_TABLE).fieldOf("loot_table").forGetter(c -> c.lootTable),
-        ResourceLocation.CODEC.listOf().optionalFieldOf("model_stages", List.of()).forGetter(c -> c.modelStages)
+        Identifier.CODEC.listOf().optionalFieldOf("model_stages", List.of()).forGetter(c -> c.modelStages)
     ).apply(i, Deposit::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Deposit> STREAM_CODEC = StreamCodec.composite(
         Ingredient.CONTENTS_STREAM_CODEC, c -> c.ingredient,
         ResourceKey.streamCodec(Registries.LOOT_TABLE), c -> c.lootTable,
-        ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()), c -> c.modelStages,
+        Identifier.STREAM_CODEC.apply(ByteBufCodecs.list()), c -> c.modelStages,
         Deposit::new
     );
 

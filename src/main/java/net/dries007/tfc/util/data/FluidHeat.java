@@ -14,7 +14,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
@@ -47,7 +47,7 @@ public record FluidHeat(
         FluidHeat::new
     );
 
-    public static final ResourceLocation UNKNOWN_ID = Helpers.identifier("unknown");
+    public static final Identifier UNKNOWN_ID = Helpers.identifier("unknown");
 
     public static final DataManager<FluidHeat> MANAGER = new DataManager<>(Helpers.identifier("fluid_heat"), CODEC, STREAM_CODEC);
     private static final Map<Fluid, FluidHeat> BY_FLUID = new IdentityHashMap<>();

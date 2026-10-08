@@ -8,7 +8,7 @@ package net.dries007.tfc.world.feature.tree;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.WorldGenLevel;
@@ -39,7 +39,7 @@ public class RandomTreeFeature extends Feature<RandomTreeConfig>
         final BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos().set(pos);
         final StructureTemplateManager manager = TreeHelpers.getStructureManager(level);
         final StructurePlaceSettings settings = TreeHelpers.getPlacementSettings(level, chunkPos, random);
-        final ResourceLocation structureId = config.structureNames().get(random.nextInt(config.structureNames().size()));
+        final Identifier structureId = config.structureNames().get(random.nextInt(config.structureNames().size()));
         final StructureTemplate structure = manager.getOrCreate(structureId);
         if (((StructureTemplateAccessor) structure).accessor$getPalettes().isEmpty())
         {

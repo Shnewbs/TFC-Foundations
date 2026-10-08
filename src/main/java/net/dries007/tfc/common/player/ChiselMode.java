@@ -14,7 +14,7 @@ import net.minecraft.core.DefaultedRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -183,7 +183,7 @@ public abstract class ChiselMode
 
     public interface IconCallback<T>
     {
-        T accept(ResourceLocation texture, int u, int v, int width, int height);
+        T accept(Identifier texture, int u, int v, int width, int height);
     }
 
     /**
@@ -195,6 +195,6 @@ public abstract class ChiselMode
 
     public interface HotbarIconCallback
     {
-        void accept(ResourceLocation texture, int u, int v);
+        void accept(Identifier texture, int u, int v);
     }
 }

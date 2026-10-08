@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -311,12 +311,12 @@ public enum Wood implements RegistryWood
             };
         }
 
-        private ResourceLocation planksTexture(RegistryWood wood)
+        private Identifier planksTexture(RegistryWood wood)
         {
             return Helpers.identifier("block/wood/planks/" + wood.getSerializedName());
         }
 
-        private ResourceLocation waterWheelTexture(RegistryWood wood)
+        private Identifier waterWheelTexture(RegistryWood wood)
         {
             return Helpers.identifier("textures/entity/water_wheel/" + wood.getSerializedName() + ".png");
         }

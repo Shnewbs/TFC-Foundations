@@ -10,7 +10,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.joml.Matrix4f;
 
@@ -50,7 +50,7 @@ public enum ScrapingBlockModel implements SimpleStaticBlockEntityModel<ScrapingB
         return 16;
     }
 
-    private void drawTiles(VertexConsumer buffer, PoseStack poseStack, ResourceLocation texture, short positions, int condition, int packedLight, int packedOverlay, int color)
+    private void drawTiles(VertexConsumer buffer, PoseStack poseStack, Identifier texture, short positions, int condition, int packedLight, int packedOverlay, int color)
     {
         Matrix4f mat = poseStack.last().pose();
         TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(RenderHelpers.BLOCKS_ATLAS).apply(texture);

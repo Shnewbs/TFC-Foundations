@@ -11,7 +11,7 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.SlotWidget;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import net.dries007.tfc.common.recipes.AnvilRecipe;
 import net.dries007.tfc.compat.emi.EmiHelpers;
@@ -22,7 +22,7 @@ public class EmiAnvilRecipe extends AutoLayoutRecipe<AnvilRecipe>
 {
     protected final int tier;
 
-    public EmiAnvilRecipe(ResourceLocation id, AnvilRecipe recipe)
+    public EmiAnvilRecipe(Identifier id, AnvilRecipe recipe)
     {
         super(EmiIntegration.ANVIL, id, recipe);
         tier = recipe.getMinTier();

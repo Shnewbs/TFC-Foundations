@@ -8,7 +8,7 @@ package net.dries007.tfc.client;
 
 import java.util.function.ToIntFunction;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ColorResolver;
 import net.minecraft.world.level.CommonLevelAccessor;
@@ -28,15 +28,15 @@ import static net.dries007.tfc.world.TFCChunkGenerator.*;
 
 public final class TFCColors
 {
-    public static final ResourceLocation SKY_COLORS_LOCATION = Helpers.identifier("textures/colormap/sky.png");
-    public static final ResourceLocation FOG_COLORS_LOCATION = Helpers.identifier("textures/colormap/fog.png");
-    public static final ResourceLocation WATER_COLORS_LOCATION = Helpers.identifier("textures/colormap/water.png");
-    public static final ResourceLocation WATER_FOG_COLORS_LOCATION = Helpers.identifier("textures/colormap/water_fog.png");
-    public static final ResourceLocation FOLIAGE_COLORS_LOCATION = Helpers.identifier("textures/colormap/foliage.png");
-    public static final ResourceLocation FOLIAGE_SUMMER_COLORS_LOCATION = Helpers.identifier("textures/colormap/foliage.png");
-    public static final ResourceLocation FOLIAGE_FALL_COLORS_LOCATION = Helpers.identifier("textures/colormap/foliage_fall.png");
-    public static final ResourceLocation GRASS_COLORS_LOCATION = Helpers.identifier("textures/colormap/grass.png");
-    public static final ResourceLocation TALL_GRASS_COLORS_LOCATION = Helpers.identifier("textures/colormap/tall_grass.png");
+    public static final Identifier SKY_COLORS_LOCATION = Helpers.identifier("textures/colormap/sky.png");
+    public static final Identifier FOG_COLORS_LOCATION = Helpers.identifier("textures/colormap/fog.png");
+    public static final Identifier WATER_COLORS_LOCATION = Helpers.identifier("textures/colormap/water.png");
+    public static final Identifier WATER_FOG_COLORS_LOCATION = Helpers.identifier("textures/colormap/water_fog.png");
+    public static final Identifier FOLIAGE_COLORS_LOCATION = Helpers.identifier("textures/colormap/foliage.png");
+    public static final Identifier FOLIAGE_SUMMER_COLORS_LOCATION = Helpers.identifier("textures/colormap/foliage.png");
+    public static final Identifier FOLIAGE_FALL_COLORS_LOCATION = Helpers.identifier("textures/colormap/foliage_fall.png");
+    public static final Identifier GRASS_COLORS_LOCATION = Helpers.identifier("textures/colormap/grass.png");
+    public static final Identifier TALL_GRASS_COLORS_LOCATION = Helpers.identifier("textures/colormap/tall_grass.png");
 
     public static final ColorResolver FRESH_WATER;
     public static final ColorResolver SALT_WATER;

@@ -7,7 +7,7 @@
 package net.dries007.tfc.common.container;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -33,7 +33,7 @@ public class AnvilPlanContainer extends BlockEntityContainer<AnvilBlockEntity> i
     {
         if (extraNBT != null && player != null)
         {
-            final ResourceLocation recipeId = Helpers.resourceLocation(extraNBT.getString("recipe"));
+            final Identifier recipeId = Helpers.resourceLocation(extraNBT.getString("recipe"));
 
             blockEntity.chooseRecipe(recipeId);
             if (player instanceof ServerPlayer serverPlayer)

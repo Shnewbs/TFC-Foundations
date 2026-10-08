@@ -19,7 +19,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.ItemStack;
@@ -37,7 +37,7 @@ public class TFCChestBoatRenderer extends TFCBoatRenderer
         return RenderHelpers.layerId("chest_boat/" + name);
     }
 
-    private static final ResourceLocation DEFAULT_TEXTURE = Helpers.identifier("textures/entity/chest_boat/oak.png");
+    private static final Identifier DEFAULT_TEXTURE = Helpers.identifier("textures/entity/chest_boat/oak.png");
 
     private final ListModel<Boat> model;
 
@@ -48,7 +48,7 @@ public class TFCChestBoatRenderer extends TFCBoatRenderer
         this.model = name.equals("palm") ? new ChestRaftModel(part) : new ChestBoatModel(part);
     }
 
-    public TFCChestBoatRenderer(EntityRendererProvider.Context context, Pair<ResourceLocation, ListModel<Boat>> originalPair, BoatModel model)
+    public TFCChestBoatRenderer(EntityRendererProvider.Context context, Pair<Identifier, ListModel<Boat>> originalPair, BoatModel model)
     {
         super(context, originalPair);
         this.model = model;
@@ -90,7 +90,7 @@ public class TFCChestBoatRenderer extends TFCBoatRenderer
         super.render(boat, ageInTicks, pitch, poseStack, buffers, packedLight);
     }
 
-    protected ResourceLocation getChestTexture(TFCChestBoat chest)
+    protected Identifier getChestTexture(TFCChestBoat chest)
     {
         final ItemStack stack = chest.getChestItem();
         return stack.getItem() instanceof ChestBlockItem item ? item.getBoatTexture() : DEFAULT_TEXTURE;

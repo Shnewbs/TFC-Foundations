@@ -18,14 +18,14 @@ import dev.emi.emi.api.widget.FillingArrowWidget;
 import dev.emi.emi.api.widget.SlotWidget;
 import dev.emi.emi.api.widget.Widget;
 import dev.emi.emi.api.widget.WidgetHolder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.Recipe;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class AutoLayoutRecipe<T extends Recipe<?>> implements EmiRecipe, ComparableRecipe
 {
 
-    private final ResourceLocation id;
+    private final Identifier id;
     private final EmiRecipeCategory category;
     protected final List<EmiIngredient> inputs = new ArrayList<>();
     protected final List<EmiIngredient> catalysts = new ArrayList<>();
@@ -35,7 +35,7 @@ public abstract class AutoLayoutRecipe<T extends Recipe<?>> implements EmiRecipe
     protected int width;
     protected int height;
 
-    public AutoLayoutRecipe(EmiRecipeCategory category, ResourceLocation id, T recipe)
+    public AutoLayoutRecipe(EmiRecipeCategory category, Identifier id, T recipe)
     {
         this.id = id;
         this.category = category;
@@ -64,7 +64,7 @@ public abstract class AutoLayoutRecipe<T extends Recipe<?>> implements EmiRecipe
     }
 
     @Override
-    public @Nullable ResourceLocation getId()
+    public @Nullable Identifier getId()
     {
         return id;
     }
@@ -160,7 +160,7 @@ public abstract class AutoLayoutRecipe<T extends Recipe<?>> implements EmiRecipe
     @Override
     public int compareTo(EmiRecipe other)
     {
-        ResourceLocation otherId = other.getId();
+        Identifier otherId = other.getId();
         if (otherId != null)
         {
             return id.compareTo(other.getId());

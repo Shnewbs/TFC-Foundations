@@ -15,7 +15,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import org.jetbrains.annotations.Nullable;
@@ -120,7 +120,7 @@ public class KnappingRecipeCategory<T extends KnappingRecipe> extends BaseRecipe
         return slots.findSlotByName(INPUT_SLOT_NAME)
             .flatMap(slot -> slot.getDisplayedIngredient(JEIIntegration.ITEM_STACK))
             .map(displayed -> {
-                final ResourceLocation high = KnappingScreen.getButtonLocation(displayed.getItem(), disabled);
+                final Identifier high = KnappingScreen.getButtonLocation(displayed.getItem(), disabled);
                 return helper.drawableBuilder(high, 0, 0, 16, 16).setTextureSize(16, 16).build();
             })
             .orElse(null);

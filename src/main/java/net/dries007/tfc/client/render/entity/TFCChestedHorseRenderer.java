@@ -9,7 +9,7 @@ package net.dries007.tfc.client.render.entity;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.AbstractHorseRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.client.model.entity.HorseChestLayer;
@@ -19,14 +19,14 @@ import net.dries007.tfc.util.Helpers;
 
 public class TFCChestedHorseRenderer<T extends TFCChestedHorse> extends AbstractHorseRenderer<T, TFCChestedHorseModel<T>>
 {
-    private final ResourceLocation texture;
+    private final Identifier texture;
 
     public TFCChestedHorseRenderer(EntityRendererProvider.Context ctx, float scale, ModelLayerLocation layer, String name)
     {
         this(ctx, scale, layer, Helpers.identifierMC("textures/entity/horse/" + name + ".png"));
     }
 
-    public TFCChestedHorseRenderer(EntityRendererProvider.Context ctx, float scale, ModelLayerLocation layer, ResourceLocation texture)
+    public TFCChestedHorseRenderer(EntityRendererProvider.Context ctx, float scale, ModelLayerLocation layer, Identifier texture)
     {
         super(ctx, new TFCChestedHorseModel<>(ctx.bakeLayer(layer), false), scale);
         addLayer(new HorseChestLayer<>(this, new TFCChestedHorseModel<>(ctx.bakeLayer(RenderHelpers.layerId("horse_chest")), true)));
@@ -34,7 +34,7 @@ public class TFCChestedHorseRenderer<T extends TFCChestedHorse> extends Abstract
     }
 
     @Override
-    public ResourceLocation getTextureLocation(T horse)
+    public Identifier getTextureLocation(T horse)
     {
         return texture;
     }

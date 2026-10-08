@@ -24,7 +24,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -194,7 +194,7 @@ public abstract class CustomComponent implements ICustomComponent
                 }));
     }
 
-    protected Optional<ResourceLocation> asResourceLocation(String variable)
+    protected Optional<Identifier> asResourceLocation(String variable)
     {
         try
         {

@@ -8,7 +8,7 @@ package net.dries007.tfc.common.blocks.wood;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -50,9 +50,9 @@ public class TFCLoomBlock extends BottomSupportedDeviceBlock implements IFluidLo
     private static final VoxelShape SHAPE_SOUTH = box(1, 0, 2, 15, 16, 8);
     private static final VoxelShape SHAPE_NORTH = box(1, 0, 8, 15, 16, 14);
 
-    private final ResourceLocation textureLocation;
+    private final Identifier textureLocation;
 
-    public TFCLoomBlock(ExtendedProperties properties, ResourceLocation textureLocation)
+    public TFCLoomBlock(ExtendedProperties properties, Identifier textureLocation)
     {
         super(properties, InventoryRemoveBehavior.DROP);
         this.textureLocation = textureLocation;
@@ -138,7 +138,7 @@ public class TFCLoomBlock extends BottomSupportedDeviceBlock implements IFluidLo
         return false;
     }
 
-    public ResourceLocation getTextureLocation()
+    public Identifier getTextureLocation()
     {
         return textureLocation;
     }

@@ -12,7 +12,7 @@ import java.util.function.Function;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 
@@ -25,10 +25,10 @@ public record StackedTreeConfig(List<Layer> layers, TrunkConfig trunk, TreePlace
         RootConfig.CODEC.optionalFieldOf("root_system").forGetter(c -> c.rootSystem)
     ).apply(instance, StackedTreeConfig::new));
 
-    public record Layer(List<ResourceLocation> templates, int minCount, int maxCount)
+    public record Layer(List<Identifier> templates, int minCount, int maxCount)
     {
         public static final Codec<Layer> CODEC = RecordCodecBuilder.<Layer>create(instance -> instance.group(
-            ResourceLocation.CODEC.listOf().fieldOf("templates").forGetter(c -> c.templates),
+            Identifier.CODEC.listOf().fieldOf("templates").forGetter(c -> c.templates),
             Codec.INT.fieldOf("min_count").forGetter(c -> c.minCount),
             Codec.INT.fieldOf("max_count").forGetter(c -> c.maxCount)
         ).apply(instance, Layer::new)).comapFlatMap(c -> {

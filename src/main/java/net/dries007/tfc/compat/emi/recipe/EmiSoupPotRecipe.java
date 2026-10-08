@@ -8,7 +8,7 @@ package net.dries007.tfc.compat.emi.recipe;
 
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.widget.WidgetHolder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 
@@ -20,7 +20,7 @@ import net.dries007.tfc.compat.emi.widgets.CyclingSlotWidget;
 public class EmiSoupPotRecipe extends EmiBasePotRecipe<SoupPotRecipe>
 {
 
-    public EmiSoupPotRecipe(ResourceLocation id, SoupPotRecipe recipe)
+    public EmiSoupPotRecipe(Identifier id, SoupPotRecipe recipe)
     {
         super(id, recipe, 113, 80);
 

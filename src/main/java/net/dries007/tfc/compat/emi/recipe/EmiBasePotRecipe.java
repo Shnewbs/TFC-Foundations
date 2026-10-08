@@ -13,7 +13,7 @@ import java.util.function.BiFunction;
 import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.widget.TextWidget;
 import dev.emi.emi.api.widget.WidgetHolder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.joml.Vector2i;
 
 import net.dries007.tfc.common.recipes.PotRecipe;
@@ -35,7 +35,7 @@ public class EmiBasePotRecipe<T extends PotRecipe> extends BasicRecipe<T>
         new Vector2i(42, 24)
     };
 
-    public EmiBasePotRecipe(ResourceLocation id, T recipe, int width, int height)
+    public EmiBasePotRecipe(Identifier id, T recipe, int width, int height)
     {
         super(EmiIntegration.POT, id, width, height);
         inputs.add(EmiHelpers.toIngredient(recipe.getFluidIngredient()));

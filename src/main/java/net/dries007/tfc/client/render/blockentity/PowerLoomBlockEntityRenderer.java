@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
 import net.dries007.tfc.client.RenderHelpers;
@@ -26,8 +26,8 @@ import net.dries007.tfc.util.Helpers;
 
 public class PowerLoomBlockEntityRenderer implements BlockEntityRenderer<PowerLoomBlockEntity>
 {
-    private static final ResourceLocation STEEL = Helpers.identifier("block/metal/block/steel");
-    private static final ResourceLocation BAR = Helpers.identifier("block/devices/power_loom/bar");
+    private static final Identifier STEEL = Helpers.identifier("block/metal/block/steel");
+    private static final Identifier BAR = Helpers.identifier("block/devices/power_loom/bar");
     private static final float ANIM_SPEED_MULTIPLIER = 16f;
 
     @Override
@@ -61,7 +61,7 @@ public class PowerLoomBlockEntityRenderer implements BlockEntityRenderer<PowerLo
 
         // Fabric strips
         final LoomRecipe recipe = loom.getRecipe();
-        final ResourceLocation lastTex = loom.getLastTexture();
+        final Identifier lastTex = loom.getLastTexture();
         if (recipe != null || lastTex != null)
         {
             if (recipe != null)

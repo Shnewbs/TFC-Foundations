@@ -9,7 +9,7 @@ package net.dries007.tfc.client.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 import net.dries007.tfc.common.blockentities.InventoryBlockEntity;
@@ -19,7 +19,7 @@ public class BlockEntityScreen<T extends InventoryBlockEntity<?>, C extends Bloc
 {
     protected final T blockEntity;
 
-    public BlockEntityScreen(C container, Inventory playerInventory, Component name, ResourceLocation texture)
+    public BlockEntityScreen(C container, Inventory playerInventory, Component name, Identifier texture)
     {
         super(container, playerInventory, name, texture);
         this.blockEntity = container.getBlockEntity();

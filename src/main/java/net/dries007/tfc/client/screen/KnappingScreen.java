@@ -14,7 +14,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
@@ -32,24 +32,24 @@ import net.dries007.tfc.util.data.KnappingType;
 
 public class KnappingScreen extends TFCContainerScreen<KnappingContainer>
 {
-    public static final ResourceLocation BACKGROUND = Helpers.identifier("textures/gui/knapping.png");
+    public static final Identifier BACKGROUND = Helpers.identifier("textures/gui/knapping.png");
 
-    private final ResourceLocation buttonLocation;
-    @Nullable private final ResourceLocation buttonDisabledLocation;
+    private final Identifier buttonLocation;
+    @Nullable private final Identifier buttonDisabledLocation;
     private final List<ScreenParticle> particles = new ArrayList<>();
 
-    public static ResourceLocation getHighTexture(ItemStack stack)
+    public static Identifier getHighTexture(ItemStack stack)
     {
         return getButtonLocation(stack.getItem(), false);
     }
 
     @Nullable
-    public static ResourceLocation getLowTexture(KnappingType type, ItemStack stack)
+    public static Identifier getLowTexture(KnappingType type, ItemStack stack)
     {
         return type.hasOffTexture() ? getButtonLocation(stack.getItem(), true) : null;
     }
 
-    public static ResourceLocation getButtonLocation(Item item, boolean disabled)
+    public static Identifier getButtonLocation(Item item, boolean disabled)
     {
         return Helpers.identifier("textures/gui/knapping/" + BuiltInRegistries.ITEM.getKey(item).getPath() + (disabled ? "_disabled" : "") + ".png");
     }

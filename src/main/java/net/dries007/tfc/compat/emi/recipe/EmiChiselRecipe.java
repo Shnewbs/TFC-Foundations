@@ -10,7 +10,7 @@ import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 import net.dries007.tfc.common.TFCTags;
@@ -23,7 +23,7 @@ public class EmiChiselRecipe extends BasicRecipe<ChiselRecipe>
 {
     private final ChiselMode mode;
 
-    public EmiChiselRecipe(ResourceLocation id, ChiselRecipe recipe)
+    public EmiChiselRecipe(Identifier id, ChiselRecipe recipe)
     {
         super(EmiIntegration.CHISEL, id, 118, 26);
         mode = recipe.getMode();
@@ -49,8 +49,8 @@ public class EmiChiselRecipe extends BasicRecipe<ChiselRecipe>
     {
         if (other instanceof EmiChiselRecipe chisel)
         {
-            ResourceLocation modeA = ChiselMode.REGISTRY.getKey(mode);
-            ResourceLocation modeB = ChiselMode.REGISTRY.getKey(chisel.mode);
+            Identifier modeA = ChiselMode.REGISTRY.getKey(mode);
+            Identifier modeB = ChiselMode.REGISTRY.getKey(chisel.mode);
             return modeA.compareTo(modeB);
         }
         return super.compareTo(other);

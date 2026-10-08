@@ -8,7 +8,7 @@ package net.dries007.tfc.mixin;
 
 import java.util.Map;
 import com.google.gson.JsonElement;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -23,7 +23,7 @@ import net.dries007.tfc.util.SelfTests;
 public abstract class RecipeManagerMixin
 {
     @Inject(method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V", at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V", remap = false), require = 0)
-    private void setStateToErrored(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci)
+    private void setStateToErrored(Map<Identifier, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci)
     {
         SelfTests.reportExternalError();
     }

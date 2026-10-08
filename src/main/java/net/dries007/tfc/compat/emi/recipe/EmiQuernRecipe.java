@@ -7,7 +7,7 @@
 package net.dries007.tfc.compat.emi.recipe;
 
 import dev.emi.emi.api.stack.EmiIngredient;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import net.dries007.tfc.common.recipes.QuernRecipe;
 import net.dries007.tfc.compat.emi.EmiHelpers;
@@ -15,7 +15,7 @@ import net.dries007.tfc.compat.emi.EmiIntegration;
 
 public class EmiQuernRecipe extends AutoLayoutRecipe<QuernRecipe>
 {
-    public EmiQuernRecipe(ResourceLocation id, QuernRecipe recipe)
+    public EmiQuernRecipe(Identifier id, QuernRecipe recipe)
     {
         super(EmiIntegration.QUERN, id, recipe);
         init(recipe);

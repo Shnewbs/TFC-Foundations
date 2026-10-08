@@ -11,7 +11,7 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.TextWidget;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
@@ -22,7 +22,7 @@ import net.dries007.tfc.compat.emi.EmiIntegration;
 
 public class EmiInstantFluidBarrelRecipe extends AutoLayoutRecipe<InstantFluidBarrelRecipe>
 {
-    public EmiInstantFluidBarrelRecipe(ResourceLocation id, InstantFluidBarrelRecipe recipe)
+    public EmiInstantFluidBarrelRecipe(Identifier id, InstantFluidBarrelRecipe recipe)
     {
         super(EmiIntegration.BARREL, id, recipe);
         init(recipe);

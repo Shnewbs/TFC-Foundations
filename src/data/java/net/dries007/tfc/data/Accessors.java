@@ -14,7 +14,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -91,25 +91,25 @@ public interface Accessors
 
     default <T> TagKey<T> commonTagOf(ResourceKey<Registry<T>> key, String name)
     {
-        return TagKey.create(key, ResourceLocation.fromNamespaceAndPath("c", name.toLowerCase(Locale.ROOT)));
+        return TagKey.create(key, Identifier.fromNamespaceAndPath("c", name.toLowerCase(Locale.ROOT)));
     }
 
     default <T> TagKey<T> tfcTagOf(ResourceKey<Registry<T>> key, String name)
     {
-        return TagKey.create(key, ResourceLocation.fromNamespaceAndPath("tfc", name.toLowerCase(Locale.ROOT)));
+        return TagKey.create(key, Identifier.fromNamespaceAndPath("tfc", name.toLowerCase(Locale.ROOT)));
     }
 
     default Item dyeOf(DyeColor color)
     {
-        return itemOf(ResourceLocation.withDefaultNamespace(color.getSerializedName() + "_dye"));
+        return itemOf(Identifier.withDefaultNamespace(color.getSerializedName() + "_dye"));
     }
 
     default Item dyedOf(DyeColor color, String suffix)
     {
-        return itemOf(ResourceLocation.withDefaultNamespace(color.getSerializedName() + "_" + suffix));
+        return itemOf(Identifier.withDefaultNamespace(color.getSerializedName() + "_" + suffix));
     }
 
-    default Item itemOf(ResourceLocation name)
+    default Item itemOf(Identifier name)
     {
         assert BuiltInRegistries.ITEM.containsKey(name) : "No item '" + name + "'";
         return BuiltInRegistries.ITEM.get(name);

@@ -19,7 +19,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
@@ -40,8 +40,8 @@ import net.dries007.tfc.util.Helpers;
 public class CrankshaftBlockEntityRenderer implements BlockEntityRenderer<CrankshaftBlockEntity>
 {
     public static final ModelResourceLocation WHEEL_MODEL = RenderHelpers.modelId("block/crankshaft_wheel");
-    public static final ResourceLocation ROD_TEXTURE = Helpers.identifier("block/metal/block/steel");
-    public static final ResourceLocation PUMP_TEXTURE = Helpers.identifier("block/metal/smooth/brass");
+    public static final Identifier ROD_TEXTURE = Helpers.identifier("block/metal/block/steel");
+    public static final Identifier PUMP_TEXTURE = Helpers.identifier("block/metal/smooth/brass");
 
     @Override
     public void render(CrankshaftBlockEntity crankshaft, float partialTick, PoseStack stack, MultiBufferSource bufferSource, int packedLight, int packedOverlay)
@@ -95,7 +95,7 @@ public class CrankshaftBlockEntityRenderer implements BlockEntityRenderer<Cranks
             final BlockState adjacentAxleState = level.getBlockState(crankshaft.getBlockPos().relative(face.getCounterClockWise()));
             if (adjacentAxleState.getBlock() instanceof ConnectedAxleBlock axleBlock && crankshaft.getRotationNode().isConnectedToNetwork())
             {
-                final ResourceLocation axleTexture = axleBlock.getAxleTextureLocation();
+                final Identifier axleTexture = axleBlock.getAxleTextureLocation();
                 final TextureAtlasSprite axleSprite = RenderHelpers.blockTexture(axleTexture);
 
                 RenderHelpers.renderTexturedCuboid(stack, buffer, axleSprite, packedLight, packedOverlay, 0, 6 / 16f, 6 / 16f, 6 / 16f, 10 / 16f, 10 / 16f, false);

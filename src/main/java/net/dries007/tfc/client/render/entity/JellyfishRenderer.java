@@ -16,11 +16,11 @@ import net.dries007.tfc.common.entities.aquatic.Jellyfish;
 import net.dries007.tfc.common.entities.aquatic.Jellyfish.Type;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class JellyfishRenderer extends SimpleMobRenderer<Jellyfish, JellyfishModel>
 {
-    private static final Map<Type, ResourceLocation> LOCATION_BY_TYPE = Util.make(Maps.newEnumMap(Type.class), (map) -> {
+    private static final Map<Type, Identifier> LOCATION_BY_TYPE = Util.make(Maps.newEnumMap(Type.class), (map) -> {
         map.put(Type.BLUE, RenderHelpers.animalTexture("jellyfish_blue"));
         map.put(Type.RED, RenderHelpers.animalTexture("jellyfish_red"));
         map.put(Type.YELLOW, RenderHelpers.animalTexture("jellyfish_yellow"));
@@ -34,7 +34,7 @@ public class JellyfishRenderer extends SimpleMobRenderer<Jellyfish, JellyfishMod
     }
 
     @Override
-    public ResourceLocation getTextureLocation(Jellyfish jellyfish)
+    public Identifier getTextureLocation(Jellyfish jellyfish)
     {
         return LOCATION_BY_TYPE.get(jellyfish.getVariant());
     }

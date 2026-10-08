@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -28,8 +28,8 @@ import net.dries007.tfc.util.collections.IndirectHashCollection;
  */
 public record MetalItem(
     String name,
-    ResourceLocation textureId,
-    ResourceLocation softTextureId
+    Identifier textureId,
+    Identifier softTextureId
 )
 {
     private static final MetalPartCache CACHE = IndirectHashCollection.create(new MetalPartCache(new IdentityHashMap<>()));
@@ -77,7 +77,7 @@ public record MetalItem(
             values.clear();
 
             BuiltInRegistries.ITEM.getTags().forEach(pair -> {
-                final ResourceLocation id = pair.getFirst().location();
+                final Identifier id = pair.getFirst().location();
                 if (id.getNamespace().equals("c"))
                 {
                     final String[] path = id.getPath().split("/");

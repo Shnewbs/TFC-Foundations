@@ -13,7 +13,7 @@ import dev.emi.emi.api.widget.SlotWidget;
 import dev.emi.emi.api.widget.TextWidget;
 import dev.emi.emi.api.widget.Widget;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 
 import net.dries007.tfc.common.recipes.AlloyRecipe;
@@ -26,7 +26,7 @@ public class EmiAlloyingRecipe extends AutoLayoutRecipe<AlloyRecipe>
     private static final int COLUMN_SPACING = 70;
     private static final int Y_SPACING = 2;
 
-    public EmiAlloyingRecipe(ResourceLocation id, AlloyRecipe recipe)
+    public EmiAlloyingRecipe(Identifier id, AlloyRecipe recipe)
     {
         super(EmiIntegration.ALLOYING, id, recipe);
         init(recipe);

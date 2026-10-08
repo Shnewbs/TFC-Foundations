@@ -8,7 +8,7 @@ package net.dries007.tfc.client.render.entity;
 
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.animal.camel.Camel;
 
 import net.dries007.tfc.client.RenderHelpers;
@@ -18,10 +18,10 @@ import net.dries007.tfc.common.entities.livestock.camel.AbstractCamel;
 
 public class BactrianCamelRenderer<T extends Camel, M extends HierarchicalAnimatedModel<T>> extends MobRenderer<T, M>
 {
-    private final ResourceLocation young;
-    private final ResourceLocation old;
-    private final ResourceLocation saddled;
-    private final ResourceLocation old_saddled;
+    private final Identifier young;
+    private final Identifier old;
+    private final Identifier saddled;
+    private final Identifier old_saddled;
 
     public BactrianCamelRenderer(EntityRendererProvider.Context ctx, M model, float shadow)
     {
@@ -33,7 +33,7 @@ public class BactrianCamelRenderer<T extends Camel, M extends HierarchicalAnimat
     }
 
     @Override
-    public ResourceLocation getTextureLocation(T entity)
+    public Identifier getTextureLocation(T entity)
     {
         if (entity instanceof AbstractCamel camel) {
             if (camel.isSaddled())

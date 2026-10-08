@@ -6,9 +6,9 @@ Updated: 2026-10-08. Read this file first when resuming work.
 
 - Destination: `Shnewbs/TFC-Foundations`, default branch `26.x`.
 - Publication policy (2026-10-08): the user explicitly authorized public source pushes to this existing fork. This supersedes the earlier private-repository requirement. Continue using `Shnewbs/TFC-Foundations`; no detachment/new repository is needed.
-- Source baseline: `e9d9a88a187d5a33064e2d86b2803f54238cadd6`, identical to upstream `1.21.x`. The branch name does not indicate a completed port.
+- Source baseline: `e9d9a88a187d5a33064e2d86b2803f54238cadd6`, originally identical to upstream `1.21.x`. The branch name does not indicate a completed port.
 - First candidate version: **0.0.0**, expected filename `TFC-Foundations-26.3-0.0.0.jar`.
-- Build configuration now targets Minecraft 26.3, NeoForge 26.3.0.58-beta, Java 25, Gradle 9.2.1 and ModDevGradle 2.0.148. Gameplay source is still the upstream 1.21.1 baseline and has NOT passed 26.3 compilation.
+- Build configuration now targets Minecraft 26.3, NeoForge 26.3.0.58-beta, Java 25, Gradle 9.2.1 and ModDevGradle 2.0.148. Gameplay port is underway: the first source migration replaces ResourceLocation with Identifier across 179 Java files. Full 26.3 compilation has NOT passed.
 - Requested target: Minecraft 26.3, then released 26.4 with a usable NeoForge toolchain. Official metadata currently lists release 26.3, snapshot 26.4-snapshot-3 and NeoForge 26.3.0.58-beta. These are observed versions, not a tested dependency set.
 - No playable Foundations build, 26.3 compilation, benchmark result, KubeJS/CraftTweaker adapter or Conquest integration exists yet.
 - Daily upstream/version monitoring was enabled on 2026-10-08. It reports meaningful changes, not automatic merges of untested fixes.
@@ -49,3 +49,10 @@ Updated: 2026-10-08. Read this file first when resuming work.
 - [Work log](docs/foundations/WORK_LOG.md)
 
 - [26.3 dependency checkpoint](docs/foundations/DEPENDENCIES.md)
+
+## First source migration checkpoint
+
+- CI run [37860739449](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37860739449) reached `compileJava` and reported the first 100 errors. This is the compiler display limit, not the total number of migration errors. Missing types include ResourceLocation, moved entity classes, GuiGraphics, reload events and interaction APIs.
+- Replaced the exact ResourceLocation token with Identifier in 179 main/data/test Java files, including codecs, packets, registries, assets and integration adapters. All string IDs and gameplay logic remain unchanged by this migration.
+- Verified the replacement against Mojang's SHA-1-verified 26.3 client JAR, using `javap` and an isolated executable probe: explicit/default namespaces, serialization round trip and invalid-ID rejection all passed. Local main/data/test license checks pass. This is not a full TFC compile or runtime test.
+- Next: inspect the post-migration CI diagnostics, migrate entity class locations and event APIs, then adapt rendering and unavailable integrations. Packaging remains blocked.

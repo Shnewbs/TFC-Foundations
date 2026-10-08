@@ -9,14 +9,14 @@ package net.dries007.tfc.client.render.entity;
 import net.minecraft.client.model.SquidModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import net.dries007.tfc.common.entities.aquatic.Octopoteuthis;
 import net.dries007.tfc.util.Helpers;
 
 public class OctopoteuthisRenderer extends TFCSquidRenderer<Octopoteuthis>
 {
-    private static final ResourceLocation LOCATION = Helpers.identifierMC("textures/entity/squid/glow_squid.png");
+    private static final Identifier LOCATION = Helpers.identifierMC("textures/entity/squid/glow_squid.png");
 
     public OctopoteuthisRenderer(EntityRendererProvider.Context ctx, SquidModel<Octopoteuthis> model)
     {
@@ -24,7 +24,7 @@ public class OctopoteuthisRenderer extends TFCSquidRenderer<Octopoteuthis>
     }
 
     @Override
-    public ResourceLocation getTextureLocation(Octopoteuthis squid)
+    public Identifier getTextureLocation(Octopoteuthis squid)
     {
         return LOCATION;
     }

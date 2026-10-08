@@ -19,7 +19,7 @@ import mezz.jei.api.recipe.category.AbstractRecipeCategory;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
@@ -38,7 +38,7 @@ import net.dries007.tfc.util.Helpers;
 
 public abstract class BaseRecipeCategory<T extends Recipe<?>> extends AbstractRecipeCategory<RecipeHolder<T>>
 {
-    public static final ResourceLocation ICONS = Helpers.identifier("textures/gui/jei/icons.png");
+    public static final Identifier ICONS = Helpers.identifier("textures/gui/jei/icons.png");
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<T> recipe, IFocusGroup focuses)

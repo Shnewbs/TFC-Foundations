@@ -8,7 +8,7 @@ package net.dries007.tfc.client.render.entity;
 
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.client.RenderHelpers;
@@ -17,11 +17,11 @@ import net.dries007.tfc.common.entities.livestock.TFCAnimal;
 public class GenderedRenderer<T extends TFCAnimal, M extends EntityModel<T>> extends AnimalRenderer<T, M>
 {
     @Nullable
-    private final ResourceLocation maleYoung;
+    private final Identifier maleYoung;
     @Nullable
-    private final ResourceLocation maleOld;
+    private final Identifier maleOld;
     @Nullable
-    private final ResourceLocation baby;
+    private final Identifier baby;
 
     public GenderedRenderer(EntityRendererProvider.Context ctx, M model, String name)
     {
@@ -42,7 +42,7 @@ public class GenderedRenderer<T extends TFCAnimal, M extends EntityModel<T>> ext
     }
 
     @Override
-    public ResourceLocation getTextureLocation(T entity)
+    public Identifier getTextureLocation(T entity)
     {
         if (baby != null && entity.isBaby()) return baby;
         return maleYoung != null && maleOld != null && entity.isMale() ? RenderHelpers.getTextureForAge(entity, maleYoung, maleOld) : super.getTextureLocation(entity);

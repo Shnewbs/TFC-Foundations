@@ -14,7 +14,7 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -24,15 +24,15 @@ import net.dries007.tfc.network.ScreenButtonPacket;
 public class KnappingButton extends Button
 {
     public int id;
-    private final ResourceLocation texture;
+    private final Identifier texture;
     private final Holder<SoundEvent> sound;
 
-    public KnappingButton(int id, int x, int y, int width, int height, ResourceLocation texture, Holder<SoundEvent> sound)
+    public KnappingButton(int id, int x, int y, int width, int height, Identifier texture, Holder<SoundEvent> sound)
     {
         this(id, x, y, width, height, texture, sound, button -> {});
     }
 
-    public KnappingButton(int id, int x, int y, int width, int height, ResourceLocation texture, Holder<SoundEvent> sound, OnPress onPress)
+    public KnappingButton(int id, int x, int y, int width, int height, Identifier texture, Holder<SoundEvent> sound, OnPress onPress)
     {
         super(x, y, width, height, Component.empty(), onPress, RenderHelpers.NARRATION);
         this.id = id;
@@ -72,7 +72,7 @@ public class KnappingButton extends Button
         }
     }
 
-    public ResourceLocation getTexture()
+    public Identifier getTexture()
     {
         return texture;
     }

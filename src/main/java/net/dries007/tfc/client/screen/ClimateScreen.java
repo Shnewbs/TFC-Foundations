@@ -12,7 +12,7 @@ import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -31,7 +31,7 @@ import static net.dries007.tfc.client.screen.TFCContainerScreen.TextAlignment.*;
 
 public class ClimateScreen extends TFCContainerScreen<Container>
 {
-    public static final ResourceLocation BACKGROUND = Helpers.identifier("textures/gui/player_climate.png");
+    public static final Identifier BACKGROUND = Helpers.identifier("textures/gui/player_climate.png");
 
     public ClimateScreen(Container container, Inventory playerInv, Component name)
     {

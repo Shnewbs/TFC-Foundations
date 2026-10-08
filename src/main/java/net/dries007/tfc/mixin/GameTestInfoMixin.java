@@ -8,7 +8,7 @@ package net.dries007.tfc.mixin;
 
 import java.util.Locale;
 import net.minecraft.gametest.framework.GameTestInfo;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -18,7 +18,7 @@ public abstract class GameTestInfoMixin
 {
     /**
      * When storing a game test name into a structure block, first convert the name to lowercase. It is required for it to parse correctly
-     * as a {@link ResourceLocation}, and it is compared in a case-insensitive manner later. This is the best solution that doesn't require
+     * as a {@link Identifier}, and it is compared in a case-insensitive manner later. This is the best solution that doesn't require
      * removing nice display names, and allows {@code /test runthis} to function correctly.
      */
     @ModifyArg(method = "prepareTestStructure", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/StructureBlockEntity;setMetaData(Ljava/lang/String;)V"))

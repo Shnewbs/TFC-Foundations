@@ -7,7 +7,7 @@
 package net.dries007.tfc.compat.jade;
 
 import java.util.List;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -82,7 +82,7 @@ public class JadeIntegration implements IWailaPlugin
         EntityTooltips.register((name, tooltip, entity) -> register(registry, name, tooltip, entity));
     }
 
-    private void register(IWailaClientRegistration registry, ResourceLocation name, BlockEntityTooltip blockEntityTooltip, Class<? extends Block> block)
+    private void register(IWailaClientRegistration registry, Identifier name, BlockEntityTooltip blockEntityTooltip, Class<? extends Block> block)
     {
         registry.registerBlockComponent(new IBlockComponentProvider() {
             @Override
@@ -92,14 +92,14 @@ public class JadeIntegration implements IWailaPlugin
             }
 
             @Override
-            public ResourceLocation getUid()
+            public Identifier getUid()
             {
                 return name;
             }
         }, block);
     }
 
-    private void register(IWailaClientRegistration registry, ResourceLocation name, EntityTooltip entityTooltip, Class<? extends Entity> entityClass)
+    private void register(IWailaClientRegistration registry, Identifier name, EntityTooltip entityTooltip, Class<? extends Entity> entityClass)
     {
         registry.registerEntityComponent(new IEntityComponentProvider() {
             @Override
@@ -109,7 +109,7 @@ public class JadeIntegration implements IWailaPlugin
             }
 
             @Override
-            public ResourceLocation getUid()
+            public Identifier getUid()
             {
                 return name;
             }

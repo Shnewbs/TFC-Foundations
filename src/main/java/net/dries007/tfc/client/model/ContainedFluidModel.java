@@ -22,7 +22,7 @@ import net.minecraft.client.resources.model.BlockModelRotation;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
@@ -93,7 +93,7 @@ public record ContainedFluidModel(Fluid fluid) implements IUnbakedGeometry<Conta
         var itemContext = StandaloneGeometryBakingContext.builder(context)
             .withGui3d(false)
             .withUseBlockLight(false)
-            .build(ResourceLocation.fromNamespaceAndPath("neoforge", "dynamic_fluid_container"));
+            .build(Identifier.fromNamespaceAndPath("neoforge", "dynamic_fluid_container"));
         var modelBuilder = CompositeModel.Baked.builder(itemContext, particleSprite, new ContainedFluidOverrideHandler(overrides, baker, itemContext, this), context.getTransforms());
         var normalRenderTypes = DynamicFluidContainerModel.getLayerRenderTypes(false);
 

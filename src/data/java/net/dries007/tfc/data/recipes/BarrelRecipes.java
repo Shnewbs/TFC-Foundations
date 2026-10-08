@@ -8,7 +8,7 @@ package net.dries007.tfc.data.recipes;
 
 import java.util.function.Function;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -351,7 +351,7 @@ public interface BarrelRecipes extends Recipes
 
     private void dye(ItemLike input, String baseName)
     {
-        dye(input, color -> itemOf(ResourceLocation.withDefaultNamespace(color.getSerializedName() + "_" + baseName)));
+        dye(input, color -> itemOf(Identifier.withDefaultNamespace(color.getSerializedName() + "_" + baseName)));
     }
 
     private void dye(ItemLike input, Function<DyeColor, ItemLike> output)

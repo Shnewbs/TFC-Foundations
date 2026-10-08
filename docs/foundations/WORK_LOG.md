@@ -46,3 +46,7 @@ Selected published NeoForge Licenser 0.7.5 and ran `gradle checkLicenses --no-da
 ### CI dependency resolution follow-up — 2026-10-08
 
 Run [37860254645](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37860254645) passed the original Licenser configuration error, then failed resolving JEI transitive MezzConfig 0.6.6 artifacts. Both 26.3 POMs were verified present on Maven BlameJared; the exclusive repository filter admitted only `mezz.jei`. Added `net.mezzdev.config` to that filter. Full compilation and runtime validation remain pending; this is a dependency resolution correction, not a completed gameplay port.
+
+### First Java migration — 2026-10-08
+
+CI now runs explicit compilation targets with `--continue`, retaining the failing packaging gate. Run 37860739449 reached the compiler and displayed 100 errors. Migrated ResourceLocation to the verified 26.3 Identifier API across 179 Java files. A token-only diff check confirmed no other Java edits; no data/resource IDs changed. A standalone Java 25 probe against the official Minecraft 26.3 client JAR passed namespace preservation, round trip, and invalid identifier checks. All local license checks pass. Full compilation, tests, client/server startup and gameplay regression checks remain incomplete.

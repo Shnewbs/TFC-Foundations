@@ -10,7 +10,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -28,16 +28,16 @@ public class ScrapingRecipe extends ItemRecipe
     public static final MapCodec<ScrapingRecipe> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
         Ingredient.CODEC.fieldOf("ingredient").forGetter(c -> c.ingredient),
         ItemStackProvider.CODEC.fieldOf("result").forGetter(c -> c.result),
-        ResourceLocation.CODEC.fieldOf("input_texture").forGetter(c -> c.inputTexture),
-        ResourceLocation.CODEC.fieldOf("output_texture").forGetter(c -> c.outputTexture),
+        Identifier.CODEC.fieldOf("input_texture").forGetter(c -> c.inputTexture),
+        Identifier.CODEC.fieldOf("output_texture").forGetter(c -> c.outputTexture),
         ItemStackProvider.CODEC.optionalFieldOf("result_item", ItemStackProvider.empty()).forGetter(c -> c.extraDrop)
     ).apply(i, ScrapingRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ScrapingRecipe> STREAM_CODEC = StreamCodec.composite(
         Ingredient.CONTENTS_STREAM_CODEC, c -> c.ingredient,
         ItemStackProvider.STREAM_CODEC, c -> c.result,
-        ResourceLocation.STREAM_CODEC, c -> c.inputTexture,
-        ResourceLocation.STREAM_CODEC, c -> c.outputTexture,
+        Identifier.STREAM_CODEC, c -> c.inputTexture,
+        Identifier.STREAM_CODEC, c -> c.outputTexture,
         ItemStackProvider.STREAM_CODEC, c -> c.extraDrop,
         ScrapingRecipe::new
     );
@@ -48,11 +48,11 @@ public class ScrapingRecipe extends ItemRecipe
         return RecipeHelpers.getRecipe(CACHE, stack, stack.getItem());
     }
 
-    private final ResourceLocation inputTexture;
-    private final ResourceLocation outputTexture;
+    private final Identifier inputTexture;
+    private final Identifier outputTexture;
     private final ItemStackProvider extraDrop;
 
-    public ScrapingRecipe(Ingredient ingredient, ItemStackProvider result, ResourceLocation inputTexture, ResourceLocation outputTexture, ItemStackProvider extraDrop)
+    public ScrapingRecipe(Ingredient ingredient, ItemStackProvider result, Identifier inputTexture, Identifier outputTexture, ItemStackProvider extraDrop)
     {
         super(ingredient, result);
 
@@ -61,12 +61,12 @@ public class ScrapingRecipe extends ItemRecipe
         this.extraDrop = extraDrop;
     }
 
-    public ResourceLocation getInputTexture()
+    public Identifier getInputTexture()
     {
         return inputTexture;
     }
 
-    public ResourceLocation getOutputTexture()
+    public Identifier getOutputTexture()
     {
         return outputTexture;
     }

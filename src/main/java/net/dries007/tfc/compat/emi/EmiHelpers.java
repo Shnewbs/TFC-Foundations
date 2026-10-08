@@ -18,7 +18,7 @@ import dev.emi.emi.api.widget.SlotWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
@@ -162,7 +162,7 @@ public class EmiHelpers
     /**
      * Creates a "synthetic" ID for EMI, used for recipes that do not map to an actual registered recipe.
      */
-    static ResourceLocation syntheticId(String id)
+    static Identifier syntheticId(String id)
     {
         return Helpers.identifier("/" + id);
     }

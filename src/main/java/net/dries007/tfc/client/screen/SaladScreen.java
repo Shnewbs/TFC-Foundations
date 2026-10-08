@@ -7,7 +7,7 @@
 package net.dries007.tfc.client.screen;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 import net.dries007.tfc.common.container.SaladContainer;
@@ -15,7 +15,7 @@ import net.dries007.tfc.util.Helpers;
 
 public class SaladScreen extends TFCContainerScreen<SaladContainer>
 {
-    private static final ResourceLocation TEXTURE = Helpers.identifier("textures/gui/salad.png");
+    private static final Identifier TEXTURE = Helpers.identifier("textures/gui/salad.png");
 
     public SaladScreen(SaladContainer container, Inventory playerInventory, Component name)
     {

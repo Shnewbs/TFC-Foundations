@@ -12,7 +12,7 @@ import dev.emi.emi.api.widget.Bounds;
 import dev.emi.emi.api.widget.Widget;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.common.Tags;
 
 import net.dries007.tfc.client.screen.SewingTableScreen;
@@ -28,7 +28,7 @@ public class EmiSewingRecipe extends AutoLayoutRecipe<SewingRecipe>
 {
     private final SewingRecipe recipe;
 
-    public EmiSewingRecipe(ResourceLocation id, SewingRecipe recipe)
+    public EmiSewingRecipe(Identifier id, SewingRecipe recipe)
     {
         super(EmiIntegration.SEWING, id, recipe);
         this.recipe = recipe;

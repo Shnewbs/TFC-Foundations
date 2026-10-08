@@ -23,7 +23,7 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.armortrim.ArmorTrim;
@@ -50,7 +50,7 @@ public record TrimmedItemModel(@Nullable ArmorTrim trim) implements IUnbakedGeom
     {
         final TextureAtlasSprite baseSprite = spriteGetter.apply(context.getMaterial("armor"));
         final TextureAtlasSprite overlaySprite = context.hasMaterial("overlay") ? spriteGetter.apply(context.getMaterial("overlay")) : null;
-        final ResourceLocation trimLocation = context.getMaterial("trim").texture();
+        final Identifier trimLocation = context.getMaterial("trim").texture();
         final String color = trim != null ? trim.material().value().assetName() : null;
         final TextureAtlasSprite trimSprite = trim != null ? spriteGetter.apply(new Material(RenderHelpers.BLOCKS_ATLAS, trimLocation.withSuffix("_" + color))) : null;
 

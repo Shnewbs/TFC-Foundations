@@ -12,7 +12,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -35,29 +35,29 @@ public class JamPotRecipe extends PotRecipe
         PotRecipe.CODEC.forGetter(c -> c),
         ItemStack.CODEC.fieldOf("unsealed_result").forGetter(c -> c.jarredStack),
         ItemStack.CODEC.fieldOf("sealed_result").forGetter(c -> c.jarredStackWithLid),
-        ResourceLocation.CODEC.fieldOf("texture").forGetter(c -> c.texture)
+        Identifier.CODEC.fieldOf("texture").forGetter(c -> c.texture)
     ).apply(i, JamPotRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, JamPotRecipe> STREAM_CODEC = StreamCodec.composite(
         PotRecipe.STREAM_CODEC, c -> c,
         ItemStack.STREAM_CODEC, c -> c.jarredStack,
         ItemStack.STREAM_CODEC, c -> c.jarredStackWithLid,
-        ResourceLocation.STREAM_CODEC, c -> c.texture,
+        Identifier.STREAM_CODEC, c -> c.texture,
         JamPotRecipe::new
     );
 
     public static final PotOutput.OutputType OUTPUT_TYPE = (provider, nbt) -> {
         ItemStack stack = ItemStack.parseOptional(provider, nbt.getCompound("unsealed_result"));
         ItemStack stack2 = ItemStack.parseOptional(provider, nbt.getCompound("sealed_result"));
-        ResourceLocation texture = Helpers.resourceLocation(nbt.getString("texture"));
+        Identifier texture = Helpers.resourceLocation(nbt.getString("texture"));
         return new JamPotRecipe.JamOutput(stack, stack2, texture);
     };
 
     private final ItemStack jarredStack;
     private final ItemStack jarredStackWithLid;
-    private final ResourceLocation texture;
+    private final Identifier texture;
 
-    public JamPotRecipe(PotRecipe base, ItemStack jarredStack, ItemStack jarredStackWithLid, ResourceLocation texture)
+    public JamPotRecipe(PotRecipe base, ItemStack jarredStack, ItemStack jarredStackWithLid, Identifier texture)
     {
         super(base);
         this.jarredStack = jarredStack;
@@ -71,7 +71,7 @@ public class JamPotRecipe extends PotRecipe
         return jarredStackWithLid;
     }
 
-    public ResourceLocation getTexture()
+    public Identifier getTexture()
     {
         return texture;
     }
@@ -89,7 +89,7 @@ public class JamPotRecipe extends PotRecipe
         return TFCRecipeSerializers.POT_JAM.get();
     }
 
-    public record JamOutput(ItemStack unsealedStack, ItemStack sealedStack, ResourceLocation texture) implements PotOutput
+    public record JamOutput(ItemStack unsealedStack, ItemStack sealedStack, Identifier texture) implements PotOutput
     {
         @Override
         public boolean isEmpty()
@@ -120,7 +120,7 @@ public class JamPotRecipe extends PotRecipe
         }
 
         @Override
-        public ResourceLocation getRenderTexture()
+        public Identifier getRenderTexture()
         {
             return texture;
         }

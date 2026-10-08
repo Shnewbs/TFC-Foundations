@@ -14,7 +14,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -33,7 +33,7 @@ import net.dries007.tfc.util.tooltip.Tooltips;
 
 public class CrucibleScreen extends BlockEntityScreen<CrucibleBlockEntity, CrucibleContainer>
 {
-    private static final ResourceLocation BACKGROUND = Helpers.identifier("textures/gui/crucible.png");
+    private static final Identifier BACKGROUND = Helpers.identifier("textures/gui/crucible.png");
     private static final int MAX_ELEMENTS = 3;
 
     private int scrollPos;

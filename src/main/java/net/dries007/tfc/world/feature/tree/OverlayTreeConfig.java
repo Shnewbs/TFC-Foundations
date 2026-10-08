@@ -9,14 +9,14 @@ package net.dries007.tfc.world.feature.tree;
 import java.util.Optional;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 
-public record OverlayTreeConfig(ResourceLocation base, ResourceLocation overlay, Optional<TrunkConfig> trunk, float overlayIntegrity, TreePlacementConfig placement, Optional<RootConfig> rootSystem) implements FeatureConfiguration
+public record OverlayTreeConfig(Identifier base, Identifier overlay, Optional<TrunkConfig> trunk, float overlayIntegrity, TreePlacementConfig placement, Optional<RootConfig> rootSystem) implements FeatureConfiguration
 {
     public static final Codec<OverlayTreeConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-        ResourceLocation.CODEC.fieldOf("base").forGetter(c -> c.base),
-        ResourceLocation.CODEC.fieldOf("overlay").forGetter(c -> c.overlay),
+        Identifier.CODEC.fieldOf("base").forGetter(c -> c.base),
+        Identifier.CODEC.fieldOf("overlay").forGetter(c -> c.overlay),
         TrunkConfig.CODEC.optionalFieldOf("trunk").forGetter(c -> c.trunk),
         Codec.floatRange(0, 1).optionalFieldOf("overlay_integrity", 0.5f).forGetter(c -> c.overlayIntegrity),
         TreePlacementConfig.CODEC.fieldOf("placement").forGetter(c -> c.placement),

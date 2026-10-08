@@ -11,7 +11,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -82,7 +82,7 @@ public class LoomBlockEntity extends TickableInventoryBlockEntity<ItemStackHandl
     }
 
     @Nullable protected LoomRecipe recipe = null;
-    @Nullable private ResourceLocation lastTexture;
+    @Nullable private Identifier lastTexture;
 
     protected int progress = 0; // an integer that counts up to the number of steps
     protected long lastPushed = 0L;
@@ -273,7 +273,7 @@ public class LoomBlockEntity extends TickableInventoryBlockEntity<ItemStackHandl
     }
 
     @Nullable
-    public ResourceLocation getLastTexture()
+    public Identifier getLastTexture()
     {
         return lastTexture;
     }

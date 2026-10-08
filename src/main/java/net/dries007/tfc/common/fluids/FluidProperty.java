@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 import com.google.common.base.Suppliers;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
@@ -35,7 +35,7 @@ public class FluidProperty extends Property<FluidProperty.FluidKey>
     {
         return new FluidProperty(name, fluids.map(obj -> switch (obj)
         {
-            case ResourceLocation id -> id; // Direct references to fluid IDs are allowed
+            case Identifier id -> id; // Direct references to fluid IDs are allowed
             case Fluid fluid -> BuiltInRegistries.FLUID.getKey(fluid);
             case IdHolder<?> reg -> reg.getId(); // Registry objects are allowed, we assume they're fluids
             case FluidHolder<?> pair -> pair.source().getId(); // Fluid pairs are allowed (we know how to obtain the ID from it without loading the fluid)
@@ -48,7 +48,7 @@ public class FluidProperty extends Property<FluidProperty.FluidKey>
     private final List<FluidKey> keysByIndex;
     private final Supplier<Set<Fluid>> fluids;
 
-    protected FluidProperty(String name, Stream<ResourceLocation> fluids)
+    protected FluidProperty(String name, Stream<Identifier> fluids)
     {
         super(name, FluidKey.class);
 
@@ -125,10 +125,10 @@ public class FluidProperty extends Property<FluidProperty.FluidKey>
 
     public static class FluidKey implements Comparable<FluidKey>
     {
-        private final ResourceLocation name;
+        private final Identifier name;
         private final DeferredHolder<Fluid, ? extends Fluid> fluid;
 
-        private FluidKey(ResourceLocation name)
+        private FluidKey(Identifier name)
         {
             this.name = name;
             this.fluid = DeferredHolder.create(Registries.FLUID, name);

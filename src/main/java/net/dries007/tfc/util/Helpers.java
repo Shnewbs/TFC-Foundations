@@ -40,7 +40,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.WorldGenRegion;
@@ -147,36 +147,36 @@ public final class Helpers
     @Nullable private static RecipeManager CACHED_RECIPE_MANAGER = null;
 
     /**
-     * @return A {@link ResourceLocation} with the {@code tfc} namespace.
+     * @return A {@link Identifier} with the {@code tfc} namespace.
      */
-    public static ResourceLocation identifier(String name)
+    public static Identifier identifier(String name)
     {
         return resourceLocation(MOD_ID, name);
     }
 
     /**
-     * @return A {@link ResourceLocation} with the {@code minecraft} namespace.
+     * @return A {@link Identifier} with the {@code minecraft} namespace.
      */
-    public static ResourceLocation identifierMC(String name)
+    public static Identifier identifierMC(String name)
     {
         return resourceLocation("minecraft", name);
     }
 
     /**
-     * @return A {@link ResourceLocation} with an inferred namespace. If present, the namespace will be used, otherwise
+     * @return A {@link Identifier} with an inferred namespace. If present, the namespace will be used, otherwise
      * {@code minecraft} will be used.
      */
-    public static ResourceLocation resourceLocation(String name)
+    public static Identifier resourceLocation(String name)
     {
-        return ResourceLocation.parse(name);
+        return Identifier.parse(name);
     }
 
     /**
-     * @return A {@link ResourceLocation} with an explicit namespace and path.
+     * @return A {@link Identifier} with an explicit namespace and path.
      */
-    public static ResourceLocation resourceLocation(String domain, String path)
+    public static Identifier resourceLocation(String domain, String path)
     {
-        return ResourceLocation.fromNamespaceAndPath(domain, path);
+        return Identifier.fromNamespaceAndPath(domain, path);
     }
 
     public static Vec3 getRandomSpeedRanges(RandomSource random)

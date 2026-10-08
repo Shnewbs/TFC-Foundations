@@ -53,7 +53,7 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.Mth;
@@ -295,16 +295,16 @@ public final class ClientEventHandler
     /**
      * Texture locations for both vanilla and TFC fluid textures
      */
-    public static final ResourceLocation WATER_STILL = Helpers.identifierMC("block/water_still");
-    public static final ResourceLocation WATER_FLOW = Helpers.identifierMC("block/water_flow");
-    public static final ResourceLocation WATER_OVERLAY = Helpers.identifierMC("block/water_overlay");
+    public static final Identifier WATER_STILL = Helpers.identifierMC("block/water_still");
+    public static final Identifier WATER_FLOW = Helpers.identifierMC("block/water_flow");
+    public static final Identifier WATER_OVERLAY = Helpers.identifierMC("block/water_overlay");
     /**
      * @see net.minecraft.client.renderer.ScreenEffectRenderer#UNDERWATER_LOCATION
      */
-    public static final ResourceLocation UNDERWATER_LOCATION = Helpers.identifierMC("textures/misc/underwater.png");
+    public static final Identifier UNDERWATER_LOCATION = Helpers.identifierMC("textures/misc/underwater.png");
 
-    public static final ResourceLocation MOLTEN_STILL = Helpers.identifier("block/molten_still");
-    public static final ResourceLocation MOLTEN_FLOW = Helpers.identifier("block/molten_flow");
+    public static final Identifier MOLTEN_STILL = Helpers.identifier("block/molten_still");
+    public static final Identifier MOLTEN_FLOW = Helpers.identifier("block/molten_flow");
 
 
     public static void init(ModContainer mod, IEventBus bus)
@@ -534,7 +534,7 @@ public final class ClientEventHandler
         }
     }
 
-    private static final ResourceLocation SEALED = Helpers.identifier("sealed");
+    private static final Identifier SEALED = Helpers.identifier("sealed");
 
     private static <T> void registerSealedProperty(ItemLike item, Supplier<? extends DataComponentType<T>> type)
     {
@@ -673,7 +673,7 @@ public final class ClientEventHandler
         event.registerEntityRenderer(TFCEntities.MULE.get(), ctx -> new TFCChestedHorseRenderer<>(ctx, 0.92F, RenderHelpers.layerId("mule"), "mule"));
         event.registerEntityRenderer(TFCEntities.DONKEY.get(), ctx -> new TFCChestedHorseRenderer<>(ctx, 0.87F, RenderHelpers.layerId("donkey"), "donkey"));
         event.registerEntityRenderer(TFCEntities.HORSE.get(), TFCHorseRenderer::new);
-        event.registerEntityRenderer(TFCEntities.DROMEDARY_CAMEL.get(), ctx -> new SimpleMobRenderer.Builder<>(ctx, CamelModel::new, "dromedary_camel").shadow(0.7f).texture((e) -> ResourceLocation.withDefaultNamespace("textures/entity/camel/camel.png")).build());
+        event.registerEntityRenderer(TFCEntities.DROMEDARY_CAMEL.get(), ctx -> new SimpleMobRenderer.Builder<>(ctx, CamelModel::new, "dromedary_camel").shadow(0.7f).texture((e) -> Identifier.withDefaultNamespace("textures/entity/camel/camel.png")).build());
         event.registerEntityRenderer(TFCEntities.BACTRIAN_CAMEL.get(), ctx -> new BactrianCamelRenderer<>(ctx, new BactrianCamelModel(RenderHelpers.bakeSimple(ctx, "bactrian_camel")), 0.6F));
         event.registerEntityRenderer(TFCEntities.RAT.get(), RatRenderer::new);
         event.registerEntityRenderer(TFCEntities.JERBOA.get(), JerboaRenderer::new);
@@ -847,18 +847,18 @@ public final class ClientEventHandler
         event.register(CrankshaftBlockEntityRenderer.WHEEL_MODEL);
 
         ResourceManager rm = Minecraft.getInstance().getResourceManager();
-        Map<ResourceLocation, Resource> resources = rm.listResources("models/block/mold", r -> r.getPath().endsWith(".json"));
-        for (ResourceLocation model : resources.keySet())
+        Map<Identifier, Resource> resources = rm.listResources("models/block/mold", r -> r.getPath().endsWith(".json"));
+        for (Identifier model : resources.keySet())
         {
             String path = model.getPath();
             path = path.substring("models/".length(), path.length() - ".json".length());
-            register(event, ResourceLocation.fromNamespaceAndPath(model.getNamespace(), path));
+            register(event, Identifier.fromNamespaceAndPath(model.getNamespace(), path));
         }
 
         TFCConfig.CLIENT.additionalSpecialModels.get().forEach(s -> register(event, Helpers.resourceLocation(s)));
     }
 
-    private static void register(ModelEvent.RegisterAdditional event, ResourceLocation id)
+    private static void register(ModelEvent.RegisterAdditional event, Identifier id)
     {
         event.register(ModelResourceLocation.standalone(id)); // This event will assert this is the case, piss poor API design here
     }

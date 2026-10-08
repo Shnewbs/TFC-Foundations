@@ -8,7 +8,7 @@ package net.dries007.tfc.config;
 
 import java.util.List;
 import java.util.function.Supplier;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.fml.loading.FMLEnvironment;
 
 /**
@@ -148,7 +148,7 @@ public class ClientConfig extends BaseConfig
         additionalSpecialModels = builder.comment(
             "Registers additional models into forge's special model registry.",
             "For Pack Makers: this is needed if you want your custom item models to render when used for panning (if they are not already used somewhere else and added automatically in that case)"
-        ).define("additionalSpecialModels", List.of(), name -> ResourceLocation.tryParse(name) != null);
+        ).define("additionalSpecialModels", List.of(), name -> Identifier.tryParse(name) != null);
 
         builder.pop();
     }

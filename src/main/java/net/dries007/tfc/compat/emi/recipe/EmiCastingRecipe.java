@@ -9,7 +9,7 @@ package net.dries007.tfc.compat.emi.recipe;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import net.dries007.tfc.common.recipes.CastingRecipe;
 import net.dries007.tfc.compat.emi.EmiHelpers;
@@ -17,7 +17,7 @@ import net.dries007.tfc.compat.emi.EmiIntegration;
 
 public class EmiCastingRecipe extends AutoLayoutRecipe<CastingRecipe>
 {
-    public EmiCastingRecipe(ResourceLocation id, CastingRecipe recipe)
+    public EmiCastingRecipe(Identifier id, CastingRecipe recipe)
     {
         super(EmiIntegration.CASTING, id, recipe);
         init(recipe);
@@ -36,13 +36,13 @@ public class EmiCastingRecipe extends AutoLayoutRecipe<CastingRecipe>
     {
         if (other instanceof EmiCastingRecipe r)
         {
-            ResourceLocation fluidA = inputs.getLast().getEmiStacks().getFirst().getId();
-            ResourceLocation fluidB = r.getInputs().getLast().getEmiStacks().getFirst().getId();
+            Identifier fluidA = inputs.getLast().getEmiStacks().getFirst().getId();
+            Identifier fluidB = r.getInputs().getLast().getEmiStacks().getFirst().getId();
             int fluidCompare = fluidA.compareTo(fluidB);
             if (fluidCompare == 0)
             {
-                ResourceLocation moldA = inputs.getFirst().getEmiStacks().getFirst().getId();
-                ResourceLocation moldB = r.getInputs().getFirst().getEmiStacks().getFirst().getId();
+                Identifier moldA = inputs.getFirst().getEmiStacks().getFirst().getId();
+                Identifier moldB = r.getInputs().getFirst().getEmiStacks().getFirst().getId();
                 return moldA.compareTo(moldB);
             }
             return fluidCompare;

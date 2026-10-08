@@ -8,7 +8,7 @@ package net.dries007.tfc.client.screen;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 import net.dries007.tfc.TerraFirmaCraft;
@@ -22,7 +22,7 @@ public class LargeVesselScreen extends BlockEntityScreen<LargeVesselBlockEntity,
 {
     private static final Component SEAL = Component.translatable(TerraFirmaCraft.MOD_ID + ".tooltip.seal_barrel");
     private static final Component UNSEAL = Component.translatable(TerraFirmaCraft.MOD_ID + ".tooltip.unseal_barrel");
-    public static final ResourceLocation BACKGROUND = Helpers.identifier("textures/gui/large_vessel.png");
+    public static final Identifier BACKGROUND = Helpers.identifier("textures/gui/large_vessel.png");
 
     public LargeVesselScreen(LargeVesselContainer container, Inventory playerInventory, Component name)
     {

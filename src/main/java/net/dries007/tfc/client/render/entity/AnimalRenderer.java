@@ -10,7 +10,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
 import net.dries007.tfc.client.RenderHelpers;
@@ -18,8 +18,8 @@ import net.dries007.tfc.common.entities.livestock.TFCAnimal;
 
 public class AnimalRenderer<T extends TFCAnimal, M extends EntityModel<T>> extends MobRenderer<T, M>
 {
-    private final ResourceLocation young;
-    private final ResourceLocation old;
+    private final Identifier young;
+    private final Identifier old;
 
     public AnimalRenderer(EntityRendererProvider.Context ctx, M model, String name)
     {
@@ -43,7 +43,7 @@ public class AnimalRenderer<T extends TFCAnimal, M extends EntityModel<T>> exten
     }
 
     @Override
-    public ResourceLocation getTextureLocation(T entity)
+    public Identifier getTextureLocation(T entity)
     {
         return RenderHelpers.getTextureForAge(entity, young, old);
     }

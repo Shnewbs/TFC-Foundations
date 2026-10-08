@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.FastColor.ARGB32;
 
 import net.dries007.tfc.client.RenderHelpers;
@@ -26,8 +26,8 @@ import net.dries007.tfc.util.Helpers;
 
 public class BellowsBlockEntityRenderer implements BlockEntityRenderer<BellowsBlockEntity>
 {
-    private static final ResourceLocation BACK_TEXTURE = Helpers.identifier("block/devices/bellows/back");
-    private static final ResourceLocation SIDE_TEXTURE = Helpers.identifier("block/devices/bellows/side");
+    private static final Identifier BACK_TEXTURE = Helpers.identifier("block/devices/bellows/back");
+    private static final Identifier SIDE_TEXTURE = Helpers.identifier("block/devices/bellows/side");
     // The number of planes each side of the bellows has
     private static final int planeCount = 4;
     private static final float texWidth = 16f / planeCount;
@@ -80,7 +80,7 @@ public class BellowsBlockEntityRenderer implements BlockEntityRenderer<BellowsBl
 
         poseStack.pushPose();
 
-        final Function<ResourceLocation, TextureAtlasSprite> atlas = Minecraft.getInstance().getTextureAtlas(RenderHelpers.BLOCKS_ATLAS);
+        final Function<Identifier, TextureAtlasSprite> atlas = Minecraft.getInstance().getTextureAtlas(RenderHelpers.BLOCKS_ATLAS);
 
         final TextureAtlasSprite endSprite = atlas.apply(BACK_TEXTURE);
         final TextureAtlasSprite sideSprite = atlas.apply(SIDE_TEXTURE);

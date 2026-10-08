@@ -11,7 +11,7 @@ import java.util.Objects;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.CommonLevelAccessor;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.biome.Biome;
@@ -281,7 +281,7 @@ public final class TFCBiomes
 
     private static BiomeExtension register(String name, BiomeBuilder builder)
     {
-        final ResourceLocation id = Helpers.identifier(name);
+        final Identifier id = Helpers.identifier(name);
         final ResourceKey<Biome> key = ResourceKey.create(Registries.BIOME, id);
         final BiomeExtension extension = builder.build(key);
 

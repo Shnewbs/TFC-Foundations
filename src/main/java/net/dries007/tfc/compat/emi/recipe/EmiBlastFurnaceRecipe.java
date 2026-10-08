@@ -9,7 +9,7 @@ package net.dries007.tfc.compat.emi.recipe;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import net.dries007.tfc.common.recipes.BlastFurnaceRecipe;
 import net.dries007.tfc.compat.emi.EmiHelpers;
@@ -20,7 +20,7 @@ public class EmiBlastFurnaceRecipe extends BasicRecipe<BlastFurnaceRecipe>
     // Including the catalyst in the inputs gives an inaccurate amount in recipe trees, since it is displayed 1x catalyst per 1mb input fluid
     private final EmiIngredient catalyst;
 
-    public EmiBlastFurnaceRecipe(ResourceLocation id, BlastFurnaceRecipe recipe)
+    public EmiBlastFurnaceRecipe(Identifier id, BlastFurnaceRecipe recipe)
     {
         super(EmiIntegration.BLAST_FURNACE, id, 98, 26);
         inputs.add(EmiHelpers.toIngredient(recipe.inputFluid()));

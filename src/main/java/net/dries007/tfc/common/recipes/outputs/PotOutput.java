@@ -11,7 +11,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -99,10 +99,10 @@ public interface PotOutput
     /**
      * An alternative to {@link PotOutput#getFluidColor()} that renders a solid texture.
      *
-     * @return A {@linkplain ResourceLocation} matching a texture.
+     * @return A {@linkplain Identifier} matching a texture.
      */
     @Nullable
-    default ResourceLocation getRenderTexture()
+    default Identifier getRenderTexture()
     {
         return null;
     }

@@ -10,20 +10,20 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.compat.patchouli.PatchouliIntegration;
 
 public record OpenFieldGuidePacket(
-    ResourceLocation id,
+    Identifier id,
     int page
 ) implements CustomPacketPayload
 {
     public static final CustomPacketPayload.Type<OpenFieldGuidePacket> TYPE = PacketHandler.type("open_field_guide");
     public static final StreamCodec<ByteBuf, OpenFieldGuidePacket> CODEC = StreamCodec.composite(
-        ResourceLocation.STREAM_CODEC, c -> c.id,
+        Identifier.STREAM_CODEC, c -> c.id,
         ByteBufCodecs.VAR_INT, c -> c.page,
         OpenFieldGuidePacket::new
     );

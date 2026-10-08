@@ -22,7 +22,7 @@ import net.dries007.tfc.util.Helpers;
 
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.compat.emi.EmiHelpers;
@@ -33,20 +33,20 @@ import net.dries007.tfc.util.data.LampFuel;
 public class EmiLampFuelRecipe implements EmiRecipe, ComparableRecipe
 {
 
-    private static final ResourceLocation ICONS = Helpers.identifier("textures/gui/jei/icons.png");
+    private static final Identifier ICONS = Helpers.identifier("textures/gui/jei/icons.png");
 
     private static final EmiTexture LAMP_BACKGROUND = new EmiTexture(ICONS, 0, 48, 20, 20);
     private static final EmiTexture LAMP_FOREGROUND = new EmiTexture(ICONS, 20, 48, 20, 20);
 
     private final LampFuel fuel;
-    private final ResourceLocation id;
+    private final Identifier id;
     private final EmiIngredient fluidInput;
     private final EmiIngredient lampInput;
 
     private static final int WIDTH = 140;
     private static final int HEIGHT = 30;
 
-    public EmiLampFuelRecipe(ResourceLocation id, LampFuel fuel)
+    public EmiLampFuelRecipe(Identifier id, LampFuel fuel)
     {
         this.fuel = fuel;
         this.id = id;
@@ -61,7 +61,7 @@ public class EmiLampFuelRecipe implements EmiRecipe, ComparableRecipe
     }
 
     @Override
-    public @Nullable ResourceLocation getId()
+    public @Nullable Identifier getId()
     {
         return id;
     }

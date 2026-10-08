@@ -13,7 +13,7 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.Vec3;
@@ -23,15 +23,15 @@ import net.dries007.tfc.client.RenderHelpers;
 
 public class SimpleMobRenderer<T extends Mob, M extends EntityModel<T>> extends MobRenderer<T, M>
 {
-    private final ResourceLocation texture;
+    private final Identifier texture;
     @Nullable
-    private final ResourceLocation babyTexture;
+    private final Identifier babyTexture;
     @Nullable
-    private final Function<T, ResourceLocation> textureGetter;
+    private final Function<T, Identifier> textureGetter;
     private final boolean doesFlop;
     private final float scale;
 
-    public SimpleMobRenderer(EntityRendererProvider.Context ctx, M model, String name, float shadow, boolean flop, float scale, boolean hasBabyTexture, boolean itemInMouth, @Nullable Function<T, ResourceLocation> textureGetter)
+    public SimpleMobRenderer(EntityRendererProvider.Context ctx, M model, String name, float shadow, boolean flop, float scale, boolean hasBabyTexture, boolean itemInMouth, @Nullable Function<T, Identifier> textureGetter)
     {
         super(ctx, model, shadow);
         doesFlop = flop;
@@ -70,7 +70,7 @@ public class SimpleMobRenderer<T extends Mob, M extends EntityModel<T>> extends 
     }
 
     @Override
-    public ResourceLocation getTextureLocation(T entity)
+    public Identifier getTextureLocation(T entity)
     {
         return textureGetter.apply(entity);
     }
@@ -86,7 +86,7 @@ public class SimpleMobRenderer<T extends Mob, M extends EntityModel<T>> extends 
         private float scale = 1f;
         private boolean hasBabyTexture = false;
         private boolean itemInMouth = false;
-        @Nullable private Function<T, ResourceLocation> textureGetter = null;
+        @Nullable private Function<T, Identifier> textureGetter = null;
 
         public Builder(EntityRendererProvider.Context ctx, Function<ModelPart, M> model, String name)
         {
@@ -125,7 +125,7 @@ public class SimpleMobRenderer<T extends Mob, M extends EntityModel<T>> extends 
             return this;
         }
 
-        public Builder<T, M> texture(Function<T, ResourceLocation> getter)
+        public Builder<T, M> texture(Function<T, Identifier> getter)
         {
             this.textureGetter = getter;
             return this;

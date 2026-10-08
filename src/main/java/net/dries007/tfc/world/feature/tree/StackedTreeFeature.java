@@ -8,7 +8,7 @@ package net.dries007.tfc.world.feature.tree;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.WorldGenLevel;
@@ -54,7 +54,7 @@ public class StackedTreeFeature extends Feature<StackedTreeConfig>
                     int layerCount = layer.getCount(random);
                     for (int i = 0; i < layerCount; i++)
                     {
-                        final ResourceLocation structureId = layer.templates().get(random.nextInt(layer.templates().size()));
+                        final Identifier structureId = layer.templates().get(random.nextInt(layer.templates().size()));
                         final StructureTemplate structure = manager.getOrCreate(structureId);
                         // todo: randomize the settings rotation + mirror before each layer.
                         // last time I tried this it broke something with 2x2 structures - they were offset by 1 and I hate fixing those issues

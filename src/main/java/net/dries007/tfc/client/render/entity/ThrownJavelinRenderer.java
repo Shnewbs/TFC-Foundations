@@ -17,7 +17,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 
@@ -31,8 +31,8 @@ import net.dries007.tfc.util.Metal;
 
 public class ThrownJavelinRenderer extends EntityRenderer<ThrownJavelin>
 {
-    public static final ResourceLocation DEFAULT_TEXTURE = Helpers.identifier("textures/entity/projectiles/stone_javelin.png");
-    public static final Map<Item, ResourceLocation> JAVELIN_TEXTURES = Util.make(new HashMap<>(), map -> {
+    public static final Identifier DEFAULT_TEXTURE = Helpers.identifier("textures/entity/projectiles/stone_javelin.png");
+    public static final Map<Item, Identifier> JAVELIN_TEXTURES = Util.make(new HashMap<>(), map -> {
         TFCItems.ROCK_TOOLS.forEach((k, v) -> map.put(v.get(RockCategory.ItemType.JAVELIN).get(), Helpers.identifier("textures/entity/projectiles/stone_javelin.png")));
         map.put(TFCItems.OBSIDIAN_JAVELIN.get(), Helpers.identifier("textures/entity/projectiles/obsidian_javelin.png"));
         TFCItems.METAL_ITEMS.entrySet()
@@ -67,7 +67,7 @@ public class ThrownJavelinRenderer extends EntityRenderer<ThrownJavelin>
     }
 
     @Override
-    public ResourceLocation getTextureLocation(ThrownJavelin entity)
+    public Identifier getTextureLocation(ThrownJavelin entity)
     {
         return JAVELIN_TEXTURES.getOrDefault(entity.getItem().getItem(), DEFAULT_TEXTURE);
     }

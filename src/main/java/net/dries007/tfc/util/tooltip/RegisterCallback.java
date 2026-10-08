@@ -6,7 +6,7 @@
 
 package net.dries007.tfc.util.tooltip;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import net.dries007.tfc.util.Helpers;
 
@@ -18,5 +18,5 @@ public interface RegisterCallback<T, C>
         register(Helpers.identifier(name), tooltip, thing);
     }
 
-    void register(ResourceLocation name, T tooltip, Class<? extends C> thing);
+    void register(Identifier name, T tooltip, Class<? extends C> thing);
 }

@@ -9,7 +9,7 @@ package net.dries007.tfc.common.blocks.rotation;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -35,9 +35,9 @@ public class WaterWheelBlock extends ExtendedBlock implements EntityBlockExtensi
     public static final VoxelShape SHAPE = box(0, 0.125, 0, 16, 15.875, 16);
 
     private final Supplier<? extends AxleBlock> axle;
-    private final ResourceLocation textureLocation;
+    private final Identifier textureLocation;
 
-    public WaterWheelBlock(ExtendedProperties properties, Supplier<? extends AxleBlock> axle, ResourceLocation textureLocation)
+    public WaterWheelBlock(ExtendedProperties properties, Supplier<? extends AxleBlock> axle, Identifier textureLocation)
     {
         super(properties);
 
@@ -47,7 +47,7 @@ public class WaterWheelBlock extends ExtendedBlock implements EntityBlockExtensi
         registerDefaultState(getStateDefinition().any().setValue(AXIS, Direction.Axis.X));
     }
 
-    public ResourceLocation getTextureLocation()
+    public Identifier getTextureLocation()
     {
         return textureLocation;
     }

@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +37,7 @@ public class WaterWheelBlockEntityRenderer implements BlockEntityRenderer<WaterW
     {
         final Block block = wheel.getBlockState().getBlock();
         assert block instanceof WaterWheelBlock;
-        final @Nullable ResourceLocation texture = ((WaterWheelBlock) block).getTextureLocation();
+        final @Nullable Identifier texture = ((WaterWheelBlock) block).getTextureLocation();
         if (wheel.getLevel() == null || texture == null)
         {
             return;

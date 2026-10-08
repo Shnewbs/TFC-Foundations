@@ -25,7 +25,7 @@ import net.minecraft.core.DefaultedRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.DelegatingOps;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -71,7 +71,7 @@ public final class Codecs extends ExtraCodecs
      */
     public static <R> Codec<R> nonDefaultedRegistryCodec(DefaultedRegistry<R> registry)
     {
-        return ResourceLocation.CODEC.flatXmap(
+        return Identifier.CODEC.flatXmap(
             id -> registry.containsKey(id) ? DataResult.success(registry.get(id)) : DataResult.error(() -> "No such key: " + id),
             value -> registry.containsValue(value) ? DataResult.success(registry.getKey(value)) : DataResult.error(() -> "No such value: " + value)
         );

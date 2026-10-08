@@ -7,7 +7,7 @@
 package net.dries007.tfc.compat.emi.recipe;
 
 import dev.emi.emi.api.stack.EmiStack;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import net.dries007.tfc.common.recipes.BloomeryRecipe;
 import net.dries007.tfc.compat.emi.EmiHelpers;
@@ -15,7 +15,7 @@ import net.dries007.tfc.compat.emi.EmiIntegration;
 
 public class EmiBloomeryRecipe extends AutoLayoutRecipe<BloomeryRecipe>
 {
-    public EmiBloomeryRecipe(ResourceLocation id, BloomeryRecipe recipe)
+    public EmiBloomeryRecipe(Identifier id, BloomeryRecipe recipe)
     {
         super(EmiIntegration.BLOOMERY, id, recipe);
         init(recipe);

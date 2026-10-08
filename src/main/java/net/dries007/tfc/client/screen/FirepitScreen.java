@@ -8,7 +8,7 @@ package net.dries007.tfc.client.screen;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 import net.dries007.tfc.client.RenderHelpers;
@@ -20,7 +20,7 @@ import net.dries007.tfc.util.Helpers;
 
 public class FirepitScreen extends BlockEntityScreen<FirepitBlockEntity, FirepitContainer>
 {
-    private static final ResourceLocation FIREPIT = Helpers.identifier("textures/gui/fire_pit.png");
+    private static final Identifier FIREPIT = Helpers.identifier("textures/gui/fire_pit.png");
 
     public FirepitScreen(FirepitContainer container, Inventory playerInventory, Component name)
     {

@@ -12,7 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
@@ -32,7 +32,7 @@ import net.dries007.tfc.util.Helpers;
  */
 public final class ClientHelpers
 {
-    public static final ResourceLocation GUI_ICONS = Helpers.identifier("textures/gui/icons.png");
+    public static final Identifier GUI_ICONS = Helpers.identifier("textures/gui/icons.png");
 
     @Nullable
     @SuppressWarnings("ConstantValue")

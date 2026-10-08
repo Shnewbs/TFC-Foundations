@@ -15,7 +15,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -69,9 +69,9 @@ public class IndirectHashCollection<K, R>
      * Creates a new bijective ID map between that is backed from the given recipe type. This will manage the cache's overall
      * lifecycle, including clearing and reloading, as necessary
      */
-    public static <R extends Recipe<?>> BiMap<ResourceLocation, R> createForRecipeId(Supplier<RecipeType<R>> recipeType)
+    public static <R extends Recipe<?>> BiMap<Identifier, R> createForRecipeId(Supplier<RecipeType<R>> recipeType)
     {
-        final BiMap<ResourceLocation, R> cache = HashBiMap.create();
+        final BiMap<Identifier, R> cache = HashBiMap.create();
         create(new RecipeIdCache<>(cache, recipeType));
         return cache;
     }
@@ -149,7 +149,7 @@ public class IndirectHashCollection<K, R>
         @Override public void reload(RecipeManager manager) { cache.reload(RecipeHelpers.getRecipes(manager, recipeType).stream().map(RecipeHolder::value).toList()); }
     }
 
-    record RecipeIdCache<R extends Recipe<?>>(BiMap<ResourceLocation, R> cache, Supplier<RecipeType<R>> recipeType) implements Cache
+    record RecipeIdCache<R extends Recipe<?>>(BiMap<Identifier, R> cache, Supplier<RecipeType<R>> recipeType) implements Cache
     {
         @Override
         public void clear()

@@ -9,7 +9,7 @@ package net.dries007.tfc.client.screen;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -32,7 +32,7 @@ public class BarrelScreen extends BlockEntityScreen<BarrelBlockEntity, BarrelCon
     private static final Component UNSEAL = Component.translatable(TerraFirmaCraft.MOD_ID + ".tooltip.unseal_barrel");
     private static final int MAX_RECIPE_NAME_LENGTH = 100;
 
-    public static final ResourceLocation BACKGROUND = Helpers.identifier("textures/gui/barrel.png");
+    public static final Identifier BACKGROUND = Helpers.identifier("textures/gui/barrel.png");
 
     public BarrelScreen(BarrelContainer container, Inventory playerInventory, Component name)
     {

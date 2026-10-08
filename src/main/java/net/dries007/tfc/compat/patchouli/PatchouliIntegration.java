@@ -11,7 +11,7 @@ import java.util.function.Function;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -54,8 +54,8 @@ import net.dries007.tfc.util.Metal;
 
 public final class PatchouliIntegration
 {
-    public static final ResourceLocation BOOK_ID = Helpers.identifier("field_guide");
-    public static final ResourceLocation TEXTURE = Helpers.identifier("textures/gui/book/icons.png");
+    public static final Identifier BOOK_ID = Helpers.identifier("field_guide");
+    public static final Identifier TEXTURE = Helpers.identifier("textures/gui/book/icons.png");
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -80,7 +80,7 @@ public final class PatchouliIntegration
         PatchouliAPI.get().openBookGUI(player, BOOK_ID);
     }
 
-    public static void openGui(ServerPlayer player, ResourceLocation entry, int page)
+    public static void openGui(ServerPlayer player, Identifier entry, int page)
     {
         PatchouliAPI.get().openBookEntry(player, BOOK_ID, entry, page);
     }

@@ -9,7 +9,7 @@ package net.dries007.tfc.client.screen;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 
@@ -23,13 +23,13 @@ public class ScreenParticle
     private int lifetime;
 
 
-    private final ResourceLocation texture;
+    private final Identifier texture;
     private final int width;
     private final int height;
     private final int rotationSign;
     private final float scale;
 
-    public ScreenParticle(ResourceLocation texture, float x, float y, float dx, float dy, int width, int height, RandomSource random)
+    public ScreenParticle(Identifier texture, float x, float y, float dx, float dy, int width, int height, RandomSource random)
     {
         this.texture = texture;
         this.x = x;

@@ -9,7 +9,7 @@ package net.dries007.tfc.client.render.blockentity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.common.blockentities.GlassBasinBlockEntity;
@@ -17,7 +17,7 @@ import net.dries007.tfc.util.Helpers;
 
 public class GlassBasinBlockEntityRenderer implements BlockEntityRenderer<GlassBasinBlockEntity>
 {
-    private static final ResourceLocation TEXTURE = Helpers.identifier("block/glass/3");
+    private static final Identifier TEXTURE = Helpers.identifier("block/glass/3");
 
     @Override
     public void render(GlassBasinBlockEntity glass, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int combinedLight, int combinedOverlay)

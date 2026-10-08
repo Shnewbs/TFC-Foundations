@@ -9,14 +9,14 @@ package net.dries007.tfc.client.render.entity;
 import net.minecraft.client.renderer.entity.ArrowRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import net.dries007.tfc.common.entities.misc.GlowArrow;
 import net.dries007.tfc.util.Helpers;
 
 public class GlowArrowRenderer extends ArrowRenderer<GlowArrow>
 {
-    public static final ResourceLocation LOCATION = Helpers.identifier("textures/entity/projectiles/glow_arrow.png");
+    public static final Identifier LOCATION = Helpers.identifier("textures/entity/projectiles/glow_arrow.png");
 
     public GlowArrowRenderer(EntityRendererProvider.Context context)
     {
@@ -24,7 +24,7 @@ public class GlowArrowRenderer extends ArrowRenderer<GlowArrow>
     }
 
     @Override
-    public ResourceLocation getTextureLocation(GlowArrow arrow)
+    public Identifier getTextureLocation(GlowArrow arrow)
     {
         return LOCATION;
     }

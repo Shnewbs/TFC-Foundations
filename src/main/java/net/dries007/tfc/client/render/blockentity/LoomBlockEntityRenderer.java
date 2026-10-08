@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 
 import net.dries007.tfc.client.RenderHelpers;
@@ -30,7 +30,7 @@ public class LoomBlockEntityRenderer implements BlockEntityRenderer<LoomBlockEnt
     {
         Block block = loom.getBlockState().getBlock();
         assert block instanceof TFCLoomBlock;
-        final @Nullable ResourceLocation texture = ((TFCLoomBlock) block).getTextureLocation();
+        final @Nullable Identifier texture = ((TFCLoomBlock) block).getTextureLocation();
         if (texture == null)
         {
             return;
@@ -59,7 +59,7 @@ public class LoomBlockEntityRenderer implements BlockEntityRenderer<LoomBlockEnt
         poseStack.popPose();
 
         final LoomRecipe recipe = loom.getRecipe();
-        final ResourceLocation lastTex = loom.getLastTexture();
+        final Identifier lastTex = loom.getLastTexture();
         if (recipe != null || lastTex != null)
         {
             poseStack.pushPose();

@@ -11,7 +11,7 @@ import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.common.entities.livestock.pet.TFCCat;
@@ -19,7 +19,7 @@ import net.dries007.tfc.util.Helpers;
 
 public class TFCCatCollarLayer extends RenderLayer<TFCCat, TFCCatModel>
 {
-    private static final ResourceLocation CAT_COLLAR_LOCATION = Helpers.identifierMC("textures/entity/cat/cat_collar.png");
+    private static final Identifier CAT_COLLAR_LOCATION = Helpers.identifierMC("textures/entity/cat/cat_collar.png");
     private final TFCCatModel catModel;
 
     public TFCCatCollarLayer(RenderLayerParent<TFCCat, TFCCatModel> renderer, EntityModelSet ctx)

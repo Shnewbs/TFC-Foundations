@@ -12,7 +12,7 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.SlotWidget;
 import dev.emi.emi.api.widget.WidgetHolder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,7 +30,7 @@ public class EmiAdvancedShapelessRecipe extends EmiCraftingRecipe
     private final boolean isSpecial;
     private final ItemStackProvider provider;
 
-    public EmiAdvancedShapelessRecipe(ResourceLocation id, AdvancedShapelessRecipe recipe)
+    public EmiAdvancedShapelessRecipe(Identifier id, AdvancedShapelessRecipe recipe)
     {
         super(recipe.getIngredients().stream().map(EmiIngredient::of).toList(), EmiHelpers.nonDecayStack(recipe.getResultItem(EmiHelpers.registryAccess())), id, true);
         primaryIngredient = recipe.getPrimaryIngredient().map(EmiIngredient::of).orElse(null);

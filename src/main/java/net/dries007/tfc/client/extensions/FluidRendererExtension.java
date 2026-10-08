@@ -9,7 +9,7 @@ package net.dries007.tfc.client.extensions;
 import java.util.function.ToIntBiFunction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
@@ -18,13 +18,13 @@ import org.jetbrains.annotations.Nullable;
 public record FluidRendererExtension(
     int tintColor,
     ToIntBiFunction<BlockAndTintGetter, BlockPos> tintColorFunction,
-    ResourceLocation stillTexture,
-    ResourceLocation flowingTexture,
-    @Nullable ResourceLocation overlayTexture,
-    @Nullable ResourceLocation renderOverlayTexture
+    Identifier stillTexture,
+    Identifier flowingTexture,
+    @Nullable Identifier overlayTexture,
+    @Nullable Identifier renderOverlayTexture
 ) implements IClientFluidTypeExtensions
 {
-    public FluidRendererExtension(int tintColor, ResourceLocation stillTexture, ResourceLocation flowingTexture, @Nullable ResourceLocation overlayTexture, @Nullable ResourceLocation renderOverlayTexture)
+    public FluidRendererExtension(int tintColor, Identifier stillTexture, Identifier flowingTexture, @Nullable Identifier overlayTexture, @Nullable Identifier renderOverlayTexture)
     {
         this(tintColor, (level, pos) -> tintColor, stillTexture, flowingTexture, overlayTexture, renderOverlayTexture);
     }
@@ -42,27 +42,27 @@ public record FluidRendererExtension(
     }
 
     @Override
-    public ResourceLocation getStillTexture()
+    public Identifier getStillTexture()
     {
         return stillTexture;
     }
 
     @Override
-    public ResourceLocation getFlowingTexture()
+    public Identifier getFlowingTexture()
     {
         return flowingTexture;
     }
 
     @Override
     @Nullable
-    public ResourceLocation getOverlayTexture()
+    public Identifier getOverlayTexture()
     {
         return overlayTexture;
     }
 
     @Override
     @Nullable
-    public ResourceLocation getRenderOverlayTexture(Minecraft minecraft)
+    public Identifier getRenderOverlayTexture(Minecraft minecraft)
     {
         return renderOverlayTexture;
     }

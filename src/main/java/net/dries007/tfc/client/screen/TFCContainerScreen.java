@@ -9,7 +9,7 @@ package net.dries007.tfc.client.screen;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
@@ -19,10 +19,10 @@ import static net.dries007.tfc.client.screen.TFCContainerScreen.TextAlignment.*;
 
 public class TFCContainerScreen<C extends AbstractContainerMenu> extends AbstractContainerScreen<C>
 {
-    public static final ResourceLocation INVENTORY_1x1 = Helpers.identifier("textures/gui/single_inventory.png");
-    public static final ResourceLocation INVENTORY_2x2 = Helpers.identifier("textures/gui/small_inventory.png");
+    public static final Identifier INVENTORY_1x1 = Helpers.identifier("textures/gui/single_inventory.png");
+    public static final Identifier INVENTORY_2x2 = Helpers.identifier("textures/gui/small_inventory.png");
 
-    protected final ResourceLocation texture;
+    protected final Identifier texture;
     protected final Inventory playerInventory;
 
     public enum TextAlignment
@@ -32,7 +32,7 @@ public class TFCContainerScreen<C extends AbstractContainerMenu> extends Abstrac
         RIGHT
     }
 
-    public TFCContainerScreen(C container, Inventory playerInventory, Component name, ResourceLocation texture)
+    public TFCContainerScreen(C container, Inventory playerInventory, Component name, Identifier texture)
     {
         super(container, playerInventory, name);
         this.texture = texture;

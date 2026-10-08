@@ -13,14 +13,14 @@ import net.minecraft.client.resources.LegacyStuffWrapper;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class ColorMapReloadListener extends SimplePreparableReloadListener<int[]>
 {
-    private final ResourceLocation textureLocation;
+    private final Identifier textureLocation;
     private final Consumer<int[]> consumer;
 
-    public ColorMapReloadListener(Consumer<int[]> consumer, ResourceLocation textureLocation)
+    public ColorMapReloadListener(Consumer<int[]> consumer, Identifier textureLocation)
     {
         this.textureLocation = textureLocation;
         this.consumer = consumer;

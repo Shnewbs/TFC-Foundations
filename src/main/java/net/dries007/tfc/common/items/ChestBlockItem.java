@@ -6,7 +6,7 @@
 
 package net.dries007.tfc.common.items;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 
@@ -15,9 +15,9 @@ import net.dries007.tfc.util.registry.RegistryWood;
 
 public class ChestBlockItem extends BlockItem
 {
-    private final ResourceLocation boatTexture;
+    private final Identifier boatTexture;
 
-    public ChestBlockItem(Block block, Properties properties, ResourceLocation boatTexture)
+    public ChestBlockItem(Block block, Properties properties, Identifier boatTexture)
     {
         super(block, properties);
         this.boatTexture = boatTexture;
@@ -28,7 +28,7 @@ public class ChestBlockItem extends BlockItem
         this(block, properties, Helpers.identifier("textures/entity/chest_boat/" + wood.getSerializedName() + ".png"));
     }
 
-    public ResourceLocation getBoatTexture()
+    public Identifier getBoatTexture()
     {
         return boatTexture;
     }

@@ -51,7 +51,7 @@ public class TFCWolfModel extends HierarchicalAnimatedModel<PackPredator>
         return LayerDefinition.create(meshdefinition, 64, 32);
     }
 
-    //public static final ResourceLocation WOLF_LOCATION = new ResourceLocation("textures/entity/wolf/wolf.png");
+    //public static final Identifier WOLF_LOCATION = new Identifier("textures/entity/wolf/wolf.png");
 
     private final ModelPart head;
     private final ModelPart body;

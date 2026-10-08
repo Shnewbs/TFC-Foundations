@@ -13,7 +13,7 @@ import net.minecraft.client.model.TridentModel;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
@@ -23,7 +23,7 @@ import net.dries007.tfc.common.items.JavelinItem;
 
 public class JavelinItemRenderer extends BlockEntityWithoutLevelRenderer
 {
-    private final ResourceLocation textureLocation;
+    private final Identifier textureLocation;
     private final TridentModel model;
 
     public JavelinItemRenderer(JavelinItem item)

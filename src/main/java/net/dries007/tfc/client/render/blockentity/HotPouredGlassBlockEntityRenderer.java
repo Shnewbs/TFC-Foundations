@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
 import net.dries007.tfc.client.RenderHelpers;
@@ -23,14 +23,14 @@ import net.dries007.tfc.util.Helpers;
 
 public class HotPouredGlassBlockEntityRenderer implements BlockEntityRenderer<HotPouredGlassBlockEntity>
 {
-    private static final ResourceLocation VERY_VERY_HOT = Helpers.identifier("block/glass/3");
-    private static final ResourceLocation HOT = Helpers.identifier("block/glass/1");
+    private static final Identifier VERY_VERY_HOT = Helpers.identifier("block/glass/3");
+    private static final Identifier HOT = Helpers.identifier("block/glass/1");
 
     @Override
     public void render(HotPouredGlassBlockEntity glass, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int combinedLight, int combinedOverlay)
     {
         final float ticks = (40f - glass.getAnimationTicks()) / 40f;
-        final Function<ResourceLocation, TextureAtlasSprite> textureAtlas = Minecraft.getInstance().getTextureAtlas(RenderHelpers.BLOCKS_ATLAS);
+        final Function<Identifier, TextureAtlasSprite> textureAtlas = Minecraft.getInstance().getTextureAtlas(RenderHelpers.BLOCKS_ATLAS);
         final VertexConsumer buffer = buffers.getBuffer(RenderType.cutout());
 
         if (glass.isInitialTransition())

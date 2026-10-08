@@ -13,7 +13,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,14 +29,14 @@ public final class ForgingComponent
         ForgeSteps.CODEC.optionalFieldOf("steps", ForgeSteps.EMPTY).forGetter(c -> c.steps),
         Codec.INT.optionalFieldOf("work", 0).forGetter(c -> c.work),
         Codec.INT.optionalFieldOf("target", 0).forGetter(c -> c.target),
-        ResourceLocation.CODEC.optionalFieldOf("recipe").forGetter(c -> Optional.ofNullable(c.recipeId))
+        Identifier.CODEC.optionalFieldOf("recipe").forGetter(c -> Optional.ofNullable(c.recipeId))
     ).apply(i, ForgingComponent::new));
 
     public static final StreamCodec<ByteBuf, ForgingComponent> STREAM_CODEC = StreamCodec.composite(
         ForgeSteps.STREAM_CODEC, c -> c.steps,
         ByteBufCodecs.VAR_INT, c -> c.work,
         ByteBufCodecs.VAR_INT, c -> c.target,
-        ByteBufCodecs.optional(ResourceLocation.STREAM_CODEC), c -> Optional.ofNullable(c.recipeId),
+        ByteBufCodecs.optional(Identifier.STREAM_CODEC), c -> Optional.ofNullable(c.recipeId),
         ForgingComponent::new
     );
 
@@ -45,15 +45,15 @@ public final class ForgingComponent
     final ForgeSteps steps;
     final int work;
     final int target;
-    private @Nullable ResourceLocation recipeId;
+    private @Nullable Identifier recipeId;
     private @Nullable AnvilRecipe recipe;
 
-    ForgingComponent(ForgeSteps steps, int work, int target, Optional<ResourceLocation> recipeId)
+    ForgingComponent(ForgeSteps steps, int work, int target, Optional<Identifier> recipeId)
     {
         this(steps, work, target, recipeId.orElse(null), null);
     }
 
-    ForgingComponent(ForgeSteps steps, int work, int target, @Nullable ResourceLocation recipeId, @Nullable AnvilRecipe recipe)
+    ForgingComponent(ForgeSteps steps, int work, int target, @Nullable Identifier recipeId, @Nullable AnvilRecipe recipe)
     {
         this.steps = steps;
         this.work = work;

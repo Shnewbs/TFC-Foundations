@@ -12,7 +12,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -67,7 +67,7 @@ public class AnvilBlockEntity extends InventoryBlockEntity<AnvilBlockEntity.Anvi
     public static final int[] SLOTS_BY_HAND_INSERT = new int[] {SLOT_CATALYST, SLOT_INPUT_MAIN, SLOT_INPUT_SECOND};
 
     @Nullable
-    private ResourceLocation lastRecipe = null;
+    private Identifier lastRecipe = null;
 
     public AnvilBlockEntity(BlockPos pos, BlockState state)
     {
@@ -172,7 +172,7 @@ public class AnvilBlockEntity extends InventoryBlockEntity<AnvilBlockEntity.Anvi
         super.loadAdditional(nbt, provider);
         if (nbt.contains("lastRecipe", CompoundTag.TAG_STRING))
         {
-            lastRecipe = ResourceLocation.tryParse(nbt.getString("lastRecipe"));
+            lastRecipe = Identifier.tryParse(nbt.getString("lastRecipe"));
         }
     }
 
@@ -225,7 +225,7 @@ public class AnvilBlockEntity extends InventoryBlockEntity<AnvilBlockEntity.Anvi
         super.ejectInventory();
     }
 
-    public void chooseRecipe(ResourceLocation recipeId)
+    public void chooseRecipe(Identifier recipeId)
     {
         assert level != null;
 

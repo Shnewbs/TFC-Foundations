@@ -11,7 +11,7 @@ import java.util.List;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -27,7 +27,7 @@ import net.dries007.tfc.util.Helpers;
 
 public class AnvilPlanScreen extends BlockEntityScreen<AnvilBlockEntity, AnvilPlanContainer>
 {
-    public static final ResourceLocation BACKGROUND = Helpers.identifier("textures/gui/anvil_plan.png");
+    public static final Identifier BACKGROUND = Helpers.identifier("textures/gui/anvil_plan.png");
 
     @Nullable private Button leftButton, rightButton;
     @Nullable private List<AnvilPlanSelectButton> recipeButtons;

@@ -23,7 +23,7 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
@@ -216,7 +216,7 @@ public final class EmiIntegration implements EmiPlugin
 
         for (RecipeHolder<PotRecipe> entry : recipes(registry.getRecipeManager(), TFCRecipeTypes.POT))
         {
-            ResourceLocation id = entry.id();
+            Identifier id = entry.id();
             PotRecipe recipe = entry.value();
             var serializer = recipe.getSerializer();
             if (serializer == TFCRecipeSerializers.POT_JAM.get())
@@ -243,14 +243,14 @@ public final class EmiIntegration implements EmiPlugin
 
         for (var entry : LampFuel.MANAGER.getElements().entrySet())
         {
-            ResourceLocation id = entry.getKey();
+            Identifier id = entry.getKey();
             LampFuel fuel = entry.getValue();
             registry.addRecipe(new EmiLampFuelRecipe(EmiHelpers.syntheticId("lamp_fuel/" + id.getNamespace() + "/" + id.getPath()), fuel));
         }
 
         for (RecipeHolder<ScrapingRecipe> entry : recipes(registry.getRecipeManager(), TFCRecipeTypes.SCRAPING))
         {
-            ResourceLocation id = entry.id();
+            Identifier id = entry.id();
             ScrapingRecipe recipe = entry.value();
             ItemStack extra = recipe.getExtraDrop().getEmptyStack();
             EmiWorldInteractionRecipe.Builder builder = EmiWorldInteractionRecipe.builder()
@@ -365,10 +365,10 @@ public final class EmiIntegration implements EmiPlugin
      */
     private void overrideRecipes(EmiRegistry registry)
     {
-        List<ResourceLocation> removedRecipes = new ArrayList<>();
+        List<Identifier> removedRecipes = new ArrayList<>();
         for (RecipeHolder<CraftingRecipe> entry : registry.getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING))
         {
-            ResourceLocation id = entry.id();
+            Identifier id = entry.id();
             CraftingRecipe recipe = entry.value();
 
             if (recipe instanceof AdvancedShapelessRecipe asr)
@@ -388,7 +388,7 @@ public final class EmiIntegration implements EmiPlugin
 
     }
 
-    private static <C extends RecipeInput, T extends Recipe<C>> void basicRecipeMapping(EmiRegistry registry, Supplier<RecipeType<T>> type, BiFunction<ResourceLocation, T, EmiRecipe> mapper)
+    private static <C extends RecipeInput, T extends Recipe<C>> void basicRecipeMapping(EmiRegistry registry, Supplier<RecipeType<T>> type, BiFunction<Identifier, T, EmiRecipe> mapper)
     {
         for (RecipeHolder<T> recipe : recipes(registry.getRecipeManager(), type))
         {

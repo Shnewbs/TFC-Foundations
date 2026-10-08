@@ -14,7 +14,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import net.dries007.tfc.client.RenderHelpers;
@@ -25,8 +25,8 @@ import net.dries007.tfc.util.Helpers;
 
 public class CalendarClockBlockEntityRenderer implements BlockEntityRenderer<CalendarClockBlockEntity>
 {
-    public static final ResourceLocation TEXTURE = Helpers.identifier("textures/entity/calendar_clock.png");
-    public static final ResourceLocation TEXTURE_MONTH = Helpers.identifier("textures/entity/calendar_clock_month.png");
+    public static final Identifier TEXTURE = Helpers.identifier("textures/entity/calendar_clock.png");
+    public static final Identifier TEXTURE_MONTH = Helpers.identifier("textures/entity/calendar_clock_month.png");
 
     private final CalendarClockModel model;
 

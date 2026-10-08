@@ -8,7 +8,7 @@ package net.dries007.tfc.client.screen;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 import net.dries007.tfc.client.RenderHelpers;
@@ -21,9 +21,9 @@ import net.dries007.tfc.util.calendar.Calendars;
 
 public class FireboxScreen extends BlockEntityScreen<FireboxBlockEntity, FireboxContainer>
 {
-    private static final ResourceLocation TEXTURE = Helpers.identifier("textures/gui/firebox.png");
-    private static final ResourceLocation THERMOMETER = Helpers.identifier("container/thermometer");
-    private static final ResourceLocation THERMOMETER_INDICATOR = Helpers.identifier("container/thermometer_indicator");
+    private static final Identifier TEXTURE = Helpers.identifier("textures/gui/firebox.png");
+    private static final Identifier THERMOMETER = Helpers.identifier("container/thermometer");
+    private static final Identifier THERMOMETER_INDICATOR = Helpers.identifier("container/thermometer_indicator");
 
     public FireboxScreen(FireboxContainer container, Inventory playerInventory, Component name)
     {

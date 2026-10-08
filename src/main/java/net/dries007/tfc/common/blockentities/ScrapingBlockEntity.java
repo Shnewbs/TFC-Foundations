@@ -10,7 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -25,8 +25,8 @@ import static net.dries007.tfc.TerraFirmaCraft.*;
 
 public class ScrapingBlockEntity extends InventoryBlockEntity<ItemStackHandler>
 {
-    @Nullable private ResourceLocation inputTexture = null;
-    @Nullable private ResourceLocation outputTexture = null;
+    @Nullable private Identifier inputTexture = null;
+    @Nullable private Identifier outputTexture = null;
     private short positions = 0; // essentially a boolean[16]
     @Nullable private DyeColor color1 = null;
     @Nullable private DyeColor color2 = null;
@@ -130,13 +130,13 @@ public class ScrapingBlockEntity extends InventoryBlockEntity<ItemStackHandler>
     }
 
     @Nullable
-    public ResourceLocation getInputTexture()
+    public Identifier getInputTexture()
     {
         return inputTexture;
     }
 
     @Nullable
-    public ResourceLocation getOutputTexture()
+    public Identifier getOutputTexture()
     {
         return outputTexture;
     }

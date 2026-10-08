@@ -10,7 +10,7 @@ import java.util.List;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.handler.EmiCraftContext;
 import dev.emi.emi.api.recipe.handler.StandardRecipeHandler;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -46,7 +46,7 @@ public class EmiAnvilHandler implements StandardRecipeHandler<AnvilContainer>
     {
         if (StandardRecipeHandler.super.craft(recipe, context))
         {
-            ResourceLocation id = recipe.getId();
+            Identifier id = recipe.getId();
             if (id != null)
             {
                 PacketDistributor.sendToServer(new SelectAnvilPlanPacket(id));

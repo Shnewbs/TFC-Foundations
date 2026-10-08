@@ -8,7 +8,7 @@ package net.dries007.tfc.client.screen;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 import net.dries007.tfc.client.RenderHelpers;
@@ -20,7 +20,7 @@ import net.dries007.tfc.util.Helpers;
 
 public class CharcoalForgeScreen extends BlockEntityScreen<CharcoalForgeBlockEntity, CharcoalForgeContainer>
 {
-    private static final ResourceLocation FORGE = Helpers.identifier("textures/gui/charcoal_forge.png");
+    private static final Identifier FORGE = Helpers.identifier("textures/gui/charcoal_forge.png");
 
     public CharcoalForgeScreen(CharcoalForgeContainer container, Inventory playerInventory, Component name)
     {

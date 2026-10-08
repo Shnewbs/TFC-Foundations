@@ -12,7 +12,7 @@ import java.util.function.UnaryOperator;
 import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -55,7 +55,7 @@ public class RockKnappingComponent extends CustomComponent
                     final ItemStack inputStack = new ItemStack(input);
                     if (recipe.matchesItem(inputStack))
                     {
-                        final ResourceLocation texture = KnappingScreen.getButtonLocation(input, false);
+                        final Identifier texture = KnappingScreen.getButtonLocation(input, false);
                         recipes.add(new Entry(recipe, recipe.getResultItem(null), texture));
                     }
                 }
@@ -87,5 +87,5 @@ public class RockKnappingComponent extends CustomComponent
             .toArray(String[]::new);
     }
 
-    record Entry(KnappingRecipe recipe, ItemStack outputStack, ResourceLocation texture) {}
+    record Entry(KnappingRecipe recipe, ItemStack outputStack, Identifier texture) {}
 }

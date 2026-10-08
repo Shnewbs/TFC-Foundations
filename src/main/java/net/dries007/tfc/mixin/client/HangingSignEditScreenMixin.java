@@ -7,7 +7,7 @@
 package net.dries007.tfc.mixin.client;
 
 import net.minecraft.client.gui.screens.inventory.HangingSignEditScreen;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,7 +25,7 @@ public abstract class HangingSignEditScreenMixin
     @Mutable
     @Final
     @Shadow
-    private ResourceLocation texture;
+    private Identifier texture;
 
     @Inject(method = "<init>(Lnet/minecraft/world/level/block/entity/SignBlockEntity;ZZ)V", at = @At("TAIL"))
     public void inject$constructor(SignBlockEntity signBlockEntity, boolean isFrontText, boolean filter, CallbackInfo ci)

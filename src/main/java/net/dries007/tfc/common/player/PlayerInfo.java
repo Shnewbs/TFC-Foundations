@@ -7,7 +7,7 @@
 package net.dries007.tfc.common.player;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -361,7 +361,7 @@ public final class PlayerInfo extends net.minecraft.world.food.FoodData implemen
         food.readAdditionalSaveData(root);
         lastDrinkTick = tag.getLong("lastDrinkTick");
         thirst = tag.getFloat("thirst");
-        chiselMode = ChiselMode.REGISTRY.get(ResourceLocation.tryParse(tag.getString("chiselMode")));
+        chiselMode = ChiselMode.REGISTRY.get(Identifier.tryParse(tag.getString("chiselMode")));
         nutrition.setHunger(getFoodLevel());
         nutrition.readFromNbt(tag.get("nutrition"));
         intoxicationTick = tag.getLong("intoxication");

@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.client.model.entity.AnemometerModel;
@@ -21,7 +21,7 @@ import net.dries007.tfc.util.Helpers;
 
 public class AnemometerBlockEntityRenderer implements BlockEntityRenderer<AnemometerBlockEntity>
 {
-    public static final ResourceLocation TEXTURE = Helpers.identifier("textures/entity/anemometer.png");
+    public static final Identifier TEXTURE = Helpers.identifier("textures/entity/anemometer.png");
 
     private final AnemometerModel model;
 
