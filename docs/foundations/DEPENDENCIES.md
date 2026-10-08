@@ -11,6 +11,7 @@ Observed 2026-10-08. Candidate version: 0.0.0. Source baseline: e9d9a88a187d5a33
 | Java | 25 | Official NeoForge 26.3 MDK |
 | ModDevGradle | 2.0.148 | Official NeoForge 26.3 MDK |
 | Gradle | 9.2.1 | Official NeoForge 26.3 MDK; distribution SHA-256 verified |
+| Licenser | 0.7.5 | Official NeoForge Maven metadata; local Gradle 9.2.1 license checks pass |
 | Foojay resolver | 1.0.0 | Official NeoForge 26.3 MDK |
 | JEI | 31.9.0.61 | Published metadata for jei-26.3-neoforge; adapter not ported/tested |
 

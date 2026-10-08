@@ -36,3 +36,9 @@ Record date, starting/ending commits, scope, changed systems, exact test command
 The user explicitly requested continued work and public pushes, superseding the earlier privacy requirement. Retain the existing public fork and its full history. Removed the private-only CI condition and enabled manual validation runs. Push preparation includes the local 0.0.0 checkpoint 36e9b1fbd. Runtime/playability gates still apply to releases.
 
 Publication result: pushed preparation and public CI configuration to `26.x` as `990bda3df4a2d09ca2dfbcf91d500439ab0ceef5` through the GitHub connector. Direct Git transport had no credential, so the connector created the equivalent tree/commit; original local commits remain on `local-pre-public-checkpoint`. Verified identical trees and aligned the local branch with the published commit. Both workflows report active, but the Actions runs endpoint reports zero runs. No CI compilation result is available. The connector has no manual-dispatch action. Updated README to identify this fork, disclose the incomplete port and preserve all upstream legal/acknowledgment notices.
+
+## 2026-10-08 — Actions enabled; Gradle 9 license check repaired
+
+With explicit browser approval, enabled Actions for this fork and dispatched Validate 26.x on 26.x. Run #1: https://github.com/Shnewbs/TFC-Foundations/actions/runs/37860026420, commit 995c2433a287e0d21a45fc41dcb1e45fee7900db. Checkout and Java 25 setup passed. Build failed before source compilation: Licenser 0.7.2 referenced removed Gradle class `org/gradle/util/ConfigureUtil`.
+
+Selected published NeoForge Licenser 0.7.5 and ran `gradle checkLicenses --no-daemon` on Gradle 9.2.1 locally. PASS: checkLicenseMain, checkLicenseTest, checkLicenseData and checkLicenses. No check disabled or license removed. Push this fix for a full CI retry. Playable 0.0.0 remains unavailable.

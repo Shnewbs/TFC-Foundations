@@ -39,7 +39,7 @@ Updated: 2026-10-08. Read this file first when resuming work.
 - Gradle automatically installed Temurin 25.0.4.1+1. `compileJava` failed in `createMinecraftArtifacts`: NeoFormEngine.java:120 throws `NoSuchElementException` because `ProcessHandle.current().info().command()` is empty on this host. An independent Java probe reproduced the empty Optional. TFC Java compilation and tests did not run; no JAR exists.
 - `verifyPortDependencies` fails as intended: Patchouli/EMI/Jade/The One Probe target pins are missing. Removed old runtime dependencies rather than loading 1.21.1 binaries into 26.3. Adapters remain in source for a proper port/isolation pass.
 - The 26.x validation workflow now allows public-fork runs. Runtime release gates still apply: an incomplete port must not be published as a playable release.
-- Public checkpoint `990bda3df4a2d09ca2dfbcf91d500439ab0ceef5` contains the 0.0.0 preparation. GitHub reports the validation workflow active, but no Actions run has started as of this checkpoint. The connector cannot manually dispatch workflows; CI results are pending.
+- Actions were disabled at repository level for this fork; enabled after user approval. Manually launched run #1 (`37860026420`) at commit `995c2433a287e0d21a45fc41dcb1e45fee7900db`. It failed configuring license checks because Licenser 0.7.2 references Gradle's removed ConfigureUtil. Upgraded to 0.7.5; all local main/test/data license checks now pass. Full CI retry is pending.
 
 ## References
 
