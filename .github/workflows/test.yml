@@ -28,7 +28,8 @@ jobs:
     - name: Build, Test, Check Licenses
       uses: gradle/gradle-build-action@v2
       with:
-        arguments: build
+        # Collect independent compiler/license failures even while packaging is gated.
+        arguments: compileJava compileDataJava compileTestJava build --continue
     - name: Set up Python 3.13
       uses: actions/setup-python@v4
       with:
