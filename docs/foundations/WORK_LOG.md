@@ -42,3 +42,7 @@ Publication result: pushed preparation and public CI configuration to `26.x` as 
 With explicit browser approval, enabled Actions for this fork and dispatched Validate 26.x on 26.x. Run #1: https://github.com/Shnewbs/TFC-Foundations/actions/runs/37860026420, commit 995c2433a287e0d21a45fc41dcb1e45fee7900db. Checkout and Java 25 setup passed. Build failed before source compilation: Licenser 0.7.2 referenced removed Gradle class `org/gradle/util/ConfigureUtil`.
 
 Selected published NeoForge Licenser 0.7.5 and ran `gradle checkLicenses --no-daemon` on Gradle 9.2.1 locally. PASS: checkLicenseMain, checkLicenseTest, checkLicenseData and checkLicenses. No check disabled or license removed. Push this fix for a full CI retry. Playable 0.0.0 remains unavailable.
+
+### CI dependency resolution follow-up — 2026-10-08
+
+Run [37860254645](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37860254645) passed the original Licenser configuration error, then failed resolving JEI transitive MezzConfig 0.6.6 artifacts. Both 26.3 POMs were verified present on Maven BlameJared; the exclusive repository filter admitted only `mezz.jei`. Added `net.mezzdev.config` to that filter. Full compilation and runtime validation remain pending; this is a dependency resolution correction, not a completed gameplay port.

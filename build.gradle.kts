@@ -61,7 +61,10 @@ repositories {
     }
     exclusiveContent {
         forRepository { maven("https://maven.blamejared.com/") }
-        filter { includeGroup("mezz.jei") }
+        filter {
+            includeGroup("mezz.jei")
+            includeGroup("net.mezzdev.config")
+        }
     }
     exclusiveContent {
         forRepository { maven("https://maven.k-4u.nl/") }
