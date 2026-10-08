@@ -19,7 +19,7 @@ Observed 2026-10-08. Candidate version: 0.0.0. Source baseline: e9d9a88a187d5a33
 
 The existing source directly imports all of these integrations. Removing an old runtime jar alone does not port the adapter. Compilation remains useful for diagnosing source API differences; JAR packaging also checks for missing integration version pins.
 
-- Patchouli: no 26.3 version found in published Maven metadata. TFC hard-depends on its API and internal client classes. Preserve guide data; move guide access behind an optional adapter or port a compatible backend before a playable candidate. Do not replace gameplay with no-op implementations.
+- Patchouli: official 26.1-94 beta NeoForge release exists (July 10), supports `[26.1,26.2)`, including 26.1.2. Static binary inspection found seven Minecraft class references absent on 26.3; see VERSION_STRATEGY.md. No 26.3 release verified. TFC hard-depends on its API and internal client classes. Preserve guide data; move guide access behind an optional adapter or port a compatible backend before a playable candidate. Do not replace gameplay with no-op implementations.
 - EMI: no 26.3 artifact verified. Existing repository metadata has no 26.x artifact. Recheck the maintained repository before selecting a future version; isolate the old adapter if unavailable.
 - The One Probe: published metadata contains 26.1.2 and 26.2 entries, but no 26.3 entry. Do not assume binary compatibility.
 - Jade: the inherited CurseForge file targets the old baseline. No target artifact selected yet.

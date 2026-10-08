@@ -63,3 +63,7 @@ Updated: 2026-10-08. Read this file first when resuming work.
 - Moved references to 36 vanilla entity types to their actual 26.3 packages across 63 Java files, and renamed MobSpawnType to EntitySpawnReason. Verified all referenced spawn-reason enum constants exist in the official 26.3 JAR.
 - Updated the AbstractSkeleton mixin invocation descriptor to the moved class. Bytecode inspection confirms reassessWeaponGoal still invokes getItemInHand with the expected descriptor; application of the mixin still requires a runtime test.
 - These changes do not complete entity behavior migration. Constructor/method signatures, synchronization, AI and spawning need compiler and runtime verification.
+
+## Version investigation
+
+[Version strategy investigation](docs/foundations/VERSION_STRATEGY.md) records Patchouli binary incompatibilities and published ecosystem plans as of 2026-10-08. Recommendation: first playable candidate on 26.1.2, preserve 26.3 work and keep 26.4 conditional. This is a recommendation only; the user has not selected a new target and the current build remains 26.3.
