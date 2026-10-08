@@ -32,6 +32,8 @@
 !/HEADER.txt
 !/README.md
 !/CHANGELOG.md
+!/PROJECT_STATUS.md
+!/docs/foundations/**/*.md
 !/CodeStyle.xml
 
 # Splash / Logo Images

@@ -2,16 +2,16 @@
 modLoader = "javafml"
 loaderVersion = "[4,)"
 license = "EUPL-1.2"
-issueTrackerURL = "https://github.com/TerraFirmaCraft/TerraFirmaCraft/issues"
+issueTrackerURL = "https://github.com/Shnewbs/TFC-Foundations/issues"
 
 # TFC
 [[mods]]
     modId = "${modId}"
     version = "${modVersion}"
-    displayName = "TerraFirmaCraft"
+    displayName = "TFC Foundations"
     credits = "By AlcatrazEscapee, Disastermoo, Dries007, Bunsan, Claycorp, DavidTriphon, EERussianguy, Gaelmare, and many others. Based on the original work by Bioxx, Dunk, and Kitty. Music by Mike \"Menoch\" Pelaez"
     authors = "AlcatrazEscapee"
-    description = '''TerraFirmaCraft - The Next Generation'''
+    description = '''TFC Foundations — a TerraFirmaCraft port for Minecraft 26.3.'''
     enumExtensions = "META-INF/enumextensions.json"
 
 # Dependencies

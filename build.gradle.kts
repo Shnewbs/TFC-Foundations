@@ -2,26 +2,24 @@ import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 
 plugins {
-    id("net.neoforged.moddev") version "2.0.107"
+    id("net.neoforged.moddev") version "2.0.148"
     id("net.neoforged.licenser") version "0.7.2"
 }
 
 
-// Toolchain versions
-val minecraftVersion: String = "1.21.1"
-val neoForgeVersion: String = "21.1.234"
-val parchmentVersion: String = "2024.11.17"
-val parchmentMinecraftVersion: String = "1.21.1"
-
-// Dependency versions
-val emiVersion: String = "1.1.22+1.21.1"
-val jeiVersion: String = "19.25.0.321"
-val patchouliVersion: String = "1.21.1-92-NEOFORGE"
+// Verified against the NeoForge 26.3 MDK; integration versions must target 26.3.
+val minecraftVersion: String = providers.gradleProperty("minecraftVersion").get()
+val neoForgeVersion: String = providers.gradleProperty("neoForgeVersion").get()
+val jeiVersion: String = providers.gradleProperty("jeiVersion").get()
+val patchouliVersion = providers.gradleProperty("patchouliVersion")
+val emiVersion = providers.gradleProperty("emiVersion")
+val jadeVersion = providers.gradleProperty("jadeVersion")
+val theOneProbeVersion = providers.gradleProperty("theOneProbeVersion")
 
 val modId: String = "tfc"
-val modVersion: String = System.getenv("VERSION") ?: "0.0.0-indev"
-val modJavaVersion: String = "21"
-val modIsInCI: Boolean = !modVersion.contains("-indev")
+val modVersion: String = providers.gradleProperty("modVersion").get()
+val modJavaVersion: String = "25"
+val modIsInCI: Boolean = providers.environmentVariable("CI").map { it == "true" }.getOrElse(false)
 val modDataOutput: String = "src/generated/resources"
 
 
@@ -31,7 +29,7 @@ val generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
         "modVersion" to modVersion,
         "minecraftVersionRange" to "[$minecraftVersion]",
         "neoForgeVersionRange" to "[$neoForgeVersion,)",
-        "patchouliVersionRange" to "[$patchouliVersion,)",
+        "patchouliVersionRange" to patchouliVersion.map { "[$it,)" }.getOrElse("[0,)"),
         "jeiVersionRange" to "[$jeiVersion,)"
     )
     inputs.properties(modReplacementProperties)
@@ -45,7 +43,7 @@ neoForge {
 }
 
 base {
-    archivesName.set("TerraFirmaCraft-NeoForge-$minecraftVersion")
+    archivesName.set("TFC-Foundations-$minecraftVersion")
     group = "net.dries007.tfc"
     version = modVersion
 }
@@ -93,11 +91,6 @@ neoForge {
     addModdingDependenciesTo(sourceSets["data"])
     validateAccessTransformers = true
 
-    parchment {
-        minecraftVersion.set(parchmentMinecraftVersion)
-        mappingsVersion.set(parchmentVersion)
-    }
-
     runs {
         configureEach {
             // Only JBR allows enhanced class redefinition, so ignore the option for any other JDKs
@@ -114,7 +107,7 @@ neoForge {
             programArgument("--nogui")
         }
         register("data") {
-            data()
+            clientData()
             sourceSet = sourceSets["data"]
             programArguments.addAll("--all", "--mod", modId, "--output", file(modDataOutput).absolutePath, "--existing",  file("src/main/resources").absolutePath)
         }
@@ -136,29 +129,24 @@ neoForge {
 }
 
 dependencies {
-    // EMI
-    compileOnly("dev.emi:emi-neoforge:${emiVersion}:api")
-    //runtimeOnly("dev.emi:emi-neoforge:${emiVersion}")
-
-    // JEI
+    // Never resolve old Minecraft integrations into a 26.3 runtime.
+    // Unported integrations remain in source until replacement adapters are ready.
+    if (emiVersion.isPresent) {
+        compileOnly("dev.emi:emi-neoforge:${emiVersion.get()}:api")
+    }
     compileOnly("mezz.jei:jei-${minecraftVersion}-common-api:${jeiVersion}")
     compileOnly("mezz.jei:jei-${minecraftVersion}-neoforge-api:${jeiVersion}")
     runtimeOnly("mezz.jei:jei-${minecraftVersion}-neoforge:${jeiVersion}")
-
-    // Patchouli
-    // We need to compile against the full JAR, not just the API, because we do some egregious hacks.
-    implementation("vazkii.patchouli:Patchouli:$patchouliVersion")
-    "dataImplementation"("vazkii.patchouli:Patchouli:$patchouliVersion")
-
-    // Jade / The One Probe
-    implementation(group = "curse.maven", name = "jade-324717", version = "6853386")
-    compileOnly(group = "mcjty.theoneprobe", name = "theoneprobe", version = "1.21_neo-12.0.4-6")
-
-    // ModernFix - useful at runtime for significant memory savings in TFC in dev (see i.e. wall block shape caches)
-    runtimeOnly(group = "curse.maven", name = "modernfix-790626", version = "6766126")
-
-    // Sodium - useful for testing graphics behavior
-//    runtimeOnly(group = "curse.maven", name = "sodium-394468", version = "6382651")
+    if (patchouliVersion.isPresent) {
+        implementation("vazkii.patchouli:Patchouli:${patchouliVersion.get()}")
+        "dataImplementation"("vazkii.patchouli:Patchouli:${patchouliVersion.get()}")
+    }
+    if (jadeVersion.isPresent) {
+        implementation("curse.maven:jade-324717:${jadeVersion.get()}")
+    }
+    if (theOneProbeVersion.isPresent) {
+        compileOnly("mcjty.theoneprobe:theoneprobe:${theOneProbeVersion.get()}")
+    }
 
     // Data
     "dataImplementation"(sourceSets["main"].output)
@@ -169,6 +157,25 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.3")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.3")
 }
+
+// Fail before producing a misleading artifact while legacy adapters are still linked.
+val requiredIntegrationVersions = listOf("patchouliVersion", "emiVersion", "jadeVersion", "theOneProbeVersion")
+val missingIntegrationVersions = requiredIntegrationVersions.filter { !providers.gradleProperty(it).isPresent }
+val verifyPortDependencies = tasks.register("verifyPortDependencies") {
+    inputs.property("missingIntegrationVersions", missingIntegrationVersions)
+    doLast {
+        val missing = inputs.properties.getValue("missingIntegrationVersions") as List<*>
+        check(missing.isEmpty()) {
+            "26.3 port is incomplete: verified target-version dependencies are missing for " +
+                missing.joinToString() +
+                ". Port/isolate these adapters or configure verified 26.3 artifacts; do not use 1.21.1 jars."
+        }
+    }
+}
+tasks.withType<JavaCompile>().configureEach {
+    options.encoding = "UTF-8"
+}
+tasks.named("jar") { dependsOn(verifyPortDependencies) }
 
 // Automatically apply a license header when running checkLicense / updateLicense
 license {
