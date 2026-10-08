@@ -6,8 +6,8 @@
 
 package net.dries007.tfc.mixin.accessor;
 
-import net.minecraft.world.entity.animal.horse.Horse;
-import net.minecraft.world.entity.animal.horse.Markings;
+import net.minecraft.world.entity.animal.equine.Horse;
+import net.minecraft.world.entity.animal.equine.Markings;
 import net.minecraft.world.entity.animal.horse.Variant;
 
 import org.spongepowered.asm.mixin.Mixin;

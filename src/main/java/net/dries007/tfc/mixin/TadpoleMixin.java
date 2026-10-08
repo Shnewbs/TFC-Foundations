@@ -8,7 +8,7 @@ package net.dries007.tfc.mixin;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.animal.frog.Frog;
 import net.minecraft.world.entity.animal.frog.Tadpole;
 import net.minecraft.world.item.ItemStack;
@@ -39,7 +39,7 @@ public class TadpoleMixin
             if (frog != null)
             {
                 frog.moveTo(pole.getX(), pole.getY(), pole.getZ(), pole.getYRot(), pole.getXRot());
-                frog.finalizeSpawn(server, server.getCurrentDifficultyAt(frog.blockPosition()), MobSpawnType.CONVERSION, null);
+                frog.finalizeSpawn(server, server.getCurrentDifficultyAt(frog.blockPosition()), EntitySpawnReason.CONVERSION, null);
                 frog.setNoAi(pole.isNoAi());
                 if (pole.hasCustomName())
                 {

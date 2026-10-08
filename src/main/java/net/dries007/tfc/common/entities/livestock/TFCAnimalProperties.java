@@ -28,7 +28,7 @@ import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -234,7 +234,7 @@ public interface TFCAnimalProperties extends GenderedRenderAnimal, BrainAnimalBe
         getEntityData().set(animalData().lastMateTick(), nbt.getLong("lastMateTick"));
     }
 
-    default void initCommonAnimalData(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason)
+    default void initCommonAnimalData(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason reason)
     {
         final var random = getEntity().getRandom();
 

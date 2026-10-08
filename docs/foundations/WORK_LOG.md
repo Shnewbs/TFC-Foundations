@@ -50,3 +50,7 @@ Run [37860254645](https://github.com/Shnewbs/TFC-Foundations/actions/runs/378602
 ### First Java migration — 2026-10-08
 
 CI now runs explicit compilation targets with `--continue`, retaining the failing packaging gate. Run 37860739449 reached the compiler and displayed 100 errors. Migrated ResourceLocation to the verified 26.3 Identifier API across 179 Java files. A token-only diff check confirmed no other Java edits; no data/resource IDs changed. A standalone Java 25 probe against the official Minecraft 26.3 client JAR passed namespace preservation, round trip, and invalid identifier checks. All local license checks pass. Full compilation, tests, client/server startup and gameplay regression checks remain incomplete.
+
+### Entity package migration — 2026-10-08
+
+Migrated 36 entity class locations plus MobSpawnType → EntitySpawnReason across 63 Java files using the official 26.3 class inventory. Updated the skeleton mixin bytecode target and verified the target invocation still exists. Retained all spawn-reason values used by TFC; verified each against EntitySpawnReason. Next checks: clean compilation, mixin application, natural/chunk/breeding/conversion spawns, animal AI, projectiles, boats/minecarts and save/reload. None of those gameplay checks has passed yet.

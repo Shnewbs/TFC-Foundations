@@ -15,10 +15,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.animal.Ocelot;
+import net.minecraft.world.entity.animal.feline.Ocelot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -126,7 +126,7 @@ public class TFCOcelot extends Ocelot
                         final TFCCat cat = convertTo(TFCEntities.CAT.get(), false);
                         if (cat != null && level() instanceof ServerLevelAccessor server)
                         {
-                            cat.finalizeSpawn(server, level().getCurrentDifficultyAt(blockPosition()), MobSpawnType.CONVERSION, null);
+                            cat.finalizeSpawn(server, level().getCurrentDifficultyAt(blockPosition()), EntitySpawnReason.CONVERSION, null);
                             if (!wasBaby)
                             {
                                 cat.setBirthTickToALongTimeAgo();

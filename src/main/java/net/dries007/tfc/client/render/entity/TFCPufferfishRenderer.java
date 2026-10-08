@@ -9,7 +9,7 @@ package net.dries007.tfc.client.render.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.PufferfishRenderer;
-import net.minecraft.world.entity.animal.Pufferfish;
+import net.minecraft.world.entity.animal.fish.Pufferfish;
 import net.minecraft.world.phys.Vec3;
 
 public class TFCPufferfishRenderer extends PufferfishRenderer

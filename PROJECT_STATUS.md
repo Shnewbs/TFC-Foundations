@@ -56,3 +56,10 @@ Updated: 2026-10-08. Read this file first when resuming work.
 - Replaced the exact ResourceLocation token with Identifier in 179 main/data/test Java files, including codecs, packets, registries, assets and integration adapters. All string IDs and gameplay logic remain unchanged by this migration.
 - Verified the replacement against Mojang's SHA-1-verified 26.3 client JAR, using `javap` and an isolated executable probe: explicit/default namespaces, serialization round trip and invalid-ID rejection all passed. Local main/data/test license checks pass. This is not a full TFC compile or runtime test.
 - Next: inspect the post-migration CI diagnostics, migrate entity class locations and event APIs, then adapt rendering and unavailable integrations. Packaging remains blocked.
+
+## Entity migration checkpoint
+
+- Run [37861223935](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37861223935) still fails Java compilation; the reported errors now expose entity package moves, interaction APIs, rendering and reload-event changes.
+- Moved references to 36 vanilla entity types to their actual 26.3 packages across 63 Java files, and renamed MobSpawnType to EntitySpawnReason. Verified all referenced spawn-reason enum constants exist in the official 26.3 JAR.
+- Updated the AbstractSkeleton mixin invocation descriptor to the moved class. Bytecode inspection confirms reassessWeaponGoal still invokes getItemInHand with the expected descriptor; application of the mixin still requires a runtime test.
+- These changes do not complete entity behavior migration. Constructor/method signatures, synchronization, AI and spawning need compiler and runtime verification.

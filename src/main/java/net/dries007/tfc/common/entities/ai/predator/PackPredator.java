@@ -21,7 +21,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.player.Player;
@@ -76,7 +76,7 @@ public class PackPredator extends Predator implements Temptable
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnData)
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason spawnType, @Nullable SpawnGroupData spawnData)
     {
         spawnData = super.finalizeSpawn(level, difficulty, spawnType, spawnData);
         setRespect(random.nextInt(10));
@@ -229,7 +229,7 @@ public class PackPredator extends Predator implements Temptable
                         final Dog dog = convertTo(TFCEntities.DOG.get(), false);
                         if (dog != null && level() instanceof ServerLevelAccessor server)
                         {
-                            dog.finalizeSpawn(server, level().getCurrentDifficultyAt(blockPosition()), MobSpawnType.CONVERSION, null);
+                            dog.finalizeSpawn(server, level().getCurrentDifficultyAt(blockPosition()), EntitySpawnReason.CONVERSION, null);
                             dog.setGender(isMale() ? Gender.MALE : Gender.FEMALE);
                             if (!wasBaby)
                             {

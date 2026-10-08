@@ -26,8 +26,8 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.animal.CatVariant;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.animal.feline.CatVariant;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -86,7 +86,7 @@ public class TFCCat extends TamableMammal
     }
 
     @Override
-    public void initCommonAnimalData(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason)
+    public void initCommonAnimalData(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason reason)
     {
         super.initCommonAnimalData(level, difficulty, reason);
 

@@ -7,7 +7,7 @@
 package net.dries007.tfc.mixin;
 
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.monster.AbstractSkeleton;
+import net.minecraft.world.entity.monster.skeleton.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
@@ -31,7 +31,7 @@ public abstract class AbstractSkeletonMixin extends Monster
         super(type, level);
     }
 
-    @Inject(method = "reassessWeaponGoal", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/entity/monster/AbstractSkeleton;getItemInHand(Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/item/ItemStack;"), cancellable = true)
+    @Inject(method = "reassessWeaponGoal", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/entity/monster/skeleton/AbstractSkeleton;getItemInHand(Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/item/ItemStack;"), cancellable = true)
     private void inject$reassessWeaponGoal(CallbackInfo ci)
     {
         ItemStack held = getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, item -> item instanceof JavelinItem));
