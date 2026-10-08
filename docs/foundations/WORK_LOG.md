@@ -34,3 +34,5 @@ Record date, starting/ending commits, scope, changed systems, exact test command
 ## 2026-10-08 — Public source publication authorized
 
 The user explicitly requested continued work and public pushes, superseding the earlier privacy requirement. Retain the existing public fork and its full history. Removed the private-only CI condition and enabled manual validation runs. Push preparation includes the local 0.0.0 checkpoint 36e9b1fbd. Runtime/playability gates still apply to releases.
+
+Publication result: pushed preparation and public CI configuration to `26.x` as `990bda3df4a2d09ca2dfbcf91d500439ab0ceef5` through the GitHub connector. Direct Git transport had no credential, so the connector created the equivalent tree/commit; original local commits remain on `local-pre-public-checkpoint`. Verified identical trees and aligned the local branch with the published commit. Both workflows report active, but the Actions runs endpoint reports zero runs. No CI compilation result is available. The connector has no manual-dispatch action. Updated README to identify this fork, disclose the incomplete port and preserve all upstream legal/acknowledgment notices.

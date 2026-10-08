@@ -1,34 +1,41 @@
-![TerraFirmaCraft Splash Image](./img/splash-1.png)
+# TFC Foundations
 
-*Survival Mode As It Should've Been*
+A public development fork of [TerraFirmaCraft](https://github.com/TerraFirmaCraft/TerraFirmaCraft), targeting Minecraft **26.3** and NeoForge.
 
-### About
+**Current candidate: 0.0.0 — source preparation only. No playable 26.3 build is available.** The branch contains upstream gameplay code that still needs porting; changing the build target does not establish runtime compatibility.
 
-TerraFirmaCraft (TFC) is a total conversion mod that overhauls and reinvents survival mode. The goal of the mod is to create a believable, challenging survival experience, in a brand new immersive setting. It completely overhauls Minecraft world generation - from adding plate tectonics, to flowing rivers, to mountain ranges, to varied and diverse forests, flora, and fauna. Below is a list of some of the features of this mod:
+## Development goals
 
-- The underground has been completely reimagined, with layers of different types of rock, and massive sparse ore deposits of several different types.
-- A fully fledged technology tree, from pottery and pit kilns, to charcoal production, producing iron with a bloomery, steel making and more.
-- Seasons, weather, and a realistic climate and calendar model cause the player to need to stockpile food for winter to survive.
-- The world is alive, with many different plants, wild crops, wild fruits, animals - both passive and predators - to find
-- The player must manage their food's expiration, nutrition, and thirst using our detailed food and cooking mechanics.
+- Preserve TFC survival progression, climate, geology, food and agriculture while porting to 26.3.
+- Prioritize correctness and measured performance.
+- Extend datapack and addon APIs, with optional KubeJS/CraftTweaker adapters when compatible dependencies are available.
+- Support optional Conquest-compatible presentation without bundling unlicensed assets.
+- Track fixes across upstream branches; move to released 26.4 once Minecraft and a usable matching NeoForge toolchain are available.
 
-In order to understand all of these new features, TerraFirmaCraft comes with a detailed in-game Field Guide, which is available from the moment you spawn in, and will guide you through the art of surviving in this brand-new world.
+These are development goals, not completed features.
 
-### Links
+## Build status
 
-- [Download on CurseForge](https://www.curseforge.com/minecraft/mc-mods/terrafirmacraft)
-- [Discuss on Discord](https://discord.gg/PRuAKvY)
-- [Read the Field Guide (Players)](https://terrafirmacraft.github.io/Field-Guide/en_us/)
-- [Read the API Documentation (Pack Makers / Addons)](https://terrafirmacraft.github.io/Documentation/)
+The configured toolchain uses Java 25, Gradle 9.2.1, ModDevGradle 2.0.148 and NeoForge 26.3.0.58-beta. The Gradle wrapper and mod metadata generation pass. Full compilation is not yet verified: the current development host fails in NeoFormRuntime artifact generation, and legacy integration adapters still need porting or isolation.
 
-### Contributing
+```sh
+./gradlew build --no-daemon
+```
 
- - Firstly, join our [Discord](https://invite.gg/terrafirmacraft), as it's where all discussion surrounding development, tasks, and decisions happens.
- - As per the Github terms of service, you grant us the right to use your contribution under the same license as this project.
- - In addition, we request that you give us the right to change the license in the future.
- - Import & use the project's Code Style. (Recommend using Intellij as that's what our code style xml is based on)
-- Before creating a Pull Request, run `gradlew updateLicenses`. This will apply the correct license header to all project files.
-- We use python for data and asset generation, among other things. In order to run the generation scripts (all found in `/resources`), you will need to install the python modules `mcresources`, `pillow`, `nbtlib`, and `Levenshtein` (see `resources/requirements.txt`).
+On Windows, use `gradlew.bat build --no-daemon`. A fresh build downloads its required toolchain and dependencies. Do not supply old 1.21.1 integration jars to satisfy the 26.3 dependency checks.
+
+## Project records
+
+- [Current status and next actions](PROJECT_STATUS.md)
+- [Roadmap and release gates](docs/foundations/ROADMAP.md)
+- [Dependency checkpoint](docs/foundations/DEPENDENCIES.md)
+- [Source audit](docs/foundations/AUDIT.md)
+- [Upstream tracking](docs/foundations/UPSTREAM.md)
+- [Work log](docs/foundations/WORK_LOG.md)
+
+Source checkpoints are published on `26.x`. Playable releases require successful compilation, tests and client/dedicated-server survival validation. Publishing to upstream distribution destinations is disabled.
+
+Upstream's [Field Guide](https://terrafirmacraft.github.io/Field-Guide/en_us/) and [API documentation](https://terrafirmacraft.github.io/Documentation/) describe the original project and are reference material, not guarantees of compatibility with this port.
 
 ### Legal
 
