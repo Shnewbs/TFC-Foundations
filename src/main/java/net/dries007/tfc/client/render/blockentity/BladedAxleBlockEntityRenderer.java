@@ -7,53 +7,64 @@
 package net.dries007.tfc.client.render.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.core.Direction;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.sprite.SpriteGetter;
+import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
-import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.common.blockentities.rotation.BladedAxleBlockEntity;
 import net.dries007.tfc.common.blocks.rotation.BladedAxleBlock;
-import net.dries007.tfc.util.Helpers;
 
-public class BladedAxleBlockEntityRenderer implements BlockEntityRenderer<BladedAxleBlockEntity>
+public class BladedAxleBlockEntityRenderer implements BlockEntityRenderer<BladedAxleBlockEntity, BladedAxleBlockEntityRenderer.State>
 {
-    private static final Identifier BLADE_TEXTURE = Helpers.identifier("block/metal/block/steel");
-
-    public static void renderBlade(PoseStack stack, MultiBufferSource bufferSource, Direction.Axis axis, int packedLight, int packedOverlay, float rotationAngle)
+    private static final Identifier BLADE_TEXTURE = Identifier.fromNamespaceAndPath("tfc", "block/metal/block/steel");
+    public static class State extends AxleBlockEntityRenderer.State
     {
-        final TextureAtlasSprite sprite = RenderHelpers.blockTexture(BLADE_TEXTURE);
-        final VertexConsumer buffer = bufferSource.getBuffer(RenderType.cutout());
+        public AxleRenderGeometry.@Nullable Texture bladeTexture;
+    }
 
-        stack.pushPose();
+    private final SpriteGetter sprites;
 
-        AxleBlockEntityRenderer.applyRotation(stack, axis, rotationAngle);
+    public BladedAxleBlockEntityRenderer(BlockEntityRendererProvider.Context context) { sprites = context.sprites(); }
 
-        RenderHelpers.renderTexturedCuboid(stack, buffer, sprite, packedLight, packedOverlay, 7f / 16f, 10f / 16f, 6f / 16f, 9f / 16f, 17.5f / 16f, 10f / 16f, false);
+    @Override
+    public State createRenderState() { return new State(); }
 
-        stack.popPose();
+    @Override
+    public void extractRenderState(BladedAxleBlockEntity axle, State state, float partialTick, Vec3 camera,
+        ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress)
+    {
+        BlockEntityRenderer.super.extractRenderState(axle, state, partialTick, camera, breakProgress);
+        state.texture = state.bladeTexture = null;
+        if (axle.getLevel() != null && axle.getBlockState().getBlock() instanceof BladedAxleBlock block)
+        {
+            state.axis = axle.getBlockState().getValue(BladedAxleBlock.AXIS);
+            state.angle = -axle.getRotationAngle(partialTick);
+            state.texture = AxleRenderGeometry.Texture.capture(sprites.get(new SpriteId(TextureAtlas.LOCATION_BLOCKS, block.getAxleTextureLocation())));
+            state.bladeTexture = AxleRenderGeometry.Texture.capture(sprites.get(new SpriteId(TextureAtlas.LOCATION_BLOCKS, BLADE_TEXTURE)));
+        }
     }
 
     @Override
-    public void render(BladedAxleBlockEntity axle, float partialTick, PoseStack stack, MultiBufferSource bufferSource, int packedLight, int packedOverlay)
+    public void submit(State state, PoseStack poses, SubmitNodeCollector collector, CameraRenderState camera)
     {
-        final BlockState state = axle.getBlockState();
-        final Level level = axle.getLevel();
-
-        if (!(state.getBlock() instanceof BladedAxleBlock axleBlock) || level == null)
-        {
-            return;
-        }
-
-        final Direction.Axis axis = state.getValue(BladedAxleBlock.AXIS);
-
-        AxleBlockEntityRenderer.renderAxle(stack, bufferSource, axleBlock, axis, packedLight, packedOverlay, -axle.getRotationAngle(partialTick));
-        renderBlade(stack, bufferSource, axis, packedLight, packedOverlay, -axle.getRotationAngle(partialTick));
+        if (state.texture == null || state.bladeTexture == null) return;
+        AxleBlockEntityRenderer.submitAxle(poses, collector, state.texture, state.axis, state.lightCoords, state.angle);
+        final AxleRenderGeometry.Texture texture = state.bladeTexture;
+        final int light = state.lightCoords;
+        poses.pushPose();
+        AxleRenderGeometry.applyRotation(poses, state.axis, state.angle);
+        collector.submitCustomGeometry(poses, RenderTypes.entityCutoutCull(TextureAtlas.LOCATION_BLOCKS),
+            (pose, out) -> AxleRenderGeometry.drawBlade(pose, out, texture, light, OverlayTexture.NO_OVERLAY));
+        poses.popPose();
     }
 }

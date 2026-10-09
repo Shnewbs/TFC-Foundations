@@ -1,0 +1,9 @@
+{
+  "baseline": "354bb9ec206f612489172cf2100b69b30f6d14d4",
+  "geometry_factories": {
+    "WaterWheelModel": "cabd57d9685a51a264f8fff6cde83e1d32d7bbf28f16b76aa4e0290ee71ae71d",
+    "WindmillBladeModel": "08e42fed07152d4e7cacc966b9f83e6d65a8fd08f8c66c2631362f2c159bf7b7",
+    "WindmillBladeLatticeModel": "800fc7054b81f63cb919d9f48fd09e85c358b2da4bbe5e49017b50a3b7c06a6d",
+    "WindmillBladeRusticModel": "ac05ff441165716e01a214b71afdc7d20ff901a6a28c53b4ae5dfdb0141d8bb3"
+  }
+}

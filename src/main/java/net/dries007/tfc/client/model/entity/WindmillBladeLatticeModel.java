@@ -6,26 +6,16 @@
 
 package net.dries007.tfc.client.model.entity;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.dries007.tfc.common.blockentities.rotation.WindmillBlockEntity;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 
 public class WindmillBladeLatticeModel extends WindmillBladeModel
 {
-
-    private final ModelPart blade;
-    private final ModelPart main;
-
     public WindmillBladeLatticeModel(ModelPart root)
     {
         super(root);
-        this.blade = root.getChild("blade");
-        this.main = root.getChild("main");
     }
-
 
     public static LayerDefinition createBodyLayer()
     {
@@ -40,18 +30,5 @@ public class WindmillBladeLatticeModel extends WindmillBladeModel
             .texOffs(0, 163).addBox(-1.0F, 1.5F, -93.5F, 1.0F, 12.0F, 81.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
 
         return LayerDefinition.create(meshdefinition, 256, 256);
-    }
-
-    public void setupAnim(WindmillBlockEntity windmill, float partialTick, float offsetAngle)
-    {
-        main.xRot = -(windmill.getRotationAngle(partialTick) + offsetAngle);
-        blade.xRot = -(windmill.getRotationAngle(partialTick) + offsetAngle);
-    }
-
-    @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color)
-    {
-        main.render(poseStack, vertexConsumer, packedLight, packedOverlay, -1);
-        blade.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
     }
 }

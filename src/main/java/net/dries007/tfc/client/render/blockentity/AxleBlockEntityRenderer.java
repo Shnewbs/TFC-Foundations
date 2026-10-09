@@ -7,65 +7,75 @@
 package net.dries007.tfc.client.render.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.sprite.SpriteGetter;
+import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
-import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.common.blockentities.rotation.AxleBlockEntity;
 import net.dries007.tfc.common.blocks.rotation.AxleBlock;
-import net.dries007.tfc.common.blocks.rotation.ConnectedAxleBlock;
 
-
-public class AxleBlockEntityRenderer implements BlockEntityRenderer<AxleBlockEntity>
+public class AxleBlockEntityRenderer implements BlockEntityRenderer<AxleBlockEntity, AxleBlockEntityRenderer.State>
 {
-    public static void renderAxle(PoseStack stack, MultiBufferSource bufferSource, ConnectedAxleBlock axle, Direction.Axis axis, int packedLight, int packedOverlay, float rotationAngle)
+    public static class State extends BlockEntityRenderState
     {
-        final TextureAtlasSprite sprite = RenderHelpers.blockTexture(axle.getAxleTextureLocation());
-        final VertexConsumer buffer = bufferSource.getBuffer(RenderType.cutout());
-
-        stack.pushPose();
-
-        applyRotation(stack, axis, rotationAngle);
-
-        RenderHelpers.renderTexturedCuboid(stack, buffer, sprite, packedLight, packedOverlay, 6f / 16f, 6f / 16f, 0f, 10f / 16f, 10f / 16f, 1f, false);
-
-        stack.popPose();
+        public Direction.Axis axis = Direction.Axis.Z;
+        public float angle;
+        public AxleRenderGeometry.@Nullable Texture texture;
     }
 
-    public static void applyRotation(PoseStack stack, Direction.Axis axis, float rotationAngle)
+    private final SpriteGetter sprites;
+
+    public AxleBlockEntityRenderer(BlockEntityRendererProvider.Context context)
     {
-        stack.translate(0.5f, 0.5f, 0.5f);
+        sprites = context.sprites();
+    }
 
-        switch (axis) {
-            case X -> stack.mulPose(Axis.YP.rotationDegrees(90));
-            case Y -> stack.mulPose(Axis.XP.rotationDegrees(-90));
-            case Z -> {}
-        }
+    public static void applyRotation(PoseStack poses, Direction.Axis axis, float angle)
+    {
+        AxleRenderGeometry.applyRotation(poses, axis, angle);
+    }
 
-        stack.mulPose(Axis.ZP.rotation(rotationAngle));
-        stack.translate(-0.5f, -0.5f, -0.5f);
+    public static void submitAxle(PoseStack poses, SubmitNodeCollector collector, AxleRenderGeometry.Texture texture,
+        Direction.Axis axis, int light, float angle)
+    {
+        poses.pushPose();
+        applyRotation(poses, axis, angle);
+        collector.submitCustomGeometry(poses, RenderTypes.entityCutoutCull(TextureAtlas.LOCATION_BLOCKS),
+            (pose, out) -> AxleRenderGeometry.drawAxle(pose, out, texture, light, OverlayTexture.NO_OVERLAY));
+        poses.popPose();
     }
 
     @Override
-    public void render(AxleBlockEntity axle, float partialTick, PoseStack stack, MultiBufferSource bufferSource, int packedLight, int packedOverlay)
+    public State createRenderState() { return new State(); }
+
+    @Override
+    public void extractRenderState(AxleBlockEntity axle, State state, float partialTick, Vec3 camera,
+        ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress)
     {
-        final BlockState state = axle.getBlockState();
-        final Level level = axle.getLevel();
-
-        if (!(state.getBlock() instanceof AxleBlock axleBlock) || level == null)
+        BlockEntityRenderer.super.extractRenderState(axle, state, partialTick, camera, breakProgress);
+        state.texture = null;
+        if (axle.getLevel() != null && axle.getBlockState().getBlock() instanceof AxleBlock block)
         {
-            return;
+            state.axis = axle.getBlockState().getValue(AxleBlock.AXIS);
+            state.angle = -axle.getRotationAngle(partialTick);
+            state.texture = AxleRenderGeometry.Texture.capture(sprites.get(new SpriteId(TextureAtlas.LOCATION_BLOCKS, block.getAxleTextureLocation())));
         }
+    }
 
-        final Direction.Axis axis = state.getValue(AxleBlock.AXIS);
-
-        renderAxle(stack, bufferSource, axleBlock, axis, packedLight, packedOverlay, -axle.getRotationAngle(partialTick));
+    @Override
+    public void submit(State state, PoseStack poses, SubmitNodeCollector collector, CameraRenderState camera)
+    {
+        if (state.texture != null) submitAxle(poses, collector, state.texture, state.axis, state.lightCoords, state.angle);
     }
 }

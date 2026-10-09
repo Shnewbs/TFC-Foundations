@@ -6,36 +6,62 @@
 
 package net.dries007.tfc.client.render.entity;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.model.animal.equine.EquineSaddleModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.AbstractHorseRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.layers.SimpleEquipmentLayer;
+import net.minecraft.client.resources.model.EquipmentClientInfo;
 import net.minecraft.resources.Identifier;
 
-import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.client.model.entity.HorseChestLayer;
 import net.dries007.tfc.client.model.entity.TFCChestedHorseModel;
+import net.dries007.tfc.client.render.entity.state.TFCChestedHorseRenderState;
 import net.dries007.tfc.common.entities.livestock.horse.TFCChestedHorse;
-import net.dries007.tfc.util.Helpers;
 
-public class TFCChestedHorseRenderer<T extends TFCChestedHorse> extends AbstractHorseRenderer<T, TFCChestedHorseModel<T>>
+public class TFCChestedHorseRenderer<T extends TFCChestedHorse> extends AbstractHorseRenderer<T, TFCChestedHorseRenderState, TFCChestedHorseModel>
 {
-    private final Identifier texture;
-
-    public TFCChestedHorseRenderer(EntityRendererProvider.Context ctx, float scale, ModelLayerLocation layer, String name)
+    public static ModelLayerLocation saddleLayer(ModelLayerLocation layer)
     {
-        this(ctx, scale, layer, Helpers.identifierMC("textures/entity/horse/" + name + ".png"));
+        return new ModelLayerLocation(layer.model().withSuffix("_saddle"), layer.layer());
     }
 
-    public TFCChestedHorseRenderer(EntityRendererProvider.Context ctx, float scale, ModelLayerLocation layer, Identifier texture)
+    private final Identifier texture;
+    private final float size;
+
+    public TFCChestedHorseRenderer(EntityRendererProvider.Context context, float scale, ModelLayerLocation layer, String name)
     {
-        super(ctx, new TFCChestedHorseModel<>(ctx.bakeLayer(layer), false), scale);
-        addLayer(new HorseChestLayer<>(this, new TFCChestedHorseModel<>(ctx.bakeLayer(RenderHelpers.layerId("horse_chest")), true)));
+        this(context, scale, layer, Identifier.withDefaultNamespace("textures/entity/horse/" + name + ".png"));
+    }
+
+    public TFCChestedHorseRenderer(EntityRendererProvider.Context context, float scale, ModelLayerLocation layer, Identifier texture)
+    {
+        super(context, new TFCChestedHorseModel(context.bakeLayer(layer), false),
+            new TFCChestedHorseModel(context.bakeLayer(layer), false));
+        addLayer(new HorseChestLayer(this, new TFCChestedHorseModel(context.bakeLayer(layer), true)));
+        addLayer(new SimpleEquipmentLayer<>(this, context.getEquipmentRenderer(),
+            layer.model().getPath().endsWith("mule") ? EquipmentClientInfo.LayerType.MULE_SADDLE : EquipmentClientInfo.LayerType.DONKEY_SADDLE,
+            state -> state.saddle, new EquineSaddleModel(context.bakeLayer(saddleLayer(layer))), null));
         this.texture = texture;
+        size = scale;
     }
 
     @Override
-    public Identifier getTextureLocation(T horse)
+    public TFCChestedHorseRenderState createRenderState() { return new TFCChestedHorseRenderState(); }
+
+    @Override
+    public void extractRenderState(T horse, TFCChestedHorseRenderState state, float partialTick)
     {
-        return texture;
+        super.extractRenderState(horse, state, partialTick);
+        state.chestTexture = HorseChestLayer.textureFor(horse.getChestItem());
+        // TFC can carry barrels and other registered items, not only wooden chests.
+        state.hasChest = state.chestTexture != null;
     }
+
+    @Override
+    public Identifier getTextureLocation(TFCChestedHorseRenderState state) { return texture; }
+
+    @Override
+    protected void scale(TFCChestedHorseRenderState state, PoseStack poses) { poses.scale(size, size, size); }
 }

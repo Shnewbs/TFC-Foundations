@@ -6,28 +6,16 @@
 
 package net.dries007.tfc.client.model.entity;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.dries007.tfc.common.blockentities.rotation.WindmillBlockEntity;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 
 public class WindmillBladeRusticModel extends WindmillBladeModel
 {
-
-    private final ModelPart main;
-    private final ModelPart blade;
-    private final ModelPart extras;
-
     public WindmillBladeRusticModel(ModelPart root)
     {
         super(root);
-        this.main = root.getChild("main");
-        this.blade = root.getChild("blade");
-        this.extras = root.getChild("extras");
     }
-
 
     public static LayerDefinition createBodyLayer()
     {
@@ -67,25 +55,5 @@ public class WindmillBladeRusticModel extends WindmillBladeModel
             .texOffs(245, 134).addBox(-0.5F, -49.0F, -64.0F, 1.0F, 47.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.5F, 21.5F, -17.0F, -0.3142F, 0.0F, 0.0F));
 
         return LayerDefinition.create(meshdefinition, 256, 256);
-    }
-
-    public void setupAnim(WindmillBlockEntity windmill, float partialTick, float offsetAngle)
-    {
-        main.xRot = -(windmill.getRotationAngle(partialTick) + offsetAngle);
-        blade.xRot = -(windmill.getRotationAngle(partialTick) + offsetAngle);
-        extras.xRot = -(windmill.getRotationAngle(partialTick) + offsetAngle);
-    }
-
-    @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color)
-    {
-        main.render(poseStack, vertexConsumer, packedLight, packedOverlay, -1);
-        blade.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
-    }
-
-    @Override
-    public void renderWindmillExtras(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color)
-    {
-        extras.render(poseStack, vertexConsumer, packedLight, packedOverlay, -1);
     }
 }

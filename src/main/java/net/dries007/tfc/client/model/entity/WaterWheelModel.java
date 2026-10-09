@@ -6,8 +6,6 @@
 
 package net.dries007.tfc.client.model.entity;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -16,11 +14,10 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
-import net.dries007.tfc.common.blockentities.rotation.WaterWheelBlockEntity;
 
-public class WaterWheelModel extends Model
+public class WaterWheelModel extends Model<Float>
 {
     public static LayerDefinition createBodyLayer()
     {
@@ -154,18 +151,14 @@ public class WaterWheelModel extends Model
 
     public WaterWheelModel(ModelPart root)
     {
-        super(RenderType::entityCutout);
+        super(root, RenderTypes::entityCutoutCull);
         this.main = root.getChild("main");
     }
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color)
+    public void setupAnim(Float rotationAngle)
     {
-        main.render(poseStack, buffer, packedLight, packedOverlay, color);
-    }
-
-    public void setupAnim(WaterWheelBlockEntity wheel, float partialTick)
-    {
-        main.xRot = -wheel.getRotationAngle(partialTick);
+        super.setupAnim(rotationAngle);
+        main.xRot = -rotationAngle;
     }
 }

@@ -23,9 +23,7 @@ import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CraftingScreen;
 import net.minecraft.client.model.object.boat.BoatModel;
 import net.minecraft.client.model.animal.camel.CamelModel;
-import net.minecraft.client.model.ChestBoatModel;
-import net.minecraft.client.model.ChestRaftModel;
-import net.minecraft.client.model.ChestedHorseModel;
+import net.minecraft.client.model.animal.equine.DonkeyModel;
 import net.minecraft.client.model.animal.fish.CodModel;
 import net.minecraft.client.model.animal.goat.GoatModel;
 import net.minecraft.client.model.object.cart.MinecartModel;
@@ -717,8 +715,8 @@ public final class ClientEventHandler
         event.registerBlockEntityRenderer(TFCBlockEntities.BOWL.get(), ctx -> new BowlBlockEntityRenderer());
         event.registerBlockEntityRenderer(TFCBlockEntities.HOT_POURED_GLASS.get(), ctx -> new HotPouredGlassBlockEntityRenderer());
         event.registerBlockEntityRenderer(TFCBlockEntities.GLASS_BASIN.get(), ctx -> new GlassBasinBlockEntityRenderer());
-        event.registerBlockEntityRenderer(TFCBlockEntities.AXLE.get(), ctx -> new AxleBlockEntityRenderer());
-        event.registerBlockEntityRenderer(TFCBlockEntities.BLADED_AXLE.get(), ctx -> new BladedAxleBlockEntityRenderer());
+        event.registerBlockEntityRenderer(TFCBlockEntities.AXLE.get(), AxleBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(TFCBlockEntities.BLADED_AXLE.get(), BladedAxleBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.TRIP_HAMMER.get(), ctx -> new TripHammerBlockEntityRenderer());
         event.registerBlockEntityRenderer(TFCBlockEntities.WATER_WHEEL.get(), WaterWheelBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.WINDMILL.get(), WindmillBlockEntityRenderer::new);
@@ -734,10 +732,10 @@ public final class ClientEventHandler
 
     public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event)
     {
-        LayerDefinition boatLayer = BoatModel.createBodyModel();
-        LayerDefinition raftLayer = RaftModel.createBodyModel();
-        LayerDefinition chestLayer = ChestBoatModel.createBodyModel();
-        LayerDefinition chestRaftLayer = ChestRaftModel.createBodyModel();
+        LayerDefinition boatLayer = BoatModel.createBoatModel();
+        LayerDefinition raftLayer = RaftModel.createRaftModel();
+        LayerDefinition chestLayer = BoatModel.createChestBoatModel();
+        LayerDefinition chestRaftLayer = RaftModel.createChestRaftModel();
         for (Wood wood : Wood.VALUES)
         {
             event.registerLayerDefinition(TFCBoatRenderer.boatName(wood.getSerializedName()), wood == Wood.PALM ? () -> raftLayer : () -> boatLayer);
@@ -819,9 +817,11 @@ public final class ClientEventHandler
         event.registerLayerDefinition(RenderHelpers.layerId("windmill_blade"), WindmillBladeModel::createBodyLayer);
         event.registerLayerDefinition(RenderHelpers.layerId("windmill_blade_lattice"), WindmillBladeLatticeModel::createBodyLayer);
         event.registerLayerDefinition(RenderHelpers.layerId("windmill_blade_rustic"), WindmillBladeRusticModel::createBodyLayer);
-        event.registerLayerDefinition(RenderHelpers.layerId("horse_chest"), ChestedHorseModel::createBodyLayer);
-        event.registerLayerDefinition(RenderHelpers.layerId("mule"), ChestedHorseModel::createBodyLayer);
-        event.registerLayerDefinition(RenderHelpers.layerId("donkey"), ChestedHorseModel::createBodyLayer);
+        event.registerLayerDefinition(RenderHelpers.layerId("donkey_saddle"), () -> DonkeyModel.createSaddleLayer(1F));
+        event.registerLayerDefinition(RenderHelpers.layerId("mule_saddle"), () -> DonkeyModel.createSaddleLayer(1F));
+        event.registerLayerDefinition(RenderHelpers.layerId("horse_chest"), () -> DonkeyModel.createBodyLayer(1F));
+        event.registerLayerDefinition(RenderHelpers.layerId("mule"), () -> DonkeyModel.createBodyLayer(1F));
+        event.registerLayerDefinition(RenderHelpers.layerId("donkey"), () -> DonkeyModel.createBodyLayer(1F));
         event.registerLayerDefinition(RenderHelpers.layerId("dromedary_camel"), CamelModel::createBodyLayer);
         event.registerLayerDefinition(RenderHelpers.layerId("bactrian_camel"), BactrianCamelModel::createBodyLayer);
         event.registerLayerDefinition(RenderHelpers.layerId("water_wheel"), WaterWheelModel::createBodyLayer);

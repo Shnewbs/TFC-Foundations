@@ -9,57 +9,44 @@ package net.dries007.tfc.client.model.entity;
 import java.util.HashMap;
 import java.util.Map;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import org.jspecify.annotations.Nullable;
 
-import net.dries007.tfc.common.entities.livestock.horse.TFCChestedHorse;
-import net.dries007.tfc.util.Helpers;
+import net.dries007.tfc.client.render.entity.state.TFCChestedHorseRenderState;
 
-public class HorseChestLayer<T extends TFCChestedHorse, M extends EntityModel<T>> extends RenderLayer<T, M>
+public class HorseChestLayer extends RenderLayer<TFCChestedHorseRenderState, TFCChestedHorseModel>
 {
-    public static void registerChest(Item item, Identifier location)
+    private static final Map<Item, Identifier> MAP = new HashMap<>();
+    private static final Identifier DEFAULT_CHEST_TEXTURE = Identifier.fromNamespaceAndPath("tfc", "textures/entity/chest/horse/oak.png");
+
+    public static void registerChest(Item item, Identifier location) { MAP.put(item, location); }
+
+    public static @Nullable Identifier textureFor(ItemStack stack)
     {
-        MAP.put(item, location);
+        return stack.isEmpty() ? null : MAP.getOrDefault(stack.getItem(), DEFAULT_CHEST_TEXTURE);
     }
 
-    private static final Map<Item, Identifier> MAP = new HashMap<>();
-    private static final Identifier DEFAULT_CHEST_TEXTURE = Helpers.identifier("textures/entity/chest/horse/oak.png");
+    private final TFCChestedHorseModel model;
 
-    private final M model;
-
-    public HorseChestLayer(RenderLayerParent<T, M> parent, M model)
+    public HorseChestLayer(RenderLayerParent<TFCChestedHorseRenderState, TFCChestedHorseModel> parent, TFCChestedHorseModel model)
     {
         super(parent);
         this.model = model;
     }
 
     @Override
-    public void render(PoseStack poseStack, MultiBufferSource buffer, int packedLight, T entity, float limbSwing, float limbSwingAmount, float partialTick, float ageInTicks, float yaw, float pitch)
+    public void submit(PoseStack poses, SubmitNodeCollector collector, int light, TFCChestedHorseRenderState state, float yaw, float pitch)
     {
-        if (!entity.getChestItem().isEmpty())
+        if (state.chestTexture != null && state.hasChest)
         {
-            this.getParentModel().copyPropertiesTo(this.model);
-            this.model.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTick);
-            this.model.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, yaw, pitch);
-            VertexConsumer vertexconsumer = buffer.getBuffer(RenderType.entityCutoutNoCull(getTexture(entity)));
-            this.model.renderToBuffer(poseStack, vertexconsumer, packedLight, OverlayTexture.NO_OVERLAY, -1);
+            collector.order(1).submitModel(model, state, poses, state.chestTexture, light,
+                OverlayTexture.NO_OVERLAY, state.outlineColor, null);
         }
-    }
-
-    private Identifier getTexture(T entity)
-    {
-        final Item item = entity.getChestItem().getItem();
-        if (MAP.containsKey(item))
-        {
-            return MAP.get(item);
-        }
-        return DEFAULT_CHEST_TEXTURE;
     }
 }

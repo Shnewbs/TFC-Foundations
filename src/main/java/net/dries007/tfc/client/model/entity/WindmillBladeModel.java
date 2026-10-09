@@ -6,8 +6,6 @@
 
 package net.dries007.tfc.client.model.entity;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -16,22 +14,26 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import org.jspecify.annotations.Nullable;
 
-import net.dries007.tfc.common.blockentities.rotation.WindmillBlockEntity;
-
-public class WindmillBladeModel extends Model
+/** Independent, immutable animation input for each deferred frame/blade/extra draw. */
+public class WindmillBladeModel extends Model<WindmillBladeModel.BladePose>
 {
+    public enum Portion { FRAME, BLADE, EXTRAS }
+    public record BladePose(float angle, Portion portion) {}
+
     private final ModelPart blade;
     private final ModelPart main;
+    private final @Nullable ModelPart extras;
 
     public WindmillBladeModel(ModelPart root)
     {
-        super(RenderType::entityCutout);
-        this.blade = root.getChild("blade");
-        this.main = root.getChild("main");
+        super(root, RenderTypes::entityCutout);
+        blade = root.getChild("blade");
+        main = root.getChild("main");
+        extras = root.hasChild("extras") ? root.getChild("extras") : null;
     }
-
 
     public static LayerDefinition createBodyLayer()
     {
@@ -45,18 +47,22 @@ public class WindmillBladeModel extends Model
         return LayerDefinition.create(meshdefinition, 256, 256);
     }
 
-    public void setupAnim(WindmillBlockEntity windmill, float partialTick, float offsetAngle)
+    public final boolean hasExtras()
     {
-        main.xRot = -(windmill.getRotationAngle(partialTick) + offsetAngle);
-        blade.xRot = -(windmill.getRotationAngle(partialTick) + offsetAngle);
+        return extras != null;
     }
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color)
+    public void setupAnim(BladePose state)
     {
-        main.render(poseStack, vertexConsumer, packedLight, packedOverlay, -1);
-        blade.render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
+        super.setupAnim(state);
+        main.xRot = blade.xRot = -state.angle();
+        main.visible = state.portion() == Portion.FRAME;
+        blade.visible = state.portion() == Portion.BLADE;
+        if (extras != null)
+        {
+            extras.xRot = -state.angle();
+            extras.visible = state.portion() == Portion.EXTRAS;
+        }
     }
-
-    public void renderWindmillExtras(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color) {}
 }
