@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import com.mojang.math.Constants;
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
@@ -19,9 +21,8 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
-import net.dries007.tfc.common.entities.prey.Pest;
 
-public class MongooseModel extends HierarchicalAnimatedModel<Pest>
+public class MongooseModel extends HierarchicalAnimatedModel
 {
     public static LayerDefinition createBodyLayer()
     {
@@ -121,17 +122,23 @@ public class MongooseModel extends HierarchicalAnimatedModel<Pest>
 
 
     @Override
-    public void setupAnim(Pest entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float netHeadYaw = state.yRot;
+        final float headPitch = state.xRot;
 
-        this.animate(entity.walkingAnimation, MONGOOSE_RUN, ageInTicks, getAdjustedLandSpeed(entity));
-        this.animate(entity.eatingAnimation, MONGOOSE_EAT, ageInTicks);
-        this.animate(entity.searchingAnimation, MONGOOSE_SEARCH, ageInTicks);
-        this.animate(entity.sniffingAnimation, MONGOOSE_SNIFF, ageInTicks);
-        this.animate(entity.draggingAnimation, MONGOOSE_DRAG, ageInTicks);
 
-        if (!entity.searchingAnimation.isStarted() && !entity.sniffingAnimation.isStarted() && !entity.draggingAnimation.isStarted() && !entity.eatingAnimation.isStarted())
+        this.animate(state.walkingAnimation, MONGOOSE_RUN, ageInTicks, getAdjustedLandSpeed(state));
+        this.animate(state.eatingAnimation, MONGOOSE_EAT, ageInTicks);
+        this.animate(state.searchingAnimation, MONGOOSE_SEARCH, ageInTicks);
+        this.animate(state.sniffingAnimation, MONGOOSE_SNIFF, ageInTicks);
+        this.animate(state.draggingAnimation, MONGOOSE_DRAG, ageInTicks);
+
+        if (!state.searchingAnimation.isStarted() && !state.sniffingAnimation.isStarted() && !state.draggingAnimation.isStarted() && !state.eatingAnimation.isStarted())
         {
             this.head.xRot = headPitch * Constants.DEG_TO_RAD;
             this.head.yRot = netHeadYaw * Constants.DEG_TO_RAD;

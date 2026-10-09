@@ -10,6 +10,8 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.Keyframe;
@@ -23,9 +25,8 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 
-import net.dries007.tfc.common.entities.predator.AmphibiousPredator;
 
-public class CrocodileModel extends HierarchicalAnimatedModel<AmphibiousPredator>
+public class CrocodileModel extends HierarchicalAnimatedModel
 {
     public static LayerDefinition createBodyLayer() {
         MeshDefinition meshdefinition = new MeshDefinition();
@@ -97,25 +98,31 @@ public class CrocodileModel extends HierarchicalAnimatedModel<AmphibiousPredator
     }
 
     @Override
-    public void setupAnim(AmphibiousPredator predator, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(predator, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch);
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float headYaw = state.yRot;
+        final float headPitch = state.xRot;
 
-        if (predator.sleepingAnimation.isStarted())
+
+        if (state.sleepingAnimation.isStarted())
         {
-            this.animate(predator.sleepingAnimation, SLEEP, ageInTicks);
+            this.animate(state.sleepingAnimation, SLEEP, ageInTicks);
         }
         else
         {
-            if (predator.isInWaterOrBubble())
+            if (state.inWaterOrBubble)
             {
                 this.animateWalk(SWIM, limbSwing, limbSwingAmount, 1f, 2.5f);
-                this.animate(predator.attackingAnimation, BITE_ROLL, ageInTicks);
+                this.animate(state.attackingAnimation, BITE_ROLL, ageInTicks);
             }
             else
             {
                 this.animateWalk(WALK, limbSwing, limbSwingAmount, 1f, 2.5f);
-                this.animate(predator.attackingAnimation, BITE, ageInTicks);
+                this.animate(state.attackingAnimation, BITE, ageInTicks);
             }
             head.yRot = headYaw * Mth.PI / 180F;
         }

@@ -10,6 +10,10 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import java.util.Set;
+
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import com.mojang.math.Constants;
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
@@ -23,14 +27,16 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
-import net.dries007.tfc.client.ClientHelpers;
-import net.dries007.tfc.common.entities.prey.WingedPrey;
-import net.dries007.tfc.util.calendar.Calendars;
-import net.dries007.tfc.util.calendar.Month;
-import net.dries007.tfc.util.calendar.Season;
 
-public class GrouseModel extends HierarchicalAnimatedModel<WingedPrey>
+public class GrouseModel extends HierarchicalAnimatedModel
 {
+    // Preserve the reviewed legacy omissions when reusing this animation set.
+    @Override
+    protected Set<String> optionalAnimationBones()
+    {
+        return Set.of("neck1", "snood");
+    }
+
     public static LayerDefinition createBodyLayer()
     {
         MeshDefinition meshdefinition = new MeshDefinition();
@@ -385,13 +391,17 @@ public class GrouseModel extends HierarchicalAnimatedModel<WingedPrey>
     }
 
     @Override
-    public void setupAnim(WingedPrey entity, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch);
-        Month currentMonth = Calendars.CLIENT.getHemispheralCalendarMonthOfYear(ClientHelpers.inNorthernHemisphere());
-        Season season = currentMonth.getSeason();
-        this.animateWalk(season == Season.FALL ? GROUSE_STRUT : GROUSE_WALK, limbSwing, limbSwing, 1f, 2.5f);
-        if (!entity.onGround())
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float headYaw = state.yRot;
+        final float headPitch = state.xRot;
+
+        this.animateWalk(state.fallSeason ? GROUSE_STRUT : GROUSE_WALK, limbSwing, limbSwing, 1f, 2.5f);
+        if (!state.onGround)
         {
             wingR.zRot = ageInTicks;
             wingL.zRot = -ageInTicks;

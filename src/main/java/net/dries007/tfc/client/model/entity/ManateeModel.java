@@ -6,8 +6,8 @@
 
 package net.dries007.tfc.client.model.entity;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
@@ -17,9 +17,8 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 
-import net.dries007.tfc.common.entities.aquatic.Manatee;
 
-public class ManateeModel extends HierarchicalAnimatedModel<Manatee>
+public class ManateeModel extends HierarchicalAnimatedModel
 {
     public static LayerDefinition createBodyLayer()
     {
@@ -67,9 +66,16 @@ public class ManateeModel extends HierarchicalAnimatedModel<Manatee>
     }
 
     @Override
-    public void setupAnim(Manatee entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        float swingRate = entity.isInWater() ? 1.0F : 1.5F;
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float netHeadYaw = state.yRot;
+        final float headPitch = state.xRot;
+
+        float swingRate = state.isInWater ? 1.0F : 1.5F;
         float oscillation = -1 * swingRate * 0.2F * Mth.sin(0.06F * ageInTicks);
         finright.zRot = oscillation * -2F;
         finleft.zRot = oscillation * 2F;
@@ -77,13 +83,5 @@ public class ManateeModel extends HierarchicalAnimatedModel<Manatee>
         back.xRot = oscillation * 0.5F;
     }
 
-    @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color)
-    {
-        head.render(poseStack, buffer, packedLight, packedOverlay);
-        finright.render(poseStack, buffer, packedLight, packedOverlay);
-        finleft.render(poseStack, buffer, packedLight, packedOverlay);
-        mainPart.render(poseStack, buffer, packedLight, packedOverlay);
-        back.render(poseStack, buffer, packedLight, packedOverlay);
-    }
+
 }

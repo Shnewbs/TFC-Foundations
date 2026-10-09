@@ -11,6 +11,7 @@ import com.mojang.math.Axis;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
 import net.dries007.tfc.client.RenderHelpers;
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
 import net.dries007.tfc.client.model.entity.PenguinModel;
 import net.dries007.tfc.common.entities.aquatic.Penguin;
 
@@ -22,10 +23,10 @@ public class PenguinRenderer extends SimpleMobRenderer<Penguin, PenguinModel>
     }
 
     @Override
-    protected void setupRotations(Penguin entity, PoseStack stack, float bob, float yBodyRot, float partialTick, float scale)
+    protected void setupRotations(TFCAnimalRenderState state, PoseStack stack, float yBodyRot, float scale)
     {
-        super.setupRotations(entity, stack, bob, yBodyRot, partialTick, scale);
-        if (entity.isInWater())
+        super.setupRotations(state, stack, yBodyRot, scale);
+        if (state.isInWater)
         {
             stack.translate(0.0D, 0.4D, 0.0D);
             stack.mulPose(Axis.XP.rotationDegrees(270.0F));

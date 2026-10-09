@@ -6,8 +6,8 @@
 
 package net.dries007.tfc.client.model.entity;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
@@ -18,9 +18,8 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 
 import net.dries007.tfc.client.animation.BactrianCamelAnimation;
-import net.dries007.tfc.common.entities.livestock.camel.BactrianCamel;
 
-public class BactrianCamelModel extends HierarchicalAnimatedModel<BactrianCamel>
+public class BactrianCamelModel extends HierarchicalAnimatedModel
 {
     public static LayerDefinition createBodyLayer()
     {
@@ -114,32 +113,31 @@ public class BactrianCamelModel extends HierarchicalAnimatedModel<BactrianCamel>
     }
 
     @Override
-    public void setupAnim(BactrianCamel animal, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        this.root().getAllParts().forEach(ModelPart::resetPose);
-        this.applyHeadRotation(netHeadYaw, headPitch);
-        wool_body.visible = animal.hasProduct();
-        wool_shey.visible = animal.hasProduct();
-        this.animateWalk(BactrianCamelAnimation.CAMEL_WALK, limbSwing, limbSwingAmount, 2.0F, 2.5F);
-        this.animate(animal.sitAnimationState, BactrianCamelAnimation.CAMEL_SIT, ageInTicks, 1.0F);
-        this.animate(animal.sitPoseAnimationState, BactrianCamelAnimation.CAMEL_SIT_POSE, ageInTicks, 1.0F);
-        this.animate(animal.sitUpAnimationState, BactrianCamelAnimation.CAMEL_STANDUP, ageInTicks, 1.0F);
-        this.animate(animal.idleAnimationState, BactrianCamelAnimation.CAMEL_IDLE, ageInTicks, 1.0F);
-        this.animate(animal.dashAnimationState, BactrianCamelAnimation.CAMEL_DASH, ageInTicks, 1.0F);
-    }
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float netHeadYaw = state.yRot;
+        final float headPitch = state.xRot;
 
-    @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color)
-    {
-        if (this.young)
+        this.applyHeadRotation(netHeadYaw, headPitch);
+        wool_body.visible = state.hasProduct;
+        wool_shey.visible = state.hasProduct;
+        this.animateWalk(BactrianCamelAnimation.CAMEL_WALK, limbSwing, limbSwingAmount, 2.0F, 2.5F);
+        this.animate(state.sitAnimationState, BactrianCamelAnimation.CAMEL_SIT, ageInTicks, 1.0F);
+        this.animate(state.sitPoseAnimationState, BactrianCamelAnimation.CAMEL_SIT_POSE, ageInTicks, 1.0F);
+        this.animate(state.sitUpAnimationState, BactrianCamelAnimation.CAMEL_STANDUP, ageInTicks, 1.0F);
+        this.animate(state.idleAnimationState, BactrianCamelAnimation.CAMEL_IDLE, ageInTicks, 1.0F);
+        this.animate(state.dashAnimationState, BactrianCamelAnimation.CAMEL_DASH, ageInTicks, 1.0F);
+
+        if (state.isBaby)
         {
-            poseStack.pushPose();
-            poseStack.scale(0.45F, 0.45F, 0.45F);
-            poseStack.translate(0.0F, 1.834375F, 0.0F);
-            this.root().render(poseStack, buffer, packedLight, packedOverlay, color);
-            poseStack.popPose();
-        } else {
-            this.root().render(poseStack, buffer, packedLight, packedOverlay, color);
+            root().xScale = root().yScale = root().zScale = 0.45F;
+            root().y += 0.45F * 1.834375F * 16F;
         }
-    }
+}
+
+
 }

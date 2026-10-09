@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import java.util.stream.Stream;
 import com.mojang.math.Constants;
 import net.minecraft.client.animation.AnimationChannel;
@@ -21,9 +23,8 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 
-import net.dries007.tfc.common.entities.prey.RammingPrey;
 
-public class MooseModel extends HierarchicalAnimatedModel<RammingPrey>
+public class MooseModel extends HierarchicalAnimatedModel
 {
     public static LayerDefinition createBodyLayer()
     {
@@ -341,12 +342,18 @@ public class MooseModel extends HierarchicalAnimatedModel<RammingPrey>
     }
 
     @Override
-    public void setupAnim(RammingPrey entity, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch);
-        final boolean antlers = entity.displayMaleCharacteristics();
-        Stream.concat(antler1.getAllParts(), antler2.getAllParts()).forEach(p -> p.visible = antlers);
-        final float speed = getAdjustedLandSpeed(entity);
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float headYaw = state.yRot;
+        final float headPitch = state.xRot;
+
+        final boolean antlers = state.maleCharacteristics;
+        Stream.concat(antler1.getAllParts().stream(), antler2.getAllParts().stream()).forEach(p -> p.visible = antlers);
+        final float speed = getAdjustedLandSpeed(state);
         if (speed > 1f)
         {
             this.animateWalk(MOOSE_RUN, limbSwing, limbSwingAmount, 1f, 2.5f);
@@ -359,12 +366,12 @@ public class MooseModel extends HierarchicalAnimatedModel<RammingPrey>
             leftFrontLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
         }
 
-        if (entity.isTelegraphingAttack())
+        if (state.telegraphingAttack)
         {
             //Note for re-use: telegraph animations should be 1 second long, or the float here should be multiplied by their length
-            //animate(entity.telegraphAnimation, BOAR_PREPARE_CHARGE, entity.getTelegraphAnimationProgress());
-            this.head.xRot = entity.getTelegraphAttackTick() * Constants.DEG_TO_RAD * -1;
-            this.neck.xRot = entity.getTelegraphAttackTick() * Constants.DEG_TO_RAD * -1;
+            //animate(state.telegraphAnimation, BOAR_PREPARE_CHARGE, state.getTelegraphAnimationProgress());
+            this.head.xRot = state.telegraphAttackTick * Constants.DEG_TO_RAD * -1;
+            this.neck.xRot = state.telegraphAttackTick * Constants.DEG_TO_RAD * -1;
         }
         else
         {

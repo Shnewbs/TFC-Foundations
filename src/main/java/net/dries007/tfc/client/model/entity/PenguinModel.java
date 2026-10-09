@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import com.mojang.math.Constants;
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
@@ -19,9 +21,8 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
-import net.dries007.tfc.common.entities.aquatic.Penguin;
 
-public class PenguinModel extends HierarchicalAnimatedModel<Penguin>
+public class PenguinModel extends HierarchicalAnimatedModel
 {
     public static LayerDefinition createBodyLayer()
     {
@@ -69,18 +70,24 @@ public class PenguinModel extends HierarchicalAnimatedModel<Penguin>
     }
 
     @Override
-    public void setupAnim(Penguin entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-        if (entity.isPlayingDead())
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float netHeadYaw = state.yRot;
+        final float headPitch = state.xRot;
+
+        if (state.playingDead)
         {
             core.xRot = -90F * Constants.DEG_TO_RAD;
         }
         else
         {
-            animateWalk(entity.isInWaterOrBubble() ? SWIM : WALK, limbSwing, limbSwingAmount, 3.2f, 2.5f);
+            animateWalk(state.inWaterOrBubble ? SWIM : WALK, limbSwing, limbSwingAmount, 3.2f, 2.5f);
 
-            head.xRot = entity.isInWater() ? -1 : headPitch * Constants.DEG_TO_RAD;
+            head.xRot = state.isInWater ? -1 : headPitch * Constants.DEG_TO_RAD;
             head.yRot = netHeadYaw * Constants.DEG_TO_RAD;
         }
     }

@@ -11,6 +11,7 @@ import com.mojang.math.Axis;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
 import net.dries007.tfc.client.RenderHelpers;
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
 import net.dries007.tfc.client.model.entity.RatModel;
 import net.dries007.tfc.common.entities.prey.Pest;
 
@@ -22,16 +23,16 @@ public class RatRenderer extends SimpleMobRenderer<Pest, RatModel>
     }
 
     @Override
-    protected void setupRotations(Pest entity, PoseStack poseStack, float bob, float yBodyRot, float partialTick, float scale)
+    protected void setupRotations(TFCAnimalRenderState state, PoseStack poseStack, float yBodyRot, float scale)
     {
-        super.setupRotations(entity, poseStack, bob, yBodyRot, partialTick, scale);
-        if (entity.isClimbing())
+        super.setupRotations(state, poseStack, yBodyRot, scale);
+        if (state.climbing)
         {
             poseStack.pushPose();
             poseStack.mulPose(Axis.ZP.rotationDegrees(90f));
             poseStack.popPose();
         }
-        if (entity.draggingAnimation.isStarted())
+        if (state.draggingAnimation.isStarted())
         {
             poseStack.pushPose();
             poseStack.mulPose(Axis.YP.rotationDegrees(180f));

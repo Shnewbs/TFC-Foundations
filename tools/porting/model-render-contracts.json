@@ -1,0 +1,233 @@
+{
+  "baseline_commit": "4ea0a94b771091573f461610cf6613378d47b398",
+  "native_factory_exception": "DogModel uses the exact target AdultWolfModel factory and keeps the adult bone/64x32 texture layout.",
+  "models": {
+    "ArcticCharModel": {
+      "geometry_sha256": "4c9cc3723dcb92e101ee8b1ef7f20f131c5e0d12814e8afdb68cbdab6ea2d17b",
+      "animation_sha256": "249e68bbb204ca728cf2801446536970c793c49f50530f0c529d0fd1ff915543"
+    },
+    "BactrianCamelModel": {
+      "geometry_sha256": "66eb48097b96e09750a440023f8eb7777f5e78e743f7973565a78f17fd59b833",
+      "animation_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "BisonModel": {
+      "geometry_sha256": "d394315af397b3bdaf18a13046a766641cf52182724e9dea9c87a6e656b5a71d",
+      "animation_sha256": "97d97bca9ab435f31ca4392deddb59176aa46357c604b4437b5f9d1bce6e6320"
+    },
+    "BlackBearModel": {
+      "geometry_sha256": "1dee5541e80e6e534e1ffa2607fb8288fb0fc75134e65a9b6a38e4e5aa5d5a85",
+      "animation_sha256": "66bbb499f2c8bcac7b2681ded1e83dcb8a733fc9991198cf8b13fba166a6dea9"
+    },
+    "BluegillModel": {
+      "geometry_sha256": "63d88bd59d7550d3a391b42ef9e7f4156d59c4ae593ddf1b8d5679dfe42046a9",
+      "animation_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "BoarModel": {
+      "geometry_sha256": "8704075a070f48f66e96e28f7d947a3e052bb2d0b4b8bbb6f615a3caf5bcccd5",
+      "animation_sha256": "f41d51a881835d85263c8169e717d2458a54fb10dd190c59303cbddf56e0cba6"
+    },
+    "BongoModel": {
+      "geometry_sha256": "82396ca96bdd9eee4938b175681ddc61bf4daac9695b0129d93016f31d14f5e7",
+      "animation_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "BurbotModel": {
+      "geometry_sha256": "f33965b6a740ee1396c55738b16ab4fb59b108ca5b0b0e96891673b94e8d5be1",
+      "animation_sha256": "249e68bbb204ca728cf2801446536970c793c49f50530f0c529d0fd1ff915543"
+    },
+    "CaribouModel": {
+      "geometry_sha256": "c555522186b8390ec0553a9900a648e635a3dad17fd27878f2678b59abbd56e3",
+      "animation_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "CougarModel": {
+      "geometry_sha256": "de42796e14f0efa19317267e51510c1d45dc0625e31437be9cec15d2b5a9fdf4",
+      "animation_sha256": "d4871da7367d2f5e88f4abc6f438cfe268f9445ee87d2c2252ab24a989955984"
+    },
+    "CrocodileModel": {
+      "geometry_sha256": "ebdcd3899f3a04773473ec07561151fc72fd01cf19cf55cb16b061f5401e817c",
+      "animation_sha256": "0e0a43e46f9153c9a0a7bc74889cb44f30e8c83723fb7aa0b319001870333995"
+    },
+    "DeerModel": {
+      "geometry_sha256": "a8ab1c078c6d96271a54a7f4ce30e0c1bad57d767aabc95e41b7ea31d5ac08ad",
+      "animation_sha256": "a584c9a50f0ab116bbd8dfc60357a51a167da19ef5858df755c781bf12789860"
+    },
+    "DirewolfModel": {
+      "geometry_sha256": "d1a2e519632a012ebff66f606b8e01a458c52e06a1f498bf53745a26853fec3c",
+      "animation_sha256": "fc0fa254aa89d02b3be34ade5cd1b18d5cab9cf7e0a949c939181cec1c966c89"
+    },
+    "DogModel": {
+      "geometry_sha256": "33e42045fdfb394a20985d56c11d7540406c9c62a5945229ac8839b5765103b1",
+      "animation_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "GazelleModel": {
+      "geometry_sha256": "0cd4088d8356fb1d80f97dd6c490bdfe7f1fe1d75ba0a457ab484851892ebf34",
+      "animation_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "GrizzlyBearModel": {
+      "geometry_sha256": "7446e237b98bce47446400c36763df96c0a518682dbdab3182c70bb2856be00a",
+      "animation_sha256": "c81bd1890d3ddaeccda298c1c212286091f94b88c20db787f07c977a0c66c975"
+    },
+    "GrouseModel": {
+      "geometry_sha256": "60fb73f1f21819757f194c03f66cb0d70fe59407cd636068ccbca130923dab51",
+      "animation_sha256": "6f76be68923fae01c80125200a0cbf62cc045da1e026b8e287b861b28d0b44e5"
+    },
+    "HorseshoeCrabModel": {
+      "geometry_sha256": "e4e530007b8ec4bf4234cec18801e2309ab16c8812b56cd4ba849525f6315fa0",
+      "animation_sha256": "5ead6d4ede148cd4fd104e2779a3321ce3316239e317fab0db8bfcf840435aa3"
+    },
+    "HyenaModel": {
+      "geometry_sha256": "2420114041609f22843872c36c2640eb4730d1b6b385d4812518c05a9c54d362",
+      "animation_sha256": "94276a348430686ff3ca7f2f2a292e87e8aa62273893c82ef91eb55ebf04e29f"
+    },
+    "IsopodModel": {
+      "geometry_sha256": "1c69214ee9a009cd2bddbdf302f8c221ba2ba18a7520b9c9b5f31c79c3c1e413",
+      "animation_sha256": "35c49669a0927b159bfcb629274a6ac322b4a1bc52287483b823b580ebdfd005"
+    },
+    "JellyfishModel": {
+      "geometry_sha256": "d1e818051e13c2b2324963cd277ca8edc1289eef758365237e8b91503b850ab0",
+      "animation_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "JerboaModel": {
+      "geometry_sha256": "fe04410246e04987bf0243a5cd607a8a40868afaf4face31b524bf147052489f",
+      "animation_sha256": "0ffd472bba237a88e70c2620b73660d647dd336c026522da254c581c84f38a01"
+    },
+    "LemmingModel": {
+      "geometry_sha256": "a88a42895a2ab8f44d9882b0f2e140f76edf27b467a0bcd8d1d488a811877a3c",
+      "animation_sha256": "60b39b8116dbeeb3c17190988b0446bdbb23999e76b9de30cb3c35ba33b9c6e2"
+    },
+    "LeopardSealModel": {
+      "geometry_sha256": "65de929038e66ac340ecec9379708daa3a7c27f0241bdaa82fd566686c1100a7",
+      "animation_sha256": "78a4304c4cc12596f80a9087a5fb37d0bbcb0829636e577a6094e9ca212ca2b9"
+    },
+    "LionModel": {
+      "geometry_sha256": "302984ade0871c05a1c4ac0756e42ee910c2e35315019cc7d639dd74ed833034",
+      "animation_sha256": "01a24bd8edab668fe5477136e8cb45f35025f5f86c9c4691f1d2ff782abbb2d9"
+    },
+    "LobsterModel": {
+      "geometry_sha256": "ff880c3903df7e737a57dd7d44e72e295f3a0f0fd098e13437e78f48cb8a0669",
+      "animation_sha256": "cdb9e62d166b36744df4de456cf47117fdbcf965112d61e73c4ff1783f526d42"
+    },
+    "ManateeModel": {
+      "geometry_sha256": "b0fa04c478f9b18f981e6a7e61c077dfaf9891ff77e3e3490f5ed967b78340ca",
+      "animation_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "MongooseModel": {
+      "geometry_sha256": "66816a17de75edd57739adebbdc77cb65647b6a26f4f46e8eedb0cb9595339d0",
+      "animation_sha256": "6e749dbd88b8e68276be69af4348184a9c710bd2c9d80dc51e5eda36474498a9"
+    },
+    "MooseModel": {
+      "geometry_sha256": "59e242ca6d9eba51e2df34643330e2afebcd9c2a0dad9457dd783547c317bcd3",
+      "animation_sha256": "e9a2055a8606170484040ed2c6c21ec9d8116841beacc57efb5cfb0e36013a67"
+    },
+    "MuksunModel": {
+      "geometry_sha256": "3a8ba3156951fd4f83f3161355060f40e6224ec7edbc59ff172337ca6bdbe69f",
+      "animation_sha256": "696ff83139bfdc679e33f6afd9e32660528f65c4cad3e5fab842b89cbdf08ada"
+    },
+    "NorthernPikeModel": {
+      "geometry_sha256": "a384f9c1748a775e6d1003ae010da547a07de6fffa2365045fc6d66db6ff87a7",
+      "animation_sha256": "a75700b5fdef8d7889f2ba64e09ccf8a97b7d0ee34fdeff8db41e6bdd7eddc5c"
+    },
+    "OrcaModel": {
+      "geometry_sha256": "ea9f51c1673a38d0bae300b8b4d018646bce603f064b48794498c6bfdb936816",
+      "animation_sha256": "95240ce3e9ce98564c6930de979c6e2ac079c7c173b93f6659c0b78e273807ed"
+    },
+    "PacuModel": {
+      "geometry_sha256": "fd4434d02f2910421b264813a378bd4e3fb576e64cf594847404102968e86ad9",
+      "animation_sha256": "9426de83a416ac87ec1b167dc27fdc55a6d31d0ba869ad4dbbf85739550d30ee"
+    },
+    "PeacockBassModel": {
+      "geometry_sha256": "d760b0532b13f167dcf75b503abc6306968cf71f375a41e2b53bab54f5eb28fa",
+      "animation_sha256": "a75700b5fdef8d7889f2ba64e09ccf8a97b7d0ee34fdeff8db41e6bdd7eddc5c"
+    },
+    "PeafowlModel": {
+      "geometry_sha256": "747b8f574bb4966e1935f5337993042f2470e2d276b745ce096d83638f7920e8",
+      "animation_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "PenguinModel": {
+      "geometry_sha256": "26f6f1287e851bb52e2392a4bb717b790162281d0dbbdc3091971fbdfa83fcdf",
+      "animation_sha256": "d1b4ba6108b7c944ff88432d898e92e2d4a2f4ce3e673ba1c941f84b4d06b00d"
+    },
+    "PheasantModel": {
+      "geometry_sha256": "97a92bc04fa5627c958e68a9d2518b8529c5526c3cbb811adfacb595e9f98ae6",
+      "animation_sha256": "ea12a8d916e5f0711a15659c014783c0039d2165345de98552be060760e7bc51"
+    },
+    "PolarBearModel": {
+      "geometry_sha256": "496e25b021094fac222d72215cdcc3db650655c9af6c899d322f56e01e867019",
+      "animation_sha256": "42c825809b39e9ec22d2d373c1f811a9f10e732a0cb1743bfec83f127fee1da4"
+    },
+    "RatModel": {
+      "geometry_sha256": "37ea1821fa2ea0b7ffdd801e79d99b4444abac964aba98512b227049623e3f49",
+      "animation_sha256": "56d95b09ee712acf012da18285d5a7d2ab2e8faee596b0ade63e416eb4b04b8f"
+    },
+    "RedPiranhaModel": {
+      "geometry_sha256": "127991adf53df89df66cfc17b9663cbfe36e31ed5d17c281c0b7c9a9dc5ba2ff",
+      "animation_sha256": "5a9c535f9f8287fc07e0812e093abe3429b8e11d0806e1c7e336ec57d0934873"
+    },
+    "SabertoothModel": {
+      "geometry_sha256": "7822d7a2a0fdb02bfc5bf755fac338f3c7d3bf2488698a687be230b663436222",
+      "animation_sha256": "ef102161ccd7baf5ce9b4d551bd751ef0d4f0b91b2fcf6c952111d958b5d0aad"
+    },
+    "SpottedGudgeonModel": {
+      "geometry_sha256": "e53902b22b6b3ca94c7dab6819beef33d970de25f0a6d562e665f053085e61d6",
+      "animation_sha256": "a96c0d4aab15efdb443de47cfc9cdf937bcf04e841761b06d857a151a92fb9e9"
+    },
+    "TFCTurtleModel": {
+      "geometry_sha256": "cc0494e59f5baeec83de5bd982ca1f4fd469d7053ceeb8eecb1af15b29e49162",
+      "animation_sha256": "1902cd35c795390dc6d703c72ae7dec0a21bb643c660ecae1ad9663875bd8693"
+    },
+    "TFCWolfModel": {
+      "geometry_sha256": "c9549f8959375d89107f840c2e73cdba0bab516801b23a07ad93003675b6232e",
+      "animation_sha256": "7d7df768cab3ed0a915c14a12da4a80dbea46e2dc55c70f0d5749df448586714"
+    },
+    "TigerModel": {
+      "geometry_sha256": "1a2df239fac4fda4acf55341e854b4fce58d4ac13f3dd7c0497c39d426a32e34",
+      "animation_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "TilapiaModel": {
+      "geometry_sha256": "7f7c16d4b9f8ff2afdf4f13fec48cde7fd861c640defc2244b279995359681c0",
+      "animation_sha256": "249e68bbb204ca728cf2801446536970c793c49f50530f0c529d0fd1ff915543"
+    },
+    "TurkeyModel": {
+      "geometry_sha256": "e4329c445ae750ec0a2d2f2c24c9881bc28217334fe40a9e2d198c79636d9d03",
+      "animation_sha256": "430d0a457ab20cd16dc5eab669bed3f7268786368f71cbbae016575bb0bc6a39"
+    },
+    "WildebeestModel": {
+      "geometry_sha256": "2136e0edda763cedc49e23915f2554990e5498b9cbac9722bc184e9aca4cf259",
+      "animation_sha256": "ce394cb33a0697ff19592731c0b28fb4bb63cb5fca611fcc3957950044faca3d"
+    }
+  },
+  "reviewed_missing_bones": {
+    "BongoModel": [
+      "tail1"
+    ],
+    "CaribouModel": [
+      "right_hind_leg"
+    ],
+    "DeerModel": [
+      "tail1"
+    ],
+    "GazelleModel": [
+      "tail1"
+    ],
+    "GrouseModel": [
+      "neck1",
+      "snood"
+    ],
+    "HorseshoeCrabModel": [
+      "antena1",
+      "antena2"
+    ],
+    "HyenaModel": [
+      "tail2"
+    ],
+    "JerboaModel": [
+      "1",
+      "2"
+    ],
+    "PeafowlModel": [
+      "snood"
+    ],
+    "WildebeestModel": [
+      "tail1"
+    ]
+  }
+}

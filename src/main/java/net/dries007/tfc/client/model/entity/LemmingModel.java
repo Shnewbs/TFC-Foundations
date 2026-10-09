@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import com.mojang.math.Constants;
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
@@ -19,9 +21,8 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
-import net.dries007.tfc.common.entities.prey.Pest;
 
-public class LemmingModel extends HierarchicalAnimatedModel<Pest>
+public class LemmingModel extends HierarchicalAnimatedModel
 {
     public static LayerDefinition createBodyLayer()
     {
@@ -124,18 +125,24 @@ public class LemmingModel extends HierarchicalAnimatedModel<Pest>
     }
 
     @Override
-    public void setupAnim(Pest entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float netHeadYaw = state.yRot;
+        final float headPitch = state.xRot;
 
-        this.animate(entity.walkingAnimation, LEMMING_WALKING, ageInTicks, getAdjustedLandSpeed(entity));
-        this.animate(entity.eatingAnimation, LEMMING_EATING, ageInTicks);
-        this.animate(entity.searchingAnimation, LEMMING_SEARCH, ageInTicks);
-        this.animate(entity.sniffingAnimation, LEMMING_SNIFFS, ageInTicks);
+
+        this.animate(state.walkingAnimation, LEMMING_WALKING, ageInTicks, getAdjustedLandSpeed(state));
+        this.animate(state.eatingAnimation, LEMMING_EATING, ageInTicks);
+        this.animate(state.searchingAnimation, LEMMING_SEARCH, ageInTicks);
+        this.animate(state.sniffingAnimation, LEMMING_SNIFFS, ageInTicks);
         // TODO: Full animation set?
-        this.animate(entity.draggingAnimation, LEMMING_WALKING, ageInTicks);
+        this.animate(state.draggingAnimation, LEMMING_WALKING, ageInTicks);
 
-        if (!entity.searchingAnimation.isStarted() && !entity.sniffingAnimation.isStarted() && !entity.draggingAnimation.isStarted() && !entity.eatingAnimation.isStarted())
+        if (!state.searchingAnimation.isStarted() && !state.sniffingAnimation.isStarted() && !state.draggingAnimation.isStarted() && !state.eatingAnimation.isStarted())
         {
             this.head.xRot = headPitch * Constants.DEG_TO_RAD;
             this.head.yRot = netHeadYaw * Constants.DEG_TO_RAD;

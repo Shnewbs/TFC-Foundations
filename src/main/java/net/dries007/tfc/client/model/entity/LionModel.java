@@ -11,6 +11,8 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.Keyframe;
@@ -24,9 +26,8 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 
-import net.dries007.tfc.common.entities.predator.FelinePredator;
 
-public class LionModel extends FelinePredatorModel<FelinePredator>
+public class LionModel extends FelinePredatorModel
 {
     public static LayerDefinition createBodyLayer()
     {
@@ -162,10 +163,16 @@ public class LionModel extends FelinePredatorModel<FelinePredator>
     }
 
     @Override
-    public void setupAnim(FelinePredator felinePredator, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(felinePredator, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-        maneHeadBone.visible = maneBone.visible = felinePredator.isMale();
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float netHeadYaw = state.yRot;
+        final float headPitch = state.xRot;
+
+        maneHeadBone.visible = maneBone.visible = state.isMale;
     }
 
     @Override

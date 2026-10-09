@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import com.mojang.math.Constants;
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
@@ -20,10 +22,8 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 
-import net.dries007.tfc.common.entities.EntityHelpers;
-import net.dries007.tfc.common.entities.prey.RammingPrey;
 
-public class BoarModel extends HierarchicalAnimatedModel<RammingPrey>
+public class BoarModel extends HierarchicalAnimatedModel
 {
 
     public static final AnimationDefinition BOAR_WALK = AnimationDefinition.Builder.withLength(2f).looping()
@@ -294,13 +294,19 @@ public class BoarModel extends HierarchicalAnimatedModel<RammingPrey>
     }
 
     @Override
-    public void setupAnim(RammingPrey entity, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch);
-        if (EntityHelpers.isMovingOnLand(entity))
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float headYaw = state.yRot;
+        final float headPitch = state.xRot;
+
+        if (state.movingOnLand)
         {
-            final float speed = getAdjustedLandSpeed(entity);
-            if (entity.getTelegraphAttackTick() > 0)
+            final float speed = getAdjustedLandSpeed(state);
+            if (state.telegraphAttackTick > 0)
             {
                 animateWalk(BOAR_RUN, limbSwing, limbSwingAmount, 1F, 3 * speed);
             }
@@ -313,17 +319,17 @@ public class BoarModel extends HierarchicalAnimatedModel<RammingPrey>
             }
         }
 
-        if (entity.isTelegraphingAttack())
+        if (state.telegraphingAttack)
         {
             //Note for re-use: telegraph animations should be 1 second long, or the float here should be multiplied by their length
-            //animate(entity.telegraphAnimation, BOAR_PREPARE_CHARGE, entity.getTelegraphAnimationProgress());
-            this.head.xRot = entity.getTelegraphAttackTick() * 2 * Constants.DEG_TO_RAD;
+            //animate(state.telegraphAnimation, BOAR_PREPARE_CHARGE, state.getTelegraphAnimationProgress());
+            this.head.xRot = state.telegraphAttackTick * 2 * Constants.DEG_TO_RAD;
         }
         else
         {
             this.head.xRot = headPitch * Constants.DEG_TO_RAD;
             this.head.yRot = headYaw * Constants.DEG_TO_RAD;
         }
-        this.animate(entity.attackingAnimation, BOAR_HEADBUTT, ageInTicks);
+        this.animate(state.attackingAnimation, BOAR_HEADBUTT, ageInTicks);
     }
 }

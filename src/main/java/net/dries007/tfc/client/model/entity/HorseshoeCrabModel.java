@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import java.util.Set;
+
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.Keyframe;
@@ -20,6 +22,13 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 
 public class HorseshoeCrabModel extends AquaticCritterModel
 {
+    // Preserve the reviewed legacy omissions when reusing this animation set.
+    @Override
+    protected Set<String> optionalAnimationBones()
+    {
+        return Set.of("antena1", "antena2");
+    }
+
     public static LayerDefinition createBodyLayer()
     {
         MeshDefinition meshdefinition = new MeshDefinition();

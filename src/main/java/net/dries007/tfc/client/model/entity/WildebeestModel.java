@@ -10,6 +10,10 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import java.util.Set;
+
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import com.mojang.math.Constants;
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
@@ -23,11 +27,16 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
-import net.dries007.tfc.common.entities.EntityHelpers;
-import net.dries007.tfc.common.entities.prey.RammingPrey;
 
-public class WildebeestModel extends HierarchicalAnimatedModel<RammingPrey>
+public class WildebeestModel extends HierarchicalAnimatedModel
 {
+    // Preserve the reviewed legacy omissions when reusing this animation set.
+    @Override
+    protected Set<String> optionalAnimationBones()
+    {
+        return Set.of("tail1");
+    }
+
     private final ModelPart body;
     private final ModelPart head;
     private final ModelPart neck;
@@ -95,13 +104,19 @@ public class WildebeestModel extends HierarchicalAnimatedModel<RammingPrey>
     }
 
     @Override
-    public void setupAnim(RammingPrey entity, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch);
-        if (EntityHelpers.isMovingOnLand(entity))
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float headYaw = state.yRot;
+        final float headPitch = state.xRot;
+
+        if (state.movingOnLand)
         {
-            final float speed = getAdjustedLandSpeed(entity);
-            if (entity.getTelegraphAttackTick() > 0)
+            final float speed = getAdjustedLandSpeed(state);
+            if (state.telegraphAttackTick > 0)
             {
                 animateWalk(WILDEBEEST_RUN, limbSwing, limbSwingAmount, 1F, 3 * speed);
             }
@@ -111,19 +126,19 @@ public class WildebeestModel extends HierarchicalAnimatedModel<RammingPrey>
             }
         }
 
-        if (entity.isTelegraphingAttack())
+        if (state.telegraphingAttack)
         {
             //Note for re-use: telegraph animations should be 1 second long, or the float here should be multiplied by their length
-            //animate(entity.telegraphAnimation, BOAR_PREPARE_CHARGE, entity.getTelegraphAnimationProgress());
-            this.head.xRot = (entity.getTelegraphAttackTick() + 50) * Constants.DEG_TO_RAD;
-            this.neck.xRot = entity.getTelegraphAttackTick() * Constants.DEG_TO_RAD;
+            //animate(state.telegraphAnimation, BOAR_PREPARE_CHARGE, state.getTelegraphAnimationProgress());
+            this.head.xRot = (state.telegraphAttackTick + 50) * Constants.DEG_TO_RAD;
+            this.neck.xRot = state.telegraphAttackTick * Constants.DEG_TO_RAD;
         }
         else
         {
             this.head.xRot = (headPitch + 50) * Constants.DEG_TO_RAD;
             this.head.yRot = headYaw * Constants.DEG_TO_RAD;
         }
-        this.animate(entity.attackingAnimation, WILDEBEEST_ATTACK, ageInTicks);
+        this.animate(state.attackingAnimation, WILDEBEEST_ATTACK, ageInTicks);
     }
 
     public static final AnimationDefinition WILDEBEEST_RUN = AnimationDefinition.Builder.withLength(0.5f).looping()

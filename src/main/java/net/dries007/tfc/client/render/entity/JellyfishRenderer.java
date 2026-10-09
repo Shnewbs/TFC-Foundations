@@ -11,6 +11,7 @@ import java.util.Map;
 import com.google.common.collect.Maps;
 
 import net.dries007.tfc.client.RenderHelpers;
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
 import net.dries007.tfc.client.model.entity.JellyfishModel;
 import net.dries007.tfc.common.entities.aquatic.Jellyfish;
 import net.dries007.tfc.common.entities.aquatic.Jellyfish.Type;
@@ -34,8 +35,9 @@ public class JellyfishRenderer extends SimpleMobRenderer<Jellyfish, JellyfishMod
     }
 
     @Override
-    public Identifier getTextureLocation(Jellyfish jellyfish)
+    public void extractRenderState(Jellyfish jellyfish, TFCAnimalRenderState state, float partialTick)
     {
-        return LOCATION_BY_TYPE.get(jellyfish.getVariant());
+        super.extractRenderState(jellyfish, state, partialTick);
+        state.texture = LOCATION_BY_TYPE.get(jellyfish.getVariant());
     }
 }

@@ -13,10 +13,10 @@ import net.minecraft.world.entity.animal.camel.Camel;
 
 import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.client.model.entity.HierarchicalAnimatedModel;
-import net.dries007.tfc.common.entities.livestock.Age;
-import net.dries007.tfc.common.entities.livestock.camel.AbstractCamel;
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderStateExtractor;
 
-public class BactrianCamelRenderer<T extends Camel, M extends HierarchicalAnimatedModel<T>> extends MobRenderer<T, M>
+public class BactrianCamelRenderer<T extends Camel, M extends HierarchicalAnimatedModel> extends MobRenderer<T, TFCAnimalRenderState, M>
 {
     private final Identifier young;
     private final Identifier old;
@@ -33,15 +33,21 @@ public class BactrianCamelRenderer<T extends Camel, M extends HierarchicalAnimat
     }
 
     @Override
-    public Identifier getTextureLocation(T entity)
+    public TFCAnimalRenderState createRenderState()
     {
-        if (entity instanceof AbstractCamel camel) {
-            if (camel.isSaddled())
-            {
-                return camel.getAgeType() == Age.OLD ? old_saddled : saddled;
-            }
-            else return camel.getAgeType() == Age.OLD ? old : young;
-        }
-        else return young;
+        return new TFCAnimalRenderState();
+    }
+
+    @Override
+    public void extractRenderState(T entity, TFCAnimalRenderState state, float partialTick)
+    {
+        super.extractRenderState(entity, state, partialTick);
+        TFCAnimalRenderStateExtractor.extract(entity, state, partialTick);
+    }
+
+    @Override
+    public Identifier getTextureLocation(TFCAnimalRenderState state)
+    {
+        return state.isSaddled ? (state.isOld ? old_saddled : saddled) : (state.isOld ? old : young);
     }
 }

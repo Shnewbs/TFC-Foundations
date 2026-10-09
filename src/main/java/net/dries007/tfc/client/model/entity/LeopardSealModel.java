@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.Keyframe;
@@ -18,9 +20,8 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
-import net.dries007.tfc.common.entities.aquatic.LeopardSeal;
 
-public class LeopardSealModel extends HierarchicalAnimatedModel<LeopardSeal>
+public class LeopardSealModel extends HierarchicalAnimatedModel
 {
     public static LayerDefinition createBodyLayer()
     {
@@ -280,10 +281,16 @@ public class LeopardSealModel extends HierarchicalAnimatedModel<LeopardSeal>
     }
 
     @Override
-    public void setupAnim(LeopardSeal animal, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(animal, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch);
-        if (!animal.isInWater() && animal.onGround())
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float headYaw = state.yRot;
+        final float headPitch = state.xRot;
+
+        if (!state.isInWater && state.onGround)
         {
             this.animateWalk(FLOP, limbSwing, limbSwingAmount, 3, 3);
         }

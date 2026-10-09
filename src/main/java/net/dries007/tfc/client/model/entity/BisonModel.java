@@ -5,6 +5,8 @@
  */
 
 package net.dries007.tfc.client.model.entity;
+
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
 import com.mojang.math.Constants;
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
@@ -18,9 +20,8 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
-import net.dries007.tfc.common.entities.prey.RammingPrey;
 
-public class BisonModel extends HierarchicalAnimatedModel<RammingPrey>
+public class BisonModel extends HierarchicalAnimatedModel
 {
     public static LayerDefinition createBodyLayer()
     {
@@ -269,11 +270,17 @@ public class BisonModel extends HierarchicalAnimatedModel<RammingPrey>
 
 
     @Override
-    public void setupAnim(RammingPrey entity, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch);
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float headYaw = state.yRot;
+        final float headPitch = state.xRot;
 
-        final float speed = getAdjustedLandSpeed(entity);
+
+        final float speed = getAdjustedLandSpeed(state);
         if (speed > 1f)
         {
             this.animateWalk(BISON_RUN, limbSwing, limbSwingAmount, 1f, 2.5f);
@@ -283,11 +290,11 @@ public class BisonModel extends HierarchicalAnimatedModel<RammingPrey>
             this.animateWalk(BISON_WALK, limbSwing, limbSwingAmount, 1f, 5f);
         }
 
-        if (entity.isTelegraphingAttack())
+        if (state.telegraphingAttack)
         {
             //Note for re-use: telegraph animations should be 1 second long, or the float here should be multiplied by their length
-            //animate(entity.telegraphAnimation, BOAR_PREPARE_CHARGE, entity.getTelegraphAnimationProgress());
-            this.head.xRot = entity.getTelegraphAttackTick() * Constants.DEG_TO_RAD * -1;
+            //animate(state.telegraphAnimation, BOAR_PREPARE_CHARGE, state.getTelegraphAnimationProgress());
+            this.head.xRot = state.telegraphAttackTick * Constants.DEG_TO_RAD * -1;
         }
         else
         {

@@ -10,6 +10,10 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import java.util.Set;
+
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import com.mojang.math.Constants;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -19,9 +23,15 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
-import net.dries007.tfc.common.entities.prey.Prey;
 
-public class GazelleModel extends HierarchicalAnimatedModel<Prey> {
+public class GazelleModel extends HierarchicalAnimatedModel {
+    // Preserve the reviewed legacy omissions when reusing this animation set.
+    @Override
+    protected Set<String> optionalAnimationBones()
+    {
+        return Set.of("tail1");
+    }
+
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
     private final ModelPart head;
 
@@ -84,10 +94,16 @@ public class GazelleModel extends HierarchicalAnimatedModel<Prey> {
 	}
 
     @Override
-    public void setupAnim(Prey entity, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch);
-        final float speed = getAdjustedLandSpeed(entity);
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float headYaw = state.yRot;
+        final float headPitch = state.xRot;
+
+        final float speed = getAdjustedLandSpeed(state);
         if (speed > 1.1f)
         {
             this.animateWalk(DeerModel.DEER_RUN, limbSwing, limbSwingAmount, 1f, 2.5f);

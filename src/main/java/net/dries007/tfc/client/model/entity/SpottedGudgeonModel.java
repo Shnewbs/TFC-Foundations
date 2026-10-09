@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 // Made with Blockbench 5.1.4
 // Exported for Minecraft version 1.17 or later with Mojang mappings
 
@@ -13,7 +15,6 @@ import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.Keyframe;
 import net.minecraft.client.animation.KeyframeAnimations;
-import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
@@ -22,11 +23,9 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
-import net.dries007.tfc.common.entities.aquatic.FreshwaterFish;
 
-public class SpottedGudgeonModel extends HierarchicalAnimatedModel<FreshwaterFish>
+public class SpottedGudgeonModel extends HierarchicalAnimatedModel
 {
-    private final ModelPart root;
     private final ModelPart body;
     private final ModelPart leftFin;
     private final ModelPart rightFin;
@@ -35,7 +34,6 @@ public class SpottedGudgeonModel extends HierarchicalAnimatedModel<FreshwaterFis
     public SpottedGudgeonModel(ModelPart root)
     {
         super(root);
-        this.root = root;
         this.body = root.getChild("body");
         this.leftFin = this.body.getChild("leftFin");
         this.rightFin = this.body.getChild("rightFin");
@@ -62,17 +60,18 @@ public class SpottedGudgeonModel extends HierarchicalAnimatedModel<FreshwaterFis
     }
 
     @Override
-    public void setupAnim(FreshwaterFish entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float netHeadYaw = state.yRot;
+        final float headPitch = state.xRot;
+
         this.animateWalk(SWIM, limbSwing, limbSwingAmount, 1f, 2.5f);
     }
 
-    @Override
-    public ModelPart root()
-    {
-        return this.root;
-    }
 
     public static final AnimationDefinition SWIM = AnimationDefinition.Builder.withLength(0.7864F).looping()
         .addAnimation("body", new AnimationChannel(AnimationChannel.Targets.ROTATION,

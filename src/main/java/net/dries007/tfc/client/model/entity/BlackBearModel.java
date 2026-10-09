@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.Keyframe;
@@ -18,14 +20,9 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.ai.memory.MemoryModuleType;
-import net.minecraft.world.entity.ai.memory.MemoryStatus;
 
-import net.dries007.tfc.common.TFCTags;
-import net.dries007.tfc.common.entities.EntityHelpers;
-import net.dries007.tfc.common.entities.predator.Predator;
 
-public class BlackBearModel extends HierarchicalAnimatedModel<Predator>
+public class BlackBearModel extends HierarchicalAnimatedModel
 {
 
     public static LayerDefinition createBodyLayer()
@@ -684,27 +681,33 @@ public class BlackBearModel extends HierarchicalAnimatedModel<Predator>
     }
 
     @Override
-    public void setupAnim(Predator predator, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(predator, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch);
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float headYaw = state.yRot;
+        final float headPitch = state.xRot;
 
-        if (predator.sleepingAnimation.isStarted())
+
+        if (state.sleepingAnimation.isStarted())
         {
-            this.animate(predator.sleepingAnimation, BLACK_BEAR_SLEEP, ageInTicks);
+            this.animate(state.sleepingAnimation, BLACK_BEAR_SLEEP, ageInTicks);
         }
         else
         {
-            if (predator.isInWaterOrBubble())
+            if (state.inWaterOrBubble)
             {
                 this.animateWalk(BLACK_BEAR_SWIM, limbSwing, limbSwingAmount, 4f, 6f);
             }
-            else if (predator.getBlockStateOn().is(TFCTags.Blocks.BEAR_CRAWLS_ON))
+            else if (state.bearCrawlsOn)
             {
                 this.animateWalk(BLACK_BEAR_CRAWL, limbSwing, limbSwingAmount, 2.5f, 3f);
             }
             else
             {
-                if ((predator.isAggressive() || predator.getBrain().checkMemory(MemoryModuleType.HURT_BY_ENTITY, MemoryStatus.VALUE_PRESENT)) && EntityHelpers.isMovingOnLand(predator))
+                if ((state.aggressive || state.hurtByEntity) && state.movingOnLand)
                 {
                     animateWalk(BLACK_BEAR_RUN, limbSwing, limbSwingAmount, 4f, 6f);
                 }
@@ -712,7 +715,7 @@ public class BlackBearModel extends HierarchicalAnimatedModel<Predator>
                 {
                     animateWalk(BLACK_BEAR_WALK, limbSwing, limbSwingAmount, 4f, 6f);
                 }
-                this.animate(predator.attackingAnimation, BLACK_BEAR_ATTACK, ageInTicks);
+                this.animate(state.attackingAnimation, BLACK_BEAR_ATTACK, ageInTicks);
             }
             head.xRot = headPitch * Mth.PI / 180F;
             head.yRot = headYaw * Mth.PI / 180F;

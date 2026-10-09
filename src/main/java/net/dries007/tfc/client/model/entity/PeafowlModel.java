@@ -10,6 +10,10 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import java.util.Set;
+
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import com.mojang.math.Constants;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -19,14 +23,16 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
-import net.dries007.tfc.client.ClientHelpers;
-import net.dries007.tfc.common.entities.prey.WingedPrey;
-import net.dries007.tfc.util.calendar.Calendars;
-import net.dries007.tfc.util.calendar.Month;
-import net.dries007.tfc.util.calendar.Season;
 
-public class PeafowlModel extends HierarchicalAnimatedModel<WingedPrey>
+public class PeafowlModel extends HierarchicalAnimatedModel
 {
+    // Preserve the reviewed legacy omissions when reusing this animation set.
+    @Override
+    protected Set<String> optionalAnimationBones()
+    {
+        return Set.of("snood");
+    }
+
     private final ModelPart neck;
     private final ModelPart body;
     private final ModelPart head;
@@ -151,14 +157,18 @@ public class PeafowlModel extends HierarchicalAnimatedModel<WingedPrey>
 
 
     @Override
-    public void setupAnim(WingedPrey entity, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch);
-        Month currentMonth = Calendars.CLIENT.getHemispheralCalendarMonthOfYear(ClientHelpers.inNorthernHemisphere());
-        Season season = currentMonth.getSeason();
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float headYaw = state.yRot;
+        final float headPitch = state.xRot;
+
         //TODO: Make peacock "Strutting" a self-defense mechanism, maybe borrow from playing dead?
-        animateWalk(season == Season.FALL ? TurkeyModel.TURKEY_STRUT : TurkeyModel.TURKEY_WALK, limbSwing, limbSwingAmount, 1f, 2.5f);
-        if (!entity.onGround())
+        animateWalk(state.fallSeason ? TurkeyModel.TURKEY_STRUT : TurkeyModel.TURKEY_WALK, limbSwing, limbSwingAmount, 1f, 2.5f);
+        if (!state.onGround)
         {
             right_wing.zRot = ageInTicks;
             left_wing.zRot = -ageInTicks;

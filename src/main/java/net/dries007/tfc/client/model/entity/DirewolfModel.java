@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.Keyframe;
@@ -19,10 +21,8 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 
-import net.dries007.tfc.common.entities.EntityHelpers;
-import net.dries007.tfc.common.entities.ai.predator.PackPredator;
 
-public class DirewolfModel extends HierarchicalAnimatedModel<PackPredator>
+public class DirewolfModel extends HierarchicalAnimatedModel
 {
     public static LayerDefinition createBodyLayer()
     {
@@ -274,23 +274,29 @@ public class DirewolfModel extends HierarchicalAnimatedModel<PackPredator>
     }
 
     @Override
-    public void setupAnim(PackPredator predator, float limbSwing, float limbSwingAmount, float ageInTicks, float yaw, float pitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(predator, limbSwing, limbSwingAmount, ageInTicks, yaw, pitch);
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float yaw = state.yRot;
+        final float pitch = state.xRot;
 
-        if (predator.sleepingAnimation.isStarted())
+
+        if (state.sleepingAnimation.isStarted())
         {
-            this.animate(predator.sleepingAnimation, DIREWOLF_SLEEP, ageInTicks);
+            this.animate(state.sleepingAnimation, DIREWOLF_SLEEP, ageInTicks);
         }
         else
         {
-            if (predator.isInWaterOrBubble())
+            if (state.inWaterOrBubble)
             {
                 this.animateWalk(DIREWOLF_RUN, limbSwing, limbSwingAmount, 1f, 2.5f);
             }
             else
             {
-                if (predator.isAggressive() && EntityHelpers.isMovingOnLand(predator))
+                if (state.aggressive && state.movingOnLand)
                 {
                     animateWalk(DIREWOLF_RUN, limbSwing, limbSwingAmount, 1f, 2.5f);
                 }
@@ -298,7 +304,7 @@ public class DirewolfModel extends HierarchicalAnimatedModel<PackPredator>
                 {
                     animateWalk(DIREWOLF_WALK, limbSwing, limbSwingAmount, 2.5f, 2.5f);
                 }
-                this.animate(predator.attackingAnimation, DIREWOLF_ATTACK, ageInTicks);
+                this.animate(state.attackingAnimation, DIREWOLF_ATTACK, ageInTicks);
             }
             head.xRot = pitch * Mth.PI / 180F;
             head.yRot = yaw * Mth.PI / 360F;

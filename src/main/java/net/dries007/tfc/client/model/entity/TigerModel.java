@@ -19,9 +19,8 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 
-import net.dries007.tfc.common.entities.predator.FelinePredator;
 
-public class TigerModel extends FelinePredatorModel<FelinePredator>
+public class TigerModel extends FelinePredatorModel
 {
     private final ModelPart body;
     private final ModelPart tail;

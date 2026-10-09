@@ -10,6 +10,8 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import com.mojang.math.Constants;
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
@@ -23,9 +25,8 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
-import net.dries007.tfc.common.entities.prey.WingedPrey;
 
-public class PheasantModel extends HierarchicalAnimatedModel<WingedPrey>
+public class PheasantModel extends HierarchicalAnimatedModel
 {
     public static LayerDefinition createBodyLayer()
     {
@@ -167,11 +168,17 @@ public class PheasantModel extends HierarchicalAnimatedModel<WingedPrey>
     }
 
     @Override
-    public void setupAnim(WingedPrey entity, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch);
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float headYaw = state.yRot;
+        final float headPitch = state.xRot;
+
         this.animateWalk(PHEASANT_WALK, limbSwing, limbSwingAmount, 1f, 2.5f);
-        if (!entity.onGround())
+        if (!state.onGround)
         {
             wingR.zRot = ageInTicks;
             wingL.zRot = -ageInTicks;

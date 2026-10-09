@@ -6,12 +6,13 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.model.geom.ModelPart;
 
-import net.dries007.tfc.common.entities.aquatic.AquaticCritter;
 
-public class AquaticCritterModel extends HierarchicalAnimatedModel<AquaticCritter>
+public class AquaticCritterModel extends HierarchicalAnimatedModel
 {
     private final AnimationDefinition crawl;
     private final AnimationDefinition calm;
@@ -28,22 +29,28 @@ public class AquaticCritterModel extends HierarchicalAnimatedModel<AquaticCritte
     }
 
     @Override
-    public void setupAnim(AquaticCritter entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-        if (entity.hurtAnimation.isStarted())
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float netHeadYaw = state.yRot;
+        final float headPitch = state.xRot;
+
+        if (state.hurtAnimation.isStarted())
         {
-            animate(entity.hurtAnimation, damage, ageInTicks);
+            animate(state.hurtAnimation, damage, ageInTicks);
         }
-        else if (!entity.onGround())
+        else if (!state.onGround)
         {
             animateWalk(swim, limbSwing, limbSwingAmount, 1f, 2.5f);
         }
         else
         {
-            if (entity.idleAnimation.isStarted())
+            if (state.idleAnimation.isStarted())
             {
-                animate(entity.idleAnimation, calm, ageInTicks);
+                animate(state.idleAnimation, calm, ageInTicks);
             }
             else
             {

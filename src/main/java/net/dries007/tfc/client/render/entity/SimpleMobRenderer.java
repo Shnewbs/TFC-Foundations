@@ -16,17 +16,18 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.phys.Vec3;
+
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.client.RenderHelpers;
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderStateExtractor;
 
-public class SimpleMobRenderer<T extends Mob, M extends EntityModel<T>> extends MobRenderer<T, M>
+public class SimpleMobRenderer<T extends Mob, M extends EntityModel<? super TFCAnimalRenderState>> extends MobRenderer<T, TFCAnimalRenderState, M>
 {
     private final Identifier texture;
     @Nullable
     private final Identifier babyTexture;
-    @Nullable
     private final Function<T, Identifier> textureGetter;
     private final boolean doesFlop;
     private final float scale;
@@ -43,17 +44,30 @@ public class SimpleMobRenderer<T extends Mob, M extends EntityModel<T>> extends 
     }
 
     @Override
-    protected void setupRotations(T entity, PoseStack poseStack, float bob, float yBodyRot, float partialTick, float scale)
+    public TFCAnimalRenderState createRenderState()
     {
-        super.setupRotations(entity, poseStack, bob, yBodyRot, partialTick, scale);
+        return new TFCAnimalRenderState();
+    }
+
+    @Override
+    public void extractRenderState(T entity, TFCAnimalRenderState state, float partialTick)
+    {
+        super.extractRenderState(entity, state, partialTick);
+        TFCAnimalRenderStateExtractor.extract(entity, state, partialTick);
+        state.texture = textureGetter.apply(entity);
+    }
+
+    @Override
+    protected void setupRotations(TFCAnimalRenderState state, PoseStack poseStack, float bodyRot, float scale)
+    {
+        super.setupRotations(state, poseStack, bodyRot, scale);
         if (doesFlop)
         {
-            // handle patchouli
-            final Vec3 pos = entity.position();
-            if (Math.abs(pos.x) < 0.01f && Math.abs(pos.y) < 0.01f && Math.abs(pos.z) < 0.01f)
+            // Preserve the field-guide origin exemption.
+            if (state.atGuideOrigin)
                 return;
-            poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.sin(0.6F * bob)));
-            if (!entity.isInWater())
+            poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.sin(0.6F * state.ageInTicks)));
+            if (!state.isInWater)
             {
                 poseStack.translate(0.1f, 0.1f, -0.1f);
                 poseStack.mulPose(Axis.ZP.rotationDegrees(90f));
@@ -62,20 +76,20 @@ public class SimpleMobRenderer<T extends Mob, M extends EntityModel<T>> extends 
     }
 
     @Override
-    protected void scale(T entity, PoseStack poseStack, float scale)
+    protected void scale(TFCAnimalRenderState state, PoseStack poseStack)
     {
-        float amount = entity.isBaby() ? this.scale * 0.7f : this.scale;
+        float amount = state.isBaby ? this.scale * 0.7f : this.scale;
         poseStack.scale(amount, amount, amount);
-        super.scale(entity, poseStack, scale);
+        super.scale(state, poseStack);
     }
 
     @Override
-    public Identifier getTextureLocation(T entity)
+    public Identifier getTextureLocation(TFCAnimalRenderState state)
     {
-        return textureGetter.apply(entity);
+        return state.texture != null ? state.texture : texture;
     }
 
-    public static class Builder<T extends Mob, M extends EntityModel<T>>
+    public static class Builder<T extends Mob, M extends EntityModel<? super TFCAnimalRenderState>>
     {
         private final EntityRendererProvider.Context ctx;
         private final Function<ModelPart, M> model;

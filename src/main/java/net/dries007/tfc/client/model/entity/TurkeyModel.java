@@ -10,6 +10,8 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import com.mojang.math.Constants;
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
@@ -23,13 +25,8 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
-import net.dries007.tfc.client.ClientHelpers;
-import net.dries007.tfc.common.entities.prey.WingedPrey;
-import net.dries007.tfc.util.calendar.Calendars;
-import net.dries007.tfc.util.calendar.Month;
-import net.dries007.tfc.util.calendar.Season;
 
-public class TurkeyModel extends HierarchicalAnimatedModel<WingedPrey>
+public class TurkeyModel extends HierarchicalAnimatedModel
 {
     public static LayerDefinition createBodyLayer()
     {
@@ -391,13 +388,17 @@ public class TurkeyModel extends HierarchicalAnimatedModel<WingedPrey>
     }
 
     @Override
-    public void setupAnim(WingedPrey entity, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, headYaw, headPitch);
-        Month currentMonth = Calendars.CLIENT.getHemispheralCalendarMonthOfYear(ClientHelpers.inNorthernHemisphere());
-        Season season = currentMonth.getSeason();
-        animateWalk(season == Season.FALL ? TURKEY_STRUT : TURKEY_WALK, limbSwing, limbSwingAmount, 1f, 2.5f);
-        if (!entity.onGround())
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float headYaw = state.yRot;
+        final float headPitch = state.xRot;
+
+        animateWalk(state.fallSeason ? TURKEY_STRUT : TURKEY_WALK, limbSwing, limbSwingAmount, 1f, 2.5f);
+        if (!state.onGround)
         {
             right_wing.zRot = ageInTicks;
             left_wing.zRot = -ageInTicks;

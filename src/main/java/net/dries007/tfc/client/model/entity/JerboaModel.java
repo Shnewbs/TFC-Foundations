@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import java.util.Set;
+
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import com.mojang.math.Constants;
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
@@ -19,10 +23,16 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
-import net.dries007.tfc.common.entities.prey.Pest;
 
-public class JerboaModel extends HierarchicalAnimatedModel<Pest>
+public class JerboaModel extends HierarchicalAnimatedModel
 {
+    // Preserve the reviewed legacy omissions when reusing this animation set.
+    @Override
+    protected Set<String> optionalAnimationBones()
+    {
+        return Set.of("1", "2");
+    }
+
     public static LayerDefinition createBodyLayer()
     {
         MeshDefinition meshdefinition = new MeshDefinition();
@@ -127,18 +137,24 @@ public class JerboaModel extends HierarchicalAnimatedModel<Pest>
     }
 
     @Override
-    public void setupAnim(Pest entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netheadYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netheadYaw, headPitch);
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float netheadYaw = state.yRot;
+        final float headPitch = state.xRot;
+
 
         // TODO: Full anim set?
-        this.animate(entity.walkingAnimation, JERBOA_RUNNING, ageInTicks, getAdjustedLandSpeed(entity));
-        this.animate(entity.eatingAnimation, JERBOA_EAT, ageInTicks);
-        this.animate(entity.searchingAnimation, JERBOA_SNIFF, ageInTicks);
-        this.animate(entity.sniffingAnimation, JERBOA_SNIFF, ageInTicks);
-        this.animate(entity.draggingAnimation, JERBOA_RUNNING, ageInTicks);
+        this.animate(state.walkingAnimation, JERBOA_RUNNING, ageInTicks, getAdjustedLandSpeed(state));
+        this.animate(state.eatingAnimation, JERBOA_EAT, ageInTicks);
+        this.animate(state.searchingAnimation, JERBOA_SNIFF, ageInTicks);
+        this.animate(state.sniffingAnimation, JERBOA_SNIFF, ageInTicks);
+        this.animate(state.draggingAnimation, JERBOA_RUNNING, ageInTicks);
 
-        if (!entity.searchingAnimation.isStarted() && !entity.sniffingAnimation.isStarted() && !entity.draggingAnimation.isStarted() && !entity.eatingAnimation.isStarted())
+        if (!state.searchingAnimation.isStarted() && !state.sniffingAnimation.isStarted() && !state.draggingAnimation.isStarted() && !state.eatingAnimation.isStarted())
         {
             this.head.xRot = headPitch * Constants.DEG_TO_RAD;
             this.head.yRot = netheadYaw * Constants.DEG_TO_RAD;

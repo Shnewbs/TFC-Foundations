@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.Identifier;
 
 import net.dries007.tfc.client.RenderHelpers;
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
 import net.dries007.tfc.client.model.entity.DogCollarLayer;
 import net.dries007.tfc.client.model.entity.DogModel;
 import net.dries007.tfc.common.entities.livestock.pet.Dog;
@@ -28,10 +29,10 @@ public class DogRenderer extends SimpleMobRenderer<Dog, DogModel>
     }
 
     @Override
-    protected void setupRotations(Dog entity, PoseStack stack, float bob, float yBodyRot, float partialTick, float scale)
+    protected void setupRotations(TFCAnimalRenderState state, PoseStack stack, float yBodyRot, float scale)
     {
-        super.setupRotations(entity, stack, bob, yBodyRot, partialTick, scale);
-        if (entity.isSleeping())
+        super.setupRotations(state, stack, yBodyRot, scale);
+        if (state.sleeping)
         {
             stack.translate(0.2F, 0.1F, 0.0D);
             stack.mulPose(Axis.ZP.rotationDegrees(90f));

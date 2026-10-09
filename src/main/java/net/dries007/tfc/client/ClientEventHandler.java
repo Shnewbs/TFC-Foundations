@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.client;
 
+import net.dries007.tfc.common.entities.prey.WingedPrey;
+
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
@@ -667,10 +669,10 @@ public final class ClientEventHandler
         event.registerEntityRenderer(TFCEntities.CARIBOU.get(), ctx -> new SimpleMobRenderer.Builder<>(ctx, CaribouModel::new, "caribou").shadow(0.6f).build());
         event.registerEntityRenderer(TFCEntities.DEER.get(), ctx -> new SimpleMobRenderer.Builder<>(ctx, DeerModel::new, "deer").shadow(0.6f).hasBabyTexture().build());
         event.registerEntityRenderer(TFCEntities.GAZELLE.get(), ctx -> new SimpleMobRenderer.Builder<>(ctx, GazelleModel::new, "gazelle").shadow(0.6f).build());
-        event.registerEntityRenderer(TFCEntities.GROUSE.get(), ctx -> new SimpleMobRenderer.Builder<>(ctx, GrouseModel::new, "grouse").shadow(0.5f).texture(e -> RenderHelpers.getGenderedTexture(e, "grouse")).build());
-        event.registerEntityRenderer(TFCEntities.PHEASANT.get(), ctx -> new SimpleMobRenderer.Builder<>(ctx, PheasantModel::new, "pheasant").shadow(0.5f).texture(e -> RenderHelpers.getGenderedTexture(e, "pheasant")).build());
-        event.registerEntityRenderer(TFCEntities.TURKEY.get(), ctx -> new SimpleMobRenderer.Builder<>(ctx, TurkeyModel::new, "turkey").shadow(0.5f).texture(e -> RenderHelpers.getGenderedTexture(e, "turkey")).build());
-        event.registerEntityRenderer(TFCEntities.PEAFOWL.get(), ctx -> new SimpleMobRenderer.Builder<>(ctx, PeafowlModel::new, "peafowl").shadow(0.5f).texture(e -> RenderHelpers.getGenderedTexture(e, "peafowl")).build());
+        event.registerEntityRenderer(TFCEntities.GROUSE.get(), ctx -> new SimpleMobRenderer.Builder<WingedPrey, GrouseModel>(ctx, GrouseModel::new, "grouse").shadow(0.5f).texture(e -> RenderHelpers.getGenderedTexture(e, "grouse")).build());
+        event.registerEntityRenderer(TFCEntities.PHEASANT.get(), ctx -> new SimpleMobRenderer.Builder<WingedPrey, PheasantModel>(ctx, PheasantModel::new, "pheasant").shadow(0.5f).texture(e -> RenderHelpers.getGenderedTexture(e, "pheasant")).build());
+        event.registerEntityRenderer(TFCEntities.TURKEY.get(), ctx -> new SimpleMobRenderer.Builder<WingedPrey, TurkeyModel>(ctx, TurkeyModel::new, "turkey").shadow(0.5f).texture(e -> RenderHelpers.getGenderedTexture(e, "turkey")).build());
+        event.registerEntityRenderer(TFCEntities.PEAFOWL.get(), ctx -> new SimpleMobRenderer.Builder<WingedPrey, PeafowlModel>(ctx, PeafowlModel::new, "peafowl").shadow(0.5f).texture(e -> RenderHelpers.getGenderedTexture(e, "peafowl")).build());
         event.registerEntityRenderer(TFCEntities.MULE.get(), ctx -> new TFCChestedHorseRenderer<>(ctx, 0.92F, RenderHelpers.layerId("mule"), "mule"));
         event.registerEntityRenderer(TFCEntities.DONKEY.get(), ctx -> new TFCChestedHorseRenderer<>(ctx, 0.87F, RenderHelpers.layerId("donkey"), "donkey"));
         event.registerEntityRenderer(TFCEntities.HORSE.get(), TFCHorseRenderer::new);

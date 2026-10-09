@@ -6,13 +6,13 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.model.geom.ModelPart;
 
-import net.dries007.tfc.common.entities.EntityHelpers;
-import net.dries007.tfc.common.entities.predator.FelinePredator;
 
-public class FelinePredatorModel<E extends FelinePredator> extends HierarchicalAnimatedModel<E>
+public class FelinePredatorModel extends HierarchicalAnimatedModel
 {
     private final AnimationDefinition sleep;
     private final AnimationDefinition walk;
@@ -29,19 +29,25 @@ public class FelinePredatorModel<E extends FelinePredator> extends HierarchicalA
     }
 
     @Override
-    public void setupAnim(E predator, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(predator, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float netHeadYaw = state.yRot;
+        final float headPitch = state.xRot;
 
-        if (predator.sleepingAnimation.isStarted())
+
+        if (state.sleepingAnimation.isStarted())
         {
             setupSleeping();
-            this.animate(predator.sleepingAnimation, sleep, ageInTicks);
+            this.animate(state.sleepingAnimation, sleep, ageInTicks);
         }
         else
         {
             // swimming is animated as walking. animations can be swapped with no consequences!
-            if (predator.isInWaterOrBubble() || !predator.isAggressive() || !EntityHelpers.isMovingOnLand(predator))
+            if (state.inWaterOrBubble || !state.aggressive || !state.movingOnLand)
             {
                 this.animateWalk(walk, limbSwing, limbSwingAmount, 2.5f, 2.5f);
             }
@@ -49,7 +55,7 @@ public class FelinePredatorModel<E extends FelinePredator> extends HierarchicalA
             {
                 this.animateWalk(run, limbSwing, limbSwingAmount, 1f, 2.5f);
             }
-            this.animate(predator.attackingAnimation, attack, ageInTicks);
+            this.animate(state.attackingAnimation, attack, ageInTicks);
             setupHeadRotations(netHeadYaw, headPitch);
         }
     }

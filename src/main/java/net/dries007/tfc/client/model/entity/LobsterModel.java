@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.Keyframe;
@@ -18,10 +20,8 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
-import net.dries007.tfc.common.entities.aquatic.AquaticCritter;
 
-
-public class LobsterModel extends HierarchicalAnimatedModel<AquaticCritter>
+public class LobsterModel extends HierarchicalAnimatedModel
 {
 
     public static LayerDefinition createBodyLayer()
@@ -151,10 +151,16 @@ public class LobsterModel extends HierarchicalAnimatedModel<AquaticCritter>
     }
 
     @Override
-    public void setupAnim(AquaticCritter entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-        if (!entity.onGround())
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float netHeadYaw = state.yRot;
+        final float headPitch = state.xRot;
+
+        if (!state.onGround)
         {
             this.animateWalk(LOBSTER_SWIM, limbSwing, limbSwingAmount, 3f, 5f);
         }

@@ -6,21 +6,22 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import com.mojang.math.Constants;
-import net.minecraft.client.model.animal.wolf.WolfModel;
+import net.minecraft.client.model.animal.wolf.AdultWolfModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.util.Mth;
 
-import net.dries007.tfc.common.entities.livestock.pet.Dog;
 
-public class DogModel extends HierarchicalAnimatedModel<Dog>
+public class DogModel extends HierarchicalAnimatedModel
 {
     public static LayerDefinition createBodyLayer()
     {
-        // todo 1.21, someone who knows wtf we did here verify
-        return LayerDefinition.create(WolfModel.createMeshDefinition(CubeDeformation.NONE), 64, 32);
+        // Keep the adult wolf bone layout used by TFC's dog animations.
+        return LayerDefinition.create(AdultWolfModel.createBodyLayer(CubeDeformation.NONE), 64, 32);
     }
 
     private final ModelPart head;
@@ -47,12 +48,20 @@ public class DogModel extends HierarchicalAnimatedModel<Dog>
         this.tail = root.getChild("tail");
     }
 
+
     @Override
-    public void prepareMobModel(Dog entity, float limbSwing, float limbSwingAmount, float partialTick)
+    public void setupAnim(TFCAnimalRenderState state)
     {
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float yaw = state.yRot;
+        final float pitch = state.xRot;
+
         tail.yRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
 
-        if (entity.isSitting() || entity.isSleeping())
+        if (state.sitting || state.sleeping)
         {
             upperBody.setPos(-1.0F, 16.0F, -3.0F);
             upperBody.xRot = 1.2566371F;
@@ -70,7 +79,7 @@ public class DogModel extends HierarchicalAnimatedModel<Dog>
             leftFrontLeg.setPos(0.51F, 17.0F, -4.0F);
 
             // tfc
-            tail.xRot = entity.isSleeping() ? 0 : Mth.PI / 5f;
+            tail.xRot = state.sleeping ? 0 : Mth.PI / 5f;
         }
         else
         {
@@ -89,12 +98,8 @@ public class DogModel extends HierarchicalAnimatedModel<Dog>
             leftFrontLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
         }
 
-        realHead.zRot = entity.getHeadRollAngle(partialTick);
-    }
+        realHead.zRot = state.headRollAngle;
 
-    @Override
-    public void setupAnim(Dog entity, float limbSwing, float limbSwingAmount, float ageInTicks, float yaw, float pitch)
-    {
         this.head.xRot = pitch * Constants.DEG_TO_RAD;
         this.head.yRot = yaw * Constants.DEG_TO_RAD;
     }

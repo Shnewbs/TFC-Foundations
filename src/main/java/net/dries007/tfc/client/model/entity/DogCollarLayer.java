@@ -7,29 +7,29 @@
 package net.dries007.tfc.client.model.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.resources.Identifier;
 
-import net.dries007.tfc.common.entities.livestock.pet.Dog;
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
 import net.dries007.tfc.util.Helpers;
 
-public class DogCollarLayer extends RenderLayer<Dog, DogModel>
+public class DogCollarLayer extends RenderLayer<TFCAnimalRenderState, DogModel>
 {
     private static final Identifier WOLF_COLLAR_LOCATION = Helpers.identifierMC("textures/entity/wolf/wolf_collar.png");
 
-    public DogCollarLayer(RenderLayerParent<Dog, DogModel> renderer)
+    public DogCollarLayer(RenderLayerParent<TFCAnimalRenderState, DogModel> renderer)
     {
         super(renderer);
     }
 
     @Override
-    public void render(PoseStack poseStack, MultiBufferSource buffer, int packedLight, Dog entity, float limbSwing, float limbSwingAmount, float partialTick, float ageInTicks, float yaw, float pitch)
+    public void submit(PoseStack poseStack, SubmitNodeCollector collector, int packedLight, TFCAnimalRenderState state, float yaw, float pitch)
     {
-        if (entity.getOwnerUUID() != null && !entity.isInvisible())
+        if (state.hasOwner && !state.isInvisible)
         {
-            renderColoredCutoutModel(this.getParentModel(), WOLF_COLLAR_LOCATION, poseStack, buffer, packedLight, entity, entity.getCollarColor().getTextureDiffuseColor());
+            renderColoredCutoutModel(this.getParentModel(), WOLF_COLLAR_LOCATION, poseStack, collector, packedLight, state, state.collarColor, 1);
         }
     }
 }

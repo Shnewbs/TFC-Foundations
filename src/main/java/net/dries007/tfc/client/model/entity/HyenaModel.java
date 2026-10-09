@@ -10,6 +10,10 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import java.util.Set;
+
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
 import net.minecraft.client.animation.Keyframe;
@@ -23,11 +27,16 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 
-import net.dries007.tfc.common.entities.EntityHelpers;
-import net.dries007.tfc.common.entities.ai.predator.PackPredator;
 
-public class HyenaModel extends HierarchicalAnimatedModel<PackPredator>
+public class HyenaModel extends HierarchicalAnimatedModel
 {
+    // Preserve the reviewed legacy omissions when reusing this animation set.
+    @Override
+    protected Set<String> optionalAnimationBones()
+    {
+        return Set.of("tail2");
+    }
+
     private final ModelPart head;
     private final ModelPart neck;
 
@@ -83,23 +92,29 @@ public class HyenaModel extends HierarchicalAnimatedModel<PackPredator>
     }
 
     @Override
-    public void setupAnim(PackPredator predator, float limbSwing, float limbSwingAmount, float ageInTicks, float yaw, float pitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(predator, limbSwing, limbSwingAmount, ageInTicks, yaw, pitch);
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float yaw = state.yRot;
+        final float pitch = state.xRot;
 
-        if (predator.sleepingAnimation.isStarted())
+
+        if (state.sleepingAnimation.isStarted())
         {
-            this.animate(predator.sleepingAnimation, HYENA_SLEEP, ageInTicks);
+            this.animate(state.sleepingAnimation, HYENA_SLEEP, ageInTicks);
         }
         else
         {
-            if (predator.isInWaterOrBubble())
+            if (state.inWaterOrBubble)
             {
                 this.animateWalk(DirewolfModel.DIREWOLF_RUN, limbSwing, limbSwingAmount, 1f, 2.5f);
             }
             else
             {
-                if (predator.isAggressive() && EntityHelpers.isMovingOnLand(predator))
+                if (state.aggressive && state.movingOnLand)
                 {
                     animateWalk(DirewolfModel.DIREWOLF_RUN, limbSwing, limbSwingAmount, 1f, 2.5f);
                 }
@@ -107,7 +122,7 @@ public class HyenaModel extends HierarchicalAnimatedModel<PackPredator>
                 {
                     animateWalk(DirewolfModel.DIREWOLF_WALK, limbSwing, limbSwingAmount, 2.5f, 2.5f);
                 }
-                this.animate(predator.attackingAnimation, DirewolfModel.DIREWOLF_ATTACK, ageInTicks);
+                this.animate(state.attackingAnimation, DirewolfModel.DIREWOLF_ATTACK, ageInTicks);
             }
             head.xRot = pitch * Mth.PI / 180F;
             head.yRot = yaw * Mth.PI / 360F;

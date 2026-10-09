@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import com.mojang.math.Constants;
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
@@ -19,9 +21,8 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
-import net.dries007.tfc.common.entities.prey.Pest;
 
-public class RatModel extends HierarchicalAnimatedModel<Pest>
+public class RatModel extends HierarchicalAnimatedModel
 {
     public static final AnimationDefinition RAT_SNIFF = AnimationDefinition.Builder.withLength(3f)
         .addAnimation("Head", new AnimationChannel(AnimationChannel.Targets.ROTATION, new Keyframe(0f, KeyframeAnimations.degreeVec(0f, 0f, 0f), AnimationChannel.Interpolations.LINEAR), new Keyframe(0.16666666666666666f, KeyframeAnimations.degreeVec(-10f, 0f, 0f), AnimationChannel.Interpolations.LINEAR), new Keyframe(0.75f, KeyframeAnimations.degreeVec(-10.627584138330803f, 19.683498079413766f, -3.616441573002703f), AnimationChannel.Interpolations.LINEAR), new Keyframe(1.875f, KeyframeAnimations.degreeVec(-10.627584138330803f, 19.683498079413766f, -3.616441573002703f), AnimationChannel.Interpolations.LINEAR), new Keyframe(2.75f, KeyframeAnimations.degreeVec(-10.627584138330695f, -19.683498079413603f, 3.6164415730035033f), AnimationChannel.Interpolations.LINEAR), new Keyframe(3f, KeyframeAnimations.degreeVec(0f, 0f, 0f), AnimationChannel.Interpolations.LINEAR)))
@@ -97,17 +98,23 @@ public class RatModel extends HierarchicalAnimatedModel<Pest>
     }
 
     @Override
-    public void setupAnim(Pest entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float netHeadYaw = state.yRot;
+        final float headPitch = state.xRot;
 
-        this.animate(entity.walkingAnimation, RAT_WALK, ageInTicks, getAdjustedLandSpeed(entity));
-        this.animate(entity.eatingAnimation, RAT_EAT, ageInTicks);
-        this.animate(entity.searchingAnimation, RAT_SEARCH, ageInTicks);
-        this.animate(entity.sniffingAnimation, RAT_SNIFF, ageInTicks);
-        this.animate(entity.draggingAnimation, RAT_DRAG, ageInTicks);
 
-        if (!entity.searchingAnimation.isStarted() && !entity.sniffingAnimation.isStarted() && !entity.draggingAnimation.isStarted() && !entity.eatingAnimation.isStarted())
+        this.animate(state.walkingAnimation, RAT_WALK, ageInTicks, getAdjustedLandSpeed(state));
+        this.animate(state.eatingAnimation, RAT_EAT, ageInTicks);
+        this.animate(state.searchingAnimation, RAT_SEARCH, ageInTicks);
+        this.animate(state.sniffingAnimation, RAT_SNIFF, ageInTicks);
+        this.animate(state.draggingAnimation, RAT_DRAG, ageInTicks);
+
+        if (!state.searchingAnimation.isStarted() && !state.sniffingAnimation.isStarted() && !state.draggingAnimation.isStarted() && !state.eatingAnimation.isStarted())
         {
             this.head.xRot = headPitch * Constants.DEG_TO_RAD;
             this.head.yRot = netHeadYaw * Constants.DEG_TO_RAD;

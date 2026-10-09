@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.client.model.entity;
 
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
+
 import com.mojang.math.Constants;
 import net.minecraft.client.animation.AnimationChannel;
 import net.minecraft.client.animation.AnimationDefinition;
@@ -19,10 +21,8 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 
-import net.dries007.tfc.common.entities.EntityHelpers;
-import net.dries007.tfc.common.entities.ai.predator.PackPredator;
 
-public class TFCWolfModel extends HierarchicalAnimatedModel<PackPredator>
+public class TFCWolfModel extends HierarchicalAnimatedModel
 {
     public static LayerDefinition createBodyLayer()
     {
@@ -76,23 +76,29 @@ public class TFCWolfModel extends HierarchicalAnimatedModel<PackPredator>
     }
 
     @Override
-    public void setupAnim(PackPredator entity, float limbSwing, float limbSwingAmount, float ageInTicks, float yaw, float pitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, yaw, pitch);
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float ageInTicks = state.ageInTicks;
+        final float yaw = state.yRot;
+        final float pitch = state.xRot;
 
-        if (entity.isSleeping() && entity.sleepingAnimation.isStarted())
+
+        if (state.sleeping && state.sleepingAnimation.isStarted())
         {
-            this.animate(entity.sleepingAnimation, WOLF_SLEEPING, ageInTicks);
+            this.animate(state.sleepingAnimation, WOLF_SLEEPING, ageInTicks);
         }
         else
         {
-            if (entity.isInWaterOrBubble())
+            if (state.inWaterOrBubble)
             {
                 this.animateWalk(WOLF_SWIM, limbSwing, limbSwingAmount, 4f, 2.5f);
             }
             else
             {
-                if (entity.isAggressive() && EntityHelpers.isMovingOnLand(entity))
+                if (state.aggressive && state.movingOnLand)
                 {
                     animateWalk(WOLF_RUN, limbSwing, limbSwingAmount, 1f, 2.5f);
                 }
@@ -100,7 +106,7 @@ public class TFCWolfModel extends HierarchicalAnimatedModel<PackPredator>
                 {
                     animateWalk(WOLF_WALK, limbSwing, limbSwingAmount, 2.5f, 2.5f);
                 }
-                this.animate(entity.attackingAnimation, WOLF_ATTACK, ageInTicks);
+                this.animate(state.attackingAnimation, WOLF_ATTACK, ageInTicks);
             }
 
             this.head.xRot = pitch * Constants.DEG_TO_RAD;
