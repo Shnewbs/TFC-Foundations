@@ -37,8 +37,11 @@ def main():
     if result.returncode:
         raise SystemExit(result.returncode)
     # A separate process checks actual production classes; no Minecraft or TFC stubs.
-    smoke = subprocess.run(['python3', 'tools/porting/run_loot_smoke.py'], timeout=190)
-    raise SystemExit(smoke.returncode)
+    failed = False
+    for probe in ('run_loot_smoke.py', 'run_common_smoke.py'):
+        smoke = subprocess.run(['python3', 'tools/porting/' + probe], timeout=360)
+        failed |= smoke.returncode != 0
+    raise SystemExit(1 if failed else 0)
 
 
 if __name__ == '__main__':
