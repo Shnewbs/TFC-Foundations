@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -66,20 +66,20 @@ public class FluidContainerItem extends Item
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
+    public InteractionResult use(Level level, Player player, InteractionHand hand)
     {
         final ItemStack stack = player.getItemInHand(hand);
         final BlockHitResult hit = getPlayerPOVHitResult(level, player, ClipContext.Fluid.SOURCE_ONLY);
         if (FluidHelpers.transferBetweenWorldAndItem(stack, level, hit, player, hand, canPlaceLiquidsInWorld, canPlaceSourceBlocks(), false))
         {
-            return InteractionResultHolder.success(player.getItemInHand(hand));
+            return InteractionResult.SUCCESS.heldItemTransformedTo(player.getItemInHand(hand));
         }
 
         // Fallback behavior
         final @Nullable IFluidHandler handler = stack.getCapability(Capabilities.FluidHandler.ITEM);
         if (handler == null)
         {
-            return InteractionResultHolder.pass(stack);
+            return InteractionResult.PASS;
         }
         if (handler.getFluidInTank(0).isEmpty())
         {
@@ -142,13 +142,13 @@ public class FluidContainerItem extends Item
         return canPlaceLiquidsInWorld;
     }
 
-    protected InteractionResultHolder<ItemStack> afterFillFailed(IFluidHandler handler, Level level, Player player, ItemStack stack, InteractionHand hand)
+    protected InteractionResult afterFillFailed(IFluidHandler handler, Level level, Player player, ItemStack stack, InteractionHand hand)
     {
-        return InteractionResultHolder.pass(stack);
+        return InteractionResult.PASS;
     }
 
-    protected InteractionResultHolder<ItemStack> afterEmptyFailed(IFluidHandler handler, Level level, Player player, ItemStack stack, InteractionHand hand)
+    protected InteractionResult afterEmptyFailed(IFluidHandler handler, Level level, Player player, ItemStack stack, InteractionHand hand)
     {
-        return InteractionResultHolder.pass(stack);
+        return InteractionResult.PASS;
     }
 }

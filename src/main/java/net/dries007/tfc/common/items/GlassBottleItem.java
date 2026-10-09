@@ -13,12 +13,12 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -71,16 +71,16 @@ public class GlassBottleItem extends FluidContainerItem
 
 
     @Override
-    protected InteractionResultHolder<ItemStack> afterFillFailed(IFluidHandler handler, Level level, Player player, ItemStack stack, InteractionHand hand)
+    protected InteractionResult afterFillFailed(IFluidHandler handler, Level level, Player player, ItemStack stack, InteractionHand hand)
     {
         level.playSound(player, player.blockPosition(), TFCSounds.JUG_BLOW.get(), SoundSource.PLAYERS, 1.0f, 1.3f + (float) (player.getLookAngle().y / 2f));
-        return InteractionResultHolder.success(stack);
+        return InteractionResult.SUCCESS.heldItemTransformedTo(stack);
     }
 
     @Override
-    public UseAnim getUseAnimation(ItemStack stack)
+    public ItemUseAnimation getUseAnimation(ItemStack stack)
     {
-        return UseAnim.DRINK;
+        return ItemUseAnimation.DRINK;
     }
 
     @Override
@@ -90,24 +90,24 @@ public class GlassBottleItem extends FluidContainerItem
     }
 
     @Override
-    protected InteractionResultHolder<ItemStack> afterEmptyFailed(IFluidHandler handler, Level level, Player player, ItemStack stack, InteractionHand hand)
+    protected InteractionResult afterEmptyFailed(IFluidHandler handler, Level level, Player player, ItemStack stack, InteractionHand hand)
     {
         if (player.isShiftKeyDown())
         {
             level.playSound(player, player.blockPosition(), SoundEvents.BUCKET_EMPTY, SoundSource.PLAYERS, 0.5f, 1.2f);
             handler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE);
-            return InteractionResultHolder.consume(stack);
+            return InteractionResult.CONSUME.heldItemTransformedTo(stack);
         }
         final Drinkable drinkable = Drinkable.get(handler.getFluidInTank(0).getFluid());
         if (drinkable != null)
         {
             if (!drinkable.mayDrinkWhenFull() && IPlayerInfo.get(player).getThirst() >= PlayerInfo.MAX_THIRST)
             {
-                return InteractionResultHolder.fail(stack);
+                return InteractionResult.FAIL;
             }
             return ItemUtils.startUsingInstantly(level, player, hand);
         }
-        return InteractionResultHolder.pass(stack);
+        return InteractionResult.PASS;
     }
 
     @Override

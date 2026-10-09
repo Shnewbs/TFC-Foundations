@@ -7,7 +7,7 @@ plugins {
 }
 
 
-// Verified against the NeoForge 26.3 MDK; integration versions must target 26.3.
+// Integration versions must match the Minecraft target of this branch.
 val minecraftVersion: String = providers.gradleProperty("minecraftVersion").get()
 val neoForgeVersion: String = providers.gradleProperty("neoForgeVersion").get()
 val jeiVersion: String = providers.gradleProperty("jeiVersion").get()
@@ -15,6 +15,11 @@ val patchouliVersion = providers.gradleProperty("patchouliVersion")
 val emiVersion = providers.gradleProperty("emiVersion")
 val jadeVersion = providers.gradleProperty("jadeVersion")
 val theOneProbeVersion = providers.gradleProperty("theOneProbeVersion")
+val optionalIntegrationVersions = mapOf(
+    "emi" to emiVersion,
+    "jade" to jadeVersion,
+    "theoneprobe" to theOneProbeVersion
+)
 
 val modId: String = "tfc"
 val modVersion: String = providers.gradleProperty("modVersion").get()
@@ -82,6 +87,11 @@ repositories {
 
 sourceSets {
     main {
+        java {
+            // Optional adapters compile independently, only with a verified dependency pin.
+            optionalIntegrationVersions.keys.forEach { exclude("net/dries007/tfc/compat/$it/**") }
+            exclude("net/dries007/tfc/mixin/client/compat/jade/**")
+        }
         resources {
             srcDir(modDataOutput)
             srcDir(generateModMetadata)
@@ -90,8 +100,23 @@ sourceSets {
     create("data")
 }
 
+val optionalIntegrationSources = optionalIntegrationVersions.filterValues { it.isPresent }.mapValues { (name, _) ->
+    sourceSets.create("${name}Integration") {
+        java.srcDir("src/main/java")
+        java.include("net/dries007/tfc/compat/$name/**")
+        if (name == "jade") java.include("net/dries007/tfc/mixin/client/compat/jade/**")
+        compileClasspath += sourceSets.main.get().output
+        runtimeClasspath += sourceSets.main.get().output
+    }.also {
+        configurations[it.implementationConfigurationName].extendsFrom(configurations.implementation.get())
+        configurations[it.compileOnlyConfigurationName].extendsFrom(configurations.compileOnly.get())
+        configurations[it.runtimeOnlyConfigurationName].extendsFrom(configurations.runtimeOnly.get())
+    }
+}
+
 neoForge {
     addModdingDependenciesTo(sourceSets["data"])
+    optionalIntegrationSources.values.forEach { addModdingDependenciesTo(it) }
     validateAccessTransformers = true
 
     runs {
@@ -120,6 +145,7 @@ neoForge {
         create(modId) {
             sourceSet(sourceSets.main.get())
             sourceSet(sourceSets["data"])
+            optionalIntegrationSources.values.forEach { sourceSet(it) }
         }
     }
 
@@ -133,9 +159,9 @@ neoForge {
 
 dependencies {
     // Integration artifacts must match the Minecraft target of this branch.
-    // Unported integrations remain in source until replacement adapters are ready.
-    if (emiVersion.isPresent) {
-        compileOnly("dev.emi:emi-neoforge:${emiVersion.get()}:api")
+    // Unpinned optional adapters stay in source but are absent from the compiled mod.
+    optionalIntegrationSources["emi"]?.let {
+        add(it.compileOnlyConfigurationName, "dev.emi:emi-neoforge:${emiVersion.get()}:api")
     }
     compileOnly("mezz.jei:jei-${minecraftVersion}-common-api:${jeiVersion}")
     compileOnly("mezz.jei:jei-${minecraftVersion}-neoforge-api:${jeiVersion}")
@@ -144,11 +170,11 @@ dependencies {
         implementation("vazkii.patchouli:patchouli-neoforge:${patchouliVersion.get()}")
         "dataImplementation"("vazkii.patchouli:patchouli-neoforge:${patchouliVersion.get()}")
     }
-    if (jadeVersion.isPresent) {
-        implementation("curse.maven:jade-324717:${jadeVersion.get()}")
+    optionalIntegrationSources["jade"]?.let {
+        add(it.implementationConfigurationName, "curse.maven:jade-324717:${jadeVersion.get()}")
     }
-    if (theOneProbeVersion.isPresent) {
-        compileOnly("mcjty.theoneprobe:theoneprobe:${theOneProbeVersion.get()}")
+    optionalIntegrationSources["theoneprobe"]?.let {
+        add(it.compileOnlyConfigurationName, "mcjty.theoneprobe:theoneprobe:${theOneProbeVersion.get()}")
     }
 
     // Data
@@ -161,8 +187,9 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.3")
 }
 
-// Fail before producing a misleading artifact while legacy adapters are still linked.
-val requiredIntegrationVersions = listOf("patchouliVersion", "emiVersion", "jadeVersion", "theOneProbeVersion")
+// The field guide is required gameplay content. Optional adapters no longer gate packaging:
+// their source sets are compiled and bundled only when their dependency is pinned.
+val requiredIntegrationVersions = listOf("patchouliVersion")
 val missingIntegrationVersions = requiredIntegrationVersions.filter { !providers.gradleProperty(it).isPresent }
 val verifyPortDependencies = tasks.register("verifyPortDependencies") {
     inputs.property("missingIntegrationVersions", missingIntegrationVersions)
@@ -171,12 +198,14 @@ val verifyPortDependencies = tasks.register("verifyPortDependencies") {
         check(missing.isEmpty()) {
             "Port is incomplete: verified target-version dependencies are missing for " +
                 missing.joinToString() +
-                ". Port/isolate these adapters or configure verified 26.3 artifacts; do not use 1.21.1 jars."
+                ". Configure a verified artifact for this branch; do not use legacy runtime jars."
         }
     }
 }
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
+    // Expose the migration backlog in one CI pass without suppressing any errors.
+    options.compilerArgs.addAll(listOf("-Xmaxerrs", "1000"))
 }
 tasks.named("jar") { dependsOn(verifyPortDependencies) }
 
@@ -249,6 +278,7 @@ tasks {
     }
 
     jar {
+        optionalIntegrationSources.values.forEach { from(it.output) }
         manifest {
             attributes["Implementation-Version"] = project.version
         }

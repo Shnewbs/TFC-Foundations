@@ -9,7 +9,7 @@ package net.dries007.tfc.common.blocks.rock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -53,7 +53,7 @@ public class LooseRockBlock extends GroundcoverBlock implements IFluidLoggable
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         if (stack.getItem() == this.asItem())
         {
@@ -71,11 +71,11 @@ public class LooseRockBlock extends GroundcoverBlock implements IFluidLoggable
                         {
                             stack.shrink(1);
                         }
-                        return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                        return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                     }
                 }
             }
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }

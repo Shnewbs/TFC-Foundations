@@ -217,7 +217,7 @@ public class SurfaceBuilderContext
 
     public void setBlockState(int y, BlockState state)
     {
-        chunk.setBlockState(cursor.setY(y), state, false);
+        chunk.setBlockState(cursor.setY(y), state);
     }
 
     public LevelAccessor level()

@@ -12,7 +12,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
@@ -55,7 +55,7 @@ public class TFCFishingRodItem extends FishingRodItem
      * Copy of the super method to use our own entity
      */
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
+    public InteractionResult use(Level level, Player player, InteractionHand hand)
     {
         ItemStack rod = player.getItemInHand(hand);
         if (player.fishing != null)
@@ -86,7 +86,7 @@ public class TFCFishingRodItem extends FishingRodItem
             player.gameEvent(GameEvent.ITEM_INTERACT_START);
         }
 
-        return InteractionResultHolder.sidedSuccess(rod, level.isClientSide());
+        return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME).heldItemTransformedTo(rod);
     }
 
     @Override

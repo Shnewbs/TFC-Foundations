@@ -6,17 +6,14 @@
 
 package net.dries007.tfc.mixin.accessor;
 
-import java.util.Collection;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.RecipeMap;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Invoker;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(RecipeManager.class)
 public interface RecipeManagerAccessor
 {
-    @Invoker(value = "byType")
-    <T extends Recipe<?>> Collection<RecipeHolder<T>> invoke$byType(RecipeType<T> type);
+    @Accessor("recipes")
+    RecipeMap accessor$getRecipes();
 }

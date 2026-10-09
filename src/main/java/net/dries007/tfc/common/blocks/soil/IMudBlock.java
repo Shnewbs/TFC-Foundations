@@ -10,7 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -38,11 +38,11 @@ public interface IMudBlock
      * Transforms this block into mud if the player has the required amount of water in their container
      * Particles like {@link net.minecraft.world.item.PotionItem}
      */
-    default ItemInteractionResult transformToMud(BlockState mud, Level level, BlockPos pos, Player player, InteractionHand hand)
+    default InteractionResult transformToMud(BlockState mud, Level level, BlockPos pos, Player player, InteractionHand hand)
     {
         if (!TFCConfig.SERVER.enableDirtToMudCreation.get())
         {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
 
         final ItemStack held = player.getItemInHand(hand);
@@ -74,9 +74,9 @@ public interface IMudBlock
                             1, 0.0, 0.0, 0.0, 1.0);
                     }
                 }
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 }

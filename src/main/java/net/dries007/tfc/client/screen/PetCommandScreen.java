@@ -6,16 +6,15 @@
 
 package net.dries007.tfc.client.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import org.joml.Matrix3x2fStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import net.dries007.tfc.client.ClientHelpers;
 import net.dries007.tfc.common.entities.livestock.pet.TamableMammal;
@@ -43,8 +42,8 @@ public class PetCommandScreen extends Screen
             {
                 MutableComponent comp = Helpers.translateEnum(command);
                 addRenderableWidget(Button.builder(comp, b -> {
-                        PacketDistributor.sendToServer(new PetCommandPacket(entity, command));
-                        Minecraft.getInstance().setScreen(null);
+                        ClientPacketDistributor.sendToServer(new PetCommandPacket(entity, command));
+                        Minecraft.getInstance().gui.setScreen(null);
 
                         final Player player = ClientHelpers.getPlayer();
                         if (player != null)
@@ -59,21 +58,21 @@ public class PetCommandScreen extends Screen
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick)
     {
         graphics.fillGradient(0, 0, width, height, -1072689136, -804253680);
-        super.render(graphics, mouseX, mouseY, partialTick);
-        PoseStack poseStack = graphics.pose();
-        poseStack.pushPose();
-        poseStack.scale(2.0F, 2.0F, 2.0F);
-        graphics.drawCenteredString(font, title, width / 2 / 2, 30, 16777215);
-        poseStack.popPose();
+        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
+        Matrix3x2fStack poseStack = graphics.pose();
+        poseStack.pushMatrix();
+        poseStack.scale(2.0F, 2.0F);
+        graphics.centeredText(font, title, width / 2 / 2, 30, 0xFFFFFFFF);
+        poseStack.popMatrix();
 
-        for (Renderable widget : renderables)
+        for (var widget : children())
         {
             if (widget instanceof Button button && button.isHoveredOrFocused())
             {
-                graphics.renderTooltip(font, button.getMessage(), mouseX, mouseY);
+                graphics.setTooltipForNextFrame(font, button.getMessage(), mouseX, mouseY);
                 return;
             }
         }

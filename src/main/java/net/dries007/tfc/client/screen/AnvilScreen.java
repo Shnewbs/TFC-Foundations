@@ -7,8 +7,8 @@
 package net.dries007.tfc.client.screen;
 
 import java.util.List;
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
@@ -34,10 +34,9 @@ public class AnvilScreen extends BlockEntityScreen<AnvilBlockEntity, AnvilContai
 
     public AnvilScreen(AnvilContainer container, Inventory playerInventory, Component name)
     {
-        super(container, playerInventory, name, BACKGROUND);
+        super(container, playerInventory, name, BACKGROUND, 176, 207);
 
-        inventoryLabelY += 41;
-        imageHeight += 41;
+        inventoryLabelY = 113;
     }
 
     @Override
@@ -45,26 +44,26 @@ public class AnvilScreen extends BlockEntityScreen<AnvilBlockEntity, AnvilContai
     {
         super.init();
 
-        addRenderableWidget(new AnvilPlanButton(blockEntity, getGuiLeft(), getGuiTop()));
-        addRenderableWidget(new AnvilWeldButton(blockEntity, getGuiLeft(), getGuiTop()));
+        addRenderableWidget(new AnvilPlanButton(blockEntity, leftPos, topPos));
+        addRenderableWidget(new AnvilWeldButton(blockEntity, leftPos, topPos));
 
         for (ForgeStep step : ForgeStep.VALUES)
         {
-            addRenderableWidget(new AnvilStepButton(step, getGuiLeft(), getGuiTop()));
+            addRenderableWidget(new AnvilStepButton(step, leftPos, topPos));
         }
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY)
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks)
     {
-        super.renderBg(graphics, partialTicks, mouseX, mouseY);
+        super.extractBackground(graphics, mouseX, mouseY, partialTicks);
 
         final Level level = blockEntity.getLevel();
-        final int guiLeft = getGuiLeft(), guiTop = getGuiTop();
+        final int guiLeft = leftPos, guiTop = topPos;
 
         if (TerraFirmaCraft.JEI)
         {
-            graphics.blit(texture, guiLeft + 141, guiTop + 40, 0, 207, 9, 14);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, texture, guiLeft + 141, guiTop + 40, 0, 207, 9, 14, 256, 256);
         }
 
         assert level != null;
@@ -79,13 +78,13 @@ public class AnvilScreen extends BlockEntityScreen<AnvilBlockEntity, AnvilContai
         if (recipe != null)
         {
             // progress indicator
-            graphics.blit(texture, guiLeft + 11 + forging.work(), guiTop + 104, 176, 0, 5, 5);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, texture, guiLeft + 11 + forging.work(), guiTop + 104, 176, 0, 5, 5, 256, 256);
 
             // target indicator
             if (range < 2)
             {
                 // render the pointer
-                graphics.blit(texture, guiLeft + 11 + target, guiTop + 98, 181, 0, 5, 5);
+                graphics.blit(RenderPipelines.GUI_TEXTURED, texture, guiLeft + 11 + target, guiTop + 98, 181, 0, 5, 5, 256, 256);
             }
             else
             {
@@ -94,20 +93,20 @@ public class AnvilScreen extends BlockEntityScreen<AnvilBlockEntity, AnvilContai
                 final int rightLimit = Math.min(145, target + range);
 
                 // left
-                graphics.blit(texture, guiLeft + 11 + leftLimit, guiTop + 96, 176, 7, 5, 7);
+                graphics.blit(RenderPipelines.GUI_TEXTURED, texture, guiLeft + 11 + leftLimit, guiTop + 96, 176, 7, 5, 7, 256, 256);
                 // right
-                graphics.blit(texture, guiLeft + 11 + rightLimit, guiTop + 96, 186, 7, 5, 7);
+                graphics.blit(RenderPipelines.GUI_TEXTURED, texture, guiLeft + 11 + rightLimit, guiTop + 96, 186, 7, 5, 7, 256, 256);
 
                 // bar
                 for (int i = leftLimit + 2; i < rightLimit - 1; i++)
                 {
-                    graphics.blit(texture, guiLeft + 15 + i, guiTop + 94, 192, 5, 1, 5);
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, texture, guiLeft + 15 + i, guiTop + 94, 192, 5, 1, 5, 256, 256);
                 }
 
                 // center
                 if (range > 2)
                 {
-                    graphics.blit(texture, guiLeft + 13 + (rightLimit + leftLimit) / 2, guiTop + 94, 181, 5, 5, 5);
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, texture, guiLeft + 13 + (rightLimit + leftLimit) / 2, guiTop + 94, 181, 5, 5, 5, 256, 256);
                 }
 
             }
@@ -125,20 +124,11 @@ public class AnvilScreen extends BlockEntityScreen<AnvilBlockEntity, AnvilContai
                     final int xOffset = i * 19;
 
                     // The rule icon
-                    graphics.blit(texture, guiLeft + 61 + xOffset, guiTop + 13, 16, 16, rule.iconX(), rule.iconY() - 16, 16, 16, 256, 256);
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, texture, guiLeft + 61 + xOffset, guiTop + 13, rule.iconX(), rule.iconY() - 16, 16, 16, 16, 16, 256, 256);
 
-                    // The overlay
-                    if (forging.matches(rule))
-                    {
-                        RenderSystem.setShaderColor(0f, 0.6f, 0.2f, 1f); // Green
-                    }
-                    else
-                    {
-                        RenderSystem.setShaderColor(1f, 0.4f, 0, 1f); // Red
-                    }
-
-                    graphics.blit(texture, guiLeft + 59 + xOffset, guiTop + 13, 198, rule.overlayY(), 20, 22);
-                    RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+                    // Extraction records each draw's tint rather than changing global shader state.
+                    final int overlayColor = forging.matches(rule) ? 0xFF009933 : 0xFFFF6600;
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, texture, guiLeft + 59 + xOffset, guiTop + 13, 198, rule.overlayY(), 20, 22, 256, 256, overlayColor);
                 }
             }
         }
@@ -147,15 +137,15 @@ public class AnvilScreen extends BlockEntityScreen<AnvilBlockEntity, AnvilContai
         int index = 0;
         for (ForgeStep step : forging.lastSteps())
         {
-            graphics.blit(texture, guiLeft + 99 - (index * 19), guiTop + 34, 16, 16, step.iconX(), step.iconY() - 16, 16, 16, 256, 256);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, texture, guiLeft + 99 - (index * 19), guiTop + 34, step.iconX(), step.iconY() - 16, 16, 16, 16, 16, 256, 256);
             index++;
         }
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY)
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
     {
-        super.renderTooltip(graphics, mouseX, mouseY);
+        super.extractTooltip(graphics, mouseX, mouseY);
 
         final Level level = blockEntity.getLevel();
         final Forging forging = blockEntity.getMainInputForging();
@@ -171,11 +161,11 @@ public class AnvilScreen extends BlockEntityScreen<AnvilBlockEntity, AnvilContai
                     if (rule != null)
                     {
                         final int xOffset = i * 19;
-                        final int x = getGuiLeft() + 64 + xOffset;
-                        final int y = getGuiTop() + 16;
+                        final int x = leftPos + 64 + xOffset;
+                        final int y = topPos + 16;
                         if (mouseX > x && mouseX < x + 10 && mouseY > y && mouseY < y + 10)
                         {
-                            graphics.renderTooltip(font, rule.getDescriptionId(), mouseX, mouseY);
+                            graphics.setTooltipForNextFrame(font, rule.getDescriptionId(), mouseX, mouseY);
                         }
                     }
                 }

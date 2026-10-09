@@ -310,6 +310,7 @@ public final class ClientEventHandler
     public static void init(ModContainer mod, IEventBus bus)
     {
         bus.addListener(ClientEventHandler::clientSetup);
+        bus.addListener(ClientForgeEventHandler::registerDebugEntries);
         bus.addListener(ClientEventHandler::registerMenuScreens);
         bus.addListener(ClientEventHandler::registerModelLoaders);
         bus.addListener(ClientEventHandler::registerSpecialModels);

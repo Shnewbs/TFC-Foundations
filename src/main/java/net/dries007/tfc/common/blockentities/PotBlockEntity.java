@@ -10,7 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -268,11 +268,11 @@ public class PotBlockEntity extends AbstractFirepitBlockEntity<PotBlockEntity.Po
         return boilingTicks;
     }
 
-    public ItemInteractionResult interactWithOutput(Player player, ItemStack stack)
+    public InteractionResult interactWithOutput(Player player, ItemStack stack)
     {
         if (output != null)
         {
-            final ItemInteractionResult result = output.onInteract(getInventory(), player, stack);
+            final InteractionResult result = output.onInteract(getInventory(), player, stack);
             if (output.isEmpty())
             {
                 output = null;
@@ -280,7 +280,7 @@ public class PotBlockEntity extends AbstractFirepitBlockEntity<PotBlockEntity.Po
             markForSync();
             return result;
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Nullable

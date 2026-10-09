@@ -22,6 +22,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeMap;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
@@ -189,6 +190,12 @@ public final class RecipeHelpers
     @Nullable
     public static <R extends Recipe<?> & IRecipePredicate<C>, C> RecipeHolder<R> getHolder(RecipeManager recipes, Supplier<RecipeType<R>> recipeType, C input)
     {
+        return getHolder(((RecipeManagerAccessor) recipes).accessor$getRecipes(), recipeType, input);
+    }
+
+    @Nullable
+    public static <R extends Recipe<?> & IRecipePredicate<C>, C> RecipeHolder<R> getHolder(RecipeMap recipes, Supplier<RecipeType<R>> recipeType, C input)
+    {
         return getHolder(getRecipes(recipes, recipeType), input);
     }
 
@@ -207,12 +214,19 @@ public final class RecipeHelpers
 
     public static <R extends Recipe<?>> Collection<RecipeHolder<R>> getRecipes(Level level, Supplier<RecipeType<R>> type)
     {
-        return getRecipes(level.getRecipeManager(), type);
+        return getRecipes(Helpers.getUnsafeRecipeMap(), type);
     }
 
     public static <R extends Recipe<?>> Collection<RecipeHolder<R>> getRecipes(RecipeManager recipeManager, Supplier<RecipeType<R>> type)
     {
-        return ((RecipeManagerAccessor) recipeManager).invoke$byType(type.get());
+        return getRecipes(((RecipeManagerAccessor) recipeManager).accessor$getRecipes(), type);
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static <R extends Recipe<?>> Collection<RecipeHolder<R>> getRecipes(RecipeMap recipes, Supplier<RecipeType<R>> type)
+    {
+        // Each RecipeType key only indexes holders of that type; callers retain the matching R.
+        return (Collection) recipes.byType((RecipeType) type.get());
     }
 
     public static int dissolveRowColumn(int row, int column, int width)

@@ -10,7 +10,7 @@ package net.dries007.tfc.client;
 import java.util.Objects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -31,7 +31,7 @@ import static net.dries007.tfc.common.items.BlowpipeItem.*;
 
 public class GlassblowingOverlays
 {
-    public static boolean render(Minecraft minecraft, GuiGraphics graphics)
+    public static boolean render(Minecraft minecraft, GuiGraphicsExtractor graphics)
     {
         final Level level = minecraft.level;
         final Player player = minecraft.player;
@@ -57,7 +57,7 @@ public class GlassblowingOverlays
                 color = Objects.requireNonNull(Heat.getHeat(HeatCapability.getTemperature(held))).getColor();
             }
 
-            if (player.getCooldowns().isOnCooldown(held.getItem()))
+            if (player.getCooldowns().isOnCooldown(held))
             {
                 Component line = Component.translatable("glass.tfc.complete");
                 drawCenteredText(minecraft, graphics, line, x, y);
@@ -103,9 +103,9 @@ public class GlassblowingOverlays
         return false;
     }
 
-    private static void drawCenteredText(Minecraft minecraft, GuiGraphics graphics, Component text, int x, int y)
+    private static void drawCenteredText(Minecraft minecraft, GuiGraphicsExtractor graphics, Component text, int x, int y)
     {
         final int textWidth = minecraft.font.width(text) / 2;
-        graphics.drawString(minecraft.font, text, x - textWidth, y, 0xCCCCCC, true);
+        graphics.text(minecraft.font, text, x - textWidth, y, (0xCCCCCC) | 0xFF000000, true);
     }
 }

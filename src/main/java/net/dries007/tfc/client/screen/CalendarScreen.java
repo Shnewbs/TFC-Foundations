@@ -7,7 +7,8 @@
 package net.dries007.tfc.client.screen;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.player.LocalPlayer;
@@ -15,7 +16,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import net.dries007.tfc.client.ClientHelpers;
 import net.dries007.tfc.client.screen.button.PlayerInventoryTabButton;
@@ -47,13 +48,13 @@ public class CalendarScreen extends TFCContainerScreen<Container>
             Minecraft mc = Minecraft.getInstance();
             if (mc.gameMode != null && mc.gameMode.isServerControlledInventory() && mc.player != null && TFCConfig.CLIENT.enableTabsInCreative.get())
             {
-                mc.setScreen(new CreativeModeInventoryScreen((LocalPlayer) playerInventory.player, mc.player.connection.enabledFeatures(), mc.options.operatorItemsTab().get()));
+                mc.gui.setScreen(new CreativeModeInventoryScreen((LocalPlayer) playerInventory.player, mc.player.connection.enabledFeatures(), mc.options.operatorItemsTab().get()));
             }
             else
             {
-                mc.setScreen(new InventoryScreen(playerInventory.player));
+                mc.gui.setScreen(new InventoryScreen(playerInventory.player));
             }
-            PacketDistributor.sendToServer(new SwitchInventoryTabPacket(PlayerInventoryTabButton.Tab.INVENTORY));
+            ClientPacketDistributor.sendToServer(new SwitchInventoryTabPacket(PlayerInventoryTabButton.Tab.INVENTORY));
         }));
         addRenderableWidget(new PlayerInventoryTabButton(leftPos, topPos, true, false, PlayerInventoryTabButton.Tab.CALENDAR, button -> {}));
         addRenderableWidget(new PlayerInventoryTabButton(leftPos, topPos, false, false, PlayerInventoryTabButton.Tab.NUTRITION));
@@ -62,9 +63,9 @@ public class CalendarScreen extends TFCContainerScreen<Container>
     }
 
     @Override
-    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY)
+    protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
     {
-        super.renderLabels(graphics, mouseX, mouseY);
+        super.extractLabels(graphics, mouseX, mouseY);
 
         String date =
             Calendars.CLIENT.getCalendarDayOfYear().getString() + ", " +
@@ -107,7 +108,7 @@ public class CalendarScreen extends TFCContainerScreen<Container>
 
         if (Calendars.CLIENT.getHourOfDay() >= 20 || Calendars.CLIENT.getHourOfDay() < 5)
         {
-            graphics.blit(texture, 154, 3, 176, 0, 16, 16);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 154, 3, 176, 0, 16, 16, 256, 256);
         }
     }
 }

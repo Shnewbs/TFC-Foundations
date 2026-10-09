@@ -8,7 +8,7 @@ package net.dries007.tfc.common.component.block;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeMap;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import net.dries007.tfc.common.blockentities.BarrelBlockEntity;
@@ -67,7 +67,7 @@ public class Barrel extends ComponentView<BarrelComponent> implements FluidConta
             fakeInventory.getItemHandler().setStackInSlot(BarrelBlockEntity.SLOT_ITEM, component.itemContent().getFirst());
             fakeInventory.getFluidHandler().fill(input, FluidAction.EXECUTE);
 
-            final RecipeManager manager = Helpers.getUnsafeRecipeManager();
+            final RecipeMap manager = Helpers.getUnsafeRecipeMap();
             final RecipeHolder<SealedBarrelRecipe> recipe = RecipeHelpers.getHolder(manager, TFCRecipeTypes.BARREL_SEALED, fakeInventory);
 
             apply(new BarrelComponent(

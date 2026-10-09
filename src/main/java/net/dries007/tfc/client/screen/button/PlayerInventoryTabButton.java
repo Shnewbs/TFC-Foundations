@@ -12,14 +12,15 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import net.dries007.tfc.client.ClientHelpers;
 import net.dries007.tfc.client.ClimateRenderCache;
@@ -72,7 +73,7 @@ public class PlayerInventoryTabButton extends Button
 
     public PlayerInventoryTabButton(int guiLeft, int guiTop, boolean active, boolean detached, Tab tab)
     {
-        this(guiLeft, guiTop, active, detached, tab, button -> PacketDistributor.sendToServer(new SwitchInventoryTabPacket(tab)));
+        this(guiLeft, guiTop, active, detached, tab, button -> ClientPacketDistributor.sendToServer(new SwitchInventoryTabPacket(tab)));
     }
 
     public PlayerInventoryTabButton(int guiLeft, int guiTop, boolean active, boolean detached, Tab tab, OnPress onPressIn)
@@ -92,32 +93,18 @@ public class PlayerInventoryTabButton extends Button
 
     public PlayerInventoryTabButton setRecipeBookCallback(InventoryScreen screen)
     {
-        // Because forge is ass and removed the event for "button clicked", and I don't care to deal with the shit in MinecraftForge#5548, this will do for now
-        this.tickCallback = new Runnable()
-        {
-            boolean recipeBookVisible = screen.getRecipeBookComponent().isVisible();
-
-            @Override
-            public void run()
-            {
-                boolean newRecipeBookVisible = screen.getRecipeBookComponent().isVisible();
-                if (newRecipeBookVisible != recipeBookVisible)
-                {
-                    recipeBookVisible = newRecipeBookVisible;
-                    PlayerInventoryTabButton.this.updateGuiSize(screen.getGuiLeft(), screen.getGuiTop());
-                }
-            }
-        };
+        // Follow layout changes directly, including recipe-book toggles and window resizing.
+        this.tickCallback = () -> updateGuiSize(screen.getLeftPos(), screen.getTopPos());
         return this;
     }
 
     @Override
-    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks)
+    public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks)
     {
         tickCallback.run();
 
-        graphics.blit(ClientHelpers.GUI_ICONS, getX(), getY(), 0, (float) textureU, (float) textureV, width, height, 256, 256);
-        graphics.blit(ClientHelpers.GUI_ICONS, iconX, iconY, 16, 16, (float) tab.iconU, (float) tab.iconV, 16, 16, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, ClientHelpers.GUI_ICONS, getX(), getY(), (float) textureU, (float) textureV, width, height, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, ClientHelpers.GUI_ICONS, iconX, iconY, (float) tab.iconU, (float) tab.iconV, 16, 16, 16, 16, 256, 256);
 
         if (this.isHovered() && !this.active)
         {
@@ -127,7 +114,7 @@ public class PlayerInventoryTabButton extends Button
                 case INVENTORY ->
                 {
                     final Component title = Component.translatable("container.inventory");
-                    graphics.renderTooltip(font, title, mouseX, mouseY);
+                    graphics.setTooltipForNextFrame(font, title, mouseX, mouseY);
                 }
                 case CALENDAR ->
                 {
@@ -149,7 +136,7 @@ public class PlayerInventoryTabButton extends Button
                     }
 
                     final Component season = Component.literal(seasonIcon).append(monthToSeason);
-                    graphics.renderComponentTooltip(font, List.of(title, season, timeAndDate), mouseX, mouseY);
+                    graphics.setComponentTooltipForNextFrame(font, List.of(title, season, timeAndDate), mouseX, mouseY);
                 }
                 case NUTRITION ->
                 {
@@ -183,7 +170,7 @@ public class PlayerInventoryTabButton extends Button
                     }
 
                     final Component title = Component.translatable("tfc.screen.nutrition");
-                    graphics.renderComponentTooltip(font, List.of(title, components), mouseX, mouseY);
+                    graphics.setComponentTooltipForNextFrame(font, List.of(title, components), mouseX, mouseY);
                 }
                 case CLIMATE ->
                 {
@@ -216,12 +203,12 @@ public class PlayerInventoryTabButton extends Button
 
                     final Component avgTemp = Component.literal(tempIcon).append(Objects.requireNonNull(tempStyle.formatRange(getAvgTemp)));
                     final Component avgRain = Component.literal(rainIcon).append(String.format("%.0f", getAvgRain) + "mm");
-                    graphics.renderComponentTooltip(font, List.of(title, avgRain, avgTemp), mouseX, mouseY);
+                    graphics.setComponentTooltipForNextFrame(font, List.of(title, avgRain, avgTemp), mouseX, mouseY);
                 }
                 case BOOK ->
                 {
                     final Component hoverText = Component.translatable("tfc.tab.field_guide");
-                    graphics.renderTooltip(font, hoverText, mouseX, mouseY);
+                    graphics.setTooltipForNextFrame(font, hoverText, mouseX, mouseY);
                 }
             }
         }

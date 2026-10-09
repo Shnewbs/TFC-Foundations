@@ -161,7 +161,7 @@ public class BlockItemPlacement implements InteractionManager.OnItemUseAction
             stack.shrink(1);
         }
 
-        return InteractionResult.sidedSuccess(level.isClientSide);
+        return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
     }
 
     @Nullable

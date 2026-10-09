@@ -14,7 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeMap;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.FogType;
@@ -34,12 +34,22 @@ public final class ClientHelpers
 {
     public static final Identifier GUI_ICONS = Helpers.identifier("textures/gui/icons.png");
 
-    @Nullable
-    @SuppressWarnings("ConstantValue")
-    public static RecipeManager tryGetSafeRecipeManager()
+    @Nullable private static RecipeMap syncedRecipes;
+
+    public static void setSyncedRecipes(RecipeMap recipes)
     {
-        final @Nullable Minecraft mc = Minecraft.getInstance();
-        return mc != null && mc.level != null ? mc.level.getRecipeManager() : null;
+        syncedRecipes = recipes;
+    }
+
+    public static void clearSyncedRecipes()
+    {
+        syncedRecipes = null;
+    }
+
+    @Nullable
+    public static RecipeMap tryGetSafeRecipeMap()
+    {
+        return syncedRecipes;
     }
 
     @Nullable

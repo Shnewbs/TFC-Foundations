@@ -6,7 +6,7 @@
 
 package net.dries007.tfc.client.screen;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
@@ -34,7 +34,7 @@ public class PowderkegScreen extends BlockEntityScreen<PowderkegBlockEntity, Pow
     public void init()
     {
         super.init();
-        addRenderableWidget(new PowderkegSealButton(blockEntity, getGuiLeft(), getGuiTop(), isSealed() ? UNSEAL : SEAL));
+        addRenderableWidget(new PowderkegSealButton(blockEntity, leftPos, topPos, isSealed() ? UNSEAL : SEAL));
     }
 
     private boolean isSealed()
@@ -43,12 +43,12 @@ public class PowderkegScreen extends BlockEntityScreen<PowderkegBlockEntity, Pow
     }
 
     @Override
-    protected void renderLabels(GuiGraphics poseStack, int mouseX, int mouseY)
+    protected void extractLabels(GuiGraphicsExtractor poseStack, int mouseX, int mouseY)
     {
-        super.renderLabels(poseStack, mouseX, mouseY);
+        super.extractLabels(poseStack, mouseX, mouseY);
         if (isSealed())
         {
-            drawDisabled(poseStack, 0, PowderkegBlockEntity.SLOTS - 1);
+            highlightDisabledSlots(0, PowderkegBlockEntity.SLOTS - 1);
         }
     }
 }

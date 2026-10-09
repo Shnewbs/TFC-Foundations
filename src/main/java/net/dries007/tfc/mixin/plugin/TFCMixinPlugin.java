@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.mixin.plugin;
 
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.LoadingModList;
 
 import java.util.List;
@@ -62,7 +64,16 @@ public class TFCMixinPlugin implements IMixinConfigPlugin
     @Override
     public List<String> getMixins()
     {
-        return null;
+        // This class lives in the optional Jade source set. Never ask Mixin to load
+        // it when this build omits that adapter, even if the player installs Jade.
+        final String jadeMixin = "client.compat.jade.NextEntityDropProviderMixin";
+        if (FMLEnvironment.dist == Dist.CLIENT
+            && LoadingModList.get().getModFileById("jade") != null
+            && getClass().getClassLoader().getResource("net/dries007/tfc/mixin/" + jadeMixin.replace('.', '/') + ".class") != null)
+        {
+            return List.of(jadeMixin);
+        }
+        return List.of();
     }
 
     public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo)

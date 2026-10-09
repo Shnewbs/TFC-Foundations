@@ -13,7 +13,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -64,7 +63,7 @@ public class RopeItem extends Item
                 level.setBlockAndUpdate(blockpos, spike.getAnchor().defaultBlockState().setValue(AbstractRopeBlock.FACING, player.getDirection()));
                 bindToAnchor(player, level, blockpos);
             }
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
         }
         else
         {
@@ -74,20 +73,20 @@ public class RopeItem extends Item
                 {
                     bindToAnchor(player, level, blockpos);
                 }
-                return InteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
         }
         return InteractionResult.PASS;
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand)
+    public InteractionResult use(Level level, Player player, InteractionHand usedHand)
     {
         final ItemStack stack = player.getItemInHand(usedHand);
         final RopeKnot knot = getKnotAt(level, player.blockPosition(), player);
         if (knot == null)
         {
-            return InteractionResultHolder.pass(stack);
+            return InteractionResult.PASS;
         }
         if (!level.isClientSide)
         {
@@ -107,7 +106,7 @@ public class RopeItem extends Item
             }
             knot.discard();
         }
-        return InteractionResultHolder.consume(stack);
+        return InteractionResult.CONSUME.heldItemTransformedTo(stack);
     }
 
     public static void bindToAnchor(Player player, Level level, BlockPos pos)

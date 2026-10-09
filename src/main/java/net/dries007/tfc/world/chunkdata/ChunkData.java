@@ -237,7 +237,7 @@ public sealed class ChunkData
     public void setLastRandomTick(ChunkAccess chunk, long lastRandomTick)
     {
         this.lastRandomTick = lastRandomTick;
-        chunk.setUnsaved(true); // Flag the chunk, since we need to re-save the data
+        chunk.markUnsaved(); // Flag the chunk, since we need to re-save the data
     }
 
     public BlockPos getNextSnowPos(ChunkPos chunkPos)
@@ -255,7 +255,7 @@ public sealed class ChunkData
     {
         // Iterate to the next snow position
         nextSnowPosition++;
-        chunk.setUnsaved(true); // Flag the chunk, since we need to re-save the data
+        chunk.markUnsaved(); // Flag the chunk, since we need to re-save the data
     }
 
     /**

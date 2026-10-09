@@ -15,7 +15,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -142,7 +141,7 @@ public class GlassBlowpipeItem extends BlowpipeItem
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
+    public InteractionResult use(Level level, Player player, InteractionHand hand)
     {
         final ItemStack held = player.getItemInHand(hand);
         final ItemStack otherItem = getOtherHandItem(player, hand);
@@ -153,12 +152,12 @@ public class GlassBlowpipeItem extends BlowpipeItem
             if (!op.hasRequiredTemperature(held))
             {
                 player.displayClientMessage(Component.translatable("tfc.tooltip.glass.not_hot_enough"), true);
-                return InteractionResultHolder.fail(held);
+                return InteractionResult.FAIL;
             }
             player.startUsingItem(hand);
-            return InteractionResultHolder.consume(held);
+            return InteractionResult.CONSUME.heldItemTransformedTo(held);
         }
-        return InteractionResultHolder.pass(held);
+        return InteractionResult.PASS;
     }
 
     @Override

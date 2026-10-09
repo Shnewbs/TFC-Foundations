@@ -12,7 +12,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -83,12 +83,12 @@ public class StoveBlock extends FirepitBlock
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         // can't add a grill for balance reasons
         if (stack.getItem() == TFCItems.WROUGHT_IRON_GRILL.get())
         {
-            return ItemInteractionResult.FAIL;
+            return InteractionResult.FAIL;
         }
         // intercept pot placement
         if (level.getBlockEntity(pos) instanceof FirepitBlockEntity firepit)
@@ -106,7 +106,7 @@ public class StoveBlock extends FirepitBlock
                     if (!player.isCreative())
                         stack.shrink(1);
                 }
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
         }
         // everything else should be the same

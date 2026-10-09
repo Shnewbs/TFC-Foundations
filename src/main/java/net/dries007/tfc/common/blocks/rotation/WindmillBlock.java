@@ -13,7 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -75,7 +75,7 @@ public class WindmillBlock extends DeviceBlock implements EntityBlockExtension, 
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         final int count = state.getValue(COUNT);
         if (level.getBlockEntity(pos) instanceof WindmillBlockEntity windmill)
@@ -87,14 +87,14 @@ public class WindmillBlock extends DeviceBlock implements EntityBlockExtension, 
                 if (!leftover.isEmpty())
                 {
                     ItemHandlerHelper.giveItemToPlayer(player, leftover);
-                    return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                    return InteractionResult.TRY_WITH_EMPTY_HAND;
                 }
                 final int newCount = windmill.updateState();
                 if (newCount == WindmillBlockEntity.SLOTS && player instanceof ServerPlayer server)
                 {
                     TFCAdvancements.MAX_WINDMILL.trigger(server);
                 }
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
             if (count == WindmillBlockEntity.SLOTS || stack.isEmpty())
             {
@@ -106,10 +106,10 @@ public class WindmillBlock extends DeviceBlock implements EntityBlockExtension, 
                 {
                     inv.extractItem(count - 1, 1, false);
                 }
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override

@@ -40,7 +40,7 @@ public interface KeyedIngredient extends Predicate<ItemStack>
     {
         return of(
             stack -> !cache.getAll(stack.getItem()).isEmpty(),
-            () -> RecipeHelpers.getRecipes(Helpers.getUnsafeRecipeManager(), type)
+            () -> RecipeHelpers.getRecipes(Helpers.getUnsafeRecipeMap(), type)
                 .stream()
                 .flatMap(r -> RecipeHelpers.stream(key.apply(r.value())))
                 .toList()

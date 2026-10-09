@@ -6,9 +6,9 @@
 
 package net.dries007.tfc.client.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
-import net.minecraft.client.gui.GuiGraphics;
+import org.joml.Matrix3x2fStack;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -44,18 +44,18 @@ public class ScreenParticle
         this.height = height;
     }
 
-    public void render(GuiGraphics graphics)
+    public void render(GuiGraphicsExtractor graphics)
     {
-        final PoseStack poseStack = graphics.pose();
-        poseStack.pushPose();
+        final Matrix3x2fStack poseStack = graphics.pose();
+        poseStack.pushMatrix();
 
-        poseStack.translate(x, y, 0f);
-        poseStack.mulPose(Axis.ZP.rotationDegrees(rotation));
-        poseStack.scale(scale, scale, 1f);
+        poseStack.translate(x, y);
+        poseStack.rotate(rotation * Mth.DEG_TO_RAD);
+        poseStack.scale(scale, scale);
 
-        graphics.blit(texture, 0, 0, 0, 0, 0, width, height, width, height);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, 0, 0, 0, 0, width, height, width, height);
 
-        poseStack.popPose();
+        poseStack.popMatrix();
     }
 
     public void tick()

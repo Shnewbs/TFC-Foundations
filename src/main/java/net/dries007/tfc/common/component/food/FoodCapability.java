@@ -14,7 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeMap;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.TerraFirmaCraft;
@@ -252,9 +252,9 @@ public final class FoodCapability
     }
 
     @SuppressWarnings("ConstantConditions")
-    public static void markRecipeOutputsAsNonDecaying(RegistryAccess registryAccess, RecipeManager manager)
+    public static void markRecipeOutputsAsNonDecaying(RegistryAccess registryAccess, RecipeMap manager)
     {
-        for (RecipeHolder<?> recipe : manager.getRecipes())
+        for (RecipeHolder<?> recipe : manager.values())
         {
             final @Nullable ItemStack stack = recipe.value().getResultItem(registryAccess);
             if (stack != null)

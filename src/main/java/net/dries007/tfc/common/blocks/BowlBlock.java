@@ -9,7 +9,7 @@ package net.dries007.tfc.common.blocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -47,7 +47,7 @@ public class BowlBlock extends BottomSupportedDeviceBlock
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         final @Nullable BowlBlockEntity bowl = level.getBlockEntity(pos, TFCBlockEntities.BOWL.get()).orElse(null);
         if (bowl != null)
@@ -66,23 +66,23 @@ public class BowlBlock extends BottomSupportedDeviceBlock
                     inventory.getStackInSlot(0).shrink(1);
                     Helpers.playSound(level, pos, SoundEvents.SAND_PLACE);
                     player.getCooldowns().addCooldown(held.getItem(), 10);
-                    return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                    return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                 }
-                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                return InteractionResult.TRY_WITH_EMPTY_HAND;
             }
 
             if (held.isEmpty() && hand == InteractionHand.MAIN_HAND)
             {
                 ItemHandlerHelper.giveItemToPlayer(player, inventory.extractItem(0, player.isShiftKeyDown() ? 16 : 1, false));
                 Helpers.playSound(level, pos, SoundEvents.SAND_PLACE);
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
 
             if (Helpers.isItem(held, TFCTags.Items.BOWL_POWDERS))
             {
                 player.setItemInHand(hand, Helpers.insertAllSlots(inventory, held));
                 Helpers.playSound(level, pos, SoundEvents.SAND_PLACE);
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
 
             if (Helpers.isItem(held, TFCTags.Items.CAN_BE_SALTED) && Helpers.isItem(current, TFCItems.POWDERS.get(Powder.SALT).get()))
@@ -97,11 +97,11 @@ public class BowlBlock extends BottomSupportedDeviceBlock
                     ItemHandlerHelper.giveItemToPlayer(player, salted);
                     inventory.getStackInSlot(0).shrink(toSalt);
                     Helpers.playSound(level, pos, SoundEvents.SAND_PLACE);
-                    return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                    return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                 }
             }
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override

@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeMap;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.neoforge.common.Tags;
 import org.junit.jupiter.api.Test;
@@ -43,13 +43,13 @@ public class CraftingRecipesTest implements TestSetup
             Arrays.stream(Wood.VALUES).map(wood -> "tfc:crafting/wood/sewing_table/" + wood.getSerializedName())
         ).flatMap(s -> s).collect(Collectors.toSet()); // Exclude recipes that consume the tool
 
-        final RecipeManager manager = Helpers.getUnsafeRecipeManager();
+        final RecipeMap manager = Helpers.getUnsafeRecipeMap();
 
         final List<String> recipes = manager
-            .getAllRecipesFor(RecipeType.CRAFTING)
+            .byType(RecipeType.CRAFTING)
             .stream()
             .filter(holder -> {
-                if (expectedDoNotDamageInputs.contains(holder.id().toString())) return false;
+                if (expectedDoNotDamageInputs.contains(holder.id().identifier().toString())) return false;
                 final CraftingRecipe recipe = holder.value();
                 final Optional<ItemStackProvider> remainder = recipe instanceof AdvancedShapedRecipe shaped ? shaped.getRemainder()
                     : recipe instanceof AdvancedShapelessRecipe shapeless ? shapeless.getRemainder() : Optional.empty();
@@ -66,7 +66,7 @@ public class CraftingRecipesTest implements TestSetup
 
                 return stacks.anyMatch(stack -> stack.isDamageableItem() && stack.is(Tags.Items.TOOLS));
             })
-            .map(holder -> holder.id().toString())
+            .map(holder -> holder.id().identifier().toString())
             .toList();
 
         assertTrue(recipes.isEmpty(), "Recipes with tools do not damage inputs: " + String.join("\n", recipes));
@@ -75,10 +75,10 @@ public class CraftingRecipesTest implements TestSetup
     @Test
     public void testAdvancedShapelessRecipesHavePrimaryInput()
     {
-        final RecipeManager manager = Helpers.getUnsafeRecipeManager();
+        final RecipeMap manager = Helpers.getUnsafeRecipeMap();
 
         final List<String> recipes = manager
-            .getAllRecipesFor(RecipeType.CRAFTING)
+            .byType(RecipeType.CRAFTING)
             .stream()
             .filter(holder -> {
                 final CraftingRecipe recipe = holder.value();
@@ -91,7 +91,7 @@ public class CraftingRecipesTest implements TestSetup
                     return false;
                 }
             })
-            .map(holder -> holder.id().toString())
+            .map(holder -> holder.id().identifier().toString())
             .toList();
 
         assertTrue(recipes.isEmpty(), "Advanced shapeless crafting recipes do not have primary inputs: " + String.join("\n", recipes));

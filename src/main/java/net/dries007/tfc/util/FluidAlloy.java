@@ -23,7 +23,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeMap;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
@@ -147,15 +147,15 @@ public final class FluidAlloy
 
     public FluidStack drain(int removeAmount, FluidAction action)
     {
-        return drain(Helpers.getUnsafeRecipeManager(), removeAmount, action);
+        return drain(Helpers.getUnsafeRecipeMap(), removeAmount, action);
     }
 
     public FluidStack drain(Level level, int removeAmount, FluidAction action)
     {
-        return drain(level.getRecipeManager(), removeAmount, action);
+        return drain(Helpers.getUnsafeRecipeMap(), removeAmount, action);
     }
 
-    private FluidStack drain(RecipeManager recipes, int removeAmount, FluidAction action)
+    private FluidStack drain(RecipeMap recipes, int removeAmount, FluidAction action)
     {
         final FluidStack result = getResult(recipes);
         if (action.simulate())
@@ -194,15 +194,15 @@ public final class FluidAlloy
 
     public FluidStack getResult()
     {
-        return getResult(Helpers.getUnsafeRecipeManager());
+        return getResult(Helpers.getUnsafeRecipeMap());
     }
 
     public FluidStack getResult(Level level)
     {
-        return getResult(level.getRecipeManager());
+        return getResult(Helpers.getUnsafeRecipeMap());
     }
 
-    private FluidStack getResult(RecipeManager recipes)
+    private FluidStack getResult(RecipeMap recipes)
     {
         if (cachedResult == null)
         {

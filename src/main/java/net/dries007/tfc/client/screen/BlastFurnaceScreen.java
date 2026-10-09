@@ -6,7 +6,8 @@
 
 package net.dries007.tfc.client.screen;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -28,16 +29,15 @@ public class BlastFurnaceScreen extends BlockEntityScreen<BlastFurnaceBlockEntit
 
     public BlastFurnaceScreen(BlastFurnaceContainer container, Inventory playerInventory, Component name)
     {
-        super(container, playerInventory, name, BLAST_FURNACE);
+        super(container, playerInventory, name, BLAST_FURNACE, 176, 186);
 
-        inventoryLabelY += 20;
-        imageHeight += 20;
+        inventoryLabelY = 92;
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY)
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks)
     {
-        super.renderBg(graphics, partialTicks, mouseX, mouseY);
+        super.extractBackground(graphics, mouseX, mouseY, partialTicks);
 
         final int capacity = blockEntity.getCapacity();
         final int fuelCount = blockEntity.getFuelCount();
@@ -55,26 +55,25 @@ public class BlastFurnaceScreen extends BlockEntityScreen<BlastFurnaceBlockEntit
         final int temperature = Heat.scaleTemperatureForGui(blockEntity.getTemperature());
         if (temperature > 0)
         {
-            graphics.blit(texture, leftPos + 8, topPos + 76 - Math.min(51, temperature), 176, 0, 15, 5);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, texture, leftPos + 8, topPos + 76 - Math.min(51, temperature), 176, 0, 15, 5, 256, 256);
         }
 
         // Render output fluid tank
         final FluidStack fluid = blockEntity.getInventory().getFluidInTank(0);
         if (!fluid.isEmpty())
         {
-            final TextureAtlasSprite sprite = RenderHelpers.getAndBindFluidSprite(fluid);
+            final TextureAtlasSprite sprite = RenderHelpers.getFluidSprite(fluid);
             final int fillHeight = (int) Math.ceil((float) 31 * fluid.getAmount() / TFCConfig.SERVER.blastFurnaceFluidCapacity.get());
 
-            RenderHelpers.fillAreaWithSprite(graphics, sprite, leftPos + 70, topPos + 84 - fillHeight, 36, fillHeight, 16, 16);
+            RenderHelpers.fillAreaWithSprite(graphics, sprite, leftPos + 70, topPos + 84 - fillHeight, 36, fillHeight, 16, 16, RenderHelpers.getFluidColor(fluid));
         }
 
-        resetToBackgroundSprite();
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY)
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
     {
-        super.renderTooltip(graphics, mouseX, mouseY);
+        super.extractTooltip(graphics, mouseX, mouseY);
 
         final int capacity = blockEntity.getCapacity();
         final int fuelCount = blockEntity.getFuelCount();
@@ -84,38 +83,38 @@ public class BlastFurnaceScreen extends BlockEntityScreen<BlastFurnaceBlockEntit
 
         if (RenderHelpers.isInside(mouseX, mouseY, leftPos + 42, topPos + 22, 10, 66))
         {
-            graphics.renderTooltip(font, Component.translatable("tfc.tooltip.blast_furnace_ore", inputCount, capacity), mouseX, mouseY);
+            graphics.setTooltipForNextFrame(font, Component.translatable("tfc.tooltip.blast_furnace_ore", inputCount, capacity), mouseX, mouseY);
         }
         if (RenderHelpers.isInside(mouseX, mouseY, leftPos + 124, topPos + 22, 10, 66))
         {
-            graphics.renderTooltip(font, Component.translatable("tfc.tooltip.blast_furnace_fuel", fuelCount, capacity), mouseX, mouseY);
+            graphics.setTooltipForNextFrame(font, Component.translatable("tfc.tooltip.blast_furnace_fuel", fuelCount, capacity), mouseX, mouseY);
         }
         if (RenderHelpers.isInside(mouseX, mouseY, leftPos + 70, topPos + 54, 36, 31) && !fluid.isEmpty())
         {
-            graphics.renderTooltip(font, Tooltips.fluidUnitsOf(fluid), mouseX, mouseY);
+            graphics.setTooltipForNextFrame(font, Tooltips.fluidUnitsOf(fluid), mouseX, mouseY);
         }
         if (RenderHelpers.isInside(mouseX, mouseY, leftPos + 8, topPos + 76 - 51, 15, 51))
         {
             final var text = TFCConfig.CLIENT.heatTooltipStyle.get().formatColored(blockEntity.getTemperature());
             if (text != null)
             {
-                graphics.renderTooltip(font, text, mouseX, mouseY);
+                graphics.setTooltipForNextFrame(font, text, mouseX, mouseY);
             }
         }
     }
 
-    private void renderCapacityLimitedFillMeter(GuiGraphics graphics, int x, int y, int fillU, int maximum, int capacity, int content)
+    private void renderCapacityLimitedFillMeter(GuiGraphicsExtractor graphics, int x, int y, int fillU, int maximum, int capacity, int content)
     {
         if (capacity == 0)
         {
             // No capacity, so render a full dotted region.
-            graphics.blit(texture, leftPos + x, topPos + y, 246, 0, 10, 66);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, texture, leftPos + x, topPos + y, 246, 0, 10, 66, 256, 256);
         }
         else if (content == 0)
         {
             // If we have capacity but no content, we render just an top section of the empty content bar.
             final int emptyHeight = (64 * capacity) / maximum;
-            graphics.blit(texture, leftPos + x, topPos + y + 64 - emptyHeight, 236, 0, 10, 1 + emptyHeight);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, texture, leftPos + x, topPos + y + 64 - emptyHeight, 236, 0, 10, 1 + emptyHeight, 256, 256);
         }
         else
         {
@@ -123,8 +122,8 @@ public class BlastFurnaceScreen extends BlockEntityScreen<BlastFurnaceBlockEntit
             final int emptyHeight = (64 * capacity) / maximum;
             final int fillHeight = (64 * content) / maximum;
 
-            graphics.blit(texture, leftPos + x, topPos + y + 64 - emptyHeight, 236, 0, 10, 1 + emptyHeight - fillHeight);
-            graphics.blit(texture, leftPos + x, topPos + y + 65 - fillHeight, fillU, 1, 10, fillHeight);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, texture, leftPos + x, topPos + y + 64 - emptyHeight, 236, 0, 10, 1 + emptyHeight - fillHeight, 256, 256);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, texture, leftPos + x, topPos + y + 65 - fillHeight, fillU, 1, 10, fillHeight, 256, 256);
         }
     }
 

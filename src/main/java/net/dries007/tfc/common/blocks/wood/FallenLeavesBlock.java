@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -47,7 +47,7 @@ public class FallenLeavesBlock extends GroundcoverBlock implements ISlowEntities
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         final ItemStack item = player.getItemInHand(hand);
         final int layers = state.getValue(LAYERS);
@@ -57,13 +57,13 @@ public class FallenLeavesBlock extends GroundcoverBlock implements ISlowEntities
                 item.shrink(1);
             final BlockState toPlace = layers + 1 == MAX_LAYERS ? leaves.get().defaultBlockState().setValue(TFCLeavesBlock.PERSISTENT, true) : state.setValue(LAYERS, layers + 1);
             level.setBlockAndUpdate(pos, toPlace);
-            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+            return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
         }
         else if (layers == 1 && item.getItem() != asItem())
         {
             return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override

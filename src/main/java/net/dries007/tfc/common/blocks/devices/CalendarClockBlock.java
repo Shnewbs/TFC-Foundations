@@ -104,7 +104,7 @@ public class CalendarClockBlock extends DeviceBlock
                 {
                     clock.needsInstantUpdate();
                 }
-                return InteractionResult.sidedSuccess(level.isClientSide());
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
             else
             {

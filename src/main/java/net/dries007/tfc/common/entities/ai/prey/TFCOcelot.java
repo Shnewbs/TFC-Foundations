@@ -135,7 +135,7 @@ public class TFCOcelot extends Ocelot
                     }
                 }
             }
-            return InteractionResult.sidedSuccess(level().isClientSide);
+            return (level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
         }
         return super.mobInteract(player, hand);
     }

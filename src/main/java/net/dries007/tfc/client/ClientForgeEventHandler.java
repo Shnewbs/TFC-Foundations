@@ -6,14 +6,18 @@
 
 package net.dries007.tfc.client;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;
+import net.minecraft.client.gui.components.debug.DebugScreenEntryStatus;
+import net.minecraft.client.gui.components.debug.DebugScreenProfile;
+import net.minecraft.resources.Identifier;
 import net.minecraft.client.gui.components.toasts.TutorialToast;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
@@ -54,12 +58,13 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.client.event.CustomizeGuiOverlayEvent;
+import net.neoforged.neoforge.client.event.RegisterDebugEntriesEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
+import net.neoforged.neoforge.client.event.RecipesReceivedEvent;
 import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 import net.neoforged.neoforge.client.event.RenderHandEvent;
-import net.neoforged.neoforge.client.event.RenderHighlightEvent;
+import net.neoforged.neoforge.client.event.ExtractBlockOutlineRenderStateEvent;
+import net.neoforged.neoforge.client.CustomBlockOutlineRenderer;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.client.event.ToastAddEvent;
 import net.neoforged.neoforge.client.event.ViewportEvent;
@@ -67,7 +72,7 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
@@ -122,7 +127,6 @@ public class ClientForgeEventHandler
     {
         final IEventBus bus = NeoForge.EVENT_BUS;
 
-        bus.addListener(ClientForgeEventHandler::onRenderGameOverlayText);
         bus.addListener(ClientForgeEventHandler::onRenderGameOverlayPost);
         bus.addListener(ClientForgeEventHandler::onItemTooltip);
         bus.addListener(ClientForgeEventHandler::onInitGuiPost);
@@ -142,7 +146,14 @@ public class ClientForgeEventHandler
     }
 
 
-    public static void onRenderGameOverlayText(CustomizeGuiOverlayEvent.DebugText event)
+    public static void registerDebugEntries(RegisterDebugEntriesEvent event)
+    {
+        final Identifier id = Helpers.identifier("climate_and_calendar");
+        event.register(id, (displayer, level, clientChunk, serverChunk) -> displayDebugInfo(displayer));
+        event.includeInProfile(id, DebugScreenProfile.DEFAULT, DebugScreenEntryStatus.IN_OVERLAY);
+    }
+
+    private static void displayDebugInfo(DebugScreenDisplayer displayer)
     {
         final Minecraft mc = Minecraft.getInstance();
         if (mc.level != null && TFCConfig.CLIENT.enableDebug.get())
@@ -152,7 +163,7 @@ public class ClientForgeEventHandler
             final BlockPos pos = BlockPos.containing(camera.getX(), camera.getBoundingBox().minY, camera.getZ());
             if (mc.level.hasChunk(pos.getX() >> 4, pos.getZ() >> 4))
             {
-                final List<String> tooltip = event.getLeft();
+                final List<String> tooltip = new ArrayList<>();
 
                 tooltip.add("");
                 tooltip.add(AQUA + TerraFirmaCraft.MOD_NAME);
@@ -201,6 +212,7 @@ public class ClientForgeEventHandler
                     final int approxSurfaceY = mc.level.getHeight(Heightmap.Types.MOTION_BLOCKING, pos.getX(), pos.getZ());
                     ex.chunkDataGenerator().displayDebugInfo(tooltip, pos, approxSurfaceY);
                 }
+                displayer.addToGroup(Helpers.identifier("climate_and_calendar"), tooltip);
             }
         }
     }
@@ -211,23 +223,23 @@ public class ClientForgeEventHandler
     public static void onRenderGameOverlayPost(RenderGuiLayerEvent.Post event)
     {
         // todo this should probably be a forge ingame gui
-        final GuiGraphics graphics = event.getGuiGraphics();
+        final GuiGraphicsExtractor graphics = event.getGuiGraphics();
         final Minecraft minecraft = Minecraft.getInstance();
         final Player player = minecraft.player;
         if (player != null)
         {
             // todo 1.21 hoe tag broken?
             final boolean holdingHoe = Helpers.isItem(player.getMainHandItem().getItem(), ItemTags.HOES) || Helpers.isItem(player.getOffhandItem().getItem(), ItemTags.HOES);
-            if (event.getName() == VanillaGuiLayers.CROSSHAIR && holdingHoe && (!TFCConfig.CLIENT.showHoeOverlaysOnlyWhenShifting.get() || player.isShiftKeyDown()))
+            if (event.getName().equals(VanillaGuiLayers.CROSSHAIR) && holdingHoe && (!TFCConfig.CLIENT.showHoeOverlaysOnlyWhenShifting.get() || player.isShiftKeyDown()))
             {
                 HoeOverlays.render(minecraft, graphics);
             }
             final boolean holdingGlassBlowpipe = Helpers.isItem(player.getMainHandItem().getItem(), TFCTags.Items.GLASS_BLOWPIPES) || Helpers.isItem(player.getOffhandItem().getItem(), TFCTags.Items.GLASS_BLOWPIPES);
-            if (event.getName() == VanillaGuiLayers.CROSSHAIR && holdingGlassBlowpipe)
+            if (event.getName().equals(VanillaGuiLayers.CROSSHAIR) && holdingGlassBlowpipe)
             {
                 GlassblowingOverlays.render(minecraft, graphics);
             }
-            if (event.getName() == VanillaGuiLayers.CROSSHAIR)
+            if (event.getName().equals(VanillaGuiLayers.CROSSHAIR))
             {
                 CrateOverlays.render(minecraft, graphics);
             }
@@ -373,8 +385,8 @@ public class ClientForgeEventHandler
         Player player = Minecraft.getInstance().player;
         if (event.getScreen() instanceof InventoryScreen screen && player != null && !player.isCreative())
         {
-            int guiLeft = screen.getGuiLeft();
-            int guiTop = screen.getGuiTop();
+            int guiLeft = screen.getLeftPos();
+            int guiTop = screen.getTopPos();
 
             event.addListener(new PlayerInventoryTabButton(guiLeft, guiTop, true, false, PlayerInventoryTabButton.Tab.INVENTORY, button -> {}).setRecipeBookCallback(screen));
             event.addListener(new PlayerInventoryTabButton(guiLeft, guiTop, false, false, PlayerInventoryTabButton.Tab.CALENDAR).setRecipeBookCallback(screen));
@@ -384,8 +396,8 @@ public class ClientForgeEventHandler
         }
         else if (event.getScreen() instanceof CreativeModeInventoryScreen screen && player != null && TFCConfig.CLIENT.enableTabsInCreative.get())
         {
-            int guiLeft = screen.getGuiLeft() + (195 - 176);
-            int guiTop = screen.getGuiTop();
+            int guiLeft = screen.getLeftPos() + (195 - 176);
+            int guiTop = screen.getTopPos();
 
             event.addListener(new PlayerInventoryTabButton(guiLeft, guiTop, true, false, PlayerInventoryTabButton.Tab.INVENTORY, button -> {}));
             event.addListener(new PlayerInventoryTabButton(guiLeft, guiTop, false, false, PlayerInventoryTabButton.Tab.CALENDAR));
@@ -399,7 +411,7 @@ public class ClientForgeEventHandler
     {
         // We can't send this on client world load, it's too early, as the connection is not setup yet
         // This is the closest point after that which will work
-        PacketDistributor.sendToServer(RequestClimateModelPacket.PACKET);
+        ClientPacketDistributor.sendToServer(RequestClimateModelPacket.PACKET);
 
         LocalPlayer player = event.getPlayer();
         List<AmbientSoundHandler> handlers = ((LocalPlayerAccessor) player).accessor$getAmbientSoundHandlers();
@@ -411,6 +423,8 @@ public class ClientForgeEventHandler
 
     public static void onClientPlayerLoggedOut(ClientPlayerNetworkEvent.LoggingOut event)
     {
+        ClientHelpers.clearSyncedRecipes();
+        IndirectHashCollection.clearAllCaches();
         // This is fired when logging out, but also when a new server is being created, just after resources are loaded. We don't want
         // to clear caches there, so guard this behind if there was an actual player that was logging out.
         if (event.getPlayer() != null)
@@ -477,11 +491,11 @@ public class ClientForgeEventHandler
     {
         if (TFCKeyBindings.PLACE_BLOCK.isDown())
         {
-            PacketDistributor.sendToServer(PlaceBlockSpecialPacket.PACKET);
+            ClientPacketDistributor.sendToServer(PlaceBlockSpecialPacket.PACKET);
         }
         else if (TFCKeyBindings.CYCLE_CHISEL_MODE.isDown())
         {
-            PacketDistributor.sendToServer(CycleChiselModePacket.PACKET);
+            ClientPacketDistributor.sendToServer(CycleChiselModePacket.PACKET);
         }
     }
 
@@ -492,7 +506,7 @@ public class ClientForgeEventHandler
             Slot slot = inv.getSlotUnderMouse();
             if (slot != null)
             {
-                PacketDistributor.sendToServer(new StackFoodPacket(slot.index));
+                ClientPacketDistributor.sendToServer(new StackFoodPacket(slot.index));
             }
         }
     }
@@ -501,59 +515,44 @@ public class ClientForgeEventHandler
      * Handles custom bounding boxes drawing
      * eg: Chisel, Quern handle
      */
-    public static void onHighlightBlockEvent(RenderHighlightEvent.Block event)
+    public static void onHighlightBlockEvent(ExtractBlockOutlineRenderStateEvent event)
     {
-        final Camera camera = event.getCamera();
-        final PoseStack poseStack = event.getPoseStack();
-        final Entity entity = camera.getEntity();
-        final Level level = entity.level();
-        final BlockHitResult hit = event.getTarget();
-        final BlockPos pos = hit.getBlockPos();
+        if (!(event.getCamera().entity() instanceof Player player)) return;
+        final var level = event.getLevel();
+        final BlockHitResult hit = event.getHitResult();
+        final BlockPos pos = hit.getBlockPos().immutable();
+        final BlockState stateAt = event.getBlockState();
+        final Block blockAt = stateAt.getBlock();
 
-        if (entity instanceof Player player)
+        ChiselRecipe.computeResult(player, stateAt, hit, false).ifLeft(chiseled ->
+            event.addCustomRenderer(IHighlightHandler.outline(pos, chiseled.getShape(level, pos), 0x66FF0000, true)));
+
+        if (blockAt instanceof IHighlightHandler handler)
         {
-            final BlockState stateAt = level.getBlockState(pos);
-            final Block blockAt = stateAt.getBlock();
-
-            ChiselRecipe.computeResult(player, stateAt, hit, false).ifLeft(chiseled -> {
-                IHighlightHandler.drawBox(poseStack, chiseled.getShape(level, pos), event.getMultiBufferSource(), pos, camera.getPosition(), 1f, 0f, 0f, 0.4f);
-                event.setCanceled(true);
-            });
-
-            if (blockAt instanceof IHighlightHandler handler)
+            final IHighlightHandler.Highlight highlight = handler.extractHighlight(level, pos, player, hit);
+            if (highlight != null) event.addCustomRenderer(highlight.renderer(pos));
+        }
+        else if (blockAt instanceof IGhostBlockHandler handler)
+        {
+            final CustomBlockOutlineRenderer ghost = handler.extractGhost(level, player, stateAt, pos, hit.getLocation(), hit.getDirection(), player.getMainHandItem());
+            if (ghost != null) event.addCustomRenderer(ghost);
+        }
+        else if (blockAt instanceof SluiceBlock && level.getBlockEntity(pos) instanceof SluiceBlockEntity sluice)
+        {
+            BlockPos waterPos = sluice.getWaterOutputPos();
+            if (!stateAt.getValue(SluiceBlock.UPPER))
             {
-                // Pass on to custom implementations
-                if (handler.drawHighlight(level, pos, player, hit, poseStack, event.getMultiBufferSource(), camera.getPosition()))
-                {
-                    // Cancel drawing this block's bounding box
-                    event.setCanceled(true);
-                }
+                waterPos = waterPos.relative(stateAt.getValue(SluiceBlock.FACING).getOpposite());
             }
-            else if (blockAt instanceof IGhostBlockHandler handler)
+            if (!level.getBlockState(waterPos).canBeReplaced())
             {
-                if (handler.draw(level, player, stateAt, pos, hit.getLocation(), hit.getDirection(), event.getPoseStack(), event.getMultiBufferSource(), player.getMainHandItem()))
-                {
-                    event.setCanceled(true);
-                }
+                event.addCustomRenderer(IHighlightHandler.outline(waterPos.immutable(), Shapes.block(), 0x660000FF, false));
             }
-            else if (blockAt instanceof SluiceBlock && level.getBlockEntity(pos) instanceof SluiceBlockEntity sluice)
+            final BlockPos posAbove = pos.above();
+            final BlockState stateAbove = level.getBlockState(posAbove);
+            if (!stateAbove.getFluidState().isEmpty())
             {
-                BlockPos waterPos = sluice.getWaterOutputPos();
-                if (!stateAt.getValue(SluiceBlock.UPPER))
-                {
-                    waterPos = waterPos.relative(stateAt.getValue(SluiceBlock.FACING).getOpposite());
-                }
-                if (!level.getBlockState(waterPos).canBeReplaced())
-                {
-                    IHighlightHandler.drawBox(poseStack, Shapes.block(), event.getMultiBufferSource(), waterPos, camera.getPosition(), 0f, 0f, 1f, 0.4f);
-                }
-
-                final BlockPos posAbove = pos.above();
-                final BlockState stateAbove = level.getBlockState(posAbove);
-                if (!stateAbove.getFluidState().isEmpty())
-                {
-                    IHighlightHandler.drawBox(poseStack, stateAbove.getFluidState().getShape(level, posAbove), event.getMultiBufferSource(), posAbove, camera.getPosition(), 1f, 0f, 0f, 0.4f);
-                }
+                event.addCustomRenderer(IHighlightHandler.outline(posAbove, stateAbove.getFluidState().getShape(level, posAbove), 0x66FF0000, false));
             }
         }
     }
@@ -642,9 +641,10 @@ public class ClientForgeEventHandler
         event.addHorizontalOffset(TFCConfig.CLIENT.effectHorizontalAdjustment.get());
     }
 
-    public static void onRecipesUpdated(RecipesUpdatedEvent event)
+    public static void onRecipesUpdated(RecipesReceivedEvent event)
     {
-        Helpers.updateReloadableData(ClientHelpers.getLevelOrThrow().registryAccess(), event.getRecipeManager());
+        ClientHelpers.setSyncedRecipes(event.getRecipeMap());
+        Helpers.updateReloadableData(ClientHelpers.getLevelOrThrow().registryAccess(), event.getRecipeMap());
     }
 
     private static void onScreenOpen(ScreenEvent.Opening event)

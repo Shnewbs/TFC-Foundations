@@ -11,7 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -57,9 +57,9 @@ public abstract class PickableClimbingCropBlock extends ClimbingCropBlock implem
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
-        final ItemInteractionResult res = super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+        final InteractionResult res = super.useItemOn(stack, state, level, pos, player, hand, hitResult);
         if (res.consumesAction())
         {
             return res; // use fertilizer
@@ -82,7 +82,7 @@ public abstract class PickableClimbingCropBlock extends ClimbingCropBlock implem
                 crop.setYield(0f);
                 cropBlock.postGrowthTick(level, pos, state, crop);
                 ItemHandlerHelper.giveItemToPlayer(player, yieldItemStack(getFirstFruit(), yield, random));
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
             else if (age == maxAge)
             {
@@ -90,10 +90,10 @@ public abstract class PickableClimbingCropBlock extends ClimbingCropBlock implem
                 crop.setYield(0f);
                 cropBlock.postGrowthTick(level, pos, state, crop);
                 ItemHandlerHelper.giveItemToPlayer(player, yieldItemStack(getSecondFruit(), yield, random));
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override

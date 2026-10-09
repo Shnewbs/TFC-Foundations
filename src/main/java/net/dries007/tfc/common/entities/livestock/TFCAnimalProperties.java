@@ -196,7 +196,7 @@ public interface TFCAnimalProperties extends GenderedRenderAnimal, BrainAnimalBe
             }
             entity.playSound(eatingSound(stack), 1f, 1f);
         }
-        return InteractionResult.sidedSuccess(level.isClientSide);
+        return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
     }
 
     default SoundEvent eatingSound(ItemStack food)

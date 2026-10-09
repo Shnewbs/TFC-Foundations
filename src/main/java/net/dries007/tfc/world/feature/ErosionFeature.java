@@ -156,7 +156,7 @@ public class ErosionFeature extends Feature<NoneFeatureConfiguration>
      */
     private void setBlock(WorldGenLevel level, ChunkAccess chunk, BlockPos pos, BlockState state)
     {
-        final BlockState prevState = chunk.setBlockState(pos, state, false);
+        final BlockState prevState = chunk.setBlockState(pos, state);
         if (prevState != null && prevState.hasBlockEntity())
         {
             chunk.removeBlockEntity(pos);

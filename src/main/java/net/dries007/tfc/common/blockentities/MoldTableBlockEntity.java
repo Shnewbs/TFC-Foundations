@@ -14,7 +14,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -300,7 +300,7 @@ public class MoldTableBlockEntity extends TickableInventoryBlockEntity<MoldTable
         inventory.setStackInSlot(OUTPUT_SLOT, stack);
     }
 
-    public ItemInteractionResult onRightClick(Player player)
+    public InteractionResult onRightClick(Player player)
     {
         assert level != null;
         final boolean interactWithMoldSlot = player.isShiftKeyDown() || inventory.getStackInSlot(MOLD_SLOT).isEmpty();
@@ -331,13 +331,13 @@ public class MoldTableBlockEntity extends TickableInventoryBlockEntity<MoldTable
                 ItemHandlerHelper.giveItemToPlayer(player, extracted, player.getInventory().selected);
 
                 markForSync();
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
             else if (shouldInsert)
             {
                 inventory.insertItem(MOLD_SLOT, heldItem.split(1), false);
                 markForSync();
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
         }
         else
@@ -349,11 +349,11 @@ public class MoldTableBlockEntity extends TickableInventoryBlockEntity<MoldTable
                     player.getInventory().selected);
 
                 markForSync();
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
         }
 
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override

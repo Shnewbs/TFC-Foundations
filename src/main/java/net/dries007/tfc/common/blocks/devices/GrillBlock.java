@@ -6,10 +6,10 @@
 
 package net.dries007.tfc.common.blocks.devices;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Map;
 import java.util.stream.Collectors;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
@@ -17,7 +17,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -98,7 +98,7 @@ public class GrillBlock extends FirepitBlock implements IHighlightHandler
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         final GrillBlockEntity grill = level.getBlockEntity(pos, TFCBlockEntities.GRILL.get()).orElse(null);
         if (grill != null)
@@ -110,7 +110,7 @@ public class GrillBlock extends FirepitBlock implements IHighlightHandler
             if (!stack.isEmpty() && slot != -1 && current.isEmpty() && inventory.isItemValid(slot, stack))
             {
                 ItemHandlerHelper.giveItemToPlayer(player, inventory.insertItem(slot, stack.split(1), false));
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
             if (stack.isEmpty() && slot != -1 && !current.isEmpty())
             {
@@ -118,7 +118,7 @@ public class GrillBlock extends FirepitBlock implements IHighlightHandler
                 if (!inventory.isItemValid(slot, current) || player.isShiftKeyDown())
                 {
                     ItemHandlerHelper.giveItemToPlayer(player, inventory.extractItem(slot, 64, false));
-                    return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                    return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                 }
             }
             if (stack.isEmpty() && player.isShiftKeyDown())
@@ -130,7 +130,7 @@ public class GrillBlock extends FirepitBlock implements IHighlightHandler
                         ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(TFCItems.POWDERS.get(Powder.WOOD_ASH).get(), grill.getAsh()));
                         grill.setAsh(0);
                         Helpers.playSound(level, pos, SoundEvents.SAND_BREAK);
-                        return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                        return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                     }
                     else
                     {
@@ -141,14 +141,14 @@ public class GrillBlock extends FirepitBlock implements IHighlightHandler
                     {
                         TFCDamageTypes.grill(player, 1f);
                         Helpers.playSound(level, pos, TFCSounds.ITEM_COOL.get());
-                        return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                        return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                     }
                 }
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
             else if (tryInsertLog(player, stack, grill, hitResult.getLocation().y - pos.getY() < 0.6))
             {
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
             else
             {
@@ -156,22 +156,18 @@ public class GrillBlock extends FirepitBlock implements IHighlightHandler
                 {
                     serverPlayer.openMenu(grill, pos);
                 }
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override
-    public boolean drawHighlight(Level level, BlockPos pos, Player player, BlockHitResult rayTrace, PoseStack stack, MultiBufferSource buffers, Vec3 rendererPosition)
+    @Nullable
+    public IHighlightHandler.Highlight extractHighlight(Level level, BlockPos pos, Player player, BlockHitResult hit)
     {
-        final int slot = getSlotForSelection(rayTrace);
-        if (slot != -1)
-        {
-            IHighlightHandler.drawBox(stack, SLOT_RENDER_SHAPES.get(slot), buffers, pos, rendererPosition, 1f, 0f, 0f, 1f);
-            return true;
-        }
-        return false;
+        final int slot = getSlotForSelection(hit);
+        return slot != -1 ? new IHighlightHandler.Highlight(SLOT_RENDER_SHAPES.get(slot), 0xFFFF0000) : null;
     }
 
     @Override

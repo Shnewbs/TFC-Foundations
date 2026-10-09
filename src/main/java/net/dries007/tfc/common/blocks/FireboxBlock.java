@@ -17,7 +17,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.ParticleUtils;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -49,7 +49,7 @@ public class FireboxBlock extends DeviceBlock implements IBellowsConsumer
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         if (level.getBlockEntity(pos) instanceof FireboxBlockEntity firebox)
         {
@@ -60,25 +60,25 @@ public class FireboxBlock extends DeviceBlock implements IBellowsConsumer
                 if (!leftover.isEmpty())
                 {
                     ItemHandlerHelper.giveItemToPlayer(player, leftover);
-                    return ItemInteractionResult.FAIL;
+                    return InteractionResult.FAIL;
                 }
                 else
                 {
-                    return ItemInteractionResult.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
             }
             else if (stack.isEmpty() && player.isShiftKeyDown() && !inv.getStackInSlot(0).isEmpty())
             {
                 ItemHandlerHelper.giveItemToPlayer(player, inv.getStackInSlot(0));
-                return ItemInteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
             else if (player instanceof ServerPlayer serverPlayer)
             {
                 serverPlayer.openMenu(firebox, pos);
             }
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override

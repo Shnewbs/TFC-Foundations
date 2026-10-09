@@ -42,7 +42,7 @@ import net.minecraft.server.Bootstrap;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeMap;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -143,7 +143,7 @@ public final class SelfTests
         }
     }
 
-    public static void runDataPackTests(RecipeManager manager)
+    public static void runDataPackTests(RecipeMap manager)
     {
         if (TFCConfig.COMMON.enableDatapackTests.get())
         {
@@ -408,18 +408,18 @@ public final class SelfTests
         return logWarnings("{} fluids were in the tfc:usable_in_jug tag but lack a Drinkable json entry", errors, LOGGER);
     }
 
-    private static boolean validatePotFluidUsability(RecipeManager manager)
+    private static boolean validatePotFluidUsability(RecipeMap manager)
     {
-        final Set<Fluid> errors = manager.getAllRecipesFor(TFCRecipeTypes.POT.get()).stream()
+        final Set<Fluid> errors = manager.byType(TFCRecipeTypes.POT.get()).stream()
             .flatMap(recipe -> RecipeHelpers.stream(recipe.value().getFluidIngredient()))
             .filter(fluid -> !Helpers.isFluid(fluid, TFCTags.Fluids.USABLE_IN_POT))
             .collect(Collectors.toSet());
         return logErrors("{} fluids are listed in pot recipes that are not tagged as tfc:usable_in_pot", errors, LOGGER);
     }
 
-    private static boolean validateBarrelFluidUsability(RecipeManager manager)
+    private static boolean validateBarrelFluidUsability(RecipeMap manager)
     {
-        final Set<Fluid> errors = manager.getRecipes().stream()
+        final Set<Fluid> errors = manager.values().stream()
             .filter(recipe -> recipe.value() instanceof BarrelRecipe)
             .map(recipe -> (BarrelRecipe) recipe.value())
             .flatMap(recipe -> Stream.concat(RecipeHelpers.stream(recipe.getInputFluid()), Stream.of(recipe.getOutputFluid().getFluid())))
@@ -428,9 +428,9 @@ public final class SelfTests
         return logErrors("{} fluids are listed in barrel recipes that are not tagged as tfc:usable_in_barrel", errors, LOGGER);
     }
 
-    private static boolean validateUniqueBloomeryRecipes(RecipeManager manager)
+    private static boolean validateUniqueBloomeryRecipes(RecipeMap manager)
     {
-        final List<Fluid> errors = manager.getAllRecipesFor(TFCRecipeTypes.BLOOMERY.get())
+        final List<Fluid> errors = manager.byType(TFCRecipeTypes.BLOOMERY.get())
             .stream()
             .flatMap(recipe -> RecipeHelpers.stream(recipe.value().getInputFluid()))
             .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
@@ -442,9 +442,9 @@ public final class SelfTests
         return logErrors("{} fluids appeared in multiple bloomery recipes. Currently, every bloomery recipe must have a unique fluid input in order to work", errors, LOGGER);
     }
 
-    private static boolean validateUniqueLoomRecipes(RecipeManager manager)
+    private static boolean validateUniqueLoomRecipes(RecipeMap manager)
     {
-        final List<Item> errors = manager.getAllRecipesFor(TFCRecipeTypes.LOOM.get()).stream()
+        final List<Item> errors = manager.byType(TFCRecipeTypes.LOOM.get()).stream()
             .flatMap(recipe -> Arrays.stream(recipe.value().getItemStackIngredient().ingredient().getItems()))
             .map(ItemStack::getItem)
             .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
@@ -453,9 +453,9 @@ public final class SelfTests
         return logErrors("{} items appeared in multiple loom recipes. Currently, every loom recipe must have a unique item input in order to work", errors, LOGGER);
     }
 
-    private static boolean validateMoldsCanContainCastingIngredients(RecipeManager manager)
+    private static boolean validateMoldsCanContainCastingIngredients(RecipeMap manager)
     {
-        final List<String> errors = manager.getAllRecipesFor(TFCRecipeTypes.CASTING.get())
+        final List<String> errors = manager.byType(TFCRecipeTypes.CASTING.get())
             .stream()
             .map(holder -> {
                 for (ItemStack stack : holder.value().getIngredient().getItems())
@@ -474,9 +474,9 @@ public final class SelfTests
         return logErrors("{} mold recipes were invalid", errors, LOGGER);
     }
 
-    private static boolean validateHeatingRecipeIngredientsAreHeatable(RecipeManager manager)
+    private static boolean validateHeatingRecipeIngredientsAreHeatable(RecipeMap manager)
     {
-        final List<ItemStack> errors = manager.getAllRecipesFor(TFCRecipeTypes.HEATING.get())
+        final List<ItemStack> errors = manager.byType(TFCRecipeTypes.HEATING.get())
             .stream()
             .flatMap(recipe -> Arrays.stream(recipe.value().getIngredient().getItems()))
             .filter(stack -> HeatCapability.getDefinition(stack) == null)

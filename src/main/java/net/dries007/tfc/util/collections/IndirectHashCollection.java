@@ -18,7 +18,7 @@ import com.google.common.collect.HashBiMap;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeMap;
 import net.minecraft.world.item.crafting.RecipeType;
 
 import net.dries007.tfc.common.recipes.RecipeHelpers;
@@ -86,7 +86,7 @@ public class IndirectHashCollection<K, R>
         return cache;
     }
 
-    public static void reloadAllCaches(RecipeManager manager)
+    public static void reloadAllCaches(RecipeMap manager)
     {
         CACHES.forEach(c -> c.reload(manager));
     }
@@ -134,19 +134,19 @@ public class IndirectHashCollection<K, R>
     public interface Cache
     {
         void clear();
-        void reload(RecipeManager manager);
+        void reload(RecipeMap manager);
     }
 
     record DirectCache<K, R>(IndirectHashCollection<K, R> cache, Supplier<Collection<R>> values) implements Cache
     {
         @Override public void clear() { cache.clear(); }
-        @Override public void reload(RecipeManager manager) { cache.reload(values.get()); }
+        @Override public void reload(RecipeMap manager) { cache.reload(values.get()); }
     }
 
     record RecipeCache<K, R extends Recipe<?>>(IndirectHashCollection<K, R> cache, Supplier<RecipeType<R>> recipeType) implements Cache
     {
         @Override public void clear() { cache.clear(); }
-        @Override public void reload(RecipeManager manager) { cache.reload(RecipeHelpers.getRecipes(manager, recipeType).stream().map(RecipeHolder::value).toList()); }
+        @Override public void reload(RecipeMap manager) { cache.reload(RecipeHelpers.getRecipes(manager, recipeType).stream().map(RecipeHolder::value).toList()); }
     }
 
     record RecipeIdCache<R extends Recipe<?>>(BiMap<Identifier, R> cache, Supplier<RecipeType<R>> recipeType) implements Cache
@@ -158,10 +158,10 @@ public class IndirectHashCollection<K, R>
         }
 
         @Override
-        public void reload(RecipeManager manager)
+        public void reload(RecipeMap manager)
         {
             cache.clear();
-            RecipeHelpers.getRecipes(manager, recipeType).forEach(holder -> cache.put(holder.id(), holder.value()));
+            RecipeHelpers.getRecipes(manager, recipeType).forEach(holder -> cache.put(holder.id().identifier(), holder.value()));
         }
     }
 }

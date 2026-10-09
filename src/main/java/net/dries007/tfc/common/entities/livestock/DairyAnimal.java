@@ -63,7 +63,7 @@ public abstract class DairyAnimal extends ProducingMammal
                     {
                         setProductsCooldown();
                         addUses(event.getUses());
-                        return InteractionResult.sidedSuccess(level().isClientSide);
+                        return (level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                     }
                     return InteractionResult.PASS;
                 }
