@@ -10,12 +10,12 @@ Continue public development in Shnewbs/TFC-Foundations, preserving upstream hist
 
 | Track | Pinned target | Latest source/validation checkpoint |
 | --- | --- | --- |
-| Priority playable track, `26.1.2` | Minecraft 26.1.2; NeoForge 26.1.2.114; JEI 29.43.0.107; Patchouli 26.1-94 | `cc04e4f1f37fa62f59f30ca5f8d23d301dbc56d9`: 14 loot source files migrated; isolated checks pass; full compilation fails. |
+| Priority playable track, `26.1.2` | Minecraft 26.1.2; NeoForge 26.1.2.114; JEI 29.43.0.107; Patchouli 26.1-94 | `8d27f34a1d76535f6b359b5151295ff8fc16f0e6`: common API checkpoint and CI probes published; 55 isolated checks pass; full compilation fails with 3,438 reported errors. |
 | Forward-port track, `26.x` | Minecraft 26.3; NeoForge 26.3.0.58-beta; JEI 31.9.0.61 | `6d3180c130b9a907be5f31511fb34e17039d5210`: exact target API and compiler evidence captured; full compilation fails. Required Patchouli target remains unresolved. |
 
 Both use Java 25 and Gradle 9.2.1. Optional EMI/Jade/TOP adapters remain isolated and incomplete. Required dependency and publication gates have not been bypassed.
 
-## Verified in this continuation
+## Earlier loot checkpoint
 
 On 26.1.2, loot registries now hold their direct MapCodec values, custom context parameters use ContextKey, and the loot package uses JSpecify defaults. All 11 registered loot IDs and three custom context IDs are unchanged. Source audits confirm the animal/crop yield calculations are unchanged apart from target API accessor names. Nested min/max providers now receive validation. These source checks do not prove in-game drops.
 
@@ -41,6 +41,19 @@ The next playable milestone remains **a fully compiled 26.1.2 build**, not merel
 NBT list reads retain all-or-nothing element-type validation, including mixed-list rejection. Missing numeric values retain explicit legacy defaults; old strict tag checks do not silently become numeric coercions. Reflective exception helpers no longer rely on the removed transitive noexception library and preserve the original thrown object. These changes do not finish entity/block-entity ValueInput/ValueOutput migration.
 
 The 26.3 source is unchanged by this checkpoint. Remaining major areas include render-state/model and JEI/Patchouli migration, save lifecycle hooks, registration/holder APIs, tool/equipment changes, fluid/inventory capability APIs and world generation. No client/server launch, world creation, save/reload, survival test, performance result, playable JAR or release is claimed.
+
+## Published checkpoint and CI confirmation
+
+Source commit `fd86c879b08723d8253d95b1304a67d266268dde` applied the 345-file reviewed checkpoint with full preimage/postimage checks and removed its temporary transfer files. Follow-up `8d27f34a1d76535f6b359b5151295ff8fc16f0e6` connected the new common API suite to CI after artifact review caught that its invocation was missing from the initial transfer. The combined migration patch changes 346 files. Public history was preserved; no force push was used.
+
+[Validation run 37878610233](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37878610233), testing `8d27f34a`:
+
+- **FAIL:** full Gradle build / compileJava, exit 1; javac reports 3,438 errors. The summary groups these into 3,199 path/line/message entries; neither number is a complete project-work estimate. Downstream compilation and mod runtime tests remain blocked.
+- **PASS:** 51 common utility/API checks and four production loot codec checks, now independently confirmed in GitHub Actions as well as locally. All 113 package-info files compile in the separate probe.
+- **PASS:** main/data/test license checks and the existing resource validation. Resource validation reports zero errors in its checked categories, but does not establish rendering or gameplay correctness.
+- **NOT RUN:** the bootstrap-dependent chunk/component/provider runtime probes, client/server launch, world creation, save/reload, multiplayer, survival progression and performance measurements.
+
+Artifact `11593477212` (`tfc-port-diagnostics-37878610233-1`) retains the logs, reports and exact source snapshot for seven days. Its downloaded SHA-256 was verified and the source snapshot matches the reviewed local files. The portable local main-source runner also completed: 1,631 source files, exit 1, 3,438 diagnostics, no timeout. The normal build remains failed; no playable JAR or release exists.
 
 ## Important 26.3 divergence
 
