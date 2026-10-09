@@ -13,6 +13,7 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.particle.SuspendedTownParticle;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.RandomSource;
 
 public class GlintParticleProvider implements ParticleProvider<SimpleParticleType>
 {
@@ -33,10 +34,9 @@ public class GlintParticleProvider implements ParticleProvider<SimpleParticleTyp
     }
 
     @Override
-    public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
+    public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, RandomSource random)
     {
-        final SuspendedTownParticle particle = new SuspendedTownParticle(level, x, y, z, xSpeed, ySpeed, zSpeed){};
-        particle.pickSprite(sprite);
+        final SuspendedTownParticle particle = new SuspendedTownParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, sprite.get(random));
         particle.setColor(red, green, blue);
         return particle;
     }

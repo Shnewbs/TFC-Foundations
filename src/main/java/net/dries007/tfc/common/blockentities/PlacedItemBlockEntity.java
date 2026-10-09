@@ -8,9 +8,8 @@ package net.dries007.tfc.common.blockentities;
 
 
 import java.util.List;
+
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -20,6 +19,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
@@ -230,25 +231,25 @@ public class PlacedItemBlockEntity extends InventoryBlockEntity<ItemStackHandler
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput nbt)
     {
         isHoldingLargeItem = nbt.getBooleanOr("isHoldingLargeItem", false);
         rotations[0] = nbt.getFloatOr("rotation1", 0f);
         rotations[1] = nbt.getFloatOr("rotation2", 0f);
         rotations[2] = nbt.getFloatOr("rotation3", 0f);
         rotations[3] = nbt.getFloatOr("rotation4", 0f);
-        super.loadAdditional(nbt, provider);
+        super.loadAdditional(nbt);
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput nbt)
     {
         nbt.putBoolean("isHoldingLargeItem", isHoldingLargeItem);
         nbt.putFloat("rotation1", rotations[0]);
         nbt.putFloat("rotation2", rotations[1]);
         nbt.putFloat("rotation3", rotations[2]);
         nbt.putFloat("rotation4", rotations[3]);
-        super.saveAdditional(nbt, provider);
+        super.saveAdditional(nbt);
     }
 
     protected void updateBlock()

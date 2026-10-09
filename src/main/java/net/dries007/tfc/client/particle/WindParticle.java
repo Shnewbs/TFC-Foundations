@@ -9,22 +9,23 @@ package net.dries007.tfc.client.particle;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec2;
 
 import net.dries007.tfc.client.ClimateRenderCache;
 
-public class WindParticle extends TextureSheetParticle
+public class WindParticle extends SingleQuadParticle
 {
     private final float xBias, zBias, amplitude;
 
-    public WindParticle(ClientLevel level, double x, double y, double z)
+    public WindParticle(ClientLevel level, double x, double y, double z, TextureAtlasSprite sprite)
     {
-        super(level, x, y, z);
+        super(level, x, y, z, sprite);
         final Vec2 wind = ClimateRenderCache.INSTANCE.getWind();
         lifetime = 100;
         age = random.nextInt(20);
@@ -52,18 +53,17 @@ public class WindParticle extends TextureSheetParticle
     }
 
     @Override
-    public ParticleRenderType getRenderType()
+    protected Layer getLayer()
     {
-        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+        return Layer.OPAQUE;
     }
 
     public record Provider(SpriteSet sprite) implements ParticleProvider<SimpleParticleType>
     {
         @Override
-        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, RandomSource random)
         {
-            WindParticle particle = new WindParticle(level, x, y, z);
-            particle.pickSprite(sprite);
+            WindParticle particle = new WindParticle(level, x, y, z, sprite.get(random));
             return particle;
         }
     }

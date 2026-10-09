@@ -6,24 +6,22 @@
 
 package net.dries007.tfc.common.blockentities;
 
-import net.dries007.tfc.util.NbtHelpers;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.util.MetalItem;
+import net.dries007.tfc.util.ValueIoHelpers;
 
 
 // TODO: Log and ingot piles should share a unified "pile" block entity, since at this point the only differences are the model, and the stacking behavior
@@ -98,27 +96,25 @@ public class IngotPileBlockEntity extends TFCBlockEntity
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    protected void saveAdditional(ValueOutput tag)
     {
-        final ListTag stacks = new ListTag();
+        final ValueOutput.TypedOutputList<ItemStack> stacks = tag.list("stacks", ItemStack.OPTIONAL_CODEC);
         for (final Entry entry : entries)
         {
-            stacks.add(entry.stack.save(provider));
+            stacks.add(entry.stack);
         }
-        tag.put("stacks", stacks);
-        super.saveAdditional(tag, provider);
+        super.saveAdditional(tag);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    protected void loadAdditional(ValueInput tag)
     {
         entries.clear();
-        final ListTag list = NbtHelpers.getHomogeneousListOrEmpty(tag, "stacks", Tag.TAG_COMPOUND);
-        for (int i = 0; i < list.size(); i++)
+        for (ItemStack stack : ValueIoHelpers.readItemStacks(tag, "stacks"))
         {
-            entries.add(new Entry(ItemStack.parseOptional(provider, list.getCompoundOrEmpty(i))));
+            entries.add(new Entry(stack));
         }
-        super.loadAdditional(tag, provider);
+        super.loadAdditional(tag);
     }
 
     public void fillTooltip(Consumer<Component> tooltip)

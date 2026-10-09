@@ -7,12 +7,11 @@
 package net.dries007.tfc.common.blockentities;
 
 import java.util.List;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Vec3i;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.ContainerHelper;
@@ -22,6 +21,8 @@ import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
@@ -145,24 +146,24 @@ public class PitKilnBlockEntity extends PlacedItemBlockEntity
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput nbt)
     {
         isLit = nbt.getBooleanOr("isLit", false);
         litTick = nbt.getLongOr("litTick", 0L);
-        ContainerHelper.loadAllItems(nbt.getCompoundOrEmpty("strawItems"), strawItems, provider);
-        ContainerHelper.loadAllItems(nbt.getCompoundOrEmpty("logItems"), logItems, provider);
+        ContainerHelper.loadAllItems(nbt.childOrEmpty("strawItems"), strawItems);
+        ContainerHelper.loadAllItems(nbt.childOrEmpty("logItems"), logItems);
         updateCache();
-        super.loadAdditional(nbt, provider);
+        super.loadAdditional(nbt);
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput nbt)
     {
         nbt.putBoolean("isLit", isLit);
         nbt.putLong("litTick", litTick);
-        nbt.put("strawItems", ContainerHelper.saveAllItems(new CompoundTag(), strawItems, provider));
-        nbt.put("logItems", ContainerHelper.saveAllItems(new CompoundTag(), logItems, provider));
-        super.saveAdditional(nbt, provider);
+        ContainerHelper.saveAllItems(nbt.child("strawItems"), strawItems);
+        ContainerHelper.saveAllItems(nbt.child("logItems"), logItems);
+        super.saveAdditional(nbt);
     }
 
     @Override

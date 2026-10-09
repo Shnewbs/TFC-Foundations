@@ -9,24 +9,25 @@ package net.dries007.tfc.client.particle;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.material.FluidState;
 
 import net.dries007.tfc.common.blocks.RiverWaterBlock;
 import net.dries007.tfc.world.river.Flow;
 
-public class WaterFlowParticle extends TextureSheetParticle
+public class WaterFlowParticle extends SingleQuadParticle
 {
     private final float particleRandom;
 
-    public WaterFlowParticle(ClientLevel level, double x, double y, double z)
+    public WaterFlowParticle(ClientLevel level, double x, double y, double z, TextureAtlasSprite sprite)
     {
-        super(level, x, y, z);
+        super(level, x, y, z, sprite);
         this.setSize(0.02F, 0.02F);
         this.quadSize *= random.nextFloat() * 0.6F + 0.2F;
         final BlockPos pos = BlockPos.containing(x, y, z);
@@ -80,18 +81,17 @@ public class WaterFlowParticle extends TextureSheetParticle
     }
 
     @Override
-    public ParticleRenderType getRenderType()
+    protected Layer getLayer()
     {
-        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+        return Layer.OPAQUE;
     }
 
     public record Provider(SpriteSet sprite) implements ParticleProvider<SimpleParticleType>
     {
         @Override
-        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, RandomSource random)
         {
-            var particle = new WaterFlowParticle(level, x, y, z);
-            particle.pickSprite(sprite);
+            var particle = new WaterFlowParticle(level, x, y, z, sprite.get(random));
             return particle;
         }
     }

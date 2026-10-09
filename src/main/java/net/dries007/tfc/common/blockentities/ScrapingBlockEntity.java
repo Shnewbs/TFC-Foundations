@@ -6,22 +6,21 @@
 
 package net.dries007.tfc.common.blockentities;
 
-import net.dries007.tfc.util.NbtHelpers;
-
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.common.recipes.ScrapingRecipe;
 import net.dries007.tfc.util.Helpers;
+import net.dries007.tfc.util.NbtHelpers;
 
 import static net.dries007.tfc.TerraFirmaCraft.*;
 
@@ -110,10 +109,10 @@ public class ScrapingBlockEntity extends InventoryBlockEntity<ItemStackHandler>
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput nbt)
     {
-        super.loadAdditional(nbt, provider);
-        positions = nbt.getShortOr("positions", (short) 0);
+        super.loadAdditional(nbt);
+        positions = (short) nbt.getShortOr("positions", (short) 0);
         inputTexture = NbtHelpers.hasTag(nbt, "inputTexture", Tag.TAG_STRING) ? Helpers.resourceLocation(nbt.getStringOr("inputTexture", "")) : null;
         outputTexture = NbtHelpers.hasTag(nbt, "outputTexture", Tag.TAG_STRING) ? Helpers.resourceLocation(nbt.getStringOr("outputTexture", "")) : null;
         color1 = NbtHelpers.hasTag(nbt, "color1", Tag.TAG_INT) ? DyeColor.byId(nbt.getIntOr("color1", 0)) : null;
@@ -121,14 +120,14 @@ public class ScrapingBlockEntity extends InventoryBlockEntity<ItemStackHandler>
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput nbt)
     {
         nbt.putShort("positions", positions);
         if (inputTexture != null) nbt.putString("inputTexture", inputTexture.toString());
         if (outputTexture != null) nbt.putString("outputTexture", outputTexture.toString());
         if (color1 != null) nbt.putInt("color1", color1.getId());
         if (color2 != null) nbt.putInt("color2", color2.getId());
-        super.saveAdditional(nbt, provider);
+        super.saveAdditional(nbt);
     }
 
     @Nullable

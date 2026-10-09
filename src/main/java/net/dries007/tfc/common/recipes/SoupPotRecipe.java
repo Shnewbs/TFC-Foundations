@@ -9,15 +9,15 @@ package net.dries007.tfc.common.recipes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+
 import com.mojang.serialization.MapCodec;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,8 +42,8 @@ public class SoupPotRecipe extends PotRecipe
     public static final MapCodec<SoupPotRecipe> CODEC = PotRecipe.CODEC.xmap(SoupPotRecipe::new, Function.identity());
     public static final StreamCodec<RegistryFriendlyByteBuf, SoupPotRecipe> STREAM_CODEC = PotRecipe.STREAM_CODEC.map(SoupPotRecipe::new, Function.identity());
 
-    public static final PotOutput.OutputType OUTPUT_TYPE = (provider, nbt) -> {
-        ItemStack stack = ItemStack.parseOptional(provider, nbt.getCompoundOrEmpty("item"));
+    public static final PotOutput.OutputType OUTPUT_TYPE = nbt -> {
+        ItemStack stack = nbt.read("item", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
         return new SoupOutput(stack);
     };
 
@@ -156,9 +156,9 @@ public class SoupPotRecipe extends PotRecipe
         }
 
         @Override
-        public void write(HolderLookup.Provider provider, CompoundTag nbt)
+        public void write(ValueOutput nbt)
         {
-            nbt.put("item", stack.save(provider));
+            nbt.store("item", ItemStack.OPTIONAL_CODEC, stack);
         }
 
         @Override

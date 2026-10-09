@@ -7,7 +7,6 @@
 package net.dries007.tfc.common.blockentities;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -15,6 +14,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 import net.dries007.tfc.util.Helpers;
@@ -51,18 +52,18 @@ public class ThatchBedBlockEntity extends InventoryBlockEntity<ItemStackHandler>
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput tag)
     {
-        tag.put("HeadBlockState", NbtUtils.writeBlockState(headState));
-        tag.put("FootBlockState", NbtUtils.writeBlockState(footState));
-        super.saveAdditional(tag, provider);
+        tag.store("HeadBlockState", CompoundTag.CODEC, NbtUtils.writeBlockState(headState));
+        tag.store("FootBlockState", CompoundTag.CODEC, NbtUtils.writeBlockState(footState));
+        super.saveAdditional(tag);
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput tag)
     {
-        headState = NbtUtils.readBlockState(provider.lookupOrThrow(Registries.BLOCK), tag.getCompoundOrEmpty("HeadBlockState"));
-        footState = NbtUtils.readBlockState(provider.lookupOrThrow(Registries.BLOCK), tag.getCompoundOrEmpty("FootBlockState"));
-        super.loadAdditional(tag, provider);
+        headState = NbtUtils.readBlockState(tag.lookup().lookupOrThrow(Registries.BLOCK), tag.read("HeadBlockState", CompoundTag.CODEC).orElseGet(CompoundTag::new));
+        footState = NbtUtils.readBlockState(tag.lookup().lookupOrThrow(Registries.BLOCK), tag.read("FootBlockState", CompoundTag.CODEC).orElseGet(CompoundTag::new));
+        super.loadAdditional(tag);
     }
 }

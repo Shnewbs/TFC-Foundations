@@ -10,14 +10,15 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 
-public class AnimatedParticle extends TextureSheetParticle
+public class AnimatedParticle extends SingleQuadParticle
 {
     private final SpriteSet sprites;
 
     public AnimatedParticle(ClientLevel level, double x, double y, double z, SpriteSet sprites)
     {
-        super(level, x, y, z);
+        super(level, x, y, z, sprites.first());
         this.xd = Mth.nextFloat(random, -0.1f, 0.1f);
         this.yd = Mth.nextFloat(random, -0.05f, 0.1f);
         this.zd = Mth.nextFloat(random, -0.1f, 0.1f);
@@ -39,15 +40,15 @@ public class AnimatedParticle extends TextureSheetParticle
     }
 
     @Override
-    public ParticleRenderType getRenderType()
+    protected Layer getLayer()
     {
-        return ParticleRenderType.PARTICLE_SHEET_LIT;
+        return Layer.OPAQUE;
     }
 
     public record Provider(SpriteSet sprites) implements ParticleProvider<SimpleParticleType>
     {
         @Override
-        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, RandomSource random)
         {
             return new AnimatedParticle(level, x, y, z, sprites);
         }

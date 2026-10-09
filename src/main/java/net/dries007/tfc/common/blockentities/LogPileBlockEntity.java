@@ -7,11 +7,11 @@
 package net.dries007.tfc.common.blockentities;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 import net.dries007.tfc.common.TFCTags;
@@ -172,19 +172,19 @@ public class LogPileBlockEntity extends InventoryBlockEntity<ItemStackHandler>
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput tag)
     {
         tag.putBoolean("placement", isLastClickPlacement);
         tag.putLong("tick", lastClickTick);
-        super.saveAdditional(tag, provider);
+        super.saveAdditional(tag);
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput tag)
     {
         isLastClickPlacement = tag.getBooleanOr("placement", false);
         lastClickTick = tag.getLongOr("tick", 0L);
-        super.loadAdditional(tag, provider);
+        super.loadAdditional(tag);
     }
 
     @Override

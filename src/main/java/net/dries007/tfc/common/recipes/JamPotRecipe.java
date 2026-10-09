@@ -9,7 +9,6 @@ package net.dries007.tfc.common.recipes;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
@@ -18,6 +17,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import net.dries007.tfc.common.TFCTags;
@@ -25,9 +25,9 @@ import net.dries007.tfc.common.blockentities.IPotInventory;
 import net.dries007.tfc.common.component.food.FoodCapability;
 import net.dries007.tfc.common.items.TFCItems;
 import net.dries007.tfc.common.recipes.outputs.PotOutput;
+import net.dries007.tfc.util.Helpers;
 import net.dries007.tfc.util.tooltip.BlockEntityTooltip;
 import net.dries007.tfc.util.tooltip.BlockEntityTooltips;
-import net.dries007.tfc.util.Helpers;
 
 public class JamPotRecipe extends PotRecipe
 {
@@ -46,9 +46,9 @@ public class JamPotRecipe extends PotRecipe
         JamPotRecipe::new
     );
 
-    public static final PotOutput.OutputType OUTPUT_TYPE = (provider, nbt) -> {
-        ItemStack stack = ItemStack.parseOptional(provider, nbt.getCompoundOrEmpty("unsealed_result"));
-        ItemStack stack2 = ItemStack.parseOptional(provider, nbt.getCompoundOrEmpty("sealed_result"));
+    public static final PotOutput.OutputType OUTPUT_TYPE = nbt -> {
+        ItemStack stack = nbt.read("unsealed_result", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
+        ItemStack stack2 = nbt.read("sealed_result", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
         Identifier texture = Helpers.resourceLocation(nbt.getStringOr("texture", ""));
         return new JamPotRecipe.JamOutput(stack, stack2, texture);
     };
@@ -132,10 +132,10 @@ public class JamPotRecipe extends PotRecipe
         }
 
         @Override
-        public void write(HolderLookup.Provider provider, CompoundTag nbt)
+        public void write(ValueOutput nbt)
         {
-            nbt.put("unsealed_result", unsealedStack.save(provider));
-            nbt.put("sealed_result", sealedStack.save(provider));
+            nbt.store("unsealed_result", ItemStack.OPTIONAL_CODEC, unsealedStack);
+            nbt.store("sealed_result", ItemStack.OPTIONAL_CODEC, sealedStack);
             nbt.putString("texture", texture.toString());
         }
 

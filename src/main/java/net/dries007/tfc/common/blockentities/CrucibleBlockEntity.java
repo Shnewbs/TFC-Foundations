@@ -9,9 +9,8 @@ package net.dries007.tfc.common.blockentities;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -20,8 +19,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
@@ -287,7 +288,7 @@ public class CrucibleBlockEntity extends TickableInventoryBlockEntity<CrucibleBl
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput components)
+    protected void applyImplicitComponents(DataComponentGetter components)
     {
         final CrucibleComponent crucible = components.getOrDefault(TFCComponents.CRUCIBLE, CrucibleComponent.EMPTY);
         final HeatComponent heat = components.getOrDefault(TFCComponents.HEAT, HeatComponent.EMPTY);
@@ -314,24 +315,24 @@ public class CrucibleBlockEntity extends TickableInventoryBlockEntity<CrucibleBl
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput nbt)
     {
         temperature = nbt.getFloatOr("temperature", 0f);
         targetTemperature = nbt.getFloatOr("targetTemperature", 0f);
         targetTemperatureStabilityTicks = nbt.getIntOr("targetTemperatureStabilityTicks", 0);
         lastUpdateTick = nbt.getLongOr("lastUpdateTick", 0L);
         needsRecipeUpdate = true;
-        super.loadAdditional(nbt, provider);
+        super.loadAdditional(nbt);
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput nbt)
     {
         nbt.putFloat("temperature", temperature);
         nbt.putFloat("targetTemperature", targetTemperature);
         nbt.putInt("targetTemperatureStabilityTicks", targetTemperatureStabilityTicks);
         nbt.putLong("lastUpdateTick", lastUpdateTick);
-        super.saveAdditional(nbt, provider);
+        super.saveAdditional(nbt);
     }
 
     @Override
@@ -358,7 +359,7 @@ public class CrucibleBlockEntity extends TickableInventoryBlockEntity<CrucibleBl
         }
     }
 
-    public static class CrucibleInventory implements DelegateItemHandler, FluidContainer, IHeatConsumer, INBTSerializable<CompoundTag>
+    public static class CrucibleInventory implements DelegateItemHandler, FluidContainer, IHeatConsumer, ValueIOSerializable
     {
         private static final FluidContainerInfo INFO = new FluidContainerInfo() {
             @Override
@@ -405,19 +406,17 @@ public class CrucibleBlockEntity extends TickableInventoryBlockEntity<CrucibleBl
         }
 
         @Override
-        public CompoundTag serializeNBT(HolderLookup.Provider provider)
+        public void serialize(ValueOutput nbt)
         {
-            final CompoundTag nbt = new CompoundTag();
-            nbt.put("inventory", inventory.serializeNBT(provider));
-            nbt.put("alloy", alloy.serializeNBT());
-            return nbt;
+            inventory.serialize(nbt.child("inventory"));
+            nbt.store("alloy", FluidAlloy.CODEC, alloy);
         }
 
         @Override
-        public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt)
+        public void deserialize(ValueInput nbt)
         {
-            inventory.deserializeNBT(provider, nbt.getCompoundOrEmpty("inventory"));
-            alloy.deserializeNBT(nbt.getCompoundOrEmpty("alloy"));
+            inventory.deserialize(nbt.childOrEmpty("inventory"));
+            alloy.copyFrom(nbt.read("alloy", FluidAlloy.CODEC).orElseGet(FluidAlloy::empty));
         }
 
         @Override

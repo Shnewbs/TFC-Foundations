@@ -8,12 +8,12 @@ package net.dries007.tfc.common.blockentities;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import net.dries007.tfc.common.blocks.BloomBlock;
 import net.dries007.tfc.common.blocks.TFCBlocks;
@@ -35,22 +35,22 @@ public class BloomBlockEntity extends TFCBlockEntity
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    protected void saveAdditional(ValueOutput tag)
     {
-        super.saveAdditional(tag, provider);
+        super.saveAdditional(tag);
         if (!item.isEmpty())
         {
-            tag.put("item", item.save(provider));
+            tag.store("item", ItemStack.OPTIONAL_CODEC, item);
         }
         tag.putInt("count", count);
         tag.putInt("maxCount", maxCount);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    protected void loadAdditional(ValueInput tag)
     {
-        super.loadAdditional(tag, provider);
-        item = ItemStack.parseOptional(provider, tag.getCompoundOrEmpty("item"));
+        super.loadAdditional(tag);
+        item = tag.read("item", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
         count = tag.getIntOr("count", 0);
         maxCount = tag.getIntOr("maxCount", 0);
     }

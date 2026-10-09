@@ -7,10 +7,9 @@
 package net.dries007.tfc.common.blockentities;
 
 import java.util.List;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
@@ -20,6 +19,8 @@ import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -137,17 +138,17 @@ public class SluiceBlockEntity extends TickableInventoryBlockEntity<ItemStackHan
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput nbt)
     {
         ticksRemaining = nbt.getIntOr("ticksRemaining", 0);
-        super.loadAdditional(nbt, provider);
+        super.loadAdditional(nbt);
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput nbt)
     {
         nbt.putInt("ticksRemaining", ticksRemaining);
-        super.saveAdditional(nbt, provider);
+        super.saveAdditional(nbt);
     }
 
     @Override

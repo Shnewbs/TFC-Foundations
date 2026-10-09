@@ -6,24 +6,26 @@
 
 package net.dries007.tfc.client.particle;
 
-import net.minecraft.client.particle.*;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.*;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 
 /**
  * Implementation for Bubble Column Down particles, overriding default ones so they can work in any liquid not just water
  */
-public class BubbleColumnDownParticle extends TextureSheetParticle
+public class BubbleColumnDownParticle extends SingleQuadParticle
 {
     private float angle;
 
 
-    public BubbleColumnDownParticle(ClientLevel worldIn, double x, double y, double z)
+    public BubbleColumnDownParticle(ClientLevel worldIn, double x, double y, double z, TextureAtlasSprite sprite)
     {
         // Sets Bubble column particle paramters
-        super(worldIn, x, y, z);
+        super(worldIn, x, y, z, sprite);
         this.setSize(0.02F, 0.02F);
         this.quadSize *= random.nextFloat() * 0.6F + 0.2F;
         this.lifetime = (int)(Math.random() * 60.0) + 30;
@@ -53,18 +55,17 @@ public class BubbleColumnDownParticle extends TextureSheetParticle
     }
 
     @Override
-    public ParticleRenderType getRenderType()
+    protected Layer getLayer()
     {
-        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+        return Layer.OPAQUE;
     }
 
     public record Provider(SpriteSet sprite) implements ParticleProvider<SimpleParticleType>
     {
         @Override
-        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, RandomSource random)
         {
-            BubbleColumnDownParticle particle = new BubbleColumnDownParticle(level, x, y, z);
-            particle.pickSprite(sprite);
+            BubbleColumnDownParticle particle = new BubbleColumnDownParticle(level, x, y, z, sprite.get(random));
             return particle;
         }
     }

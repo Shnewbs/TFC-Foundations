@@ -7,10 +7,9 @@
 package net.dries007.tfc.common.blockentities;
 
 import java.util.List;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -23,8 +22,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 import net.dries007.tfc.client.particle.TFCParticles;
@@ -39,7 +40,7 @@ import net.dries007.tfc.util.calendar.Calendars;
 import net.dries007.tfc.util.calendar.ICalendarTickable;
 import net.dries007.tfc.util.data.Fuel;
 
-public abstract class AbstractFirepitBlockEntity<C extends IItemHandlerModifiable & INBTSerializable<CompoundTag>> extends TickableInventoryBlockEntity<C> implements ICalendarTickable, MenuProvider, IHeatable
+public abstract class AbstractFirepitBlockEntity<C extends IItemHandlerModifiable & ValueIOSerializable> extends TickableInventoryBlockEntity<C> implements ICalendarTickable, MenuProvider, IHeatable
 {
     public static final int SLOT_FUEL_CONSUME = 0; // where fuel is taken by the firepit
     public static final int SLOT_FUEL_2 = 1;
@@ -175,7 +176,7 @@ public abstract class AbstractFirepitBlockEntity<C extends IItemHandlerModifiabl
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput nbt)
     {
         temperature = nbt.getFloatOr("temperature", 0f);
         burnTicks = nbt.getIntOr("burnTicks", 0);
@@ -188,11 +189,11 @@ public abstract class AbstractFirepitBlockEntity<C extends IItemHandlerModifiabl
 
         needsRecipeUpdate = true;
 
-        super.loadAdditional(nbt, provider);
+        super.loadAdditional(nbt);
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput nbt)
     {
         nbt.putFloat("temperature", temperature);
         nbt.putInt("burnTicks", burnTicks);
@@ -202,7 +203,7 @@ public abstract class AbstractFirepitBlockEntity<C extends IItemHandlerModifiabl
         nbt.putFloat("dirtiness", dirtiness);
         nbt.putInt("lastMaxBurnTicks", lastMaxBurnTicks);
         nbt.putInt("ash", ash);
-        super.saveAdditional(nbt, provider);
+        super.saveAdditional(nbt);
     }
 
     @Override

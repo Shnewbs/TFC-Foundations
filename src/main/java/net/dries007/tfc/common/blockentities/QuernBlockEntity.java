@@ -8,10 +8,8 @@ package net.dries007.tfc.common.blockentities;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -21,8 +19,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.ItemStackHandler;
-
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.client.TFCSounds;
@@ -185,18 +184,18 @@ public class QuernBlockEntity extends TickableInventoryBlockEntity<ItemStackHand
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput nbt)
     {
         recipeTimer = nbt.getFloatOr("recipeTimer", 0f);
-        super.loadAdditional(nbt, provider);
+        super.loadAdditional(nbt);
         needsStateUpdate = true;
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput nbt)
     {
         nbt.putFloat("recipeTimer", recipeTimer);
-        super.saveAdditional(nbt, provider);
+        super.saveAdditional(nbt);
     }
 
     @Override

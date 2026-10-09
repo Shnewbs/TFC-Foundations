@@ -9,20 +9,21 @@ package net.dries007.tfc.client.particle;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec2;
 
 import net.dries007.tfc.client.ClimateRenderCache;
 import net.dries007.tfc.util.Helpers;
 
-public class VariableHeightSmokeParticle extends TextureSheetParticle
+public class VariableHeightSmokeParticle extends SingleQuadParticle
 {
-    public VariableHeightSmokeParticle(ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, int lifeTime)
+    public VariableHeightSmokeParticle(ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, int lifeTime, TextureAtlasSprite sprite)
     {
-        super(level, x, y, z);
+        super(level, x, y, z, sprite);
         scale(3.0F);
         setSize(0.25F, 0.25F);
         lifetime = random.nextInt(50) + lifeTime;
@@ -60,18 +61,17 @@ public class VariableHeightSmokeParticle extends TextureSheetParticle
     }
 
     @Override
-    public ParticleRenderType getRenderType()
+    protected Layer getLayer()
     {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+        return Layer.TRANSLUCENT;
     }
 
     public record Provider(SpriteSet sprites, int lifetime) implements ParticleProvider<SimpleParticleType>
     {
         @Override
-        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, RandomSource random)
         {
-            final VariableHeightSmokeParticle particle = new VariableHeightSmokeParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, lifetime);
-            particle.pickSprite(sprites);
+            final VariableHeightSmokeParticle particle = new VariableHeightSmokeParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, lifetime, sprites.get(random));
             particle.setAlpha(0.92f);
             return particle;
         }

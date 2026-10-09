@@ -7,8 +7,9 @@
 package net.dries007.tfc.util.rotation;
 
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.util.calendar.Calendars;
@@ -196,12 +197,12 @@ public interface Rotation
             set(0, 0);
         }
 
-        default void loadFromTag(CompoundTag tag)
+        default void loadFromTag(ValueInput tag)
         {
             set(tag.getFloatOr("rtAngle", 0f), tag.getFloatOr("rtSpeed", 0f));
         }
 
-        default void saveToTag(CompoundTag tag)
+        default void saveToTag(ValueOutput tag)
         {
             tag.putFloat("rtAngle", angle());
             tag.putFloat("rtSpeed", speed());

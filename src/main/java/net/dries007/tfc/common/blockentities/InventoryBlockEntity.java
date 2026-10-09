@@ -7,14 +7,15 @@
 package net.dries007.tfc.common.blockentities;
 
 import java.util.Objects;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.world.Clearable;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -24,8 +25,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemStackHandler;
@@ -37,12 +40,13 @@ import net.dries007.tfc.common.capabilities.InventoryItemHandler;
 import net.dries007.tfc.common.capabilities.SidedHandler;
 import net.dries007.tfc.common.container.ISlotCallback;
 import net.dries007.tfc.util.Helpers;
+import net.dries007.tfc.util.ValueIoHelpers;
 
 /**
  * An abstraction for a tile entity containing at least, an inventory (item handler) capability
  * However, the inventory itself is generic.
  */
-public abstract class InventoryBlockEntity<C extends IItemHandlerModifiable & INBTSerializable<CompoundTag>> extends TFCBlockEntity implements ISlotCallback, MenuProvider, Clearable
+public abstract class InventoryBlockEntity<C extends IItemHandlerModifiable & ValueIOSerializable> extends TFCBlockEntity implements ISlotCallback, MenuProvider, Clearable
 {
     public static InventoryFactory<ItemStackHandler> defaultInventory(int slots)
     {
@@ -111,7 +115,7 @@ public abstract class InventoryBlockEntity<C extends IItemHandlerModifiable & IN
      * @param components The components, containing both original, and new components.
      */
     @Override
-    protected void applyImplicitComponents(DataComponentInput components)
+    protected void applyImplicitComponents(DataComponentGetter components)
     {
         customName = components.get(DataComponents.CUSTOM_NAME);
     }
@@ -137,25 +141,22 @@ public abstract class InventoryBlockEntity<C extends IItemHandlerModifiable & IN
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput nbt)
     {
-        if (nbt.contains("CustomName"))
-        {
-            customName = parseCustomNameSafe(nbt.getStringOr("CustomName", ""), provider);
-        }
-        inventory.deserializeNBT(provider, nbt.getCompoundOrEmpty("inventory"));
-        super.loadAdditional(nbt, provider);
+        customName = ValueIoHelpers.readCustomName(nbt, "CustomName");
+        inventory.deserialize(nbt.childOrEmpty("inventory"));
+        super.loadAdditional(nbt);
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput nbt)
     {
         if (customName != null)
         {
-            nbt.putString("CustomName", Component.Serializer.toJson(customName, provider));
+            nbt.store("CustomName", ComponentSerialization.CODEC, customName);
         }
-        nbt.put("inventory", inventory.serializeNBT(provider));
-        super.saveAdditional(nbt, provider);
+        inventory.serialize(nbt.child("inventory"));
+        super.saveAdditional(nbt);
     }
 
     @Override
@@ -202,7 +203,7 @@ public abstract class InventoryBlockEntity<C extends IItemHandlerModifiable & IN
      * A factory interface for the inventory field, allows self references in the constructor
      */
     @FunctionalInterface
-    public interface InventoryFactory<C extends IItemHandlerModifiable & INBTSerializable<CompoundTag>>
+    public interface InventoryFactory<C extends IItemHandlerModifiable & ValueIOSerializable>
     {
         C create(InventoryBlockEntity<C> entity);
     }

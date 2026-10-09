@@ -7,17 +7,16 @@
 package net.dries007.tfc.common.blockentities;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 
 /**
  * An extension of {@link InventoryBlockEntity} for block entities that are ticking. This batches sync updates so that they
  * only occur at most once per tick.
  */
-public abstract class TickableInventoryBlockEntity<C extends IItemHandlerModifiable & INBTSerializable<CompoundTag>> extends InventoryBlockEntity<C>
+public abstract class TickableInventoryBlockEntity<C extends IItemHandlerModifiable & ValueIOSerializable> extends InventoryBlockEntity<C>
 {
     private boolean needsClientUpdate;
 

@@ -7,11 +7,11 @@
 package net.dries007.tfc.common.blockentities;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import net.dries007.tfc.common.blocks.crop.DoubleCropBlock;
 import net.dries007.tfc.common.blocks.crop.ICropBlock;
@@ -165,7 +165,7 @@ public class CropBlockEntity extends TFCBlockEntity implements ICalendarTickable
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput nbt)
     {
         growth = nbt.getFloatOr("growth", 0f);
         yield = nbt.getFloatOr("yield", 0f);
@@ -175,11 +175,11 @@ public class CropBlockEntity extends TFCBlockEntity implements ICalendarTickable
         kAbsorbed = nbt.getFloatOr("k", 0f);
         lastUpdateTick = nbt.getLongOr("tick", 0L);
         lastGrowthTick = nbt.getLongOr("lastGrowthTick", 0L);
-        super.loadAdditional(nbt, provider);
+        super.loadAdditional(nbt);
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput nbt)
     {
         nbt.putFloat("growth", growth);
         nbt.putFloat("yield", yield);
@@ -189,6 +189,6 @@ public class CropBlockEntity extends TFCBlockEntity implements ICalendarTickable
         nbt.putFloat("k", kAbsorbed);
         nbt.putLong("tick", lastUpdateTick);
         nbt.putLong("lastGrowthTick", lastGrowthTick);
-        super.saveAdditional(nbt, provider);
+        super.saveAdditional(nbt);
     }
 }

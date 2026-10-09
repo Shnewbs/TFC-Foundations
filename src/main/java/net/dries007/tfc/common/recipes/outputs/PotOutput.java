@@ -7,14 +7,14 @@
 package net.dries007.tfc.common.recipes.outputs;
 
 import net.minecraft.core.DefaultedRegistry;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegistryBuilder;
@@ -26,8 +26,8 @@ import net.dries007.tfc.common.blockentities.PotBlockEntity;
 import net.dries007.tfc.common.recipes.JamPotRecipe;
 import net.dries007.tfc.common.recipes.PotRecipe;
 import net.dries007.tfc.common.recipes.SoupPotRecipe;
-import net.dries007.tfc.util.tooltip.BlockEntityTooltip;
 import net.dries007.tfc.util.Helpers;
+import net.dries007.tfc.util.tooltip.BlockEntityTooltip;
 
 /**
  * The output of a pot recipe. This output can be fairly complex, but follows a specific contract:
@@ -50,7 +50,7 @@ public interface PotOutput
 
     PotOutput EMPTY_INSTANCE = new PotOutput() {};
 
-    DeferredHolder<OutputType, OutputType> EMPTY = register("empty", (provider, nbt) -> EMPTY_INSTANCE);
+    DeferredHolder<OutputType, OutputType> EMPTY = register("empty", nbt -> EMPTY_INSTANCE);
     DeferredHolder<OutputType, OutputType> SOUP = register("soup", SoupPotRecipe.OUTPUT_TYPE);
     DeferredHolder<OutputType, OutputType> JAM = register("jam", JamPotRecipe.OUTPUT_TYPE);
 
@@ -62,20 +62,18 @@ public interface PotOutput
     /**
      * Read an output from an NBT tag.
      */
-    static PotOutput read(HolderLookup.Provider provider, CompoundTag nbt)
+    static PotOutput read(ValueInput nbt)
     {
-        return REGISTRY.get(Helpers.resourceLocation(nbt.getStringOr("type", ""))).read(provider, nbt);
+        return REGISTRY.getValue(Helpers.resourceLocation(nbt.getStringOr("type", ""))).read(nbt);
     }
 
     /**
      * Write an output to a NBT tag.
      */
-    static CompoundTag write(HolderLookup.Provider provider, PotOutput output)
+    static void write(ValueOutput nbt, PotOutput output)
     {
-        final CompoundTag nbt = new CompoundTag();
         nbt.putString("type", REGISTRY.getKey(output.getType()).toString());
-        output.write(provider, nbt);
-        return nbt;
+        output.write(nbt);
     }
 
     /**
@@ -142,7 +140,7 @@ public interface PotOutput
     /**
      * Writes implementation specific output data to disk.
      */
-    default void write(HolderLookup.Provider provider, CompoundTag nbt) {}
+    default void write(ValueOutput nbt) {}
 
     @Nullable
     default BlockEntityTooltip getTooltip()
@@ -156,6 +154,6 @@ public interface PotOutput
         /**
          * Read the output from the given tag. The tag should contain the key "type", which will equal the registered ID of this output type.
          */
-        PotOutput read(HolderLookup.Provider provider, CompoundTag nbt);
+        PotOutput read(ValueInput nbt);
     }
 }

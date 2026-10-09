@@ -6,17 +6,20 @@
 
 package net.dries007.tfc.client.particle;
 
-import net.dries007.tfc.client.ClimateRenderCache;
-import net.minecraft.client.particle.*;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.*;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec2;
 
-public class SteamParticle extends TextureSheetParticle
+import net.dries007.tfc.client.ClimateRenderCache;
+
+public class SteamParticle extends SingleQuadParticle
 {
-    private SteamParticle(ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
+    private SteamParticle(ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, TextureAtlasSprite sprite)
     {
-        super(level, x, y, z);
+        super(level, x, y, z, sprite);
         setAlpha(0.2F);
         setLifetime((int) (12.0F / (random.nextFloat() * 0.9F + 0.1F)));
 
@@ -28,18 +31,17 @@ public class SteamParticle extends TextureSheetParticle
     }
 
     @Override
-    public ParticleRenderType getRenderType()
+    protected Layer getLayer()
     {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+        return Layer.TRANSLUCENT;
     }
 
     public record Provider(SpriteSet sprite) implements ParticleProvider<SimpleParticleType>
     {
         @Override
-        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, RandomSource random)
         {
-            SteamParticle particle = new SteamParticle(level, x, y, z, xSpeed, ySpeed, zSpeed);
-            particle.pickSprite(sprite);
+            SteamParticle particle = new SteamParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, sprite.get(random));
             return particle;
         }
     }

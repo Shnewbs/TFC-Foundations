@@ -8,10 +8,10 @@ package net.dries007.tfc.common.blockentities;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
@@ -22,6 +22,7 @@ import net.dries007.tfc.common.capabilities.FluidTankCallback;
 import net.dries007.tfc.common.capabilities.InventoryFluidTank;
 import net.dries007.tfc.common.capabilities.SidedHandler;
 import net.dries007.tfc.config.TFCConfig;
+import net.dries007.tfc.util.ValueIoHelpers;
 import net.dries007.tfc.util.data.LampFuel;
 
 public class LampBlockEntity extends TickCounterBlockEntity implements FluidTankCallback
@@ -109,18 +110,18 @@ public class LampBlockEntity extends TickCounterBlockEntity implements FluidTank
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput tag)
     {
-        tank.readFromNBT(provider, tag.getCompoundOrEmpty("tank"));
+        ValueIoHelpers.readFluidTank(tag, "tank", tank);
         cachedFuel = getFuel();
-        super.loadAdditional(tag, provider);
+        super.loadAdditional(tag);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput tag)
     {
-        tag.put("tank", tank.writeToNBT(provider, new CompoundTag()));
-        super.saveAdditional(tag, provider);
+        ValueIoHelpers.writeFluidTank(tag, "tank", tank);
+        super.saveAdditional(tag);
     }
 
     @Nullable

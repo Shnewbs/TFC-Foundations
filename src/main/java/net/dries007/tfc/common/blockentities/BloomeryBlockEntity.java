@@ -6,17 +6,12 @@
 
 package net.dries007.tfc.common.blockentities;
 
-import net.dries007.tfc.util.NbtHelpers;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -24,6 +19,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
@@ -39,6 +36,7 @@ import net.dries007.tfc.common.recipes.RecipeHelpers;
 import net.dries007.tfc.common.recipes.TFCRecipeTypes;
 import net.dries007.tfc.config.TFCConfig;
 import net.dries007.tfc.util.Helpers;
+import net.dries007.tfc.util.ValueIoHelpers;
 import net.dries007.tfc.util.calendar.CalendarTransaction;
 import net.dries007.tfc.util.calendar.Calendars;
 import net.dries007.tfc.util.calendar.ICalendarTickable;
@@ -113,21 +111,21 @@ public class BloomeryBlockEntity extends TickableBlockEntity implements ICalenda
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput nbt)
     {
-        Helpers.readItemStacksFromNbt(provider, inputStacks, NbtHelpers.getHomogeneousListOrEmpty(nbt, "inputStacks", Tag.TAG_COMPOUND));
+        ValueIoHelpers.readItemStacks(nbt, "inputStacks", inputStacks);
         litTick = nbt.getLongOr("litTick", 0L);
         lastPlayerTick = nbt.getLongOr("lastTick", 0L);
-        super.loadAdditional(nbt, provider);
+        super.loadAdditional(nbt);
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput nbt)
     {
-        nbt.put("inputStacks", Helpers.writeItemStacksToNbt(provider, inputStacks));
+        ValueIoHelpers.writeItemStacks(nbt, "inputStacks", inputStacks);
         nbt.putLong("litTick", litTick);
         nbt.putLong("lastTick", lastPlayerTick);
-        super.saveAdditional(nbt, provider);
+        super.saveAdditional(nbt);
     }
 
     public long getRemainingTicks()

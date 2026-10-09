@@ -7,11 +7,10 @@
 package net.dries007.tfc.common.blockentities;
 
 import java.util.List;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
@@ -21,6 +20,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -112,17 +113,17 @@ public class BellowsBlockEntity extends TFCBlockEntity
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    protected void saveAdditional(ValueOutput tag)
     {
-        super.saveAdditional(tag, provider);
+        super.saveAdditional(tag);
         tag.putLong("pushed", lastPushed);
         tag.putBoolean("justPushed", justPushed);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    protected void loadAdditional(ValueInput tag)
     {
-        super.loadAdditional(tag, provider);
+        super.loadAdditional(tag);
         lastPushed = tag.getLongOr("pushed", 0L);
         justPushed = tag.getBooleanOr("justPushed", false);
     }

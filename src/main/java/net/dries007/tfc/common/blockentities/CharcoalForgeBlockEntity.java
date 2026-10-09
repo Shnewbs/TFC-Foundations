@@ -7,10 +7,9 @@
 package net.dries007.tfc.common.blockentities;
 
 import java.util.Arrays;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -20,6 +19,8 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -266,25 +267,25 @@ public class CharcoalForgeBlockEntity extends TickableInventoryBlockEntity<ItemS
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput nbt)
     {
         temperature = nbt.getFloatOr("temperature", 0f);
         burnTicks = nbt.getIntOr("burnTicks", 0);
         airTicks = nbt.getIntOr("airTicks", 0);
         burnTemperature = nbt.getFloatOr("burnTemperature", 0f);
         lastPlayerTick = nbt.getLongOr("lastPlayerTick", 0L);
-        super.loadAdditional(nbt, provider);
+        super.loadAdditional(nbt);
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput nbt)
     {
         nbt.putFloat("temperature", temperature);
         nbt.putInt("burnTicks", burnTicks);
         nbt.putInt("airTicks", airTicks);
         nbt.putFloat("burnTemperature", burnTemperature);
         nbt.putLong("lastPlayerTick", lastPlayerTick);
-        super.saveAdditional(nbt, provider);
+        super.saveAdditional(nbt);
     }
 
     @Override

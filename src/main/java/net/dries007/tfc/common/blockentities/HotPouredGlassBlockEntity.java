@@ -6,17 +6,15 @@
 
 package net.dries007.tfc.common.blockentities;
 
-import net.dries007.tfc.util.NbtHelpers;
-
 import java.util.ArrayDeque;
 import java.util.Comparator;
 import java.util.Queue;
 import java.util.function.Supplier;
+
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -31,11 +29,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.HotPouredGlassBlock;
 import net.dries007.tfc.util.Helpers;
+import net.dries007.tfc.util.NbtHelpers;
 import net.dries007.tfc.util.calendar.Calendars;
 import net.dries007.tfc.util.calendar.ICalendar;
 
@@ -183,26 +184,26 @@ public class HotPouredGlassBlockEntity extends TickableBlockEntity
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput nbt)
     {
-        super.loadAdditional(nbt, provider);
+        super.loadAdditional(nbt);
         capacity = nbt.getIntOr("capacity", 0);
         isInitialTransition = nbt.getBooleanOr("isInitialTransition", false);
         animationTicks = nbt.getIntOr("animationTicks", 0);
         initialized = nbt.getBooleanOr("initialized", false);
         created = NbtHelpers.hasTag(nbt, "created", CompoundTag.TAG_LONG) ? nbt.getLongOr("created", 0L) : -1L;
-        internalState = NbtUtils.readBlockState(provider.lookupOrThrow(Registries.BLOCK), nbt.getCompoundOrEmpty("internalState"));
+        internalState = NbtUtils.readBlockState(nbt.lookup().lookupOrThrow(Registries.BLOCK), nbt.read("internalState", CompoundTag.CODEC).orElseGet(CompoundTag::new));
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput nbt)
     {
-        super.saveAdditional(nbt, provider);
+        super.saveAdditional(nbt);
         nbt.putInt("capacity", capacity);
         nbt.putBoolean("isInitialTransition", isInitialTransition);
         nbt.putInt("animationTicks", animationTicks);
         nbt.putBoolean("initialized", initialized);
-        nbt.put("internalState", NbtUtils.writeBlockState(internalState));
+        nbt.store("internalState", CompoundTag.CODEC, NbtUtils.writeBlockState(internalState));
         nbt.putLong("created", created);
     }
 

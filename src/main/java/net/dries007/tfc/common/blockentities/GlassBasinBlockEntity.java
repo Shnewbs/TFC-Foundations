@@ -7,9 +7,9 @@
 package net.dries007.tfc.common.blockentities;
 
 import java.util.function.Supplier;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -24,6 +24,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 
 import net.dries007.tfc.util.Helpers;
@@ -76,16 +78,16 @@ public class GlassBasinBlockEntity extends TFCBlockEntity
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    protected void loadAdditional(ValueInput tag)
     {
-        super.loadAdditional(tag, provider);
-        this.state = NbtUtils.readBlockState(provider.lookupOrThrow(Registries.BLOCK), tag.getCompoundOrEmpty("glassState"));
+        super.loadAdditional(tag);
+        this.state = NbtUtils.readBlockState(tag.lookup().lookupOrThrow(Registries.BLOCK), tag.read("glassState", CompoundTag.CODEC).orElseGet(CompoundTag::new));
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    protected void saveAdditional(ValueOutput tag)
     {
-        super.saveAdditional(tag, provider);
-        tag.put("glassState", NbtUtils.writeBlockState(state));
+        super.saveAdditional(tag);
+        tag.store("glassState", CompoundTag.CODEC, NbtUtils.writeBlockState(state));
     }
 }

@@ -6,17 +6,13 @@
 
 package net.dries007.tfc.common.blockentities;
 
-import net.dries007.tfc.util.NbtHelpers;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.IntStream;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -27,6 +23,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -52,6 +50,7 @@ import net.dries007.tfc.common.recipes.HeatingRecipe;
 import net.dries007.tfc.config.TFCConfig;
 import net.dries007.tfc.util.Helpers;
 import net.dries007.tfc.util.SyncableContainerData;
+import net.dries007.tfc.util.ValueIoHelpers;
 import net.dries007.tfc.util.calendar.Calendars;
 import net.dries007.tfc.util.calendar.ICalendarTickable;
 import net.dries007.tfc.util.data.Fuel;
@@ -328,14 +327,14 @@ public class BlastFurnaceBlockEntity extends TickableInventoryBlockEntity<BlastF
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput nbt)
     {
-        Helpers.readItemStacksFromNbt(provider, inputStacks, NbtHelpers.getHomogeneousListOrEmpty(nbt, "inputStacks", Tag.TAG_COMPOUND));
-        Helpers.readItemStacksFromNbt(provider, catalystStacks, NbtHelpers.getHomogeneousListOrEmpty(nbt, "catalystStacks", Tag.TAG_COMPOUND));
-        Helpers.readItemStacksFromNbt(provider, fuelStacks, NbtHelpers.getHomogeneousListOrEmpty(nbt, "fuelStacks", Tag.TAG_COMPOUND));
+        ValueIoHelpers.readItemStacks(nbt, "inputStacks", inputStacks);
+        ValueIoHelpers.readItemStacks(nbt, "catalystStacks", catalystStacks);
+        ValueIoHelpers.readItemStacks(nbt, "fuelStacks", fuelStacks);
 
-        inputFluid = FluidStack.parseOptional(provider, nbt.getCompoundOrEmpty("inputFluid"));
-        outputFluidTank.readFromNBT(provider, nbt.getCompoundOrEmpty("outputFluidTank"));
+        inputFluid = nbt.read("inputFluid", FluidStack.OPTIONAL_CODEC).orElse(FluidStack.EMPTY);
+        ValueIoHelpers.readFluidTank(nbt, "outputFluidTank", outputFluidTank);
 
         temperature = nbt.getFloatOr("temperature", 0f);
         burnTicks = nbt.getIntOr("burnTicks", 0);
@@ -343,18 +342,18 @@ public class BlastFurnaceBlockEntity extends TickableInventoryBlockEntity<BlastF
         burnTemperature = nbt.getFloatOr("burnTemperature", 0f);
         lastPlayerTick = nbt.getLongOr("lastPlayerTick", 0L);
 
-        super.loadAdditional(nbt, provider);
+        super.loadAdditional(nbt);
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput nbt)
     {
-        nbt.put("inputStacks", Helpers.writeItemStacksToNbt(provider, inputStacks));
-        nbt.put("catalystStacks", Helpers.writeItemStacksToNbt(provider, catalystStacks));
-        nbt.put("fuelStacks", Helpers.writeItemStacksToNbt(provider, fuelStacks));
+        ValueIoHelpers.writeItemStacks(nbt, "inputStacks", inputStacks);
+        ValueIoHelpers.writeItemStacks(nbt, "catalystStacks", catalystStacks);
+        ValueIoHelpers.writeItemStacks(nbt, "fuelStacks", fuelStacks);
 
-        nbt.put("inputFluid", inputFluid.saveOptional(provider));
-        nbt.put("outputFluidTank", outputFluidTank.writeToNBT(provider, new CompoundTag()));
+        nbt.store("inputFluid", FluidStack.OPTIONAL_CODEC, inputFluid);
+        ValueIoHelpers.writeFluidTank(nbt, "outputFluidTank", outputFluidTank);
 
         nbt.putFloat("temperature", temperature);
         nbt.putInt("burnTicks", burnTicks);
@@ -362,7 +361,7 @@ public class BlastFurnaceBlockEntity extends TickableInventoryBlockEntity<BlastF
         nbt.putFloat("burnTemperature", burnTemperature);
         nbt.putLong("lastPlayerTick", lastPlayerTick);
 
-        super.saveAdditional(nbt, provider);
+        super.saveAdditional(nbt);
     }
 
     @Override

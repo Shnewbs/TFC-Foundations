@@ -7,12 +7,11 @@
 package net.dries007.tfc.common.blockentities;
 
 import java.util.Optional;
+
 import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -22,14 +21,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.neoforge.model.data.ModelData;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.model.data.ModelData;
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.dries007.tfc.client.model.MoldTableBlockModel;
@@ -374,16 +375,16 @@ public class MoldTableBlockEntity extends TickableInventoryBlockEntity<MoldTable
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput nbt)
     {
-        if (nbt.contains("sourcePosition"))
+        if (nbt.keySet().contains("sourcePosition"))
         {
             sourcePosition = Optional.of(BlockPos.of(nbt.getLongOr("sourcePosition", 0L)));
             flowSource = Optional.of(
                 Pair.of(
                     Helpers.DIRECTIONS[nbt.getByteOr("flowSource", (byte) 0)],
-                    nbt.contains("flowSourceDistance") ? nbt.getByteOr("flowSourceDistance", (byte) 0) : 1));
-            fluid = Optional.of(BuiltInRegistries.FLUID.get(Identifier.parse(nbt.getStringOr("fluid", ""))));
+                    nbt.keySet().contains("flowSourceDistance") ? nbt.getByteOr("flowSourceDistance", (byte) 0) : 1));
+            fluid = Optional.of(BuiltInRegistries.FLUID.getValue(Identifier.parse(nbt.getStringOr("fluid", ""))));
         }
         else
         {
@@ -391,11 +392,11 @@ public class MoldTableBlockEntity extends TickableInventoryBlockEntity<MoldTable
             flowSource = Optional.empty();
             fluid = Optional.empty();
         }
-        super.loadAdditional(nbt, provider);
+        super.loadAdditional(nbt);
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput nbt)
     {
         if (hasSource())
         {
@@ -404,7 +405,7 @@ public class MoldTableBlockEntity extends TickableInventoryBlockEntity<MoldTable
             nbt.putByte("flowSourceDistance", flowSource.get().getRight());
             nbt.putString("fluid", BuiltInRegistries.FLUID.getKey(fluid.orElseThrow()).toString());
         }
-        super.saveAdditional(nbt, provider);
+        super.saveAdditional(nbt);
     }
 
     public void intakeAir(int amount)
@@ -435,7 +436,7 @@ public class MoldTableBlockEntity extends TickableInventoryBlockEntity<MoldTable
      * If it does not have them, it implements some default behaviour for every method.
      * Moreover, it adds some custom behaviour for fill
      */
-    public static class MoldBlockInventory implements IFluidHandler, IHeatConsumer, DelegateItemHandler, INBTSerializable<CompoundTag>
+    public static class MoldBlockInventory implements IFluidHandler, IHeatConsumer, DelegateItemHandler, ValueIOSerializable
     {
         private final MoldTableBlockEntity moldTable;
         private final InventoryItemHandler inventory;
@@ -453,17 +454,15 @@ public class MoldTableBlockEntity extends TickableInventoryBlockEntity<MoldTable
         }
 
         @Override
-        public CompoundTag serializeNBT(HolderLookup.Provider provider)
+        public void serialize(ValueOutput nbt)
         {
-            final CompoundTag nbt = new CompoundTag();
-            nbt.put("inventory", inventory.serializeNBT(provider));
-            return nbt;
+            inventory.serialize(nbt.child("inventory"));
         }
 
         @Override
-        public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt)
+        public void deserialize(ValueInput nbt)
         {
-            inventory.deserializeNBT(provider, nbt.getCompoundOrEmpty("inventory"));
+            inventory.deserialize(nbt.childOrEmpty("inventory"));
         }
 
         private Optional<IFluidHandler> getMoldFluidHandler()

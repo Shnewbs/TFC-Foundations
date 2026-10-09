@@ -7,13 +7,15 @@
 package net.dries007.tfc.client.particle;
 
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.CherryParticle;
+import net.minecraft.client.particle.FallingLeavesParticle;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec2;
@@ -26,14 +28,15 @@ import net.dries007.tfc.common.blocks.plant.fruit.FruitTreeLeavesBlock;
 import net.dries007.tfc.common.blocks.wood.TFCLeavesBlock;
 import net.dries007.tfc.util.Helpers;
 
-public class FallingLeafParticle extends CherryParticle
+public class FallingLeafParticle extends FallingLeavesParticle
 {
     private final float windMoveX;
     private final float windMoveZ;
 
-    public FallingLeafParticle(ClientLevel level, double x, double y, double z, SpriteSet set, boolean tinted, @Nullable BlockState state)
+    public FallingLeafParticle(ClientLevel level, double x, double y, double z, TextureAtlasSprite sprite, boolean tinted, @Nullable BlockState state)
     {
-        super(level, x, y, z, set);
+        // Match the target vanilla cherry provider, then apply TFC tint and wind.
+        super(level, x, y, z, sprite, 0.25F, 2.0F, false, true, 1.0F, 0.0F);
 
         final BlockPos pos = BlockPos.containing(x, y, z);
 
@@ -75,18 +78,18 @@ public class FallingLeafParticle extends CherryParticle
     public record Provider(SpriteSet set, boolean tinted) implements ParticleProvider<BlockParticleOption>
     {
         @Override
-        public Particle createParticle(BlockParticleOption type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
+        public Particle createParticle(BlockParticleOption type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, RandomSource random)
         {
-            return new FallingLeafParticle(level, x, y, z, set, tinted, type.getState());
+            return new FallingLeafParticle(level, x, y, z, set.get(random), tinted, type.getState());
         }
     }
 
     public record SimpleProvider(SpriteSet set) implements ParticleProvider<SimpleParticleType>
     {
         @Override
-        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, RandomSource random)
         {
-            return new FallingLeafParticle(level, x, y, z, set, false, null);
+            return new FallingLeafParticle(level, x, y, z, set.get(random), false, null);
         }
     }
 }

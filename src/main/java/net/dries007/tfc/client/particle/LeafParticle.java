@@ -8,11 +8,13 @@ package net.dries007.tfc.client.particle;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec2;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec2;
 
 import net.dries007.tfc.client.ClimateRenderCache;
 import net.dries007.tfc.client.TFCColors;
@@ -20,7 +22,7 @@ import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.wood.TFCLeavesBlock;
 import net.dries007.tfc.util.Helpers;
 
-public class LeafParticle extends TextureSheetParticle
+public class LeafParticle extends SingleQuadParticle
 {
     private final float windMoveX, windMoveZ;
     private final int xSignModifier = random.nextBoolean() ? 1 : -1;
@@ -28,9 +30,9 @@ public class LeafParticle extends TextureSheetParticle
     private final double xMod = (random.nextFloat() - 0.5f) / 7;
     private final double zMod = (random.nextFloat() - 0.5f) / 7;
 
-    public LeafParticle(ClientLevel level, double x, double y, double z, double motionX, double motionY, double motionZ, boolean tinted)
+    public LeafParticle(ClientLevel level, double x, double y, double z, double motionX, double motionY, double motionZ, boolean tinted, TextureAtlasSprite sprite)
     {
-        super(level, x, y, z);
+        super(level, x, y, z, sprite);
         lifetime = 60 + random.nextInt(20);
         xd = motionX;
         yd = motionY;
@@ -82,18 +84,17 @@ public class LeafParticle extends TextureSheetParticle
     }
 
     @Override
-    public ParticleRenderType getRenderType()
+    protected Layer getLayer()
     {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+        return Layer.TRANSLUCENT;
     }
 
     public record Provider(SpriteSet set, boolean tinted) implements ParticleProvider<SimpleParticleType>
     {
         @Override
-        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, RandomSource random)
         {
-            LeafParticle particle = new LeafParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, tinted);
-            particle.pickSprite(set);
+            LeafParticle particle = new LeafParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, tinted, set.get(random));
             return particle;
         }
     }

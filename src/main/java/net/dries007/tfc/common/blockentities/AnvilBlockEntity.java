@@ -6,11 +6,9 @@
 
 package net.dries007.tfc.common.blockentities;
 
-import net.dries007.tfc.util.NbtHelpers;
-
 import java.util.Collection;
+
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -30,6 +28,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,6 +55,7 @@ import net.dries007.tfc.common.recipes.TFCRecipeTypes;
 import net.dries007.tfc.common.recipes.WeldingRecipe;
 import net.dries007.tfc.common.recipes.input.NonEmptyInput;
 import net.dries007.tfc.util.Helpers;
+import net.dries007.tfc.util.NbtHelpers;
 import net.dries007.tfc.util.SelfTests;
 import net.dries007.tfc.util.advancements.TFCAdvancements;
 
@@ -169,9 +170,9 @@ public class AnvilBlockEntity extends InventoryBlockEntity<AnvilBlockEntity.Anvi
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput nbt)
     {
-        super.loadAdditional(nbt, provider);
+        super.loadAdditional(nbt);
         if (NbtHelpers.hasTag(nbt, "lastRecipe", CompoundTag.TAG_STRING))
         {
             lastRecipe = Identifier.tryParse(nbt.getStringOr("lastRecipe", ""));
@@ -179,9 +180,9 @@ public class AnvilBlockEntity extends InventoryBlockEntity<AnvilBlockEntity.Anvi
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput nbt)
     {
-        super.saveAdditional(nbt, provider);
+        super.saveAdditional(nbt);
         if (lastRecipe != null)
         {
             nbt.putString("lastRecipe", lastRecipe.toString());

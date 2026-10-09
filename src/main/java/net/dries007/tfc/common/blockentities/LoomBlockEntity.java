@@ -6,12 +6,8 @@
 
 package net.dries007.tfc.common.blockentities;
 
-import net.dries007.tfc.util.NbtHelpers;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundSource;
@@ -21,6 +17,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
@@ -30,6 +28,7 @@ import net.dries007.tfc.common.capabilities.PartialItemHandler;
 import net.dries007.tfc.common.recipes.LoomRecipe;
 import net.dries007.tfc.config.TFCConfig;
 import net.dries007.tfc.util.Helpers;
+import net.dries007.tfc.util.NbtHelpers;
 
 public class LoomBlockEntity extends TickableInventoryBlockEntity<ItemStackHandler>
 {
@@ -243,7 +242,7 @@ public class LoomBlockEntity extends TickableInventoryBlockEntity<ItemStackHandl
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput tag)
     {
         tag.putInt("progress", progress);
         if (lastTexture != null)
@@ -251,17 +250,17 @@ public class LoomBlockEntity extends TickableInventoryBlockEntity<ItemStackHandl
             tag.putString("lastTexture", lastTexture.toString());
         }
         tag.putLong("lastPushed", lastPushed);
-        super.saveAdditional(tag, provider);
+        super.saveAdditional(tag);
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput tag)
     {
         progress = tag.getIntOr("progress", 0);
         lastTexture = NbtHelpers.hasTag(tag, "lastTexture", Tag.TAG_STRING) ? Helpers.resourceLocation(tag.getStringOr("lastTexture", "")) : null;
         needsRecipeUpdate = true;
         lastPushed = tag.getLongOr("lastPushed", 0L);
-        super.loadAdditional(tag, provider);
+        super.loadAdditional(tag);
     }
 
     @Override

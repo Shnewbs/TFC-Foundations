@@ -7,11 +7,11 @@
 package net.dries007.tfc.common.blockentities;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public class BerryBushBlockEntity extends TickingPlantBlockEntity
 {
@@ -39,17 +39,17 @@ public class BerryBushBlockEntity extends TickingPlantBlockEntity
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput nbt)
     {
         growthsRemaining = nbt.getIntOr("growthsRemaining", 0);
-        super.loadAdditional(nbt, provider);
+        super.loadAdditional(nbt);
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput nbt)
     {
         nbt.putInt("growthsRemaining", growthsRemaining);
-        super.saveAdditional(nbt, provider);
+        super.saveAdditional(nbt);
     }
 
     /**

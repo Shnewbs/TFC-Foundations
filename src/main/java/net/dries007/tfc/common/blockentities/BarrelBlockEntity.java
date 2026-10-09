@@ -6,18 +6,15 @@
 
 package net.dries007.tfc.common.blockentities;
 
-import net.dries007.tfc.util.NbtHelpers;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import com.google.common.collect.ImmutableList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -31,10 +28,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
@@ -71,6 +70,7 @@ import net.dries007.tfc.common.recipes.TFCRecipeTypes;
 import net.dries007.tfc.common.recipes.input.NonEmptyInput;
 import net.dries007.tfc.config.TFCConfig;
 import net.dries007.tfc.util.Helpers;
+import net.dries007.tfc.util.ValueIoHelpers;
 import net.dries007.tfc.util.calendar.CalendarTransaction;
 import net.dries007.tfc.util.calendar.Calendars;
 import net.dries007.tfc.util.calendar.ICalendarTickable;
@@ -318,26 +318,26 @@ public class BarrelBlockEntity extends TickableInventoryBlockEntity<BarrelBlockE
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput nbt)
     {
         nbt.putLong("lastUpdateTick", lastUpdateTick);
         nbt.putLong("sealedTick", sealedTick);
         nbt.putLong("recipeTick", recipeTick);
-        super.saveAdditional(nbt, provider);
+        super.saveAdditional(nbt);
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput nbt)
     {
         lastUpdateTick = nbt.getLongOr("lastUpdateTick", 0L);
         sealedTick = nbt.getLongOr("sealedTick", 0L);
         recipeTick = nbt.getLongOr("recipeTick", 0L);
         recipe.unload();
-        super.loadAdditional(nbt, provider);
+        super.loadAdditional(nbt);
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput components)
+    protected void applyImplicitComponents(DataComponentGetter components)
     {
         final BarrelComponent barrel = components.getOrDefault(TFCComponents.BARREL, BarrelComponent.EMPTY);
         if (!barrel.isEmpty())
@@ -599,7 +599,7 @@ public class BarrelBlockEntity extends TickableInventoryBlockEntity<BarrelBlockE
             : 0;
     }
 
-    public static class BarrelInventory implements DelegateItemHandler, DelegateFluidHandler, NonEmptyInput, FluidTankCallback, net.dries007.tfc.common.recipes.input.BarrelInventory, INBTSerializable<CompoundTag>
+    public static class BarrelInventory implements DelegateItemHandler, DelegateFluidHandler, NonEmptyInput, FluidTankCallback, net.dries007.tfc.common.recipes.input.BarrelInventory, ValueIOSerializable
     {
         public static final FluidContainerInfo INFO = new FluidContainerInfo()
         {
@@ -712,21 +712,19 @@ public class BarrelBlockEntity extends TickableInventoryBlockEntity<BarrelBlockE
         }
 
         @Override
-        public CompoundTag serializeNBT(HolderLookup.Provider provider)
+        public void serialize(ValueOutput nbt)
         {
-            final CompoundTag nbt = new CompoundTag();
-            nbt.put("inventory", inventory.serializeNBT(provider));
-            nbt.put("tank", tank.writeToNBT(provider, new CompoundTag()));
-            nbt.put("excess", Helpers.writeItemStacksToNbt(provider, excess));
-            return nbt;
+            inventory.serialize(nbt.child("inventory"));
+            ValueIoHelpers.writeFluidTank(nbt, "tank", tank);
+            ValueIoHelpers.writeItemStacks(nbt, "excess", excess);
         }
 
         @Override
-        public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt)
+        public void deserialize(ValueInput nbt)
         {
-            inventory.deserializeNBT(provider, nbt.getCompoundOrEmpty("inventory"));
-            tank.readFromNBT(provider, nbt.getCompoundOrEmpty("tank"));
-            Helpers.readItemStacksFromNbt(provider, excess, NbtHelpers.getHomogeneousListOrEmpty(nbt, "excess", Tag.TAG_COMPOUND));
+            inventory.deserialize(nbt.childOrEmpty("inventory"));
+            ValueIoHelpers.readFluidTank(nbt, "tank", tank);
+            ValueIoHelpers.readItemStacks(nbt, "excess", excess);
         }
 
         @Override

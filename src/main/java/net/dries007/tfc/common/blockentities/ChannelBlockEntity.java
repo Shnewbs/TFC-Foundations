@@ -7,12 +7,13 @@
 package net.dries007.tfc.common.blockentities;
 
 import java.util.Optional;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.dries007.tfc.common.blocks.devices.ChannelBlock;
@@ -204,29 +205,29 @@ public class ChannelBlockEntity extends TFCBlockEntity
     private static final byte NO_FLOW_BYTE = 99;
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput nbt)
     {
         numFlows = nbt.getByteOr("numFlowsOut", (byte) 0);
         isConnectedToAnotherChannel = nbt.getBooleanOr("useLongRenderBox", false);
         byte flowSourceByte = nbt.getByteOr("flowSource", (byte) 0);
-        byte flowSourceDistance = nbt.contains("flowSourceDistance") ? nbt.getByteOr("flowSourceDistance", (byte) 0) : 1;
+        byte flowSourceDistance = nbt.keySet().contains("flowSourceDistance") ? nbt.getByteOr("flowSourceDistance", (byte) 0) : 1;
 
         flowSource = flowSourceByte != NO_FLOW_BYTE
             ? Optional.of(Pair.of(Helpers.DIRECTIONS[flowSourceByte], flowSourceDistance))
             : Optional.empty();
 
         fluid = Identifier.parse(nbt.getStringOr("texture", ""));
-        super.loadAdditional(nbt, provider);
+        super.loadAdditional(nbt);
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput nbt)
     {
         nbt.putByte("numFlowsOut", (byte) numFlows);
         nbt.putBoolean("useLongRenderBox", isConnectedToAnotherChannel);
         nbt.putByte("flowSource", flowSource.map(directionBytePair -> (byte) directionBytePair.getLeft().ordinal()).orElse(NO_FLOW_BYTE));
         nbt.putByte("flowSourceDistance", flowSource.isPresent() ? flowSource.get().getRight() : 1);
         nbt.putString("texture", fluid.toString());
-        super.saveAdditional(nbt, provider);
+        super.saveAdditional(nbt);
     }
 }

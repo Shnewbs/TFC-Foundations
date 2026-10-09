@@ -8,14 +8,16 @@ package net.dries007.tfc.client.particle;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 
-public class SparkParticle extends TextureSheetParticle
+public class SparkParticle extends SingleQuadParticle
 {
-    public SparkParticle(ClientLevel level, double x, double y, double z)
+    public SparkParticle(ClientLevel level, double x, double y, double z, TextureAtlasSprite sprite)
     {
-        super(level, x, y, z);
+        super(level, x, y, z, sprite);
         this.rCol = level.getRandom().nextFloat() * 0.3f + 0.6f;
         this.gCol = this.rCol - (level.getRandom().nextFloat() / 5f);
         this.bCol = 0;
@@ -58,21 +60,20 @@ public class SparkParticle extends TextureSheetParticle
     }
 
     @Override
-    public ParticleRenderType getRenderType()
+    protected Layer getLayer()
     {
-        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+        return Layer.OPAQUE;
     }
 
     public record Provider(SpriteSet sprite) implements ParticleProvider<SimpleParticleType>
     {
         @Override
-        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, RandomSource random)
         {
-            SparkParticle particle = new SparkParticle(level, x, y, z);
+            SparkParticle particle = new SparkParticle(level, x, y, z, sprite.get(random));
             particle.xd = xSpeed;
             particle.yd = ySpeed;
             particle.zd = zSpeed;
-            particle.pickSprite(sprite);
             return particle;
         }
     }

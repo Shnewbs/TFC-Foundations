@@ -6,21 +6,23 @@
 
 package net.dries007.tfc.client.particle;
 
-import net.minecraft.client.particle.*;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.*;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.RandomSource;
 
 /**
  * Implementation for Bubble Column Up particles, overriding default ones so they can work in any liquid not just water
  */
-public class BubbleColumnUpParticle extends TextureSheetParticle
+public class BubbleColumnUpParticle extends SingleQuadParticle
 {
 
-    public BubbleColumnUpParticle(ClientLevel worldIn, double x, double y, double z, double motionX, double motionY, double motionZ)
+    public BubbleColumnUpParticle(ClientLevel worldIn, double x, double y, double z, double motionX, double motionY, double motionZ, TextureAtlasSprite sprite)
     {
         // Sets Bubble column particle paramters
-        super(worldIn, x, y, z);
+        super(worldIn, x, y, z, sprite);
         this.setSize(0.02F, 0.02F);
         this.quadSize *= random.nextFloat() * 0.6F + 0.2F;
         this.gravity = -0.125F;
@@ -49,18 +51,17 @@ public class BubbleColumnUpParticle extends TextureSheetParticle
     }
 
     @Override
-    public ParticleRenderType getRenderType()
+    protected Layer getLayer()
     {
-        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+        return Layer.OPAQUE;
     }
 
     public record Provider(SpriteSet sprite) implements ParticleProvider<SimpleParticleType>
     {
         @Override
-        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, RandomSource random)
         {
-            BubbleColumnUpParticle particle = new BubbleColumnUpParticle(level, x, y, z, xSpeed, ySpeed, zSpeed);
-            particle.pickSprite(sprite);
+            BubbleColumnUpParticle particle = new BubbleColumnUpParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, sprite.get(random));
             return particle;
         }
     }

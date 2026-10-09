@@ -7,8 +7,10 @@
 package net.dries007.tfc.common.blockentities;
 
 import java.util.List;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -117,7 +119,7 @@ public class PowderkegBlockEntity extends TickableInventoryBlockEntity<Powderkeg
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput components)
+    protected void applyImplicitComponents(DataComponentGetter components)
     {
         final List<ItemStack> content = components.getOrDefault(TFCComponents.CONTENTS, ItemListComponent.EMPTY).contents();
         Helpers.copyFrom(content, inventory);

@@ -7,12 +7,13 @@
 package net.dries007.tfc.common.blockentities.rotation;
 
 import java.util.EnumSet;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
 import net.dries007.tfc.common.blockentities.TFCBlockEntity;
@@ -94,16 +95,16 @@ public class GearBoxBlockEntity extends TFCBlockEntity implements RotatingBlockE
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    protected void saveAdditional(ValueOutput tag)
     {
-        super.saveAdditional(tag, provider);
+        super.saveAdditional(tag);
         tag.putBoolean("invalid", invalid);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    protected void loadAdditional(ValueInput tag)
     {
-        super.loadAdditional(tag, provider);
+        super.loadAdditional(tag);
         invalid = tag.getBooleanOr("invalid", false);
     }
 

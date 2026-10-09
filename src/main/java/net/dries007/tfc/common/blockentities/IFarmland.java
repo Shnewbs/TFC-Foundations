@@ -7,11 +7,14 @@
 package net.dries007.tfc.common.blockentities;
 
 import java.util.function.Consumer;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import net.dries007.tfc.client.particle.TFCParticles;
 import net.dries007.tfc.common.blockentities.FarmlandBlockEntity.NutrientType;
@@ -133,7 +136,7 @@ public interface IFarmland
         addAdditionalWater(deltaTicks * WATER_DISSIPATION_RATE);
     }
 
-    default void saveNutrients(CompoundTag nbt)
+    default void saveNutrients(ValueOutput nbt)
     {
         nbt.putFloat("n", getNutrient(NITROGEN));
         nbt.putFloat("p", getNutrient(PHOSPHOROUS));
@@ -147,19 +150,19 @@ public interface IFarmland
         setNutrient(POTASSIUM, nbt.getFloatOr("k", 0f));
     }
 
-    default void loadNutrientsWithoutSync(CompoundTag nbt)
+    default void loadNutrientsWithoutSync(ValueInput nbt)
     {
         setNutrientWithoutSync(NITROGEN, nbt.getFloatOr("n", 0f));
         setNutrientWithoutSync(PHOSPHOROUS, nbt.getFloatOr("p", 0f));
         setNutrientWithoutSync(POTASSIUM, nbt.getFloatOr("k", 0f));
     }
 
-    default void loadAdditionalWaterWithoutSync(CompoundTag nbt)
+    default void loadAdditionalWaterWithoutSync(ValueInput nbt)
     {
         setAdditionalWaterWithoutSync(nbt.getFloatOr("water", 0f));
     }
 
-    default void saveAdditionalWater(CompoundTag nbt)
+    default void saveAdditionalWater(ValueOutput nbt)
     {
         nbt.putFloat("water", getAdditionalWater());
     }

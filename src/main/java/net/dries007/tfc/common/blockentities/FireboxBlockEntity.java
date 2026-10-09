@@ -10,15 +10,11 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
-import javax.annotation.Nullable;
 
-import net.dries007.tfc.common.capabilities.PartialItemHandler;
-import net.dries007.tfc.config.TFCConfig;
+import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
@@ -28,16 +24,20 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.FireboxBlock;
+import net.dries007.tfc.common.capabilities.PartialItemHandler;
 import net.dries007.tfc.common.component.heat.Heat;
 import net.dries007.tfc.common.component.heat.HeatCapability;
 import net.dries007.tfc.common.component.heat.IHeat;
 import net.dries007.tfc.common.container.FireboxContainer;
 import net.dries007.tfc.common.recipes.HeatingRecipe;
+import net.dries007.tfc.config.TFCConfig;
 import net.dries007.tfc.util.Helpers;
 import net.dries007.tfc.util.calendar.Calendars;
 import net.dries007.tfc.util.calendar.ICalendar;
@@ -386,7 +386,7 @@ public class FireboxBlockEntity extends TickableInventoryBlockEntity<ItemStackHa
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput nbt)
     {
         temperature = nbt.getFloatOr("temperature", 0f);
         burnTicks = nbt.getIntOr("burnTicks", 0);
@@ -395,11 +395,11 @@ public class FireboxBlockEntity extends TickableInventoryBlockEntity<ItemStackHa
         burnTemperature = nbt.getFloatOr("burnTemperature", 0f);
         lastPlayerTick = nbt.getLongOr("lastPlayerTick", 0L);
         heatingTimestamp = nbt.getLongOr("heatingTimestamp", 0L);
-        super.loadAdditional(nbt, provider);
+        super.loadAdditional(nbt);
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput nbt)
     {
         nbt.putFloat("temperature", temperature);
         nbt.putInt("burnTicks", burnTicks);
@@ -408,7 +408,7 @@ public class FireboxBlockEntity extends TickableInventoryBlockEntity<ItemStackHa
         nbt.putFloat("burnTemperature", burnTemperature);
         nbt.putLong("lastPlayerTick", lastPlayerTick);
         nbt.putLong("heatingTimestamp", heatingTimestamp);
-        super.saveAdditional(nbt, provider);
+        super.saveAdditional(nbt);
     }
 
     @Override

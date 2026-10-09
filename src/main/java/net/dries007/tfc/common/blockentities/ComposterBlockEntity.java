@@ -8,8 +8,6 @@ package net.dries007.tfc.common.blockentities;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionResult;
@@ -17,6 +15,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 import net.dries007.tfc.common.TFCTags;
@@ -115,21 +115,21 @@ public class ComposterBlockEntity extends InventoryBlockEntity<ItemStackHandler>
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput nbt)
     {
         green = nbt.getIntOr("green", 0);
         brown = nbt.getIntOr("brown", 0);
         lastUpdateTick = nbt.getLongOr("tick", 0L);
-        super.loadAdditional(nbt, provider);
+        super.loadAdditional(nbt);
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput nbt)
     {
         nbt.putInt("green", getGreen());
         nbt.putInt("brown", getBrown());
         nbt.putLong("tick", lastUpdateTick);
-        super.saveAdditional(nbt, provider);
+        super.saveAdditional(nbt);
     }
 
     public InteractionResult use(ItemStack stack, Player player, boolean client)

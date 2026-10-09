@@ -8,14 +8,14 @@ package net.dries007.tfc.common.blockentities;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import net.dries007.tfc.common.blocks.TFCBlockStateProperties;
 import net.dries007.tfc.common.blocks.devices.CalendarClockBlock;
@@ -144,18 +144,18 @@ public class CalendarClockBlockEntity extends TickableBlockEntity
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput tag)
     {
-        super.saveAdditional(tag, provider);
+        super.saveAdditional(tag);
         tag.putFloat("minuteAngle", minuteAngle);
         tag.putFloat("hourAngle", hourAngle);
         tag.putFloat("monthAngle", monthAngle);
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput tag)
     {
-        super.loadAdditional(tag, provider);
+        super.loadAdditional(tag);
         hourAngle = tag.getFloatOr("hourAngle", 0f);
         minuteAngle = tag.getFloatOr("minuteAngle", 0f);
         monthAngle = tag.getFloatOr("monthAngle", 0f);

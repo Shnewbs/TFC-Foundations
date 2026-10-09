@@ -7,17 +7,18 @@
 package net.dries007.tfc.common.blockentities;
 
 import java.util.List;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,7 +64,7 @@ public class LargeVesselBlockEntity extends InventoryBlockEntity<LargeVesselBloc
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput components)
+    protected void applyImplicitComponents(DataComponentGetter components)
     {
         final List<ItemStack> content = components.getOrDefault(TFCComponents.CONTENTS, ItemListComponent.EMPTY).contents();
         Helpers.copyFrom(content, inventory);
@@ -100,7 +101,7 @@ public class LargeVesselBlockEntity extends InventoryBlockEntity<LargeVesselBloc
         Helpers.playSound(level, worldPosition, TFCSounds.CLOSE_VESSEL.get());
     }
 
-    public static class VesselInventory extends InventoryItemHandler implements INBTSerializable<CompoundTag>
+    public static class VesselInventory extends InventoryItemHandler implements ValueIOSerializable
     {
         private final LargeVesselBlockEntity vessel;
 

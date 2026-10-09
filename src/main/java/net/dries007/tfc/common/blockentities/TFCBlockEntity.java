@@ -16,6 +16,8 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public abstract class TFCBlockEntity extends BlockEntity
 {
@@ -34,19 +36,19 @@ public abstract class TFCBlockEntity extends BlockEntity
     }
 
     /**
-     * Handle a packet sent from {@link #getUpdatePacket()}. Calls {@link #loadWithComponents(CompoundTag, HolderLookup.Provider)}
+     * Handle a packet sent from {@link #getUpdatePacket()}. Calls {@link #loadWithComponents(ValueInput)}
      */
     @Override
-    public final void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.Provider provider)
+    public final void onDataPacket(Connection net, ValueInput input)
     {
-        super.onDataPacket(net, packet, provider);
+        super.onDataPacket(net, input);
     }
 
     /**
      * Returns the tag containing information needed to send to the client, either on block update or on bulk chunk update.
-     * This tag is either returned with the packet in {@link #getUpdatePacket()} or {@link #handleUpdateTag(CompoundTag, HolderLookup.Provider)} based on where it was called from.
+     * This tag is either returned with the packet in {@link #getUpdatePacket()} or {@link #handleUpdateTag(ValueInput)} based on where it was called from.
      * <p>
-     * Delegates to {@link #saveCustomOnly(HolderLookup.Provider)} which calls {@link #saveAdditional(CompoundTag, HolderLookup.Provider)}
+     * Delegates to {@link #saveCustomOnly(HolderLookup.Provider)} which calls {@link #saveAdditional(ValueOutput)}
      */
     @Override
     public final CompoundTag getUpdateTag(HolderLookup.Provider provider)
@@ -57,12 +59,12 @@ public abstract class TFCBlockEntity extends BlockEntity
     /**
      * Handles an update tag sent from the server.
      * <p>
-     * Delegates to {@link #loadWithComponents(CompoundTag, HolderLookup.Provider)} which calls {@link #loadAdditional(CompoundTag, HolderLookup.Provider)}
+     * Delegates to {@link #loadWithComponents(ValueInput)} which calls {@link #loadAdditional(ValueInput)}
      */
     @Override
-    public final void handleUpdateTag(CompoundTag tag, HolderLookup.Provider provider)
+    public final void handleUpdateTag(ValueInput input)
     {
-        super.handleUpdateTag(tag, provider);
+        super.handleUpdateTag(input);
     }
 
     @Override
@@ -102,13 +104,19 @@ public abstract class TFCBlockEntity extends BlockEntity
      * Override to save block entity specific data.
      */
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {}
+    protected void saveAdditional(ValueOutput tag)
+    {
+        super.saveAdditional(tag);
+    }
 
     /**
      * Override to load block entity specific data.
      */
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {}
+    protected void loadAdditional(ValueInput tag)
+    {
+        super.loadAdditional(tag);
+    }
 
     /**
      * Marks a block entity as having changed, and syncs the change to client. Also updates neighbors that this block entity has

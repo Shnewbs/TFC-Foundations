@@ -8,8 +8,6 @@ package net.dries007.tfc.common.blockentities;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -17,7 +15,9 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
@@ -42,6 +42,7 @@ import net.dries007.tfc.common.recipes.TFCRecipeTypes;
 import net.dries007.tfc.common.recipes.outputs.PotOutput;
 import net.dries007.tfc.config.TFCConfig;
 import net.dries007.tfc.util.Helpers;
+import net.dries007.tfc.util.ValueIoHelpers;
 
 public class PotBlockEntity extends AbstractFirepitBlockEntity<PotBlockEntity.PotInventory>
 {
@@ -90,27 +91,25 @@ public class PotBlockEntity extends AbstractFirepitBlockEntity<PotBlockEntity.Po
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput nbt)
     {
-        if (nbt.contains("output"))
-        {
-            output = PotOutput.read(provider, nbt.getCompoundOrEmpty("output"));
-        }
+        // A later sync packet can remove output from an already loaded pot.
+        output = nbt.child("output").map(PotOutput::read).orElse(null);
         boilingTicks = nbt.getIntOr("boilingTicks", 0);
         preBoilingTicks = nbt.getIntOr("preBoilingTicks", 0);
-        super.loadAdditional(nbt, provider);
+        super.loadAdditional(nbt);
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput nbt)
     {
         if (output != null)
         {
-            nbt.put("output", PotOutput.write(provider, output));
+            PotOutput.write(nbt.child("output"), output);
         }
         nbt.putInt("boilingTicks", boilingTicks);
         nbt.putInt("preBoilingTicks", preBoilingTicks);
-        super.saveAdditional(nbt, provider);
+        super.saveAdditional(nbt);
     }
 
     @Override
@@ -296,7 +295,7 @@ public class PotBlockEntity extends AbstractFirepitBlockEntity<PotBlockEntity.Po
         return PotContainer.create(this, playerInv, windowID);
     }
 
-    public static class PotInventory implements IPotInventory, FluidTankCallback, INBTSerializable<CompoundTag>
+    public static class PotInventory implements IPotInventory, FluidTankCallback, ValueIOSerializable
     {
         private final PotBlockEntity pot;
         private final ItemStackHandler inventory;
@@ -362,19 +361,17 @@ public class PotBlockEntity extends AbstractFirepitBlockEntity<PotBlockEntity.Po
         }
 
         @Override
-        public CompoundTag serializeNBT(HolderLookup.Provider provider)
+        public void serialize(ValueOutput nbt)
         {
-            final CompoundTag nbt = new CompoundTag();
-            nbt.put("inventory", inventory.serializeNBT(provider));
-            nbt.put("tank", tank.writeToNBT(provider, new CompoundTag()));
-            return nbt;
+            inventory.serialize(nbt.child("inventory"));
+            ValueIoHelpers.writeFluidTank(nbt, "tank", tank);
         }
 
         @Override
-        public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt)
+        public void deserialize(ValueInput nbt)
         {
-            inventory.deserializeNBT(provider, nbt.getCompoundOrEmpty("inventory"));
-            tank.readFromNBT(provider, nbt.getCompoundOrEmpty("tank"));
+            inventory.deserialize(nbt.childOrEmpty("inventory"));
+            ValueIoHelpers.readFluidTank(nbt, "tank", tank);
         }
 
         @Override

@@ -7,9 +7,8 @@
 package net.dries007.tfc.common.blockentities;
 
 import java.util.function.Consumer;
+
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
@@ -17,6 +16,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import net.dries007.tfc.common.blocks.soil.FarmlandBlock;
 import net.dries007.tfc.util.calendar.Calendars;
@@ -90,23 +91,23 @@ public class FarmlandBlockEntity extends TFCBlockEntity implements IFarmland, IC
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput nbt)
     {
         loadNutrientsWithoutSync(nbt);
         loadAdditionalWaterWithoutSync(nbt);
         lastUpdateTick = nbt.getLongOr("tick", 0L);
         lastWaterTick = nbt.getLongOr("waterTick", 0L);
-        super.loadAdditional(nbt, provider);
+        super.loadAdditional(nbt);
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput nbt)
     {
         saveNutrients(nbt);
         saveAdditionalWater(nbt);
         nbt.putLong("tick", lastUpdateTick);
         nbt.putLong("waterTick", lastWaterTick);
-        super.saveAdditional(nbt, provider);
+        super.saveAdditional(nbt);
     }
 
     public void addHoeOverlayInfo(Level level, BlockPos pos, Consumer<Component> text, boolean includeHydration, boolean includeNutrients)

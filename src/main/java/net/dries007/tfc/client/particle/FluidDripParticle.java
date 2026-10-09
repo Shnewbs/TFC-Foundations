@@ -9,9 +9,9 @@ package net.dries007.tfc.client.particle;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.DripParticle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.Mth;
@@ -23,14 +23,14 @@ import net.dries007.tfc.client.RenderHelpers;
 /**
  * Generic version of {@link DripParticle}
  */
-public class FluidDripParticle extends TextureSheetParticle
+public class FluidDripParticle extends SingleQuadParticle
 {
     private final Fluid type;
     protected boolean isGlowing;
 
-    public FluidDripParticle(ClientLevel level, double x, double y, double z, Fluid fluid)
+    public FluidDripParticle(ClientLevel level, double x, double y, double z, Fluid fluid, TextureAtlasSprite sprite)
     {
-        super(level, x, y, z);
+        super(level, x, y, z, sprite);
         setSize(0.01F, 0.01F);
         gravity = 0.06F;
         type = fluid;
@@ -47,15 +47,15 @@ public class FluidDripParticle extends TextureSheetParticle
     }
 
     @Override
-    public ParticleRenderType getRenderType()
+    protected Layer getLayer()
     {
-        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+        return Layer.OPAQUE;
     }
 
     @Override
-    public int getLightColor(float partialTick)
+    public int getLightCoords(float partialTick)
     {
-        return isGlowing ? 240 : super.getLightColor(partialTick);
+        return isGlowing ? 240 : super.getLightCoords(partialTick);
     }
 
     @Override
@@ -96,14 +96,14 @@ public class FluidDripParticle extends TextureSheetParticle
     {
         private final ParticleOptions fallingParticle;
 
-        public FluidHangParticle(ClientLevel level, double x, double y, double z, Fluid fluid)
+        public FluidHangParticle(ClientLevel level, double x, double y, double z, Fluid fluid, TextureAtlasSprite sprite)
         {
-            this(level, x, y, z, fluid, new FluidParticleOption(TFCParticles.FLUID_FALL.get(), fluid));
+            this(level, x, y, z, fluid, new FluidParticleOption(TFCParticles.FLUID_FALL.get(), fluid), sprite);
         }
 
-        public FluidHangParticle(ClientLevel level, double x, double y, double z, Fluid fluid, ParticleOptions fallParticle)
+        public FluidHangParticle(ClientLevel level, double x, double y, double z, Fluid fluid, ParticleOptions fallParticle, TextureAtlasSprite sprite)
         {
-            super(level, x, y, z, fluid);
+            super(level, x, y, z, fluid, sprite);
             fallingParticle = fallParticle;
             lifetime = 40;
             gravity *= 0.02f;
@@ -133,14 +133,14 @@ public class FluidDripParticle extends TextureSheetParticle
     {
         private final ParticleOptions landingParticle;
 
-        public FluidFallAndLandParticle(ClientLevel level, double x, double y, double z, Fluid fluid)
+        public FluidFallAndLandParticle(ClientLevel level, double x, double y, double z, Fluid fluid, TextureAtlasSprite sprite)
         {
-            this(level, x, y, z, fluid, new FluidParticleOption(TFCParticles.FLUID_LAND.get(), fluid));
+            this(level, x, y, z, fluid, new FluidParticleOption(TFCParticles.FLUID_LAND.get(), fluid), sprite);
         }
 
-        public FluidFallAndLandParticle(ClientLevel level, double x, double y, double z, Fluid fluid, ParticleOptions landParticle)
+        public FluidFallAndLandParticle(ClientLevel level, double x, double y, double z, Fluid fluid, ParticleOptions landParticle, TextureAtlasSprite sprite)
         {
-            super(level, x, y, z, fluid);
+            super(level, x, y, z, fluid, sprite);
             landingParticle = landParticle;
             lifetime = 40;
             gravity *= 0.02f;
@@ -159,9 +159,9 @@ public class FluidDripParticle extends TextureSheetParticle
 
     public static class FluidLandParticle extends FluidDripParticle
     {
-        public FluidLandParticle(ClientLevel level, double x, double y, double z, Fluid fluid)
+        public FluidLandParticle(ClientLevel level, double x, double y, double z, Fluid fluid, TextureAtlasSprite sprite)
         {
-            super(level, x, y, z, fluid);
+            super(level, x, y, z, fluid, sprite);
             lifetime = (int) (16.0D / (Math.random() * 0.8D + 0.2D));
         }
     }
@@ -171,9 +171,9 @@ public class FluidDripParticle extends TextureSheetParticle
      */
     public static class BarrelDripParticle extends FluidFallAndLandParticle
     {
-        public BarrelDripParticle(ClientLevel level, double x, double y, double z, Fluid fluid)
+        public BarrelDripParticle(ClientLevel level, double x, double y, double z, Fluid fluid, TextureAtlasSprite sprite)
         {
-            super(level, x, y, z, fluid);
+            super(level, x, y, z, fluid, sprite);
             // heuristic: if we are at ~ the middle, we know this to be the non-motion direction
             // therefore we add speed in the other direction
             final double dx = x - Mth.floor(x);
@@ -199,25 +199,22 @@ public class FluidDripParticle extends TextureSheetParticle
 
     public static class BarrelSpillParticle extends FluidFallAndLandParticle
     {
-        public BarrelSpillParticle(ClientLevel level, double x, double y, double z, Fluid fluid)
+        public BarrelSpillParticle(ClientLevel level, double x, double y, double z, Fluid fluid, TextureAtlasSprite sprite)
         {
-            super(level, x, y, z, fluid);
+            super(level, x, y, z, fluid, sprite);
             gravity = 0.06f;
         }
     }
 
     public interface FluidParticleFactory
     {
-        FluidDripParticle create(ClientLevel level, double x, double y, double z, Fluid fluid);
+        FluidDripParticle create(ClientLevel level, double x, double y, double z, Fluid fluid, TextureAtlasSprite sprite);
     }
 
     public static ParticleProvider<FluidParticleOption> provider(SpriteSet set, FluidParticleFactory factory)
     {
-        return (type, level, x, y, z, dx, dy, dz) -> {
-            final FluidDripParticle particle = factory.create(level, x, y, z, type.getFluid());
-            particle.pickSprite(set);
-            return particle;
-        };
+        return (type, level, x, y, z, dx, dy, dz, random) ->
+            factory.create(level, x, y, z, type.getFluid(), set.get(random));
     }
 
 }

@@ -7,12 +7,12 @@
 package net.dries007.tfc.common.blockentities;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import net.dries007.tfc.common.blocks.crop.DecayingBlock;
 import net.dries007.tfc.common.component.food.FoodCapability;
@@ -41,20 +41,20 @@ public class DecayingBlockEntity extends TFCBlockEntity
     }
 
     @Override
-    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput nbt)
     {
-        super.loadAdditional(nbt, provider);
-        this.stack = ItemStack.parseOptional(provider, nbt.getCompoundOrEmpty("item"));
+        super.loadAdditional(nbt);
+        this.stack = nbt.read("item", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
     }
 
     @Override
-    public void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider)
+    public void saveAdditional(ValueOutput nbt)
     {
-        super.saveAdditional(nbt, provider);
+        super.saveAdditional(nbt);
         // Stack is set to empty before this is called if the player is in creative
         if (!stack.isEmpty())
         {
-            nbt.put("item", stack.save(provider));
+            nbt.store("item", ItemStack.OPTIONAL_CODEC, stack);
         }
     }
 
