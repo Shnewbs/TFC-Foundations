@@ -6,47 +6,51 @@ Updated 2026-10-09 UTC and America/Los_Angeles.
 
 ## Direction and targets
 
-Continue public development in `Shnewbs/TFC-Foundations`, preserving history, EUPL notices, credits and `tfc` identifiers. First-playable priority: Minecraft 26.1.2, NeoForge 26.1.2.114, JEI 29.43.0.107 and Patchouli 26.1-94. Java 25 and Gradle 9.2.1 remain pinned. The separate `26.x` branch remains the Minecraft 26.3 forward track toward a separately verified 26.4 port. No 26.3 or Earth code changed here. Core gameplay, visuals, the required guide and publication gates remain enabled.
+Continue public development in `Shnewbs/TFC-Foundations`, preserving history, EUPL notices, credits and `tfc` identifiers. First-playable priority remains Minecraft 26.1.2, NeoForge 26.1.2.114, JEI 29.43.0.107 and Patchouli 26.1-94. Java 25 and Gradle 9.2.1 are unchanged. The separate `26.x` branch remains the Minecraft 26.3 forward track toward a separately verified 26.4 port. No 26.3 or Earth code changed here. Core gameplay, visuals, the required guide and publication gates remain enabled.
 
-## Seasonal block models and mold geometry
+## Pile, scraping and mold-table snapshot checkpoint
 
-Source **`bf289ca22c3ca3146fe5623cb66c253fb7917044`** applies a **131-file checkpoint** after staging `1e613ee837c8a3d9e3616c09d4a5e0392933068d`. Apply run `37994496413` verified the source preimages/postimages, removed the temporary transport and used a normal push. The checkpoint comprises nine Java files, 115 blockstate definitions, one resource generator and six test/tool files.
+Source **`5024736b274f1ad3d764c5bb5572ead6f71a6032`** applies a **28-file checkpoint**, following staging `04691f1d8b5e9742885b9a30bfd0739c3b692e69`. Apply run `37998280708` verified every source preimage/postimage, removed the temporary transport and used a normal push. Two obsolete baked-model interfaces were replaced by the native pipeline and deleted; no gameplay feature was removed.
 
-Plant and leaf models now use the native dynamic block-state pipeline rather than removed baked-model APIs. A registered `tfc:dynamic` variant preserves native rotation/UV-lock handling and supports weighted/multipart definitions. Immutable baked seasonal alternatives participate in the geometry cache key, keeping different stages and model instances distinct. Particle materials and layer flags follow the selected stage; context-free material flags conservatively include all alternatives. No performance improvement is claimed.
+Ingot piles, double-ingot piles and scraping models now use immutable model-data snapshots instead of reading mutable inventories from geometry-generation workers. The snapshot payload contains texture identifiers, colors and scraping progress, not live block entities or item stacks. Relevant mutations and client loads request fresh model data. Per-model geometry caches are bounded and reload-local; their keys distinguish both snapshot contents and model identity. Concurrency tests use fixtures, not live chunk workers.
 
-The resource migration adds 245 dynamic references across 115 blockstates and updates the generator so regeneration retains them. Model identifiers, weights, rotations and multipart conditions are protected by structural checks. All 178 seasonal and 16 mold model JSON definitions remain byte-identical. Seasonal item-model inheritance is explicitly rejected by the guard until its separate adapter exists; current item assets do not use this new dynamic route.
+Pile positions, layered rotations and UV coordinates retain the frozen legacy geometry. Scraping retains its 4-by-4 tile layout, input/output passes and dye colors; RGB colors gain explicit opaque alpha. **Lighting adaptation:** pile geometry uses white vertex colors with native shading/light application instead of pre-applying the legacy shade. Actual lit appearance is not verified pixel-identical.
 
-Existing plant lifecycle/daytime selection and leaf climate/hemisphere/graphics selection were separated into testable scalar logic without redesigning their seasonal formulas. Position hashes and conditional climate/solar reads remain guarded. The mold loader adopts native cuboid geometry while preserving the 14-by-14 cell layout, face UVs, bounds, shading and no-tint behavior. A missing client level uses a safe plant fallback. These changes do not establish in-game appearance or live climate behavior.
+Mold tables carry the selected item identifier rather than a cached client model in their block entity. Resource discovery uses the native standalone-model registration/dependency path. Each baked table owns its model map; missing or removed mold state falls back to the base table, and a later resource discovery replaces rather than accumulates the catalog. Base table and selected mold are emitted once each in dispatch fixtures. Actual atlas baking and a registered whole-resource reload are not tested.
 
-## Independent validation
+Four blockstate definitions and their generator now route through `tfc:dynamic`. Existing model identifiers, rotations and multipart conditions are guarded. All 20 relevant model JSON assets and the three block-entity save-writer bodies remain unchanged. These source contracts are not whole-world save-compatibility tests. Contained-fluid and trimmed-item models were not changed in this checkpoint.
 
-[GitHub run **37994534146**](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37994534146), testing source `bf289ca2`, completed with overall **failure**.
+## Validation
+
+[GitHub run **37998292416**](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37998292416), source `5024736b`, completed with overall **failure** because main compilation remains broken.
 
 | Check | Observed result |
 | --- | --- |
-| Full Gradle/main compilation | FAIL: exit 1; **1,997 javac errors**, grouped into **1,908 path/line/message entries**. |
-| New seasonal/mold suite | PASS: **208,269 contract assertions**, including **200,225 scalar parity comparisons**; **392 native mold cells** and **194 asset-loader checks**. |
-| New Python mutation guards | PASS: all **six** new tests. |
-| Earlier utility, save, brain and headless model suites | PASS; independently reproduced against the published source. |
+| Full Gradle/main compilation | FAIL: exit 1, **1,927 javac errors**; summary groups them into **1,845 path/line/message entries**. |
+| New snapshot-model suite | PASS: **102 pile-count scenarios**, **65,904 position/UV vertices**, **all 65,536 scraping masks**, **428,808 counted assertions**. |
+| New Python mutation guards | PASS: **12 tests**. |
+| Earlier model, utility, save, brain and seasonal suites | PASS; independently reproduced against the published source. |
 | Main/data/test license tasks | PASS. |
-| Existing resource-validation step | PASS; this is not a registered in-game reload or visual test. |
-| Downloaded CI source preservation | PASS: all **131 reviewed postimages** match; the new test invocation is tracked and temporary transfer paths are absent. |
+| Existing resource-validation step | PASS; not a registered game reload or visual test. |
+| Published source preservation | PASS: all **28 reviewed changes**, including two deletions, match the downloaded source; the test invocation is tracked and temporary transport files are absent. |
 
-The **208,269 contract assertions include 200,225 scalar comparisons** against a frozen pre-port reference; these are not additional counts to sum. The same suite checks 392 native unbaked mold cells and loads 194 existing asset definitions. Six new Python mutation tests cover missing dispatch/registration, changed weights, unsupported seasonal item inheritance and changes to the frozen reference.
+Artifact **11648720875**, `tfc-port-diagnostics-37998292416-1`, retains logs, reports and exact source until **October 16, 2026 UTC**. Downloaded ZIP SHA-256 **88ec609996c45a0bcedbe7ee695904f030a6b63d4ef99b73e152190ced9f7617** was verified. The entire API-inspection/probe step passed, independently matching the local final result. These passing steps do not override the failed full build.
 
-The edited local source and clean Git patch replay both complete the diagnostic main pass with **1,649 source files, exit 1, 1,997 errors and no timeout**. Their standalone inspection passes with exit 0. These diagnostic compilations use `-proc:none`, not the full Gradle/mixin pipeline. Compared with the previous 2,103 pass, the reduction is **106 diagnostics**, not an independent bug count or completion percentage. The migrated model paths have no diagnostics in this traversal; the minimally changed ClientEventHandler remains incomplete.
+The clean extracted-source patch replay completed all standalone suites with **exit 0** and diagnostic main compilation with **1,651 source files, exit 1, 1,927 errors and no timeout**. The edited source reports the same compiler result. These main passes use `-proc:none`, not the complete Gradle/mixin/data/test pipeline. Compared with the previous 1,997 pass, the reduction is **70 diagnostics**, not an independent bug count or completion percentage. Changed model classes have no diagnostics in this traversal; ClientEventHandler and MoldTableBlockEntity still have separate unfinished APIs.
 
-Artifact **11646452667**, `tfc-port-diagnostics-37994534146-1`, retains logs, reports and exact source until **October 16, 2026 UTC**. Its downloaded SHA-256 **3aeda006199a2819512e15e1aca41ac825c3251153f7d1f48cc76b4db7e6a65f** was verified.
+The new suite checks **102 pile-count scenarios**, compares **65,904 vertices' positions/UVs** against the frozen legacy path, covers **all 65,536 scraping masks**, and records **428,808 counted assertions**, including the vertex comparisons. These overlapping measures must not be added into a single total. **12 Python regression-guard tests** pass. Snapshot immutability, concurrent cache loading/eviction, model-data routing, stale-state clearing and reload isolation are exercised using explicit synthetic model-part/interface fixtures. Native unbaked loader parsing and standalone dependency registration are exercised against the exact target libraries; atlas/material baking is not.
 
-**Test boundary:** the scalar code, Variant codec and unbaked geometry/loader implementations use the resolved target libraries. Cache/dispatch/material tests also use synthetic model-part fixtures and a collecting resolver, not a fully baked level model. No registered whole-resource reload, atlas baking, live climate/world selection, GPU rendering, client/server startup, world creation/save/reload, multiplayer, survival progression or performance measurement has passed. Earlier registry-backed round trips and bootstrap-dependent probes remain unexecuted. Full downstream data/test compilation and packaging remain blocked.
+Earlier utility/save/brain and headless model suites remain passing in the clean replay, including 173 prior standalone Java checks, previous Python guards, package metadata and prior seasonal/geometry checks. The new runner is tracked and called from `inspect_api.py`. Three save-writer source hashes and the deleted-interface guard protect against accidental source omissions.
+
+**Not run:** live block-entity extraction or chunk-worker scheduling, atlas/material baking, registered whole-resource reload, GPU rendering, in-game appearance, client/server startup, new-world generation, save/reload/reconnect, multiplayer, survival progression or performance measurements. Earlier registry-backed round trips and bootstrap-dependent probes remain unexecuted. Full downstream data/test compilation and packaging remain blocked by main compilation.
 
 ## Next compiler and playability gates
 
-1. Continue contained-fluid, trimmed-item, pile and mold-table models, other block/item/block-entity rendering, ClientEventHandler/world rendering/overlays and JEI/Patchouli adapters.
-2. Finish remaining recipes, equipment/materials, capabilities, schedules, registry/holder and world-generation APIs, then pass complete main/data/test compilation, licenses, resource generation and packaging.
-3. Verify genuine client/server startup, resource loading and appearance, new-world generation, save/reload/reconnect, calendar, inventories/fluids, guide/recipes and survival before calling an artifact playable.
-4. Independently verify shared work on 26.3 rather than copying target-specific APIs blindly.
+1. Continue contained-fluid and trimmed-item models, other block/item/block-entity rendering, ClientEventHandler/world rendering/overlays and JEI/Patchouli adapters without removing these systems to compile.
+2. Finish recipes, equipment/materials, capabilities, schedules, registry/holder and world-generation APIs; pass complete main/data/test compilation, licenses, resource generation and packaging.
+3. Test actual client/server startup, resource reload and appearance, world creation/save/reload, calendar, inventories/fluids, guide/recipes and survival before calling an artifact playable.
+4. Independently verify shared work on 26.3 rather than copying divergent target APIs blindly.
 
-Normal TFC generation remains the default. The optional natural Earth request remains nominally one block per horizontal meter without generated manmade structures. Coordinate/elevation groundwork is not a selectable Earth preset, licensed dataset pipeline or complete chunk generator. Projection, height, geology/climate, caching and performance requirements remain open.
+Normal TFC generation remains the default. The optional natural Earth request remains nominally one block per horizontal meter without generated manmade structures. Existing coordinate/elevation groundwork is not a selectable Earth preset, licensed dataset pipeline or complete chunk generator. Projection, height, geology/climate, caching and performance requirements remain open.
 
-See [WORK_LOG](docs/foundations/WORK_LOG.md) for commands, commits and limits. The preceding complete status and log are preserved byte-for-byte in [STATUS_BEFORE_SEASONAL_BLOCK_MODELS](docs/foundations/history/STATUS_BEFORE_SEASONAL_BLOCK_MODELS.md) and [WORK_LOG_BEFORE_SEASONAL_BLOCK_MODELS](docs/foundations/history/WORK_LOG_BEFORE_SEASONAL_BLOCK_MODELS.md).
+See [WORK_LOG](docs/foundations/WORK_LOG.md) for commands, commits and limits. The preceding complete status/log are preserved byte-for-byte in [STATUS_BEFORE_SNAPSHOT_BLOCK_MODELS](docs/foundations/history/STATUS_BEFORE_SNAPSHOT_BLOCK_MODELS.md) and [WORK_LOG_BEFORE_SNAPSHOT_BLOCK_MODELS](docs/foundations/history/WORK_LOG_BEFORE_SNAPSHOT_BLOCK_MODELS.md).

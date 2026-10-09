@@ -1,74 +1,89 @@
 # TFC Foundations — Work Log
 
-The preceding complete log is retained byte-for-byte in [WORK_LOG_BEFORE_SEASONAL_BLOCK_MODELS](history/WORK_LOG_BEFORE_SEASONAL_BLOCK_MODELS.md), linking to the mechanical, livestock, model, entity, save and common-API checkpoints. Earlier validation limits remain unchanged.
+The preceding complete log is retained byte-for-byte in [WORK_LOG_BEFORE_SNAPSHOT_BLOCK_MODELS](history/WORK_LOG_BEFORE_SNAPSHOT_BLOCK_MODELS.md), linking to the seasonal, mechanical, livestock, model, entity, save and common-API checkpoints. Earlier validation limits remain unchanged.
 
-## 2026-10-09 — Seasonal block-state models and mold geometry
+## 2026-10-09 — Immutable pile, scraping and mold-table models
 
 ### Source and publication
 
-Resumed public `26.1.2` at `11c52d1ddaa4d5ca518e45dd3ad47e2a3ba90f0b`, following source `5fbcf6623b81fd06d7e4c250772b1880684d673e`. The preceding artifact `11638282576` was downloaded and verified against SHA-256 `5f4bf550b2c30fc5ae2c346f5ac24bb962e94110c8d0238e209d1fa64956beaf`. Its source supplied the local code baseline; remote documentation changes were preserved. The exact Java 25 toolchain and resolved 84-JAR classpath were reused after checksum verification. Target and dependency versions did not change.
+Resumed public `26.1.2` at documentation commit `5435d1118a6141f0b67544fbbcd3f37d105d344b`, following source `bf289ca22c3ca3146fe5623cb66c253fb7917044`. The preceding source artifact's SHA-256, `3aeda006199a2819512e15e1aca41ac825c3251153f7d1f48cc76b4db7e6a65f`, was verified. Its exact source supplied the local baseline; the later remote documentation was preserved. The Java 25 toolchain and all 84 resolved classpath JAR hashes were verified. Target and dependency pins did not change.
 
-Staging **`1e613ee837c8a3d9e3616c09d4a5e0392933068d`** transported the reviewed patch. Apply run **`37994496413`** checked the exact staging parent, all 131 source preimages/postimages, path membership, clean Git state, bounded decoding and traversal/symlink restrictions. Applied source **`bf289ca22c3ca3146fe5623cb66c253fb7917044`** removed the temporary transfer files/workflow and dispatched normal validation. No force push, branch deletion, version increment, core-system exclusion or release-gate relaxation was used.
+Staging **04691f1d8b5e9742885b9a30bfd0739c3b692e69** transported the reviewed source with bounded decoding, exact-parent/preimage/postimage checks, path/symlink restrictions and clean-index application. Apply run **37998280708** succeeded. Source **5024736b274f1ad3d764c5bb5572ead6f71a6032** applied all 28 reviewed file changes, removed the one-time transport/workflow and dispatched normal validation. Publication used a normal push, never a force push or concurrent-source overwrite.
 
-Patch **`TFC-Foundations-26.1.2-seasonal-block-models.patch`**: **131 files; 2,435 insertions; 1,177 deletions; 225,076 bytes**. SHA-256: **`92058efe355bfedac737e7252091725272927a335304f328b138b0a5de4e268a`**. Packed XZ SHA-256: **`b02ec7ac936ca3795fb1b848a7b083ca0bfdf10792f40771b9f19e653250549b`**. A transport transcription mismatch was corrected before staging; final source application checked every digest. The delivered patch contains code/resources/tests, not the later documentation update or a runnable mod.
+Patch `TFC-Foundations-26.1.2-snapshot-block-models.patch`: **28 files, 1,399 insertions, 575 deletions, 126,023 bytes**. SHA-256 **520f01fbc269e99608bd2df20014af0193530e26516b3b18c83233f2916aa109**. XZ transport: **26,228 bytes**, SHA-256 **0f53597cc9259f8819765dc04118800a80e43e4b36b8ee7538740ea5e2f5edbf**. The patch includes two obsolete-interface deletions; it is source/tests/resources, not a runnable JAR or the later documentation checkpoint.
+
+No version increment, gameplay feature removal, dependency substitution, release-gate relaxation, 26.3 change or Earth implementation was performed.
 
 ### Production changes
 
-**Dynamic world-model dispatch:** PlantBlockModel and LeavesBlockModel implement the target DynamicBlockStateModel path through SeasonalBlockStateModel. Seasonal alternatives are immutable. Cache keys distinguish both the model instance and selected baked part. The selected particle material and per-context flags follow the stage; context-free flags conservatively combine all alternatives. The leaf context-free particle fallback remains blooming stage 3, while fallback world geometry remains dense stage 0.
+**Snapshot publication:** BlockEntityModelData is client-class-free and contains only immutable values. Pile defensively copies its texture-identifier list and carries a fallback identifier. Scraping captures input/output identifiers, the 16-bit tile mask and opaque colors. Mold-table data contains only a selected item identifier. IngotPileBlockEntity and ScrapingBlockEntity refresh model data after relevant changes and client loads. MoldTableBlockEntity replaces its client-model dependency with an identifier and keeps its existing slot-update path, with a load refresh. No mutable inventory or client baked-model object is sent to geometry workers.
 
-DynamicBlockModel.Unbaked wraps the native Variant codec, retains rotations/UV lock and resolves dependencies. It locates dynamic geometry through model ancestry. Ordinary resource-pack cuboid replacements fall back to SingleVariant instead of requiring a dynamic implementation. The native variant model-state conversion was corrected to `asModelState()` after exact-target compilation exposed the type mismatch. SeasonalUnbakedModel resolves each existing inline stage using the target model baker; generic static consumers receive the documented fallback. This does not implement a general dynamic ItemModel adapter.
+**Native dynamic models:** SnapshotBlockStateModel reads ModelData through the supplied level interface, never getBlockEntity or inventory contents. It caches parts per immutable key with a 4,096-quad weight limit and model-identity geometry keys. Context-free calls return an empty fallback; contextual particle/material flags follow the selected part. Conservative global flags include translucent and animated possibilities. The cache is per baked model, not global. Tests cover concurrent same-key loading, eviction and separation between reload/model identities using synthetic parts. No real chunk scheduling or measured throughput is claimed.
 
-**Seasonal behavior:** SeasonalModelMath separates the existing plant lifecycle/daytime and leaf climate/season calculations for comparison against a frozen pre-port oracle. World-facing methods retain position hashes, wet-season and hemisphere inputs, fast-graphics/conifer behavior, calendar inputs and lazy solar/average-rainfall queries. Missing client level falls back safely for plant selection. No live world or climate-cache behavior was exercised, and no performance gain is claimed.
+**Pile/scraping geometry:** StaticBlockMesh represents immutable faces, vertices and texture identifiers. The single/double ingot placement formulas, alternating 90-degree layers, fractional bounds, and three legacy trapezoid face bodies are retained. Frozen reference execution compares every vertex position and UV for all valid pile counts, including empty counts. Scraping retains all 16 cells, input/output pass order, tile height and dye routing; explicit opaque alpha prevents RGB dye colors becoming transparent vertex colors. Native face transforms use the block/UV center conventions and inverse face transformation from ModelState.
 
-**Resources and registration:** nine Java files, 115 blockstate JSON files, resources/assets.py and six test/tool files make up the checkpoint. The new BlockModelRegistration listeners register the plant, leaf and mold model loaders plus `tfc:dynamic`. Other legacy registrations in ClientEventHandler remain blockers. Adding only Java loaders would not route seasonal models through the new block-state API: 245 references now carry the dispatch type. Weighted chestnut choices, rotations and multipart conditions remain structurally identical after removing the new type marker. The generator was updated for relevant single plants, leaves and weighted chestnut definitions. All 178 seasonal and 16 mold model definitions retain their exact original bytes. Current item definitions do not inherit seasonal loaders; the new test rejects future inheritance until a dedicated item adapter is supplied.
+StaticBlockMeshBaker converts that mesh to the exact target BakedQuad/MaterialInfo API. Material resolution is synchronized around the retained baker because missing-material collection may be mutable; local texture lookup avoids repeated resolution within one bake. **Lighting is intentionally adapted:** white pile vertices allow native shading/light application rather than applying legacy shade a second time. Appearance under actual lighting remains unverified. The baker compiles, but real atlas/material baking is not executed in the standalone suite.
 
-**Mold geometry:** MoldsModelLoader now builds native CuboidModelElement/CuboidFace/UnbakedCuboidGeometry. The 14-by-14 cell bounds, original face orientation/UV formulas, shading, no-tint and unculled faces remain implemented. Invalid pattern dimensions fail explicitly. No fully atlas-baked mold or GPU draw was tested.
+**Mold tables and resource reload:** MoldTableBlockModel registers standalone dependencies from `models/block/mold/` resources, preserving namespaces and exact path-prefix handling. Discovery replaces a volatile immutable identifier/key catalog, including when the result is empty. Each unbaked table captures the current catalog during dependency discovery; each baked table owns immutable base and mold parts and does not look up a global baked-model map. Inspection of the resolved native ModelManager showed standalone-loading completion before model dependency discovery. This inspection is not a registered in-game resource reload.
 
-### Local validation and clean replay
+The loader deep-copies JSON before removing its custom loader field and parses the remainder through native CuboidModel. Dispatch emits the base once and the selected mold once; absent, unknown or removed mold data emits only the base. The registration callback has an unambiguous one-argument method, with the collection-taking helper separately named. A compile-only IEventBus listener probe protects that signature.
+
+**Assets and saved fields:** four blockstates (single/double ingot pile, scraping, mold table) now use the existing `tfc:dynamic` variant route. Their generator reproduces the change. Canonical guards retain identifiers, rotations and multipart conditions. All 20 relevant model assets remain byte-identical. Unsupported item-model inheritance through these world-only routes is explicitly rejected by the source guard. IBakedGeometry and IStaticBakedModel were removed after replacing their users; the guard detects accidental restoration. Three exact block-entity save-writer bodies retain their prior hashes. That is source preservation, not world save/load validation.
+
+### Local checks and corrected attempts
+
+Both JAVA_HOME and PATH select the verified Java 25 JDK and exact 84-JAR target classpath.
 
 ```sh
-# JAVA_HOME and PATH select the verified target Java 25 JDK.
-python tools/porting/compile_main_diagnostics.py
-python tools/porting/run_seasonal_block_smoke.py
+python tools/porting/run_snapshot_block_smoke.py
 python tools/porting/inspect_api.py
+python tools/porting/compile_main_diagnostics.py
 ```
 
-The edited source and an independent clean Git replay both complete the main diagnostic pass with **1,649 sources, 1,997 errors, exit 1, timed_out=false**. These use `-proc:none`, not the complete Gradle/mixin pipeline. The clean replay uses `git apply --check --index --whitespace=error`, verifies every reviewed postimage and records **probes=0, compiler=1**. Main diagnostics do not occur in the migrated model classes; the narrowly changed ClientEventHandler remains incomplete.
+The main-source command uses `-proc:none` and explicitly records timeouts/exit codes; it is diagnostic-only. Baseline reports 1,997 errors. The first snapshot-model pass reports 1,927. Adding an overloaded listener helper exposed one ambiguous ClientEventHandler method reference (1,928); renaming that helper restored the completed final **1,927 errors across 1,651 sources, exit 1, no timeout**. The model classes have no diagnostics; ClientEventHandler and MoldTableBlockEntity retain unrelated unfinished APIs.
 
-The new Java suite passes **200,225 scalar parity comparisons** against the frozen reference within **208,269 total contract assertions**, along with **392 native unbaked mold cells** and **194 asset-loader checks**. Do not add the parity count to the assertion total. Source checks cover 178 seasonal model definitions, 245 dynamic references, 115 preserved blockstate structures, registration and forbidden legacy APIs. Six new Python mutation tests deliberately break dispatch, weighting, item inheritance, registration and the frozen oracle; all are rejected as expected.
+A first combined standalone run exceeded the host's command-time limit and is not counted as an overall pass. Another overlapping local test invocation raced on a shared temporary class-output directory; its missing-class failure was not treated as a source test success. Final validation runs serially in a separate clean Git worktree and records **PROBES=0**, **COMPILER=1**, 1,927 errors, timed_out=false. All reviewed postimages match. No Minecraft/TFC replacement classes or loader stubs were supplied.
 
-The Java suite uses actual scalar code, native Variant codecs and native unbaked model/geometry APIs. Its cache/dispatch/material cases use synthetic BlockStateModelPart fixtures, marker materials and a collecting resolver. Those are not a genuine fully baked level model or resource reload. The existing suites retain their previous real-model construction and CPU-geometry coverage; their successful execution does not extend to live rendering or gameplay.
+The initial patch replay also caught omission of two staged interface deletions from a worktree-only diff. The frozen final patch was regenerated from `git diff HEAD`, cleanly applied using `--check --index --whitespace=error`, and all 28 changes—including the deletions—were verified. A new deliberate restored-interface mutation test protects this case. The final patch and transport checksums above refer only to that corrected version.
 
-All prior suites pass locally: 173 standalone Java checks, six earlier Python guards, save/brain contracts, 114 package-info compilations, the 48-model suite, 11 livestock/cat suite and mechanical/boat/equine suite. Both new and old probes are tracked and invoked by inspect_api.py. Local complete resource validation was not run because its Python dependency set was unavailable in the offline container; the GitHub resource step below is the independent check.
+A local `python resources validate` attempt did not execute validation because `mcresources` was absent. Only the independent GitHub resource step, which installs the pinned requirements, can establish that resource-validation result for this checkpoint.
 
-### Independent GitHub validation
+### Standalone coverage and boundaries
 
-[Run **37994534146**](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37994534146), source **`bf289ca22c3ca3146fe5623cb66c253fb7917044`**, completed with overall **failure**.
+The new runner compiles the actual production dynamic models, snapshot values, geometry and baker classes against the resolved target libraries. It executes **102 pile-count scenarios**, compares **65,904 vertices' position/UV data** with PileLegacyReference, covers **all 65,536 scraping masks**, and reports **428,808 counted assertions**, including the vertex comparisons. These measures overlap and must not be summed. It checks immutable lists, color alpha, texture/particle selection, transform order, cache concurrency/eviction, stale-state clearing and model-identity reload separation.
+
+Synthetic model-part and level-interface fixtures are explicitly used for cache/dispatch tests; no real game level is constructed. Native unbaked JSON parsing and standalone registration/dependency objects are exercised, including all 16 TFC mold definitions and an addon fixture. Those checks do not bake an atlas or execute the live ModelManager reload. Texture/material objects and native GPU submission remain outside this suite.
+
+**12 Python mutation-guard tests** pass. They deliberately alter dispatch, multipart rotation, callback registration, defensive copying, forbidden live-world reads, load refresh, the frozen oracle, saved fields, unsupported item inheritance, stale discovery catalogs and obsolete-interface deletion. Four blockstate structures, 20 model assets, three original geometry face bodies and three save-writer bodies have preservation contracts. Source contracts do not instantiate the block entities or prove network/save behavior.
+
+The complete clean replay also passes earlier suites: 173 standalone Java checks, existing Python guards and save/brain contracts, package metadata, the 48-model suite, livestock/cat suite, mechanical/boat/equine suite and seasonal-model suite. Deprecated JOML/target API warnings remain visible. The new test runner and its inspect_api invocation are tracked in the final source.
+
+### Independent GitHub verification
+
+[GitHub run **37998292416**](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37998292416), source `5024736b`, completed with overall **failure** because main compilation remains broken.
 
 | Check | Observed result |
 | --- | --- |
-| Full Gradle/main compilation | FAIL: exit 1; **1,997 javac errors**, grouped into **1,908 path/line/message entries**. |
-| New seasonal/mold suite | PASS: **208,269 contract assertions**, including **200,225 scalar parity comparisons**; **392 native mold cells** and **194 asset-loader checks**. |
-| New Python mutation guards | PASS: all **six** new tests. |
-| Earlier utility, save, brain and headless model suites | PASS; independently reproduced against the published source. |
+| Full Gradle/main compilation | FAIL: exit 1, **1,927 javac errors**; summary groups them into **1,845 path/line/message entries**. |
+| New snapshot-model suite | PASS: **102 pile-count scenarios**, **65,904 position/UV vertices**, **all 65,536 scraping masks**, **428,808 counted assertions**. |
+| New Python mutation guards | PASS: **12 tests**. |
+| Earlier model, utility, save, brain and seasonal suites | PASS; independently reproduced against the published source. |
 | Main/data/test license tasks | PASS. |
-| Existing resource-validation step | PASS; this is not a registered in-game reload or visual test. |
-| Downloaded CI source preservation | PASS: all **131 reviewed postimages** match; the new test invocation is tracked and temporary transfer paths are absent. |
+| Existing resource-validation step | PASS; not a registered game reload or visual test. |
+| Published source preservation | PASS: all **28 reviewed changes**, including two deletions, match the downloaded source; the test invocation is tracked and temporary transport files are absent. |
 
-Artifact **11646452667**, `tfc-port-diagnostics-37994534146-1`, retains logs, reports and exact source until **October 16, 2026 UTC**. Downloaded ZIP SHA-256 **3aeda006199a2819512e15e1aca41ac825c3251153f7d1f48cc76b4db7e6a65f** was verified. Every one of the 131 source/resource/test postimages matches the archived source and all one-time transport paths are absent. The source includes the new inspection-suite invocation.
+Artifact **11648720875**, `tfc-port-diagnostics-37998292416-1`, retains logs, reports and exact source until **October 16, 2026 UTC**. Downloaded ZIP SHA-256 **88ec609996c45a0bcedbe7ee695904f030a6b63d4ef99b73e152190ced9f7617** was verified. The entire API-inspection/probe step passed, independently matching the local final result. These passing steps do not override the failed full build.
 
-Normal validation continues to run:
+Normal CI still runs the full command without overriding its failure status:
 
 ```sh
 ./gradlew -I tools/porting/diagnostics.gradle writePortClasspath compileJava compileDataJava compileTestJava build --continue --no-daemon --no-configuration-cache --console=plain
 ```
 
-Passing standalone probes or resource validation does not override a failed full build. Raw javac totals and grouped path/line/message summaries are distinct measures.
-
 ### Remaining compiler and playability boundary
 
-Completed local diagnostics move **2,103 to 1,997 (106 fewer)**; counts include cascading errors and are not independent bug counts or a completion percentage. The full GitHub build independently reproduces the final 1,997 raw javac count; its 1,908 grouped entries are a different reporting measure.
+The locally and independently CI-confirmed reduction is **1,997 to 1,927 (70 diagnostics)**. Counts include cascading failures and are not independent bugs or a completion percentage. ContainedFluidModel, TrimmedItemModel, ClientEventHandler, LevelRendererExtension and overlays remain prominent rendering clusters. Recipes, equipment/materials, capabilities, schedules, registry/holder/worldgen and JEI/Patchouli work remain outstanding.
 
-NOT RUN: registered resource reload, atlas baking, live climate/world selection, GPU rendering, in-game appearance, client/dedicated-server startup, world generation/save/reload, multiplayer, survival progression or performance measurements. Prior registry-backed round trips and bootstrap-dependent probes remain unexecuted. Downstream full data/test compilation and packaging remain blocked.
+NOT RUN: live block-entity extraction, real chunk workers, atlas/material baking, registered whole-resource reload, GPU rendering, in-game appearance, client/server startup, world generation/save/reload, multiplayer, survival progression or performance measurements. Earlier registry-backed round trips and bootstrap-dependent probes remain unexecuted. Full downstream data/test compilation and packaging remain blocked; no playable JAR or release is claimed.
 
-Contained-fluid, trimmed-item, pile and mold-table model migration remains open, as do other block/item/block-entity rendering, ClientEventHandler/world rendering/overlays, JEI/Patchouli, recipes, equipment/materials, capabilities, schedules, registry/holder and world-generation APIs. No 26.3 or Earth code changed. No playable JAR, release or CurseForge upload is claimed. Continue using [PROJECT_STATUS](../../PROJECT_STATUS.md) and its compiler/playability gates.
+Continue with the explicit target and release gates in [PROJECT_STATUS](../../PROJECT_STATUS.md).
