@@ -1,51 +1,56 @@
 # TFC Foundations — Current Project Status
 
-Updated 2026-10-09 UTC (October 8 in America/Los_Angeles).
+Updated 2026-10-09 UTC and America/Los_Angeles.
 
 **Version 0.0.0 remains an incomplete source port. Full compilation, client/server startup and survival testing have not passed. No playable JAR or release was produced by this checkpoint.**
 
 ## Direction and targets
 
-Continue public development in `Shnewbs/TFC-Foundations`, preserving Git history, EUPL notices, credits and `tfc` resource IDs. First-playable priority: Minecraft 26.1.2, NeoForge 26.1.2.114, JEI 29.43.0.107 and Patchouli 26.1-94. Forward branch `26.x` remains the separately verified Minecraft 26.3 track toward 26.4; it was unchanged in this continuation. Both tracks use Java 25 and Gradle 9.2.1. Do not copy target-specific migrations blindly or remove core systems to obtain compilation.
+Continue public development in `Shnewbs/TFC-Foundations`, preserving Git history, EUPL notices, credits and `tfc` identifiers. First-playable priority: Minecraft 26.1.2, NeoForge 26.1.2.114, JEI 29.43.0.107 and Patchouli 26.1-94. Both tracks use Java 25 and Gradle 9.2.1. The separate `26.x` branch remains the Minecraft 26.3 forward track toward a verified 26.4 port; no changes were made to it here. Core gameplay, visuals, required guide and publication gates remain enabled.
 
-## Hierarchical model/render-state checkpoint
+## Livestock, cat and native-renderer checkpoint
 
-Public source **`bcbdf950ff4280199adcfeaa15122cf6bf85e186`** applies a reviewed **68-file checkpoint**, following staging `80fd233bc22be98e8ce52cc73c0ab6337f464494`. It adopts native EntityModel/render-state and keyframe APIs for the shared hierarchical animal/fish/critter path and associated renderers. It does not finish all entity models or renderers.
+Public source **`354bb9ec206f612489172cf2100b69b30f6d14d4`** follows staging `124c68f7bd109271c08fb3c094773be45f7d3c6e`. Apply run `37926602783` verified all preimages/postimages for exactly **35 files**, removed the one-time transport and used a normal push. Target/dependency pins were unchanged.
 
-Model setup consumes a detached TFCAnimalRenderState instead of reading live entities, brains, calendars or levels. Extraction captures conditional state, texture selection and independently copied animation timelines; custom state is reset between captures. Baked keyframes are cached per definition identity and model instance, never shared between model roots. No measured performance improvement is claimed.
+Ten livestock model implementations and the cat/collar path now consume detached render state. Juvenile transforms preserve the reviewed head/body scaling order; sex, horn, udder, wool and rooster visibility remain implemented. Bird wing phase is captured separately from native animation age. Genetic size keeps the existing clamped multiplier. Native pose resets prevent baby/visibility/water state leaking into subsequent poses.
 
-Existing geometry and declared keyframes are protected by 48 source contracts. The dog intentionally adopts the verified native adult-wolf mesh factory while retaining the adult/collar texture layout. Dog sitting/standing/head-roll behavior and camel baby transform order are covered by actual model tests. Headless testing also caught strict native binding failures where old shared animations referenced absent bones. The compatibility path permits only explicitly reviewed model/bone omissions; unexpected names and wholly incompatible animations still fail. It preserves legacy omissions rather than inventing geometry or silently accepting new mistakes.
+Eight custom livestock geometry factories remain byte-identical. Pig/goat/native feline factories use their exact target APIs; the cat intentionally retains an adult-layout texture with custom juvenile proportions and native feline sitting/sleeping animation. The deformed collar uses the same pose state. This is not a pixel-identical in-game appearance claim.
 
-## Independent validation
+Four native fish renderer adapters preserve the field-guide origin exemption through captured state based on the actual entity position, not interpolated render coordinates. Squid/glowing-squid adapters retain their adult-layout textures; glow-arrow rendering uses the target arrow state. Live extraction and renderer construction remain untested.
 
-[GitHub run 37889572978](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37889572978), source `bcbdf950`, completed with overall **failure** because main compilation is still broken.
+## Validation
+
+[GitHub validation 37926650392](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37926650392), source `354bb9ec`, completed with overall **failure** because main compilation is still broken.
 
 | Check | Observed result |
 | --- | --- |
-| Full Gradle/main compilation | FAIL: exit 1, 2,361 javac errors; summary groups them into 2,250 path/line/message entries. |
-| New headless production-model tests | PASS: 48 models, 384 model/scenario combinations, 1,720 assertions, 152,544 finite CPU vertices checked. |
-| Model preservation checks | PASS: 48 geometry/keyframe contracts, explicit missing-bone rules and two native texture presence/layout checks. |
-| Existing standalone suites | PASS: 173 Java checks, six Python guards and the prior save/brain contracts. |
-| Separate production compilation | PASS: migrated models/state, prior particle/base/save utilities and all 114 package-info files. This is not full-mod compilation. |
+| Full Gradle/main compilation | FAIL: exit 1, 2,193 javac errors; summary groups them into 2,095 path/line/message entries. |
+| New headless model suite | PASS: 11 models, 336 scenarios, 3,157 assertions, 103,680 finite CPU vertices. |
+| Existing headless model suite | PASS: 48 models, 384 scenarios, 1,724 assertions, 152,544 CPU vertices. |
+| Earlier standalone suites and source/API contracts | PASS. |
 | Main/data/test license tasks | PASS. |
-| Existing resource-validation step | PASS; it does not establish in-game visual correctness. |
-| Published source preservation | PASS: all 68 reviewed postimages match the downloaded CI source; temporary transport files are absent. |
+| Existing resource-validation step | PASS; not in-game visual validation. |
+| Downloaded CI source preservation | PASS: all 35 reviewed postimages match; test invocation is tracked and temporary transfer files are absent. |
 
-Both the edited local source and a clean Git patch replay reproduce **2,361 errors** across 1,635 main sources, exit 1, without timeout. This diagnostic command uses `-proc:none`, not the complete Gradle/mixin pipeline. Compared with the previous completed 2,583 pass, there are **222 fewer diagnostics**, not necessarily 222 individual fixes or a completion percentage. No diagnostics appear in the migrated model/state/renderer files; the minimally adjusted ClientEventHandler still has unrelated errors.
+Artifact **11614218054**, `tfc-port-diagnostics-37926650392-1`, preserves logs, reports and the exact source until October 16, 2026 UTC. Downloaded ZIP SHA-256 **81ce5b3255179136d3e26b677746dc308c3f4a1469f1bae2ce95993661cca6e8** was verified.
 
-The headless suite constructs real production models, applies poses and emits native CPU geometry. It does **not** execute live entity extraction, GPU drawing, a game client or gameplay. Client/server launch, actual appearance, world save/reload, multiplayer, survival progression, registry-backed round trips and performance measurements remain untested. Downstream complete data/test compilation and packaging remain blocked.
+The edited local source and a clean Git patch replay each complete the diagnostic main pass with **1,640 source files, exit 1, 2,193 errors and no timeout**. This uses `-proc:none`, not the full Gradle/mixin pipeline. Compared with the previous completed 2,361 pass, there are **168 fewer diagnostics**, not necessarily 168 individual fixes or a completion percentage. Changed model/renderer/state paths have no diagnostics in this traversal except the minimally adjusted, still-incomplete ClientEventHandler.
 
-Artifact **11598051560**, `tfc-port-diagnostics-37889572978-1`, retains logs, reports and exact source until October 16, 2026 UTC. Downloaded SHA-256 **615759954bed4906c6ac5d5a8d7fbf615380ffc5616f2464e30dca512ab4cec3** was verified. The source patch passes a clean Git application and reproduces all reviewed files.
+The new headless suite exercises **11 real production models across 336 scenarios**, with **3,157 assertions and 103,680 finite CPU vertices**. The existing 48-model suite still passes: 384 scenarios, 1,724 assertions and 152,544 CPU vertices. Across both suites that is 59 concrete models and 720 model/scenario combinations; the new deformed cat collar is additional geometry, not counted as another animal model.
+
+Tests cover baby/adult pose reuse, visibility, geometric transform order, independent roots, cat/collar alignment, wing timing, genetic size and guide-origin state reuse. Eight geometry source contracts, four native texture layouts and separate compilation of four actual native fish renderers also pass locally. Existing 173 standalone Java checks, six Python guards, save/brain contracts and 114 package-info compilations remain passing. A fresh complete local `inspect_api.py` run records exit 0; the clean replay records probe exit 0 and diagnostic compiler exit 1. No game or TFC stubs were introduced.
+
+NOT RUN: live TFC entity extraction, renderer construction, GPU drawing, actual appearance, client/server startup, world creation/save/reload, multiplayer, survival progression and performance measurements. Earlier registry-backed round trips and bootstrap-dependent probes also remain unexecuted. Headless model tests do not establish playability or replace downstream full data/test compilation and packaging.
 
 ## Next compiler/playability gates
 
-1. Continue the remaining livestock/native entity models and renderers, block/item/block-entity rendering, ClientEventHandler/overlays and JEI/Patchouli integration.
-2. Finish remaining recipes, equipment/materials, capabilities, TFCBrain schedules, registry/holder and world-generation APIs; then pass complete main/data/test compilation, licenses, generated resources and packaging.
-3. Run genuine client/dedicated-server launch, new-world generation, save/reload, reconnect, calendar, inventory/fluid, guide/recipe and survival-progression checks before calling an artifact playable.
-4. Independently verify shared work on 26.3. No 26.3 or Earth code changed in this checkpoint; release gates remain intact.
+1. Complete horse/chest and remaining native/mechanical models, boats, block/item/block-entity rendering, ClientEventHandler/overlays and JEI/Patchouli adapters.
+2. Finish recipes, equipment/materials, capabilities, TFCBrain schedules, registry/holder and generation interfaces; pass full main/data/test compilation, licenses, resource generation and packaging.
+3. Run genuine client/dedicated-server startup, new-world generation, save/reload/reconnect, calendar, inventory/fluid, guide/recipe and survival tests before calling an artifact playable.
+4. Verify shared work separately on 26.3; do not blindly copy migrations across its divergent loot/provider/holder/worldgen APIs.
 
 ## Earth and history
 
-Normal TFC generation remains the default. The optional natural Earth request remains nominally one block per horizontal meter without generated manmade structures. Existing coordinate/elevation groundwork is not an implemented Earth preset, licensed dataset pipeline or complete chunk generator. Projection, height, geology/climate, caching and performance requirements remain open.
+Normal TFC generation remains the default. The optional natural Earth request remains nominally one block per horizontal meter without generated manmade structures. Coordinate/elevation groundwork is not a selectable Earth preset, licensed dataset pipeline or complete chunk generator. Projection, height, geology/climate, caching and performance requirements remain open. No Earth code changed here.
 
-See [WORK_LOG](docs/foundations/WORK_LOG.md) for commits, commands and validation limits. The complete preceding status and log are preserved byte-for-byte in [STATUS_BEFORE_MODEL_RENDER_STATE](docs/foundations/history/STATUS_BEFORE_MODEL_RENDER_STATE.md) and [WORK_LOG_BEFORE_MODEL_RENDER_STATE](docs/foundations/history/WORK_LOG_BEFORE_MODEL_RENDER_STATE.md).
+See [WORK_LOG](docs/foundations/WORK_LOG.md) for exact commands, commits and evidence. The complete preceding status and log are retained byte-for-byte in [STATUS_BEFORE_LIVESTOCK_RENDER_STATE](docs/foundations/history/STATUS_BEFORE_LIVESTOCK_RENDER_STATE.md) and [WORK_LOG_BEFORE_LIVESTOCK_RENDER_STATE](docs/foundations/history/WORK_LOG_BEFORE_LIVESTOCK_RENDER_STATE.md).
