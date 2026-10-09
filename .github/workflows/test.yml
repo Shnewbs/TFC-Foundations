@@ -33,13 +33,14 @@ jobs:
         shell: bash
         run: |
           mkdir -p port-diagnostics
-          # Retain every diagnostic in the artifact, without flooding the job log.
-          # The real Gradle exit code still determines whether this step passes.
           set +e
-          ./gradlew compileJava compileDataJava compileTestJava build --continue --no-daemon --console=plain > port-diagnostics/build.log 2>&1
+          ./gradlew -I tools/porting/diagnostics.gradle writePortClasspath compileJava compileDataJava compileTestJava build --continue --no-daemon --no-configuration-cache --console=plain > port-diagnostics/build.log 2>&1
           result=$?
           printf '%s\n' "$result" > port-diagnostics/gradle-exit-code.txt
           exit "$result"
+      - name: Inspect resolved target API
+        if: ${{ !cancelled() && steps.build.outcome != 'skipped' }}
+        run: python3 tools/porting/inspect_api.py
       - name: Summarize compiler diagnostics
         if: ${{ always() }}
         shell: bash
@@ -57,39 +58,39 @@ jobs:
           text = log.read_text(errors='replace') if log.exists() else 'Build log unavailable: setup or checkout failed.'
           text = re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]', '', text)
           lines = text.splitlines()
-          pattern = re.compile(r'^(.*?\.java):(\d+): (error|warning): (.*)$')
+          pattern = re.compile(r'^\s*(.*?\.java):(\d+): (error|warning): (.*)$')
           errors = []
+          seen = set()
+          occurrences = 0
           for index, line in enumerate(lines):
               match = pattern.match(line)
               if not match or match[3] != 'error':
                   continue
-              path = match[1].replace(os.environ.get('GITHUB_WORKSPACE', '') + '/', '')
+              occurrences += 1
+              path = match[1].strip().removeprefix(os.environ.get('GITHUB_WORKSPACE', '') + '/')
+              key = (path, int(match[2]), match[4].strip())
+              if key in seen:
+                  continue
+              seen.add(key)
               context = []
               for extra in lines[index + 1:index + 9]:
                   if pattern.match(extra) or extra.startswith('> Task'):
                       break
                   context.append(extra)
-              errors.append({'path': path, 'line': int(match[2]), 'message': match[4], 'context': context})
+              errors.append({'path': key[0], 'line': key[1], 'message': key[2], 'context': context})
           groups = collections.Counter('/'.join(e['path'].split('/')[:9]) for e in errors)
           report = {
               'commit': os.environ.get('GITHUB_SHA'),
               'ref': os.environ.get('GITHUB_REF_NAME'),
               'displayed_error_count': len(errors),
-              'note': 'Displayed diagnostics are not the total migration backlog. Compiler limits and dependency failures may hide later errors.',
+              'diagnostic_occurrences': occurrences,
+              'note': 'Unique displayed diagnostics are not the total migration backlog. Compiler limits and dependency failures may hide later errors.',
               'errors': errors,
               'failed_tasks': [line for line in lines if line.startswith('> Task ') and line.endswith(' FAILED')],
               'tail': lines[-45:],
           }
           (out / 'compiler-errors.json').write_text(json.dumps(report, indent=2) + '\n')
-          summary = [
-              '# Target-branch validation',
-              '',
-              'Commit: `' + str(report['commit']) + '`',
-              'Displayed Java errors: **' + str(len(errors)) + '**',
-              report['note'],
-              '',
-              '## Largest affected source groups',
-          ]
+          summary = ['# Target-branch validation', '', 'Commit: `' + str(report['commit']) + '`', 'Unique displayed Java errors: **' + str(len(errors)) + '**', report['note'], '', '## Largest affected source groups']
           summary += ['- `' + key + '`: ' + str(count) for key, count in groups.most_common(12)]
           summary += ['', '## First 12 diagnostics', '```text']
           for error in errors[:12]:
