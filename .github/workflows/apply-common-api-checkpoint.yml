@@ -1,0 +1,43 @@
+name: Apply reviewed common API checkpoint
+
+# One-time transport of locally tested source, not a playable-release workflow.
+on:
+  push:
+    branches: [26.1.2]
+    paths: [.github/workflows/apply-common-api-checkpoint.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  apply:
+    if: github.repository == 'Shnewbs/TFC-Foundations' && github.ref == 'refs/heads/26.1.2'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - name: Checkout exact staging commit
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Apply checksum-verified source
+        run: python3 tools/porting/.apply-checkpoint.py
+      - name: Commit reviewed source and remove transport files
+        shell: bash
+        run: |
+          git rm -f tools/porting/.checkpoint-part0 tools/porting/.checkpoint-part1 tools/porting/.apply-checkpoint.py .github/workflows/apply-common-api-checkpoint.yml
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Port shared gameplay APIs and preserve typed NBT reads; add standalone regression checks'
+          # Normal push only: concurrent branch changes must not be overwritten.
+          git push origin HEAD:refs/heads/26.1.2
+          echo "Applied source commit: $(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          echo 'Source application is not a successful mod build or a playable release.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Dispatch normal validation on the new source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run test.yml --repo "$GITHUB_REPOSITORY" --ref 26.1.2
