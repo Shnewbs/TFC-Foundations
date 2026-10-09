@@ -1,7 +1,8 @@
 {
   "variants": {
     "": {
-      "model": "tfc:block/plant/tulip_red_dynamic"
+      "model": "tfc:block/plant/tulip_red_dynamic",
+      "type": "tfc:dynamic"
     }
   }
 }

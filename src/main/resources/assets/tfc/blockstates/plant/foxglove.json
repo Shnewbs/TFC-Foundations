@@ -1,10 +1,12 @@
 {
   "variants": {
     "part=lower": {
-      "model": "tfc:block/plant/foxglove_lower_dynamic"
+      "model": "tfc:block/plant/foxglove_lower_dynamic",
+      "type": "tfc:dynamic"
     },
     "part=upper": {
-      "model": "tfc:block/plant/foxglove_upper_dynamic"
+      "model": "tfc:block/plant/foxglove_upper_dynamic",
+      "type": "tfc:dynamic"
     }
   }
 }

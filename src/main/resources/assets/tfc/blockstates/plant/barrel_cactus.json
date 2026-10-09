@@ -16,7 +16,8 @@
       },
       "apply": [
         {
-          "model": "tfc:block/plant/barrel_cactus_flower_dynamic"
+          "model": "tfc:block/plant/barrel_cactus_flower_dynamic",
+          "type": "tfc:dynamic"
         }
       ]
     },
@@ -25,7 +26,7 @@
         "part": "upper"
       },
       "apply": [
-		{
+        {
           "model": "tfc:block/plant/barrel_cactus_upper"
         }
       ]

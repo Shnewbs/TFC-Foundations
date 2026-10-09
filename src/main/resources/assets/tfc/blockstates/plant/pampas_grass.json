@@ -13,7 +13,8 @@
         "part": "upper"
       },
       "apply": {
-        "model": "tfc:block/plant/pampas_grass_dynamic"
+        "model": "tfc:block/plant/pampas_grass_dynamic",
+        "type": "tfc:dynamic"
       }
     }
   ]

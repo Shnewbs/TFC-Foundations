@@ -1,26 +1,33 @@
 {
   "multipart": [
-	{
+    {
       "apply": [
         {
           "model": "tfc:block/plant/lotus_empty"
         }
       ]
     },
-	{
+    {
       "apply": [
         {
-		  "model": "tfc:block/plant/lotus_dynamic"
-		},
-		{
-		  "model": "tfc:block/plant/lotus_dynamic", "y": 90
-		},
-		{
-		  "model": "tfc:block/plant/lotus_dynamic", "y": 180
-		},
-		{
-		  "model": "tfc:block/plant/lotus_dynamic", "y": 270
-		}
+          "model": "tfc:block/plant/lotus_dynamic",
+          "type": "tfc:dynamic"
+        },
+        {
+          "model": "tfc:block/plant/lotus_dynamic",
+          "y": 90,
+          "type": "tfc:dynamic"
+        },
+        {
+          "model": "tfc:block/plant/lotus_dynamic",
+          "y": 180,
+          "type": "tfc:dynamic"
+        },
+        {
+          "model": "tfc:block/plant/lotus_dynamic",
+          "y": 270,
+          "type": "tfc:dynamic"
+        }
       ]
     }
   ]

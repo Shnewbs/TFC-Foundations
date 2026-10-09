@@ -1626,7 +1626,7 @@ def generate(rm: ResourceManager):
             for i in range(0, stages):
                 rm.block_model(f'plant/{plant}_{i}', parent='block/cross', textures={'cross': f'tfc:block/plant/{plant}/{plant}_{i}'})
     for plant, states in SINGLE_BLOCK_STAGE_PLANTS.items():
-        rm.blockstate('plant/%s' % plant,  model= 'tfc:block/plant/%s_dynamic' % plant)
+        rm.blockstate('plant/%s' % plant, variants={'': {'type': 'tfc:dynamic', 'model': 'tfc:block/plant/%s_dynamic' % plant}})
         rm.custom_block_model('plant/%s_dynamic' % plant, 'tfc:plant', {'blooming': {'parent': 'tfc:block/plant/%s_%s' % (plant, states[0])}, 'seeding': {'parent': 'tfc:block/plant/%s_%s' % (plant, states[1])}, 'dying': {'parent': 'tfc:block/plant/%s_%s' % (plant, states[2])}, 'dormant': {'parent': 'tfc:block/plant/%s_%s' % (plant, states[3])}, 'sprouting': {'parent': 'tfc:block/plant/%s_%s' % (plant, states[4])}, 'budding': {'parent': 'tfc:block/plant/%s_%s' % (plant, states[5])}})
     for plant in MODEL_PLANTS:
         rm.blockstate('plant/%s' % plant, model='tfc:block/plant/%s' % plant)
@@ -1918,9 +1918,9 @@ def generate(rm: ResourceManager):
         # Used for block model
 
         if WOODS[wood].flower_model != 'random':
-            block = rm.blockstate(('wood', 'leaves', wood), model='tfc:block/wood/leaves/%s_dynamic' % wood).with_lang(lang('%s leaves', wood))
+            block = rm.blockstate(('wood', 'leaves', wood), variants={'': {'type': 'tfc:dynamic', 'model': 'tfc:block/wood/leaves/%s_dynamic' % wood}}).with_lang(lang('%s leaves', wood))
         elif wood == 'chestnut':
-            block = blank_blockstate(rm, ('wood', 'leaves', wood), {"multipart":[{"apply":[{"model":"tfc:block/wood/leaves/chestnut_empty"}]},{"apply":[{"model":"tfc:block/wood/leaves/chestnut_dynamic_0","weight":8},{"model":"tfc:block/wood/leaves/chestnut_dynamic_1","weight":5},{"model":"tfc:block/wood/leaves/chestnut_dynamic_2","weight":5},{"model":"tfc:block/wood/leaves/chestnut_dynamic_3","weight":5},{"model":"tfc:block/wood/leaves/chestnut_dynamic_4","weight":12}]}]}).with_lang(lang('%s leaves', wood))
+            block = blank_blockstate(rm, ('wood', 'leaves', wood), {"multipart":[{"apply":[{"model":"tfc:block/wood/leaves/chestnut_empty"}]},{"apply":[{"type":"tfc:dynamic","model":"tfc:block/wood/leaves/chestnut_dynamic_0","weight":8},{"type":"tfc:dynamic","model":"tfc:block/wood/leaves/chestnut_dynamic_1","weight":5},{"type":"tfc:dynamic","model":"tfc:block/wood/leaves/chestnut_dynamic_2","weight":5},{"type":"tfc:dynamic","model":"tfc:block/wood/leaves/chestnut_dynamic_3","weight":5},{"type":"tfc:dynamic","model":"tfc:block/wood/leaves/chestnut_dynamic_4","weight":12}]}]}).with_lang(lang('%s leaves', wood))
 
         if wood == 'palm' or wood == 'willow' or wood == 'mangrove':
             block.with_block_model({

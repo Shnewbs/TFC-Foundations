@@ -1,7 +1,8 @@
 {
   "variants": {
     "": {
-      "model": "tfc:block/plant/flame_vine_dynamic"
+      "model": "tfc:block/plant/flame_vine_dynamic",
+      "type": "tfc:dynamic"
     }
   }
 }

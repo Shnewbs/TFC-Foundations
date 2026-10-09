@@ -17,23 +17,27 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 
-import net.dries007.tfc.util.Helpers;
-import net.minecraft.client.renderer.block.model.BlockElement;
-import net.minecraft.client.renderer.block.model.BlockElementFace;
-import net.minecraft.client.renderer.block.model.BlockFaceUV;
+import java.util.EnumMap;
+import java.util.Map;
+import com.mojang.math.Quadrant;
+import net.minecraft.client.resources.model.cuboid.CuboidModelElement;
+import net.minecraft.client.resources.model.cuboid.CuboidFace;
+import net.minecraft.client.resources.model.cuboid.UnbakedCuboidGeometry;
+import net.minecraft.client.resources.model.geometry.UnbakedGeometry;
 import net.minecraft.core.Direction;
 import net.minecraft.util.GsonHelper;
-import net.neoforged.neoforge.client.model.ElementsModel;
-import net.neoforged.neoforge.client.model.geometry.IGeometryLoader;
+import net.neoforged.neoforge.client.model.AbstractUnbakedModel;
+import net.neoforged.neoforge.client.model.StandardModelParameters;
+import net.neoforged.neoforge.client.model.UnbakedModelLoader;
 
-public class MoldsModelLoader implements IGeometryLoader<ElementsModel>
+public class MoldsModelLoader implements UnbakedModelLoader<MoldsModelLoader.MoldModel>
 {
 
     @Override
-    public ElementsModel read(JsonObject json, JsonDeserializationContext deserializationContext)
+    public MoldModel read(JsonObject json, JsonDeserializationContext deserializationContext)
             throws JsonParseException
     {
-        final JsonArray pattern = json.getAsJsonArray("pattern");
+        final JsonArray pattern = GsonHelper.getAsJsonArray(json, "pattern");
 
         final int height = pattern.size();
         if (height != 14)
@@ -57,12 +61,20 @@ public class MoldsModelLoader implements IGeometryLoader<ElementsModel>
             }
         }
 
-        return new ElementsModel(generateBlockElementsFromPattern(full));
+        return new MoldModel(StandardModelParameters.parse(json, deserializationContext), generateBlockElementsFromPattern(full));
     }
 
-    public static List<BlockElement> generateBlockElementsFromPattern(boolean[][] pattern)
+    public static List<CuboidModelElement> generateBlockElementsFromPattern(boolean[][] pattern)
     {
-        ArrayList<BlockElement> elements = new ArrayList<>();
+        if (pattern == null || pattern.length != 14)
+        {
+            throw new IllegalArgumentException("Mold pattern must have 14 rows");
+        }
+        for (boolean[] row : pattern)
+        {
+            if (row == null || row.length != 14) throw new IllegalArgumentException("Mold rows must have 14 columns");
+        }
+        ArrayList<CuboidModelElement> elements = new ArrayList<>();
 
         int from_y = 1;
         int to_y = 2;
@@ -80,17 +92,16 @@ public class MoldsModelLoader implements IGeometryLoader<ElementsModel>
                 Vector3f from = new Vector3f(from_x, from_y, from_z);
                 Vector3f to = new Vector3f(to_x, to_y, to_z);
 
-                elements.add(new BlockElement(
-                        from, to,
-                        Helpers.mapOf(Direction.class,
-                                direction -> new BlockElementFace(
-                                        null, -1, "#0",
-                                        new BlockFaceUV(autoRelativeUV(direction, from, to), 0))),
-                        null,
-                        true));
+                final Map<Direction, CuboidFace> faces = new EnumMap<>(Direction.class);
+                for (Direction direction : Direction.values())
+                {
+                    final float[] uv = autoRelativeUV(direction, from, to);
+                    faces.put(direction, new CuboidFace(null, -1, "#0", new CuboidFace.UVs(uv[0], uv[1], uv[2], uv[3]), Quadrant.R0));
+                }
+                elements.add(new CuboidModelElement(from, to, faces, null, true, 0));
             }
         }
-        return elements;
+        return List.copyOf(elements);
     }
 
     private static float[] autoRelativeUV(Direction direction, Vector3f from, Vector3f to)
@@ -112,5 +123,21 @@ public class MoldsModelLoader implements IGeometryLoader<ElementsModel>
         }
 
         return new float[] {};
+    }
+    public static final class MoldModel extends AbstractUnbakedModel
+    {
+        private final UnbakedCuboidGeometry geometry;
+
+        private MoldModel(StandardModelParameters parameters, List<CuboidModelElement> elements)
+        {
+            super(parameters);
+            this.geometry = new UnbakedCuboidGeometry(elements);
+        }
+
+        @Override
+        public UnbakedGeometry geometry()
+        {
+            return geometry;
+        }
     }
 }

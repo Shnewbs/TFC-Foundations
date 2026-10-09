@@ -4,7 +4,8 @@
       "model": "tfc:block/empty"
     },
     "part=upper": {
-      "model": "tfc:block/plant/sea_lavender_dynamic"
+      "model": "tfc:block/plant/sea_lavender_dynamic",
+      "type": "tfc:dynamic"
     }
   }
 }

@@ -1,16 +1,23 @@
 {
   "variants": {
     "facing=east": {
-      "model": "tfc:block/plant/ramirezella_dynamic", "y": 90
+      "model": "tfc:block/plant/ramirezella_dynamic",
+      "y": 90,
+      "type": "tfc:dynamic"
     },
     "facing=south": {
-      "model": "tfc:block/plant/ramirezella_dynamic", "y": 180
+      "model": "tfc:block/plant/ramirezella_dynamic",
+      "y": 180,
+      "type": "tfc:dynamic"
     },
     "facing=west": {
-      "model": "tfc:block/plant/ramirezella_dynamic", "y": 270
+      "model": "tfc:block/plant/ramirezella_dynamic",
+      "y": 270,
+      "type": "tfc:dynamic"
     },
     "facing=north": {
-      "model": "tfc:block/plant/ramirezella_dynamic"
+      "model": "tfc:block/plant/ramirezella_dynamic",
+      "type": "tfc:dynamic"
     }
   }
 }

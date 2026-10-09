@@ -4,7 +4,8 @@
       "model": "tfc:block/empty"
     },
     "part=lower": {
-      "model": "tfc:block/plant/cattail_dynamic"
+      "model": "tfc:block/plant/cattail_dynamic",
+      "type": "tfc:dynamic"
     }
   }
 }

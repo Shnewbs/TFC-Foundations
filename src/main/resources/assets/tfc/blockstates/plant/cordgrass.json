@@ -4,7 +4,8 @@
       "model": "tfc:block/empty"
     },
     "part=upper": {
-      "model": "tfc:block/plant/cordgrass_dynamic"
+      "model": "tfc:block/plant/cordgrass_dynamic",
+      "type": "tfc:dynamic"
     }
   }
 }

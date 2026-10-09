@@ -19,17 +19,18 @@
         }
       ]
     },
-	{
-	  "apply": [
-		{
-		  "model": "tfc:block/plant/canna_stem"
-		}
-	  ]
-    },
-	{
+    {
       "apply": [
         {
-          "model": "tfc:block/plant/canna_dynamic"
+          "model": "tfc:block/plant/canna_stem"
+        }
+      ]
+    },
+    {
+      "apply": [
+        {
+          "model": "tfc:block/plant/canna_dynamic",
+          "type": "tfc:dynamic"
         }
       ]
     }

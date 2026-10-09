@@ -9,8 +9,9 @@
     },
     {
       "apply": [
-		{
-          "model": "tfc:block/plant/cycad_dynamic"
+        {
+          "model": "tfc:block/plant/cycad_dynamic",
+          "type": "tfc:dynamic"
         }
       ]
     }
