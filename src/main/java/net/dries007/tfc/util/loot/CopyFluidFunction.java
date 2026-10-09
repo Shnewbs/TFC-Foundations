@@ -13,13 +13,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.dries007.tfc.util.Helpers;
 
@@ -68,17 +67,17 @@ public class CopyFluidFunction extends LootItemConditionalFunction
     }
 
     @Override
-    public LootItemFunctionType<CopyFluidFunction> getType()
+    public MapCodec<CopyFluidFunction> codec()
     {
-        return TFCLoot.COPY_FLUID.get();
+        return CODEC;
     }
 
     @Override
     protected ItemStack run(ItemStack stack, LootContext context)
     {
-        if (context.hasParam(LootContextParams.BLOCK_ENTITY))
+        if (context.hasParameter(LootContextParams.BLOCK_ENTITY))
         {
-            return copyToItem(stack, context.getParam(LootContextParams.BLOCK_ENTITY));
+            return copyToItem(stack, context.getParameter(LootContextParams.BLOCK_ENTITY));
         }
         return stack;
     }

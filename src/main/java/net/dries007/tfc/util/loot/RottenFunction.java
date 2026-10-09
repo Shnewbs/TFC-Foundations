@@ -12,7 +12,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import net.dries007.tfc.common.component.food.FoodCapability;
@@ -27,9 +26,9 @@ public class RottenFunction extends LootItemConditionalFunction
     }
 
     @Override
-    public LootItemFunctionType<RottenFunction> getType()
+    public MapCodec<RottenFunction> codec()
     {
-        return TFCLoot.ROTTEN.get();
+        return CODEC;
     }
 
     @Override

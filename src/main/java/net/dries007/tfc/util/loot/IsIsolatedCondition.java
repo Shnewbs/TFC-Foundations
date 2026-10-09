@@ -6,7 +6,7 @@
 
 package net.dries007.tfc.util.loot;
 
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
@@ -16,16 +16,18 @@ public enum IsIsolatedCondition implements LootItemCondition
 {
     INSTANCE;
 
+    public static final MapCodec<IsIsolatedCondition> CODEC = MapCodec.unit(INSTANCE);
+
     @Override
-    public LootItemConditionType getType()
+    public MapCodec<IsIsolatedCondition> codec()
     {
-        return TFCLoot.IS_ISOLATED.get();
+        return CODEC;
     }
 
     @Override
     public boolean test(LootContext context)
     {
-        return context.hasParam(TFCLoot.ISOLATED);
+        return context.hasParameter(TFCLoot.ISOLATED);
     }
 
     @Contract(pure = true)

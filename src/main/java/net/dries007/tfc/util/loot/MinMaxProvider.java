@@ -9,6 +9,7 @@ package net.dries007.tfc.util.loot;
 import java.util.function.BiFunction;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProviders;
 
@@ -28,5 +29,13 @@ public abstract class MinMaxProvider implements NumberProvider
     {
         this.min = min;
         this.max = max;
+    }
+
+    @Override
+    public void validate(ValidationContext context)
+    {
+        NumberProvider.super.validate(context);
+        min.validate(context.forField("min"));
+        max.validate(context.forField("max"));
     }
 }

@@ -34,7 +34,11 @@ def main():
     result = subprocess.run(['javap', '-classpath', cp, '-public', *selected], text=True, capture_output=True, timeout=90)
     (OUT / 'target-api.txt').write_text(result.stdout + result.stderr)
     print(f'Inspected {len(selected)} API types from {len(classes)} target classes; javap exit {result.returncode}.')
-    raise SystemExit(result.returncode)
+    if result.returncode:
+        raise SystemExit(result.returncode)
+    # A separate process checks actual production classes; no Minecraft or TFC stubs.
+    smoke = subprocess.run(['python3', 'tools/porting/run_loot_smoke.py'], timeout=190)
+    raise SystemExit(smoke.returncode)
 
 
 if __name__ == '__main__':

@@ -6,9 +6,9 @@
 
 package net.dries007.tfc.util.loot;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 
 import org.jetbrains.annotations.Contract;
 
@@ -16,10 +16,12 @@ public enum AlwaysTrueCondition implements LootItemCondition
 {
     INSTANCE;
 
+    public static final MapCodec<AlwaysTrueCondition> CODEC = MapCodec.unit(INSTANCE);
+
     @Override
-    public LootItemConditionType getType()
+    public MapCodec<AlwaysTrueCondition> codec()
     {
-        return TFCLoot.ALWAYS_TRUE.get();
+        return CODEC;
     }
 
     @Override

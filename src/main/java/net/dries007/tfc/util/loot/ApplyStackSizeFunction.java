@@ -12,7 +12,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import net.dries007.tfc.common.component.size.ItemSizeManager;
@@ -27,9 +26,9 @@ public class ApplyStackSizeFunction extends LootItemConditionalFunction
     }
 
     @Override
-    public LootItemFunctionType<? extends LootItemConditionalFunction> getType()
+    public MapCodec<ApplyStackSizeFunction> codec()
     {
-        return TFCLoot.APPLY_STACK_SIZE.get();
+        return CODEC;
     }
 
     @Override

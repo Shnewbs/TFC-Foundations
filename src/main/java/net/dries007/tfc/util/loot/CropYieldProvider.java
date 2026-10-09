@@ -6,17 +6,19 @@
 
 package net.dries007.tfc.util.loot;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraft.world.level.storage.loot.providers.number.LootNumberProviderType;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 
 import net.dries007.tfc.common.blockentities.CropBlockEntity;
 
 public class CropYieldProvider extends MinMaxProvider
 {
+    public static final MapCodec<CropYieldProvider> CODEC = MinMaxProvider.codec(CropYieldProvider::new);
+
     public CropYieldProvider(NumberProvider min, NumberProvider max)
     {
         super(min, max);
@@ -25,7 +27,7 @@ public class CropYieldProvider extends MinMaxProvider
     @Override
     public float getFloat(LootContext context)
     {
-        final BlockEntity entity = context.getParamOrNull(LootContextParams.BLOCK_ENTITY);
+        final BlockEntity entity = context.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
         if (entity instanceof CropBlockEntity crop)
         {
             return Mth.lerp(crop.getYield(), min.getFloat(context), max.getFloat(context));
@@ -34,8 +36,8 @@ public class CropYieldProvider extends MinMaxProvider
     }
 
     @Override
-    public LootNumberProviderType getType()
+    public MapCodec<CropYieldProvider> codec()
     {
-        return TFCLoot.CROP_YIELD.get();
+        return CODEC;
     }
 }

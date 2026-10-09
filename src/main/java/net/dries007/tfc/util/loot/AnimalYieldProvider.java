@@ -6,19 +6,21 @@
 
 package net.dries007.tfc.util.loot;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraft.world.level.storage.loot.providers.number.LootNumberProviderType;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 
 import net.dries007.tfc.common.entities.livestock.TFCAnimalProperties;
 
 public class AnimalYieldProvider extends MinMaxProvider
 {
+    public static final MapCodec<AnimalYieldProvider> CODEC = MinMaxProvider.codec(AnimalYieldProvider::new);
+
     public AnimalYieldProvider(NumberProvider min, NumberProvider max)
     {
         super(min, max);
@@ -27,8 +29,8 @@ public class AnimalYieldProvider extends MinMaxProvider
     @Override
     public float getFloat(LootContext context)
     {
-        final Entity entity = context.getParamOrNull(LootContextParams.THIS_ENTITY);
-        final Player player = context.getParamOrNull(LootContextParams.LAST_DAMAGE_PLAYER);
+        final Entity entity = context.getOptionalParameter(LootContextParams.THIS_ENTITY);
+        final Player player = context.getOptionalParameter(LootContextParams.LAST_DAMAGE_PLAYER);
         if (entity instanceof TFCAnimalProperties properties)
         {
             float adjustedSize = properties.getGeneticSize();
@@ -52,8 +54,8 @@ public class AnimalYieldProvider extends MinMaxProvider
     }
 
     @Override
-    public LootNumberProviderType getType()
+    public MapCodec<AnimalYieldProvider> codec()
     {
-        return TFCLoot.ANIMAL_YIELD.get();
+        return CODEC;
     }
 }

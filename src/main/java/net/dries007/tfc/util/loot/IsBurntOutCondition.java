@@ -6,9 +6,9 @@
 
 package net.dries007.tfc.util.loot;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 
 import org.jetbrains.annotations.Contract;
 
@@ -16,16 +16,18 @@ public enum IsBurntOutCondition implements LootItemCondition
 {
     INSTANCE;
 
+    public static final MapCodec<IsBurntOutCondition> CODEC = MapCodec.unit(INSTANCE);
+
     @Override
-    public LootItemConditionType getType()
+    public MapCodec<IsBurntOutCondition> codec()
     {
-        return TFCLoot.IS_BURNT_OUT.get();
+        return CODEC;
     }
 
     @Override
     public boolean test(LootContext context)
     {
-        return context.hasParam(TFCLoot.BURNT_OUT);
+        return context.hasParameter(TFCLoot.BURNT_OUT);
     }
 
     @Contract(pure = true)

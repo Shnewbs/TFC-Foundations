@@ -6,10 +6,10 @@
 
 package net.dries007.tfc.util.loot;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 
 import org.jetbrains.annotations.Contract;
 
@@ -19,16 +19,18 @@ public enum IsMaleCondition implements LootItemCondition
 {
     INSTANCE;
 
+    public static final MapCodec<IsMaleCondition> CODEC = MapCodec.unit(INSTANCE);
+
     @Override
-    public LootItemConditionType getType()
+    public MapCodec<IsMaleCondition> codec()
     {
-        return TFCLoot.IS_MALE.get();
+        return CODEC;
     }
 
     @Override
     public boolean test(LootContext context)
     {
-        return context.hasParam(LootContextParams.THIS_ENTITY) && context.getParam(LootContextParams.THIS_ENTITY) instanceof TFCAnimalProperties properties && properties.isMale();
+        return context.hasParameter(LootContextParams.THIS_ENTITY) && context.getParameter(LootContextParams.THIS_ENTITY) instanceof TFCAnimalProperties properties && properties.isMale();
     }
 
     @Contract(pure = true)
