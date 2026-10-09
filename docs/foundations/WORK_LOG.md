@@ -54,3 +54,7 @@ CI now runs explicit compilation targets with `--continue`, retaining the failin
 ### Entity package migration — 2026-10-08
 
 Migrated 36 entity class locations plus MobSpawnType → EntitySpawnReason across 63 Java files using the official 26.3 class inventory. Updated the skeleton mixin bytecode target and verified the target invocation still exists. Retained all spawn-reason values used by TFC; verified each against EntitySpawnReason. Next checks: clean compilation, mixin application, natural/chunk/breeding/conversion spawns, animal AI, projectiles, boats/minecarts and save/reload. None of those gameplay checks has passed yet.
+
+### Dual-target build setup — 2026-10-08
+
+Accepted user direction: prioritize a playable 26.1.2 branch and continue 26.3 on 26.x for eventual 26.4. CI now listens to both branches and runs compiler, test and packaging checks independently. Modern Patchouli Maven coordinates use patchouli-neoforge; 26.1.2 pins released 26.1-94, while 26.3 remains blocked pending a compatible guide dependency. No runtime compatibility or release claimed.

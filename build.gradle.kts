@@ -132,7 +132,7 @@ neoForge {
 }
 
 dependencies {
-    // Never resolve old Minecraft integrations into a 26.3 runtime.
+    // Integration artifacts must match the Minecraft target of this branch.
     // Unported integrations remain in source until replacement adapters are ready.
     if (emiVersion.isPresent) {
         compileOnly("dev.emi:emi-neoforge:${emiVersion.get()}:api")
@@ -141,8 +141,8 @@ dependencies {
     compileOnly("mezz.jei:jei-${minecraftVersion}-neoforge-api:${jeiVersion}")
     runtimeOnly("mezz.jei:jei-${minecraftVersion}-neoforge:${jeiVersion}")
     if (patchouliVersion.isPresent) {
-        implementation("vazkii.patchouli:Patchouli:${patchouliVersion.get()}")
-        "dataImplementation"("vazkii.patchouli:Patchouli:${patchouliVersion.get()}")
+        implementation("vazkii.patchouli:patchouli-neoforge:${patchouliVersion.get()}")
+        "dataImplementation"("vazkii.patchouli:patchouli-neoforge:${patchouliVersion.get()}")
     }
     if (jadeVersion.isPresent) {
         implementation("curse.maven:jade-324717:${jadeVersion.get()}")
@@ -169,7 +169,7 @@ val verifyPortDependencies = tasks.register("verifyPortDependencies") {
     doLast {
         val missing = inputs.properties.getValue("missingIntegrationVersions") as List<*>
         check(missing.isEmpty()) {
-            "26.3 port is incomplete: verified target-version dependencies are missing for " +
+            "Port is incomplete: verified target-version dependencies are missing for " +
                 missing.joinToString() +
                 ". Port/isolate these adapters or configure verified 26.3 artifacts; do not use 1.21.1 jars."
         }

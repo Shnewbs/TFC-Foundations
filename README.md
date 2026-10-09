@@ -1,12 +1,13 @@
 # TFC Foundations
 
-A public development fork of [TerraFirmaCraft](https://github.com/TerraFirmaCraft/TerraFirmaCraft), targeting Minecraft **26.3** and NeoForge.
+A public development fork of [TerraFirmaCraft](https://github.com/TerraFirmaCraft/TerraFirmaCraft), targeting Minecraft **26.1.2** and **26.3** on NeoForge.
 
-**Current candidate: 0.0.0 — source preparation only. No playable 26.3 build is available.** The branch contains upstream gameplay code that still needs porting; changing the build target does not establish runtime compatibility.
+**Current candidate: 0.0.0 — port in progress. No playable build is available yet.** The branch contains upstream gameplay code that still needs porting; changing the build target does not establish runtime compatibility.
 
 ## Development goals
 
-- Preserve TFC survival progression, climate, geology, food and agriculture while porting to 26.3.
+- Prioritize a playable 26.1.2 build on branch `26.1.2`; develop 26.3 on `26.x` as the base for a later 26.4 port.
+- Preserve TFC survival progression, climate, geology, food and agriculture.
 - Prioritize correctness and measured performance.
 - Extend datapack and addon APIs, with optional KubeJS/CraftTweaker adapters when compatible dependencies are available.
 - Support optional Conquest-compatible presentation without bundling unlicensed assets.
@@ -16,13 +17,13 @@ These are development goals, not completed features.
 
 ## Build status
 
-The configured toolchain uses Java 25, Gradle 9.2.1, ModDevGradle 2.0.148 and NeoForge 26.3.0.58-beta. The Gradle wrapper and mod metadata generation pass. Full compilation is not yet verified: the current development host fails in NeoFormRuntime artifact generation, and legacy integration adapters still need porting or isolation.
+Both branches use Java 25, Gradle 9.2.1 and ModDevGradle 2.0.148. Exact Minecraft, NeoForge and integration pins are in each branch’s `gradle.properties`. GitHub Actions compiles each branch independently. The 26.3 build reaches Java compilation but still fails on API changes; neither branch has passed runtime testing.
 
 ```sh
 ./gradlew build --no-daemon
 ```
 
-On Windows, use `gradlew.bat build --no-daemon`. A fresh build downloads its required toolchain and dependencies. Do not supply old 1.21.1 integration jars to satisfy the 26.3 dependency checks.
+On Windows, use `gradlew.bat build --no-daemon`. A fresh build downloads its required toolchain and dependencies. Do not supply old 1.21.1 integration jars to satisfy the target-version dependency checks.
 
 ## Project records
 
