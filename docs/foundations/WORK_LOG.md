@@ -1,71 +1,74 @@
 # TFC Foundations — Work Log
 
-The preceding log is preserved byte-for-byte in [WORK_LOG_BEFORE_MECHANICAL_BOAT_EQUINE](history/WORK_LOG_BEFORE_MECHANICAL_BOAT_EQUINE.md). Its earlier compiler, livestock, model, entity and save checkpoints retain their recorded validation limits.
+The preceding complete log is retained byte-for-byte in [WORK_LOG_BEFORE_SEASONAL_BLOCK_MODELS](history/WORK_LOG_BEFORE_SEASONAL_BLOCK_MODELS.md), linking to the mechanical, livestock, model, entity, save and common-API checkpoints. Earlier validation limits remain unchanged.
 
-## 2026-10-09 — Mechanical, boat and equine rendering
+## 2026-10-09 — Seasonal block-state models and mold geometry
 
 ### Source and publication
 
-Resumed public `26.1.2` at `c51690797b4706969c7359698dfe3b13da0845af`, following source `354bb9ec206f612489172cf2100b69b30f6d14d4`. The downloaded preceding artifact `11614218054` was checked against SHA-256 `81ce5b3255179136d3e26b677746dc308c3f4a1469f1bae2ce95993661cca6e8`. Its source supplied the local baseline; the later remote documentation-only checkpoint was preserved. The Java 25 toolchain and all 84 resolved JAR hashes were reverified. No dependency pins changed.
+Resumed public `26.1.2` at `11c52d1ddaa4d5ca518e45dd3ad47e2a3ba90f0b`, following source `5fbcf6623b81fd06d7e4c250772b1880684d673e`. The preceding artifact `11638282576` was downloaded and verified against SHA-256 `5f4bf550b2c30fc5ae2c346f5ac24bb962e94110c8d0238e209d1fa64956beaf`. Its source supplied the local code baseline; remote documentation changes were preserved. The exact Java 25 toolchain and resolved 84-JAR classpath were reused after checksum verification. Target and dependency versions did not change.
 
-Staging **ddc33f29f97d2fe858c28cb3a5a9f2d9ce4d6f96** transported 23 reviewed source/test files. Apply run **37973174520** verified exact ancestry, all preimages/postimages, path membership, bounded decoding and a clean Git application before a normal push. Source **5fbcf6623b81fd06d7e4c250772b1880684d673e** contains the applied patch and removes the temporary transport files/workflow. Source application is not a successful mod build.
+Staging **`1e613ee837c8a3d9e3616c09d4a5e0392933068d`** transported the reviewed patch. Apply run **`37994496413`** checked the exact staging parent, all 131 source preimages/postimages, path membership, clean Git state, bounded decoding and traversal/symlink restrictions. Applied source **`bf289ca22c3ca3146fe5623cb66c253fb7917044`** removed the temporary transfer files/workflow and dispatched normal validation. No force push, branch deletion, version increment, core-system exclusion or release-gate relaxation was used.
 
-Patch `TFC-Foundations-26.1.2-mechanical-boat-equine.patch`: **23 files, 1,124 insertions, 445 deletions, 108,861 bytes**; SHA-256 **7065205bfd8a59a81bf587445c5d254f6324933c51dddbf1c2b27cd78d044df3**. Packed transport SHA-256: **1072af58550cda7493db89b292c629b0487275492103061806ef32ee3afacd14**. No force push, branch deletion, version increment, core-system exclusion, release or publication-gate relaxation was performed. Neither 26.3 nor Earth code changed.
+Patch **`TFC-Foundations-26.1.2-seasonal-block-models.patch`**: **131 files; 2,435 insertions; 1,177 deletions; 225,076 bytes**. SHA-256: **`92058efe355bfedac737e7252091725272927a335304f328b138b0a5de4e268a`**. Packed XZ SHA-256: **`b02ec7ac936ca3795fb1b848a7b083ca0bfdf10792f40771b9f19e653250549b`**. A transport transcription mismatch was corrected before staging; final source application checked every digest. The delivered patch contains code/resources/tests, not the later documentation update or a runnable mod.
 
 ### Production changes
 
-**Rotating machinery:** waterwheel and three windmill model factories retain their exact prior source bodies. Their model setup consumes angle/pass values rather than live block entities. Windmill frame, dyed blade and rustic extras use separate immutable `BladePose` submissions, with explicit white/dyed/white tints; extras remain restricted to a full identical five-blade set. The factory-identity model cache is renderer-local rather than retaining a render context in a global memoized factory. The captured blade list is immutable and cleared before each extraction. This guards against stale state and last-pose reuse in deferred rendering, but does not establish actual GPU queue behavior or performance.
+**Dynamic world-model dispatch:** PlantBlockModel and LeavesBlockModel implement the target DynamicBlockStateModel path through SeasonalBlockStateModel. Seasonal alternatives are immutable. Cache keys distinguish both the model instance and selected baked part. The selected particle material and per-context flags follow the stage; context-free flags conservatively combine all alternatives. The leaf context-free particle fallback remains blooming stage 3, while fallback world geometry remains dense stage 0.
 
-Axle and bladed-axle submissions use captured sprite UV bounds and primitive light/rotation values. Three legacy face-generator method bodies and their winding remain unchanged, as do the reviewed bounds and axis transform order. Custom geometry callbacks capture their needed values instead of dereferencing a live block entity. Waterwheel/windmill offscreen behavior and infinite bounds are retained, not claimed as a culling optimization. Native extraction and model break-progress inputs are preserved where used.
+DynamicBlockModel.Unbaked wraps the native Variant codec, retains rotations/UV lock and resolves dependencies. It locates dynamic geometry through model ancestry. Ordinary resource-pack cuboid replacements fall back to SingleVariant instead of requiring a dynamic implementation. The native variant model-state conversion was corrected to `asModelState()` after exact-target compilation exposed the type mismatch. SeasonalUnbakedModel resolves each existing inline stage using the target model baker; generic static consumers receive the documented fallback. This does not implement a general dynamic ItemModel adapter.
 
-**Boats and carried chests:** TFCBoatRenderer now uses the native AbstractBoatRenderer path for both ordinary and chest boats. Hull selection retains the palm raft case. The new BoatChestModel traverses the native chest boat/raft root but emits only the three chest parts; it does not draw a second hull or paddles. Chest texture is captured from the carried item and cleared before reuse, retaining the prior oak fallback. The attachment is submitted inside the native yaw/damage/bubble transform path. The water mask remains absent for rafts and underwater boats. Geometry tests check native chest shape/UV identity, not a screenshot of moving boats.
+**Seasonal behavior:** SeasonalModelMath separates the existing plant lifecycle/daytime and leaf climate/season calculations for comparison against a frozen pre-port oracle. World-facing methods retain position hashes, wet-season and hemisphere inputs, fast-graphics/conifer behavior, calendar inputs and lazy solar/average-rainfall queries. Missing client level falls back safely for plant selection. No live world or climate-cache behavior was exercised, and no performance gain is claimed.
 
-**Equines:** ordinary horses use target adult/juvenile horse models, markings and native body-armor/saddle layers with the existing scale and all seven variant texture selections. Donkeys/mules have an independently posed carried-item layer, preserving registered barrels and other supported carried items rather than narrowing visibility to vanilla wooden chests. Texture and presence are overwritten on extraction; body and carried-item passes have separate roots. Native saddle layer registration is added for donkeys/mules.
+**Resources and registration:** nine Java files, 115 blockstate JSON files, resources/assets.py and six test/tool files make up the checkpoint. The new BlockModelRegistration listeners register the plant, leaf and mold model loaders plus `tfc:dynamic`. Other legacy registrations in ClientEventHandler remain blockers. Adding only Java loaders would not route seasonal models through the new block-state API: 245 references now carry the dispatch type. Weighted chestnut choices, rotations and multipart conditions remain structurally identical after removing the new type marker. The generator was updated for relevant single plants, leaves and weighted chestnut definitions. All 178 seasonal and 16 mold model definitions retain their exact original bytes. Current item definitions do not inherit seasonal loaders; the new test rejects future inheritance until a dedicated item adapter is supplied.
 
-**Explicit juvenile visual adaptation:** chested donkeys/mules use a half-scale adult-layout model with a root offset, retaining the adult texture and carried chest geometry on juveniles. Native BabyDonkeyModel inspection showed missing chest geometry and mutation of its input xRot during setup; it was not substituted into the shared body/attachment path. The implemented juvenile proportion is a deliberate adaptation, **not verified identical to the legacy juvenile anatomy**. Actual in-game proportions and saddle/carried-item appearance remain a visual review gate. CPU tests verify alignment, reset behavior, geometry presence and nonmutation of the chosen production setup's state, not aesthetic fidelity.
-
-ClientEventHandler changes are limited to these model factories, layers and constructor signatures. Its unrelated registration/rendering failures remain. New tests and their inspect_api invocation are tracked in source.
+**Mold geometry:** MoldsModelLoader now builds native CuboidModelElement/CuboidFace/UnbakedCuboidGeometry. The 14-by-14 cell bounds, original face orientation/UV formulas, shading, no-tint and unculled faces remain implemented. Invalid pattern dimensions fail explicitly. No fully atlas-baked mold or GPU draw was tested.
 
 ### Local validation and clean replay
 
 ```sh
-# JAVA_HOME and PATH select the verified exact-target Java 25 toolchain.
+# JAVA_HOME and PATH select the verified target Java 25 JDK.
 python tools/porting/compile_main_diagnostics.py
-python tools/porting/run_mechanical_boat_smoke.py
+python tools/porting/run_seasonal_block_smoke.py
 python tools/porting/inspect_api.py
 ```
 
-Baseline diagnostic compilation completed with **1,640 sources, 2,193 errors, exit 1, no timeout**. Final edited compilation completed with **1,644 sources, 2,103 errors, exit 1, no timeout**. A separate clean Git worktree applied the source patch using `--check --index --whitespace=error`, matched all 23 postimage hashes, repeated the full standalone inspection successfully (**probes=0**) and reproduced the failed diagnostic compiler result (**compiler=1**, 2,103 errors). These main passes use `-proc:none`, not the complete Gradle/mixin/data/test pipeline.
+The edited source and an independent clean Git replay both complete the main diagnostic pass with **1,649 sources, 1,997 errors, exit 1, timed_out=false**. These use `-proc:none`, not the complete Gradle/mixin pipeline. The clean replay uses `git apply --check --index --whitespace=error`, verifies every reviewed postimage and records **probes=0, compiler=1**. Main diagnostics do not occur in the migrated model classes; the narrowly changed ClientEventHandler remains incomplete.
 
-The new suite passes **261 mechanical/boat/equine scenarios, 3,294 assertions and 37,416 finite CPU vertices**. It constructs production machinery/chest/attachment models and relevant native horse geometry, checking independent poses, resets, tint separation, chest-only emission and UVs, attachment alignment, juvenile transforms, source-state nonmutation, and axle winding/matrices. Immutable submission values are replayed into real model setup; no live renderer or GPU queue is executed. Separate javac compilation checks the production boat/horse adapters and supporting state/geometry/layer classes without game/TFC stubs.
+The new Java suite passes **200,225 scalar parity comparisons** against the frozen reference within **208,269 total contract assertions**, along with **392 native unbaked mold cells** and **194 asset-loader checks**. Do not add the parity count to the assertion total. Source checks cover 178 seasonal model definitions, 245 dynamic references, 115 preserved blockstate structures, registration and forbidden legacy APIs. Six new Python mutation tests deliberately break dispatch, weighting, item inheritance, registration and the frozen oracle; all are rejected as expected.
 
-Four retained geometry factories, three legacy face-method bodies, capture/submission contracts, 16 native equine texture dimensions and all TFC hull/carried-chest texture dimensions also pass. Earlier suites remain passing: **173 standalone Java checks, six Python guards**, save/brain contracts, 114 package-info compilations, the **48-model suite** (384 scenarios, 1,724 assertions, 152,544 CPU vertices), and the **11 livestock/cat suite** (336 scenarios, 3,157 assertions, 103,680 CPU vertices). Deprecated JOML Unsafe warnings remain visible.
+The Java suite uses actual scalar code, native Variant codecs and native unbaked model/geometry APIs. Its cache/dispatch/material cases use synthetic BlockStateModelPart fixtures, marker materials and a collecting resolver. Those are not a genuine fully baked level model or resource reload. The existing suites retain their previous real-model construction and CPU-geometry coverage; their successful execution does not extend to live rendering or gameplay.
 
-### Independent GitHub evidence
+All prior suites pass locally: 173 standalone Java checks, six earlier Python guards, save/brain contracts, 114 package-info compilations, the 48-model suite, 11 livestock/cat suite and mechanical/boat/equine suite. Both new and old probes are tracked and invoked by inspect_api.py. Local complete resource validation was not run because its Python dependency set was unavailable in the offline container; the GitHub resource step below is the independent check.
 
-[GitHub run **37973223478**](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37973223478), testing source `5fbcf662`, completed with overall **failure** because main compilation remains broken.
+### Independent GitHub validation
+
+[Run **37994534146**](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37994534146), source **`bf289ca22c3ca3146fe5623cb66c253fb7917044`**, completed with overall **failure**.
 
 | Check | Observed result |
 | --- | --- |
-| Full Gradle/main compilation | FAIL: exit 1, **2,103 javac errors**; summary groups them into **2,007 path/line/message entries**. |
-| New mechanical/boat/equine suite | PASS: **261 scenarios, 3,294 assertions, 37,416 finite CPU vertices**. |
-| Earlier model, utility, save and brain suites | PASS; independently reproduced against the published source. |
+| Full Gradle/main compilation | FAIL: exit 1; **1,997 javac errors**, grouped into **1,908 path/line/message entries**. |
+| New seasonal/mold suite | PASS: **208,269 contract assertions**, including **200,225 scalar parity comparisons**; **392 native mold cells** and **194 asset-loader checks**. |
+| New Python mutation guards | PASS: all **six** new tests. |
+| Earlier utility, save, brain and headless model suites | PASS; independently reproduced against the published source. |
 | Main/data/test license tasks | PASS. |
-| Existing resource-validation step | PASS; not GPU or gameplay validation. |
-| Public source preservation | PASS: all **23 reviewed postimages** match the downloaded source; the test invocation is tracked and temporary transfer files are absent. |
+| Existing resource-validation step | PASS; this is not a registered in-game reload or visual test. |
+| Downloaded CI source preservation | PASS: all **131 reviewed postimages** match; the new test invocation is tracked and temporary transfer paths are absent. |
 
-Artifact **11638282576**, `tfc-port-diagnostics-37973223478-1`, retains logs, reports and exact source until **October 16, 2026 UTC**. Downloaded ZIP SHA-256 **5f4bf550b2c30fc5ae2c346f5ac24bb962e94110c8d0238e209d1fa64956beaf** was verified. The complete API-inspection/probe step passed; it does not override the failed full build.
+Artifact **11646452667**, `tfc-port-diagnostics-37994534146-1`, retains logs, reports and exact source until **October 16, 2026 UTC**. Downloaded ZIP SHA-256 **3aeda006199a2819512e15e1aca41ac825c3251153f7d1f48cc76b4db7e6a65f** was verified. Every one of the 131 source/resource/test postimages matches the archived source and all one-time transport paths are absent. The source includes the new inspection-suite invocation.
 
-The standard build command remains:
+Normal validation continues to run:
 
 ```sh
 ./gradlew -I tools/porting/diagnostics.gradle writePortClasspath compileJava compileDataJava compileTestJava build --continue --no-daemon --no-configuration-cache --console=plain
 ```
 
+Passing standalone probes or resource validation does not override a failed full build. Raw javac totals and grouped path/line/message summaries are distinct measures.
+
 ### Remaining compiler and playability boundary
 
-The locally and independently CI-confirmed reduction is **2,193 to 2,103 (90 fewer diagnostics)**. Cascading compiler messages are not independent bugs or a completion percentage. Changed source paths have no diagnostics except the narrowly adjusted, still-incomplete ClientEventHandler. Client registration, world rendering, contained-fluid/plant/trim/leaves/mold block/item models, overlays and equipment/material code remain prominent clusters, with recipes, capabilities, schedules, registry/holder/worldgen and JEI/Patchouli work outstanding.
+Completed local diagnostics move **2,103 to 1,997 (106 fewer)**; counts include cascading errors and are not independent bug counts or a completion percentage. The full GitHub build independently reproduces the final 1,997 raw javac count; its 1,908 grouped entries are a different reporting measure.
 
-NOT RUN: renderer construction, live state extraction, native GPU submission, in-game visual/proportion checks, actual client/dedicated-server launch, world generation/save/reload, multiplayer, survival progression or performance measurements. Registry-backed item/fluid/name round trips and earlier bootstrap-dependent probes remain unexecuted. Full downstream data/test compilation and packaging are still blocked by main compilation. No playable JAR or release is claimed.
+NOT RUN: registered resource reload, atlas baking, live climate/world selection, GPU rendering, in-game appearance, client/dedicated-server startup, world generation/save/reload, multiplayer, survival progression or performance measurements. Prior registry-backed round trips and bootstrap-dependent probes remain unexecuted. Downstream full data/test compilation and packaging remain blocked.
 
-Continue with the targets and release gates in [PROJECT_STATUS](../../PROJECT_STATUS.md).
+Contained-fluid, trimmed-item, pile and mold-table model migration remains open, as do other block/item/block-entity rendering, ClientEventHandler/world rendering/overlays, JEI/Patchouli, recipes, equipment/materials, capabilities, schedules, registry/holder and world-generation APIs. No 26.3 or Earth code changed. No playable JAR, release or CurseForge upload is claimed. Continue using [PROJECT_STATUS](../../PROJECT_STATUS.md) and its compiler/playability gates.

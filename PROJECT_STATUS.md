@@ -6,48 +6,47 @@ Updated 2026-10-09 UTC and America/Los_Angeles.
 
 ## Direction and targets
 
-Continue public development in `Shnewbs/TFC-Foundations`, preserving history, EUPL notices, credits and `tfc` identifiers. First-playable priority: Minecraft 26.1.2, NeoForge 26.1.2.114, JEI 29.43.0.107 and Patchouli 26.1-94. Java 25 and Gradle 9.2.1 remain pinned. The separate `26.x` branch remains the Minecraft 26.3 forward track toward a separately verified 26.4 port; it was unchanged here. Core gameplay, visuals, the required guide and publication gates remain enabled.
+Continue public development in `Shnewbs/TFC-Foundations`, preserving history, EUPL notices, credits and `tfc` identifiers. First-playable priority: Minecraft 26.1.2, NeoForge 26.1.2.114, JEI 29.43.0.107 and Patchouli 26.1-94. Java 25 and Gradle 9.2.1 remain pinned. The separate `26.x` branch remains the Minecraft 26.3 forward track toward a separately verified 26.4 port. No 26.3 or Earth code changed here. Core gameplay, visuals, the required guide and publication gates remain enabled.
 
-## Mechanical, boat and equine checkpoint
+## Seasonal block models and mold geometry
 
-Public source **5fbcf6623b81fd06d7e4c250772b1880684d673e** follows staging `ddc33f29f97d2fe858c28cb3a5a9f2d9ce4d6f96`. Apply run `37973174520` verified all preimages/postimages for **23 source/test files**, removed its temporary transfer and used a normal push. Dependencies and identifiers were unchanged.
+Source **`bf289ca22c3ca3146fe5623cb66c253fb7917044`** applies a **131-file checkpoint** after staging `1e613ee837c8a3d9e3616c09d4a5e0392933068d`. Apply run `37994496413` verified the source preimages/postimages, removed the temporary transport and used a normal push. The checkpoint comprises nine Java files, 115 blockstate definitions, one resource generator and six test/tool files.
 
-Waterwheels, windmill blades, axles and bladed axles now use captured render inputs. Windmill frame, dyed-blade and optional rustic-extra portions have separate immutable pose submissions, preserving color separation and full-set conditions. Four original mechanical model factories and three axle face-generator bodies remain unchanged. Renderer-local model caching does not retain a global rendering context; no performance improvement is claimed.
+Plant and leaf models now use the native dynamic block-state pipeline rather than removed baked-model APIs. A registered `tfc:dynamic` variant preserves native rotation/UV-lock handling and supports weighted/multipart definitions. Immutable baked seasonal alternatives participate in the geometry cache key, keeping different stages and model instances distinct. Particle materials and layer flags follow the selected stage; context-free material flags conservatively include all alternatives. No performance improvement is claimed.
 
-Boats use native hull transforms with an independent chest-only attachment model, avoiding a second hull/paddle submission. Wood texture selection, oak fallback, raft handling and underwater water-mask conditions remain implemented. Horse rendering uses target adult/juvenile models, markings and equipment layers; donkey/mule carried-item layers retain registered barrel/chest support and clear stale appearance state.
+The resource migration adds 245 dynamic references across 115 blockstates and updates the generator so regeneration retains them. Model identifiers, weights, rotations and multipart conditions are protected by structural checks. All 178 seasonal and 16 mold model JSON definitions remain byte-identical. Seasonal item-model inheritance is explicitly rejected by the guard until its separate adapter exists; current item assets do not use this new dynamic route.
 
-**Juvenile visual adaptation:** chested donkeys/mules use a half-scale adult-layout mesh with a root offset, preserving the adult texture and carried geometry. This is not verified identical to legacy juvenile proportions. Native juvenile donkey geometry lacks the carried chest parts and its setup mutates an input field; the chosen independent body/attachment path avoids those issues. Actual proportions and attachment appearance still require in-game review.
+Existing plant lifecycle/daytime selection and leaf climate/hemisphere/graphics selection were separated into testable scalar logic without redesigning their seasonal formulas. Position hashes and conditional climate/solar reads remain guarded. The mold loader adopts native cuboid geometry while preserving the 14-by-14 cell layout, face UVs, bounds, shading and no-tint behavior. A missing client level uses a safe plant fallback. These changes do not establish in-game appearance or live climate behavior.
 
-## Validation
+## Independent validation
 
-[GitHub run **37973223478**](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37973223478), testing source `5fbcf662`, completed with overall **failure** because main compilation remains broken.
+[GitHub run **37994534146**](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37994534146), testing source `bf289ca2`, completed with overall **failure**.
 
 | Check | Observed result |
 | --- | --- |
-| Full Gradle/main compilation | FAIL: exit 1, **2,103 javac errors**; summary groups them into **2,007 path/line/message entries**. |
-| New mechanical/boat/equine suite | PASS: **261 scenarios, 3,294 assertions, 37,416 finite CPU vertices**. |
-| Earlier model, utility, save and brain suites | PASS; independently reproduced against the published source. |
+| Full Gradle/main compilation | FAIL: exit 1; **1,997 javac errors**, grouped into **1,908 path/line/message entries**. |
+| New seasonal/mold suite | PASS: **208,269 contract assertions**, including **200,225 scalar parity comparisons**; **392 native mold cells** and **194 asset-loader checks**. |
+| New Python mutation guards | PASS: all **six** new tests. |
+| Earlier utility, save, brain and headless model suites | PASS; independently reproduced against the published source. |
 | Main/data/test license tasks | PASS. |
-| Existing resource-validation step | PASS; not GPU or gameplay validation. |
-| Public source preservation | PASS: all **23 reviewed postimages** match the downloaded source; the test invocation is tracked and temporary transfer files are absent. |
+| Existing resource-validation step | PASS; this is not a registered in-game reload or visual test. |
+| Downloaded CI source preservation | PASS: all **131 reviewed postimages** match; the new test invocation is tracked and temporary transfer paths are absent. |
 
-Artifact **11638282576**, `tfc-port-diagnostics-37973223478-1`, retains logs, reports and exact source until **October 16, 2026 UTC**. Downloaded ZIP SHA-256 **5f4bf550b2c30fc5ae2c346f5ac24bb962e94110c8d0238e209d1fa64956beaf** was verified. The complete API-inspection/probe step passed; it does not override the failed full build.
+The **208,269 contract assertions include 200,225 scalar comparisons** against a frozen pre-port reference; these are not additional counts to sum. The same suite checks 392 native unbaked mold cells and loads 194 existing asset definitions. Six new Python mutation tests cover missing dispatch/registration, changed weights, unsupported seasonal item inheritance and changes to the frozen reference.
 
-Local baseline and final diagnostic passes complete with **2,193 → 2,103 errors**, across 1,640 → 1,644 sources. A clean Git patch replay matches all 23 postimages, records **probes=0**, and reproduces **compiler=1**, 2,103 errors, without timeout. These compiler passes use `-proc:none`, not the full Gradle/mixin/data/test pipeline. The reduction of 90 diagnostics is not an independent bug count or a completion percentage.
+The edited local source and clean Git patch replay both complete the diagnostic main pass with **1,649 source files, exit 1, 1,997 errors and no timeout**. Their standalone inspection passes with exit 0. These diagnostic compilations use `-proc:none`, not the full Gradle/mixin pipeline. Compared with the previous 2,103 pass, the reduction is **106 diagnostics**, not an independent bug count or completion percentage. The migrated model paths have no diagnostics in this traversal; the minimally changed ClientEventHandler remains incomplete.
 
-The new headless suite passes **261 scenarios, 3,294 assertions and 37,416 finite CPU vertices**. It checks real production machinery/chest/attachment models, relevant native horse geometry, pose/tint reuse, UVs, juvenile/body attachment alignment and axle transforms. It also checks source capture contracts and texture dimensions. Existing suites pass locally and in GitHub: **173 standalone Java checks, six Python guards**, prior save/brain contracts and 114 package-info compilations, plus the 48-model and 11 livestock/cat model suites. These are not game or GPU tests.
+Artifact **11646452667**, `tfc-port-diagnostics-37994534146-1`, retains logs, reports and exact source until **October 16, 2026 UTC**. Its downloaded SHA-256 **3aeda006199a2819512e15e1aca41ac825c3251153f7d1f48cc76b4db7e6a65f** was verified.
 
-NOT RUN: renderer construction, live extraction, native GPU submission, in-game appearance/proportions, client/dedicated-server startup, world generation/save/reload, multiplayer, survival progression or performance measurements. Registry-backed round trips and earlier bootstrap-dependent checks remain unexecuted. Full downstream data/test compilation and packaging remain blocked.
+**Test boundary:** the scalar code, Variant codec and unbaked geometry/loader implementations use the resolved target libraries. Cache/dispatch/material tests also use synthetic model-part fixtures and a collecting resolver, not a fully baked level model. No registered whole-resource reload, atlas baking, live climate/world selection, GPU rendering, client/server startup, world creation/save/reload, multiplayer, survival progression or performance measurement has passed. Earlier registry-backed round trips and bootstrap-dependent probes remain unexecuted. Full downstream data/test compilation and packaging remain blocked.
 
 ## Next compiler and playability gates
 
-1. Complete block/item/block-entity models and rendering, ClientEventHandler/world rendering/overlays and JEI/Patchouli adapters. Contained-fluid, plant, trimmed-item, leaf and mold model APIs are prominent remaining clusters.
-2. Finish recipes, equipment/materials, capabilities, schedules, registry/holder and world-generation APIs; pass complete main/data/test compilation, licenses, resource generation and packaging.
-3. Test genuine client/server startup, world generation, save/reload/reconnect, calendar, inventory/fluid, guide/recipe and survival progression before calling an artifact playable. Include the juvenile visual adaptation in the client review.
-4. Independently verify shared work against 26.3; do not blindly copy target-specific APIs. No 26.3 or Earth code changed here.
+1. Continue contained-fluid, trimmed-item, pile and mold-table models, other block/item/block-entity rendering, ClientEventHandler/world rendering/overlays and JEI/Patchouli adapters.
+2. Finish remaining recipes, equipment/materials, capabilities, schedules, registry/holder and world-generation APIs, then pass complete main/data/test compilation, licenses, resource generation and packaging.
+3. Verify genuine client/server startup, resource loading and appearance, new-world generation, save/reload/reconnect, calendar, inventories/fluids, guide/recipes and survival before calling an artifact playable.
+4. Independently verify shared work on 26.3 rather than copying target-specific APIs blindly.
 
-## Earth and history
+Normal TFC generation remains the default. The optional natural Earth request remains nominally one block per horizontal meter without generated manmade structures. Coordinate/elevation groundwork is not a selectable Earth preset, licensed dataset pipeline or complete chunk generator. Projection, height, geology/climate, caching and performance requirements remain open.
 
-Normal TFC generation remains the default. The optional natural Earth request remains nominally one block per horizontal meter without generated manmade structures. Existing coordinate/elevation groundwork is not a selectable Earth preset, licensed dataset pipeline or complete chunk generator. Projection, height, geology/climate, caching and performance requirements remain open.
-
-See [WORK_LOG](docs/foundations/WORK_LOG.md) for exact evidence and limits. The preceding status/log are preserved byte-for-byte in [STATUS_BEFORE_MECHANICAL_BOAT_EQUINE](docs/foundations/history/STATUS_BEFORE_MECHANICAL_BOAT_EQUINE.md) and [WORK_LOG_BEFORE_MECHANICAL_BOAT_EQUINE](docs/foundations/history/WORK_LOG_BEFORE_MECHANICAL_BOAT_EQUINE.md).
+See [WORK_LOG](docs/foundations/WORK_LOG.md) for commands, commits and limits. The preceding complete status and log are preserved byte-for-byte in [STATUS_BEFORE_SEASONAL_BLOCK_MODELS](docs/foundations/history/STATUS_BEFORE_SEASONAL_BLOCK_MODELS.md) and [WORK_LOG_BEFORE_SEASONAL_BLOCK_MODELS](docs/foundations/history/WORK_LOG_BEFORE_SEASONAL_BLOCK_MODELS.md).
