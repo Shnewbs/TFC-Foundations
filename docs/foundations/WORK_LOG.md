@@ -76,3 +76,19 @@ Validation:
 - `git diff --check`: PASS. No registry/resource/save-key rename or release gate relaxation is intended. The compiler error display limit is raised to 10,000 to expose diagnostics, not to suppress failures.
 
 The standalone probes are integrated into `inspect_api.py`; normal CI still fails when the Gradle build fails. `compile_main_diagnostics.py` provides the separate reproducible main-source diagnostic command and records timeouts/exit codes explicitly. The 26.x/26.3 branch, Earth terrain work, gameplay behavior redesign, feature exclusions and dependency/version pins were not changed. The compiler milestone, playable JAR and release remain outstanding.
+
+
+### Published common API checkpoint and final verification
+
+- `a50ff2545829b8de30191fcccd1936476c699ffe`: staged the bounded checksum-guarded source transfer, preserving real repository ancestry.
+- `fd86c879b08723d8253d95b1304a67d266268dde`: applied all 345 reviewed files and removed the temporary transfer files/workflow. Apply run `37878007059` succeeded; its success meant source application only, not a mod build.
+- Initial source validation `37878039473` failed compileJava with 3,438 errors; licenses and resource validation passed. Artifact `11593590960` was downloaded and checksum-verified. Comparing its actual source against the local working tree caught one omitted CI invocation in tools/porting/inspect_api.py; no other existing source differences remained.
+- `8d27f34a1d76535f6b359b5151295ff8fc16f0e6`: explicitly connected both the common and loot probes to API inspection, propagating failures. This corrects the earlier statement that common checks were already running in CI at the first source checkpoint.
+
+[Final validation 37878610233](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37878610233) tested `8d27f34a`: full Gradle build FAIL (exit 1, compileJava, 3,438 errors); main/data/test license checks PASS; API inspection PASS; 51 common utility/API checks PASS; four production loot codec checks PASS; existing resource validation PASS. All 113 package-info files compile separately. Bootstrap-dependent chunk/component/provider checks explicitly remain compiled-only, not successful runtime checks. The diagnostic summary groups errors by path/line/message into 3,199 entries; the full log contains repeated Gradle presentations, so grouped entries, occurrences and javac's final count must not be conflated.
+
+Artifact `11593477212`, `tfc-port-diagnostics-37878610233-1`, has seven-day retention. Download SHA-256: `3553f7d569d7fcde4d395451bb0b8f9bda0e4b5ca4e6b699a144def9fb1447de`. Verified its exact source snapshot against the local reviewed source and confirmed the one-time transport files were absent. The combined 346-file migration patch passed a clean apply check against the recorded baseline and reproduced all reviewed changed files byte-for-byte.
+
+The shipped `compile_main_diagnostics.py` was also exercised locally against the final source: 1,631 main Java files, exit 1, 3,438 displayed errors, timed_out=false. This remains a -proc:none diagnostic command, not a substitute for Gradle/mixin/data/test/runtime validation.
+
+Next source work: rendering/model/particle APIs and entity/block-entity save lifecycle changes, with equipment, capabilities and registry/holder migration also outstanding. ClientEventHandler, entity models and block-entity renderers are prominent diagnostic clusters. Existing CI logs additionally warn about deprecated action versions and a cache-service 400; those are non-blocking tooling issues, not the source compilation failure. No 26.3 source changes, performance claim, playable JAR, version increment or release was made in this checkpoint. The compiler milestone is still open.
