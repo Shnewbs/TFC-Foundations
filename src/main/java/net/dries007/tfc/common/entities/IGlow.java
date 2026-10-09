@@ -7,12 +7,13 @@
 package net.dries007.tfc.common.entities;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import net.dries007.tfc.common.blocks.TFCBlocks;
 import net.dries007.tfc.common.blocks.TFCLightBlock;
@@ -45,7 +46,7 @@ public interface IGlow
         return 20;
     }
 
-    default void saveLight(CompoundTag tag)
+    default void saveLight(ValueOutput tag)
     {
         final BlockPos light = getLightPos();
         tag.putInt("lightX", light.getX());
@@ -53,7 +54,7 @@ public interface IGlow
         tag.putInt("lightZ", light.getZ());
     }
 
-    default void readLight(CompoundTag tag)
+    default void readLight(ValueInput tag)
     {
         setLightPos(new BlockPos(tag.getIntOr("lightX", 0), tag.getIntOr("lightY", 0), tag.getIntOr("lightZ", 0)));
     }

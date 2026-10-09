@@ -268,7 +268,7 @@ public class AnvilBlockEntity extends InventoryBlockEntity<AnvilBlockEntity.Anvi
         }
         if (hammer.isEmpty())
         {
-            player.displayClientMessage(Component.translatable("tfc.tooltip.hammer_required_to_work"), false);
+            player.sendSystemMessage(Component.translatable("tfc.tooltip.hammer_required_to_work"));
             return;
         }
 
@@ -283,14 +283,14 @@ public class AnvilBlockEntity extends InventoryBlockEntity<AnvilBlockEntity.Anvi
         {
             if (!recipe.matches(inventory, level))
             {
-                player.displayClientMessage(Component.translatable("tfc.tooltip.anvil_is_too_low_tier_to_work"), false);
+                player.sendSystemMessage(Component.translatable("tfc.tooltip.anvil_is_too_low_tier_to_work"));
                 return;
             }
 
             final @Nullable IHeat heat = HeatCapability.get(stack);
             if (heat != null && !heat.canWork())
             {
-                player.displayClientMessage(Component.translatable("tfc.tooltip.not_hot_enough_to_work"), false);
+                player.sendSystemMessage(Component.translatable("tfc.tooltip.not_hot_enough_to_work"));
                 return;
             }
 
@@ -454,7 +454,7 @@ public class AnvilBlockEntity extends InventoryBlockEntity<AnvilBlockEntity.Anvi
         {
             if (!recipe.isCorrectTier(getTier()))
             {
-                player.displayClientMessage(Component.translatable("tfc.tooltip.anvil_is_too_low_tier_to_weld"), false);
+                player.sendSystemMessage(Component.translatable("tfc.tooltip.anvil_is_too_low_tier_to_weld"));
                 return InteractionResult.FAIL;
             }
 
@@ -463,13 +463,13 @@ public class AnvilBlockEntity extends InventoryBlockEntity<AnvilBlockEntity.Anvi
 
             if ((leftHeat != null && !leftHeat.canWeld()) || (rightHeat != null && !rightHeat.canWeld()))
             {
-                player.displayClientMessage(Component.translatable("tfc.tooltip.not_hot_enough_to_weld"), false);
+                player.sendSystemMessage(Component.translatable("tfc.tooltip.not_hot_enough_to_weld"));
                 return InteractionResult.FAIL;
             }
 
             if (inventory.getStackInSlot(SLOT_CATALYST).isEmpty())
             {
-                player.displayClientMessage(Component.translatable("tfc.tooltip.no_flux_to_weld"), false);
+                player.sendSystemMessage(Component.translatable("tfc.tooltip.no_flux_to_weld"));
                 return InteractionResult.FAIL;
             }
 

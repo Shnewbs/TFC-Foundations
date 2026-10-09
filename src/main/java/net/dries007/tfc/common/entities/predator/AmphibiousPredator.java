@@ -6,7 +6,6 @@
 
 package net.dries007.tfc.common.entities.predator;
 
-import com.mojang.serialization.Dynamic;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
@@ -89,15 +88,9 @@ public class AmphibiousPredator extends Predator implements AquaticMob
     }
 
     @Override
-    protected Brain.Provider<? extends Predator> brainProvider()
+    protected Brain<?> makeBrain(Brain.Packed packed)
     {
-        return Brain.provider(AmphibiousPredatorAi.MEMORY_TYPES, AmphibiousPredatorAi.SENSOR_TYPES);
-    }
-
-    @Override
-    protected Brain<?> makeBrain(Dynamic<?> dynamic)
-    {
-        return AmphibiousPredatorAi.makeBrain(brainProvider().makeBrain(dynamic), this);
+        return AmphibiousPredatorAi.makeBrain(Brain.<Predator>provider(AmphibiousPredatorAi.MEMORY_TYPES, AmphibiousPredatorAi.SENSOR_TYPES, AmphibiousPredatorAi::createActivities).makeBrain(this, packed), this);
     }
 
     @Override
@@ -113,9 +106,9 @@ public class AmphibiousPredator extends Predator implements AquaticMob
     }
 
     @Override
-    protected void customServerAiStep()
+    protected void customServerAiStep(ServerLevel serverLevel)
     {
-        getBrain().tick((ServerLevel) level(), this);
+        getBrain().tick(serverLevel, this);
         AmphibiousPredatorAi.updateActivity(this);
     }
 

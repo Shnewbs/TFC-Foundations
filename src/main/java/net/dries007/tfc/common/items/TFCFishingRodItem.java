@@ -7,6 +7,7 @@
 package net.dries007.tfc.common.items;
 
 import java.util.List;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -74,7 +75,7 @@ public class TFCFishingRodItem extends FishingRodItem
                 ItemStack bait = Bait.getBait(rod);
                 if (bait.isEmpty())
                 {
-                    player.displayClientMessage(Component.translatable("tfc.fishing.no_bait"), true);
+                    player.sendOverlayMessage(Component.translatable("tfc.fishing.no_bait"));
                 }
                 else
                 {

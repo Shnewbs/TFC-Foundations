@@ -6,7 +6,6 @@
 
 package net.dries007.tfc.common.entities.misc;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -21,6 +20,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 
 import net.dries007.tfc.common.blockentities.TFCChestBlockEntity;
@@ -68,19 +69,19 @@ public class TFCMinecartChest extends MinecartChest
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag tag)
+    protected void addAdditionalSaveData(ValueOutput tag)
     {
         super.addAdditionalSaveData(tag);
-        tag.put("cartItem", getPickResult().save(registryAccess()));
-        tag.put("chestItem", getChestItem().save(registryAccess()));
+        tag.store("cartItem", ItemStack.OPTIONAL_CODEC, getPickResult());
+        tag.store("chestItem", ItemStack.OPTIONAL_CODEC, getChestItem());
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag tag)
+    protected void readAdditionalSaveData(ValueInput tag)
     {
         super.readAdditionalSaveData(tag);
-        setPickResult(ItemStack.parseOptional(registryAccess(), tag.getCompoundOrEmpty("cartItem")));
-        setChestItem(ItemStack.parseOptional(registryAccess(), tag.getCompoundOrEmpty("chestItem")));
+        setPickResult(tag.read("cartItem", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY));
+        setChestItem(tag.read("chestItem", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY));
     }
 
     @Override

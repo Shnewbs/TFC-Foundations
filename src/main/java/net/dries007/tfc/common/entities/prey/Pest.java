@@ -6,7 +6,6 @@
 
 package net.dries007.tfc.common.entities.prey;
 
-import com.mojang.serialization.Dynamic;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -16,10 +15,10 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.AnimationState;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -63,15 +62,9 @@ public class Pest extends Prey
     }
 
     @Override
-    protected Brain.Provider<? extends Pest> brainProvider()
+    protected Brain<?> makeBrain(Brain.Packed packed)
     {
-        return Brain.provider(PestAi.MEMORY_TYPES, PestAi.SENSOR_TYPES);
-    }
-
-    @Override
-    protected Brain<?> makeBrain(Dynamic<?> dynamic)
-    {
-        return PestAi.makeBrain(brainProvider().makeBrain(dynamic));
+        return PestAi.makeBrain(Brain.<Pest>provider(PestAi.MEMORY_TYPES, PestAi.SENSOR_TYPES, PestAi::createActivities).makeBrain(this, packed));
     }
 
     @Override

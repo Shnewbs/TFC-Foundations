@@ -6,9 +6,6 @@
 
 package net.dries007.tfc.common.entities.misc;
 
-import net.dries007.tfc.util.NbtHelpers;
-
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -26,6 +23,8 @@ import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -35,6 +34,7 @@ import net.dries007.tfc.common.blocks.rock.RockCategory;
 import net.dries007.tfc.common.entities.TFCEntities;
 import net.dries007.tfc.common.items.JavelinItem;
 import net.dries007.tfc.common.items.TFCItems;
+import net.dries007.tfc.util.NbtHelpers;
 import net.dries007.tfc.util.advancements.TFCAdvancements;
 
 public class ThrownJavelin extends AbstractArrow
@@ -174,24 +174,24 @@ public class ThrownJavelin extends AbstractArrow
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag)
+    public void readAdditionalSaveData(ValueInput tag)
     {
         super.readAdditionalSaveData(tag);
         if (NbtHelpers.hasTag(tag, "item", Tag.TAG_COMPOUND))
         {
-            setItem(ItemStack.parseOptional(level().registryAccess(), tag.getCompoundOrEmpty("item")));
+            setItem(tag.read("item", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY));
             setIsEnchantGlowing(tag.getBooleanOr("glow", false));
         }
         dealtDamage = tag.getBooleanOr("dealtDamage", false);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag)
+    public void addAdditionalSaveData(ValueOutput tag)
     {
         super.addAdditionalSaveData(tag);
         if (!getItem().isEmpty())
         {
-            tag.put("item", getItem().save(level().registryAccess(), new CompoundTag()));
+            tag.store("item", ItemStack.OPTIONAL_CODEC, getItem());
             tag.putBoolean("glow", isEnchantGlowing());
         }
         tag.putBoolean("dealtDamage", dealtDamage);

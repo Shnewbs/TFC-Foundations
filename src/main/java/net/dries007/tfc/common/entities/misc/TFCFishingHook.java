@@ -7,7 +7,6 @@
 package net.dries007.tfc.common.entities.misc;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -24,6 +23,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 
@@ -125,7 +126,7 @@ public class TFCFishingHook extends FishingHook implements IEntityWithComplexSpa
             {
                 if (player != null && level().isClientSide())
                 {
-                    player.displayClientMessage(Component.translatable("tfc.fishing.pulled_too_hard"), true);
+                    player.sendOverlayMessage(Component.translatable("tfc.fishing.pulled_too_hard"));
                 }
                 eatBait();
                 playSound(SoundEvents.ITEM_BREAK, 1f, 0.5f + random.nextFloat());
@@ -201,7 +202,7 @@ public class TFCFishingHook extends FishingHook implements IEntityWithComplexSpa
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag)
+    public void addAdditionalSaveData(ValueOutput tag)
     {
         super.addAdditionalSaveData(tag);
         tag.putLong("lastPulled", lastPulled);
@@ -210,7 +211,7 @@ public class TFCFishingHook extends FishingHook implements IEntityWithComplexSpa
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag)
+    public void readAdditionalSaveData(ValueInput tag)
     {
         super.readAdditionalSaveData(tag);
         lastPulled = tag.getLongOr("lastPulled", 0L);

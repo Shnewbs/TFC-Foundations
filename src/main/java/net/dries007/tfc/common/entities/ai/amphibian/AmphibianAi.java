@@ -6,14 +6,17 @@
 
 package net.dries007.tfc.common.entities.ai.amphibian;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.ActivityData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.*;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
@@ -22,8 +25,6 @@ import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.level.Level;
-
-import com.mojang.datafixers.util.Pair;
 
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.entities.ai.SetLookTarget;
@@ -48,13 +49,19 @@ public class AmphibianAi
         MemoryModuleType.BREED_TARGET, MemoryModuleType.IS_PANICKING
     );
 
-    public static Brain<?> makeBrain(Brain<? extends AmphibiousAnimal> brain)
+    /** Build activity metadata before the provider restores saved memories. */
+    public static <E extends AmphibiousAnimal> List<ActivityData<E>> createActivities(E entity)
     {
-        initCoreActivity(brain);
-        initIdleActivity(brain);
-        initPlayDeadActivity(brain);
-        initFightActivity(brain);
+        return List.of(
+            initCoreActivity(),
+            initIdleActivity(),
+            initPlayDeadActivity(),
+            initFightActivity()
+        );
+    }
 
+    public static <E extends AmphibiousAnimal> Brain<E> makeBrain(Brain<E> brain)
+    {
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         brain.setDefaultActivity(Activity.IDLE);
         brain.useDefaultActivity();
@@ -65,9 +72,9 @@ public class AmphibianAi
     /**
      * These activities are always active. So, expect them to run every tick.
      */
-    private static void initCoreActivity(Brain<? extends AmphibiousAnimal> brain)
+    private static <E extends AmphibiousAnimal> ActivityData<E> initCoreActivity()
     {
-        brain.addActivity(Activity.CORE, 0, ImmutableList.of(
+        return ActivityData.create(Activity.CORE, 0, ImmutableList.of(
             new LookAtTargetSink(45, 90),
             new MoveToTargetSink(),
             new CountDownCooldownTicks(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS)
@@ -77,12 +84,12 @@ public class AmphibianAi
     /**
      * These will run whenever we don't have something better to do. Essentially walk and swim randomly, or do nothing.
      */
-    private static void initIdleActivity(Brain<? extends AmphibiousAnimal> brain)
+    private static <E extends AmphibiousAnimal> ActivityData<E> initIdleActivity()
     {
-        brain.addActivity(Activity.IDLE, ImmutableList.of(
+        return ActivityData.create(Activity.IDLE, ImmutableList.of(
             Pair.of(0, SetLookTarget.create(TFCTags.Entities.TURTLE_FRIENDS, 6.0F, UniformInt.of(30, 60))),
             Pair.of(2, new RunOne<>(ImmutableList.of(
-                Pair.of(BabyFollowAdult.create(ADULT_FOLLOW_RANGE, AmphibianAi::getChasingSpeedModifier), 1),
+                Pair.of(BabyFollowAdult.create(ADULT_FOLLOW_RANGE, AmphibianAi::getChasingSpeedModifier, MemoryModuleType.NEAREST_VISIBLE_ADULT, false), 1),
                 Pair.of(new FollowTemptation(AmphibianAi::getSpeedModifier), 1)
             ))),
             Pair.of(3, TryFindWater.create(6, 0.15F)),
@@ -92,7 +99,7 @@ public class AmphibianAi
                 GateBehavior.OrderPolicy.ORDERED,
                 GateBehavior.RunningPolicy.TRY_ALL,
                 ImmutableList.of(
-                    Pair.of(StartAttacking.create(AmphibianAi::getAttackTarget), 2),
+                    Pair.of(StartAttacking.<E>create((serverLevel, entity) -> AmphibianAi.getAttackTarget(entity)), 2),
                     Pair.of(RandomStroll.swim(0.5F), 2),
                     Pair.of(RandomStroll.stroll(0.15F, false), 2),
                     Pair.of(SetWalkTargetFromLookTarget.create(AmphibianAi::canSetWalkTargetFromLookTarget, AmphibianAi::getSpeedModifier, 3), 3),
@@ -107,17 +114,17 @@ public class AmphibianAi
      * A simple task that erases itself when finished.
      * First, a prioritized list of behaviors. Then a set of conditions, in this case, the memory being present. Then the memory to be erased.
      */
-    private static void initPlayDeadActivity(Brain<? extends AmphibiousAnimal> brain)
+    private static <E extends AmphibiousAnimal> ActivityData<E> initPlayDeadActivity()
     {
-        brain.addActivityAndRemoveMemoriesWhenStopped(Activity.PLAY_DEAD,
+        return ActivityData.create(Activity.PLAY_DEAD,
             ImmutableList.of(Pair.of(0, new AmphibianPlayDeadBehavior())),
             ImmutableSet.of(Pair.of(MemoryModuleType.PLAY_DEAD_TICKS, MemoryStatus.VALUE_PRESENT)),
             ImmutableSet.of(MemoryModuleType.PLAY_DEAD_TICKS));
     }
 
-    private static void initFightActivity(Brain<? extends AmphibiousAnimal> brain)
+    private static <E extends AmphibiousAnimal> ActivityData<E> initFightActivity()
     {
-        brain.addActivityAndRemoveMemoryWhenStopped(Activity.FIGHT, 0, ImmutableList.of(
+        return ActivityData.create(Activity.FIGHT, 0, ImmutableList.of(
             StopAttackingIfTargetInvalid.create(),
             SetWalkTargetFromAttackTargetIfTargetOutOfReach.create(AmphibianAi::getChasingSpeedModifier),
             MeleeAttack.create(20),

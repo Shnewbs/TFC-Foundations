@@ -6,15 +6,18 @@
 
 package net.dries007.tfc.common.entities.ai.prey;
 
-import com.google.common.collect.ImmutableMap;
+import java.util.List;
 import java.util.Optional;
+
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.ActivityData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.AnimalPanic;
 import net.minecraft.world.entity.ai.behavior.BabyFollowAdult;
@@ -53,12 +56,18 @@ public class PreyAi
         MemoryModuleType.IS_PANICKING
     );
 
-    public static Brain<?> makeBrain(Brain<? extends Prey> brain)
+    /** Build activity metadata before the provider restores saved memories. */
+    public static <E extends Prey> List<ActivityData<E>> createActivities(E entity)
     {
-        initCoreActivity(brain);
-        initIdleActivity(brain);
-        initRetreatActivity(brain);
+        return List.of(
+            initCoreActivity(),
+            initIdleActivity(),
+            initRetreatActivity()
+        );
+    }
 
+    public static <E extends Prey> Brain<E> makeBrain(Brain<E> brain)
+    {
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         brain.setDefaultActivity(Activity.IDLE);
         brain.useDefaultActivity();
@@ -66,19 +75,19 @@ public class PreyAi
         return brain;
     }
 
-    public static void initCoreActivity(Brain<? extends Prey> brain)
+    public static <E extends Prey> ActivityData<E> initCoreActivity()
     {
-        brain.addActivity(Activity.CORE, 0, ImmutableList.of(
-            new Swim(0.7F), // float in water
+        return ActivityData.create(Activity.CORE, 0, ImmutableList.of(
+            new Swim<>(0.7F), // float in water
             new AnimalPanic<>(2.0F), // if memory of being hit, runs away
             new LookAtTargetSink(45, 90), // if memory of look target, looks at that
             new MoveToTargetSink() // tries to walk to its internal walk target. This could just be a random block.
         ));
     }
 
-    public static void initIdleActivity(Brain<? extends Prey> brain)
+    public static <E extends Prey> ActivityData<E> initIdleActivity()
     {
-        brain.addActivity(Activity.IDLE, ImmutableList.of(
+        return ActivityData.create(Activity.IDLE, ImmutableList.of(
             Pair.of(0, SetLookTarget.create(EntityType.PLAYER, 6.0F, UniformInt.of(30, 60))), // looks at player, but its only try it every so often -- "Run Sometimes"
             Pair.of(1, AvoidPredatorAndRammersBehavior.create(false)),
             Pair.of(2, BabyFollowAdult.create(UniformInt.of(5, 16), 1.25F)), // babies follow any random adult around
@@ -91,9 +100,9 @@ public class PreyAi
      * What the name "addActivityAndRemoveMemoryWhenStopped" does not say is that the erased memory is REQUIRED to start this activity
      * In other words, this is triggered automatically by updateActivity if AVOID_TARGET is present.
      */
-    public static void initRetreatActivity(Brain<? extends Prey> brain)
+    public static <E extends Prey> ActivityData<E> initRetreatActivity()
     {
-        brain.addActivityAndRemoveMemoryWhenStopped(Activity.AVOID, 10, ImmutableList.of(
+        return ActivityData.create(Activity.AVOID, 10, ImmutableList.of(
             SetWalkTargetAwayFrom.entity(MemoryModuleType.AVOID_TARGET, 1.1F, 15, false),
             createIdleMovementBehaviors(),
             SetLookTarget.create(8.0F, UniformInt.of(30, 60)),

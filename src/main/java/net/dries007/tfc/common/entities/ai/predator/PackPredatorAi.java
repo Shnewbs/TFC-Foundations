@@ -8,21 +8,20 @@ package net.dries007.tfc.common.entities.ai.predator;
 
 import java.util.List;
 import java.util.Optional;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import net.minecraft.util.Util;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.ActivityData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.BabyFollowAdult;
 import net.minecraft.world.entity.ai.behavior.CountDownCooldownTicks;
 import net.minecraft.world.entity.ai.behavior.FollowTemptation;
 import net.minecraft.world.entity.ai.behavior.LookAtTargetSink;
 import net.minecraft.world.entity.ai.behavior.MoveToTargetSink;
-
-import net.dries007.tfc.common.entities.ai.SetLookTarget;
-
 import net.minecraft.world.entity.ai.behavior.StartAttacking;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.Sensor;
@@ -30,6 +29,7 @@ import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.schedule.Activity;
 import org.jetbrains.annotations.Nullable;
 
+import net.dries007.tfc.common.entities.ai.SetLookTarget;
 import net.dries007.tfc.common.entities.ai.TFCBrain;
 import net.dries007.tfc.common.entities.predator.Predator;
 
@@ -52,14 +52,20 @@ public class PackPredatorAi
         return ImmutableList.copyOf(list);
     });
 
-    public static Brain<?> makeBrain(Brain<? extends Predator> brain, Predator predator)
+    /** Build activity metadata before the provider restores saved memories. */
+    public static <E extends Predator> List<ActivityData<E>> createActivities(E entity)
     {
-        initCoreActivity(brain);
-        initHuntActivity(brain);
-        PredatorAi.initRetreatActivity(brain);
-        PredatorAi.initRestActivity(brain);
-        PredatorAi.initFightActivity(brain);
+        return List.of(
+            initCoreActivity(),
+            initHuntActivity(),
+            PredatorAi.initRetreatActivity(),
+            PredatorAi.initRestActivity(),
+            PredatorAi.initFightActivity()
+        );
+    }
 
+    public static <E extends Predator> Brain<E> makeBrain(Brain<E> brain, Predator predator)
+    {
         brain.setSchedule(predator.diurnal ? TFCBrain.DIURNAL.get() : TFCBrain.NOCTURNAL.get());
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         brain.setDefaultActivity(TFCBrain.HUNT.get());
@@ -69,9 +75,9 @@ public class PackPredatorAi
         return brain;
     }
 
-    public static void initCoreActivity(Brain<? extends Predator> brain)
+    public static <E extends Predator> ActivityData<E> initCoreActivity()
     {
-        brain.addActivity(Activity.CORE, 0, ImmutableList.of(
+        return ActivityData.create(Activity.CORE, 0, ImmutableList.of(
             new AggressiveSwim(0.8F),
             new LookAtTargetSink(45, 90),
             new MoveToTargetSink(),
@@ -79,12 +85,12 @@ public class PackPredatorAi
         ));
     }
 
-    public static void initHuntActivity(Brain<? extends Predator> brain)
+    public static <E extends Predator> ActivityData<E> initHuntActivity()
     {
-        brain.addActivity(TFCBrain.HUNT.get(), 10, ImmutableList.of(
+        return ActivityData.create(TFCBrain.HUNT.get(), 10, ImmutableList.of(
             PredatorBehaviors.becomePassiveIf(p -> p.getHealth() < 5f || isAlphaPassive(p), 200),
             PredatorBehaviors.becomePassiveIf(p -> p.getBrain().hasMemoryValue(MemoryModuleType.TEMPTING_PLAYER), 400),
-            StartAttacking.create(PackPredatorAi::getAttackTarget),
+            StartAttacking.<E>create((serverLevel, entity) -> PackPredatorAi.getAttackTarget(entity)),
             SetLookTarget.create(8.0F, UniformInt.of(30, 60)),
             PredatorBehaviors.findNewHome(),
             PredatorBehaviors.listenToAlpha(),

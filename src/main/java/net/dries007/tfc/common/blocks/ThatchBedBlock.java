@@ -7,6 +7,7 @@
 package net.dries007.tfc.common.blocks;
 
 import java.util.List;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -104,7 +105,7 @@ public class ThatchBedBlock extends BedBlock implements EntityBlockExtension, IF
         {
             if (!kickVillagerOutOfBed(level, pos))
             {
-                player.displayClientMessage(Component.translatable("block.minecraft.bed.occupied"), true);
+                player.sendOverlayMessage(Component.translatable("block.minecraft.bed.occupied"));
             }
             return InteractionResult.SUCCESS;
         }
@@ -112,7 +113,7 @@ public class ThatchBedBlock extends BedBlock implements EntityBlockExtension, IF
         {
             if (level.isThundering() && TFCConfig.SERVER.thatchBedNoSleepInThunderstorms.get())
             {
-                player.displayClientMessage(Component.translatable("tfc.thatch_bed.thundering"), true);
+                player.sendOverlayMessage(Component.translatable("tfc.thatch_bed.thundering"));
                 return InteractionResult.SUCCESS;
             }
             final boolean willSleep = TFCConfig.SERVER.enableThatchBedSleeping.get();
@@ -123,12 +124,12 @@ public class ThatchBedBlock extends BedBlock implements EntityBlockExtension, IF
             {
                 if (spawnPoint)
                 {
-                    player.displayClientMessage(Component.translatable("tfc.thatch_bed.use_no_sleep_spawn"), true);
+                    player.sendOverlayMessage(Component.translatable("tfc.thatch_bed.use_no_sleep_spawn"));
                     serverPlayer.setRespawnPosition(level.dimension(), pos, 0, false, false);
                     return InteractionResult.SUCCESS;
                 }
                 // no spawn, no sleep, do nothing
-                player.displayClientMessage(Component.translatable("tfc.thatch_bed.use_no_sleep_no_spawn"), true);
+                player.sendOverlayMessage(Component.translatable("tfc.thatch_bed.use_no_sleep_no_spawn"));
                 return InteractionResult.SUCCESS;
             }
 
@@ -138,19 +139,19 @@ public class ThatchBedBlock extends BedBlock implements EntityBlockExtension, IF
             player.startSleepInBed(pos).ifLeft(problem -> {
                 if (problem.getMessage() != null)
                 {
-                    player.displayClientMessage(problem.getMessage(), true);
+                    player.sendOverlayMessage(problem.getMessage());
                 }
             }).ifRight(unit -> {
                 // in this case vanilla sets the spawn point in startSleepInBed
                 if (spawnPoint)
                 {
-                    player.displayClientMessage(Component.translatable("tfc.thatch_bed.use_sleep_spawn"), true);
+                    player.sendOverlayMessage(Component.translatable("tfc.thatch_bed.use_sleep_spawn"));
                 }
                 else
                 {
                     // sleeping automagically resets your spawn position, so we have to copy over the old spawn position and then set it to that.
                     serverPlayer.setRespawnPosition(lastRespawnDimension, lastRespawnPos, lastRespawnAngle, false, false);
-                    player.displayClientMessage(Component.translatable("tfc.thatch_bed.use_sleep_no_spawn"), true);
+                    player.sendOverlayMessage(Component.translatable("tfc.thatch_bed.use_sleep_no_spawn"));
                 }
             });
 

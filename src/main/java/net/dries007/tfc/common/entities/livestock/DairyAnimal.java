@@ -107,7 +107,7 @@ public abstract class DairyAnimal extends ProducingMammal
         }
         if (component != null && level.isClientSide())
         {
-            player.displayClientMessage(component, true);
+            player.sendOverlayMessage(component);
         }
     }
 

@@ -9,10 +9,12 @@ package net.dries007.tfc.common.entities.livestock.pet;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
-import com.mojang.serialization.Dynamic;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -30,6 +32,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityReference;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -41,10 +44,11 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gamerules.GameRules;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.client.ClientHelpers;
@@ -68,7 +72,7 @@ public abstract class TamableMammal extends Mammal implements OwnableEntity
         return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 20.0D).add(Attributes.MOVEMENT_SPEED, 0.3F).add(Attributes.ATTACK_DAMAGE, 2f);
     }
 
-    public static final EntityDataAccessor<Optional<UUID>> DATA_OWNER = SynchedEntityData.defineId(TamableMammal.class, EntityDataSerializers.OPTIONAL_UUID);
+    public static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> DATA_OWNER = SynchedEntityData.defineId(TamableMammal.class, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);
     public static final EntityDataAccessor<Byte> DATA_PET_FLAGS = SynchedEntityData.defineId(TamableMammal.class, EntityDataSerializers.BYTE);
     public static final EntityDataAccessor<Integer> DATA_COLLAR_COLOR = SynchedEntityData.defineId(TamableMammal.class, EntityDataSerializers.INT);
 
@@ -93,15 +97,9 @@ public abstract class TamableMammal extends Mammal implements OwnableEntity
     }
 
     @Override
-    protected Brain.Provider<? extends TamableMammal> brainProvider()
+    protected Brain<?> makeBrain(Brain.Packed packed)
     {
-        return Brain.provider(TamableAi.MEMORY_TYPES, TamableAi.SENSOR_TYPES);
-    }
-
-    @Override
-    protected Brain<?> makeBrain(Dynamic<?> dynamic)
-    {
-        return TamableAi.makeBrain(brainProvider().makeBrain(dynamic));
+        return TamableAi.makeBrain(Brain.<TamableMammal>provider(TamableAi.MEMORY_TYPES, TamableAi.SENSOR_TYPES, TamableAi::createActivities).makeBrain(this, packed));
     }
 
     @Override
@@ -124,7 +122,7 @@ public abstract class TamableMammal extends Mammal implements OwnableEntity
         super.createGenes(tag, male);
         if (getOwnerUUID() != null)
         {
-            tag.putUUID("owner", getOwnerUUID());
+            tag.store("owner", UUIDUtil.CODEC, getOwnerUUID());
         }
     }
 
@@ -134,10 +132,7 @@ public abstract class TamableMammal extends Mammal implements OwnableEntity
         super.applyGenes(tag, baby);
         if (baby instanceof TamableMammal tamable)
         {
-            if (tag.hasUUID("owner"))
-            {
-                tamable.setOwnerUUID(tag.getUUID("owner"));
-            }
+            tamable.setOwnerUUID(tag.read("owner", UUIDUtil.CODEC).orElse(null));
         }
     }
 
@@ -227,7 +222,7 @@ public abstract class TamableMammal extends Mammal implements OwnableEntity
         }
         else
         {
-            player.displayClientMessage(Component.translatable("tfc.pet.not_owner"), true);
+            player.sendOverlayMessage(Component.translatable("tfc.pet.not_owner"));
         }
     }
 
@@ -279,14 +274,20 @@ public abstract class TamableMammal extends Mammal implements OwnableEntity
 
     @Nullable
     @Override
-    public UUID getOwnerUUID()
+    public EntityReference<LivingEntity> getOwnerReference()
     {
         return entityData.get(DATA_OWNER).orElse(null);
     }
 
+    @Nullable
+    public UUID getOwnerUUID()
+    {
+        return entityData.get(DATA_OWNER).map(EntityReference::getUUID).orElse(null);
+    }
+
     public void setOwnerUUID(@Nullable UUID id)
     {
-        entityData.set(DATA_OWNER, Optional.ofNullable(id));
+        entityData.set(DATA_OWNER, Optional.ofNullable(id).map(EntityReference::<LivingEntity>of));
     }
 
     // vanilla uses a try catch here. do we need to?
@@ -309,9 +310,9 @@ public abstract class TamableMammal extends Mammal implements OwnableEntity
     public InteractionResult mobInteract(Player player, InteractionHand hand)
     {
         final ItemStack held = player.getItemInHand(hand);
-        if (held.getItem() instanceof DyeItem dye)
+        final DyeColor color = held.get(DataComponents.DYE);
+        if (color != null)
         {
-            final DyeColor color = dye.getDyeColor();
             if (color != getCollarColor())
             {
                 setCollarColor(color);
@@ -367,12 +368,12 @@ public abstract class TamableMammal extends Mammal implements OwnableEntity
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag)
+    public void addAdditionalSaveData(ValueOutput tag)
     {
         super.addAdditionalSaveData(tag);
         if (getOwnerUUID() != null)
         {
-            tag.putUUID("Owner", getOwnerUUID());
+            tag.store("Owner", UUIDUtil.CODEC, getOwnerUUID());
         }
         tag.putInt("command", command.ordinal());
         tag.putByte("petFlags", entityData.get(DATA_PET_FLAGS));
@@ -380,13 +381,10 @@ public abstract class TamableMammal extends Mammal implements OwnableEntity
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag)
+    public void readAdditionalSaveData(ValueInput tag)
     {
         super.readAdditionalSaveData(tag);
-        if (tag.hasUUID("Owner"))
-        {
-            setOwnerUUID(tag.getUUID("Owner"));
-        }
+        setOwnerUUID(tag.read("Owner", UUIDUtil.CODEC).orElse(null));
         command = Command.valueOf(tag.getIntOr("command", 0));
         entityData.set(DATA_PET_FLAGS, tag.getByteOr("petFlags", (byte) 0));
         setCollarColor(DyeColor.byId(tag.getIntOr("CollarColor", 0)));

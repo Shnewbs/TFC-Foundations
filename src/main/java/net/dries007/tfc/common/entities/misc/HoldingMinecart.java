@@ -9,10 +9,10 @@ package net.dries007.tfc.common.entities.misc;
 import java.util.function.IntConsumer;
 
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
@@ -28,13 +28,13 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gamerules.GameRules;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
-
 import org.jetbrains.annotations.NotNull;
 
 import net.dries007.tfc.common.blockentities.PowderkegBlockEntity;
@@ -101,18 +101,18 @@ public class HoldingMinecart extends AbstractMinecart
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag tag)
+    protected void addAdditionalSaveData(ValueOutput tag)
     {
         super.addAdditionalSaveData(tag);
-        tag.put("holdItem", getHoldItem().save(registryAccess()));
+        tag.store("holdItem", ItemStack.OPTIONAL_CODEC, getHoldItem());
         tag.putInt("TNTFuse", fuse);
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag tag)
+    protected void readAdditionalSaveData(ValueInput tag)
     {
         super.readAdditionalSaveData(tag);
-        setHoldItem(ItemStack.parseOptional(registryAccess(), tag.getCompoundOrEmpty("holdItem")));
+        setHoldItem(tag.read("holdItem", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY));
         fuse = EntityHelpers.getIntOrDefault(tag, "TNTFuse", -1);
     }
 
@@ -190,7 +190,7 @@ public class HoldingMinecart extends AbstractMinecart
     }
 
     @Override
-    public boolean causeFallDamage(float distance, float multiplier, DamageSource source)
+    public boolean causeFallDamage(double distance, float multiplier, DamageSource source)
     {
         if (distance >= 3.0F)
         {
@@ -263,13 +263,13 @@ public class HoldingMinecart extends AbstractMinecart
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount)
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource source, float amount)
     {
         if (source.getDirectEntity() instanceof AbstractArrow arrow && arrow.isOnFire())
         {
             ifPowderkeg(this::explode);
         }
-        return super.hurt(source, amount);
+        return super.hurtServer(serverLevel,source, amount);
     }
 
     protected void explode(int strength)

@@ -6,7 +6,6 @@
 
 package net.dries007.tfc.common.entities.prey;
 
-import com.mojang.serialization.Dynamic;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AnimationState;
@@ -42,21 +41,15 @@ public class Prey extends WildAnimal
     }
 
     @Override
-    protected Brain.Provider<? extends Prey> brainProvider()
+    protected Brain<?> makeBrain(Brain.Packed packed)
     {
-        return Brain.provider(PreyAi.MEMORY_TYPES, PreyAi.SENSOR_TYPES);
+        return PreyAi.makeBrain(Brain.<Prey>provider(PreyAi.MEMORY_TYPES, PreyAi.SENSOR_TYPES, PreyAi::createActivities).makeBrain(this, packed));
     }
 
     @Override
-    protected Brain<?> makeBrain(Dynamic<?> dynamic)
+    protected void customServerAiStep(ServerLevel serverLevel)
     {
-        return PreyAi.makeBrain(brainProvider().makeBrain(dynamic));
-    }
-
-    @Override
-    protected void customServerAiStep()
-    {
-        getBrain().tick((ServerLevel) level(), this);
+        getBrain().tick(serverLevel, this);
         PreyAi.updateActivity(this);
     }
 
@@ -68,9 +61,9 @@ public class Prey extends WildAnimal
     }
 
     @Override
-    public boolean hurt(DamageSource src, float amount)
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource src, float amount)
     {
-        final boolean hurt = super.hurt(src, amount);
+        final boolean hurt = super.hurtServer(serverLevel,src, amount);
         if (this.level().isClientSide())
         {
             return false;

@@ -6,16 +6,15 @@
 
 package net.dries007.tfc.common.entities.ai.prey;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.feline.Ocelot;
@@ -25,6 +24,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.common.TFCTags;
@@ -57,7 +58,7 @@ public class TFCOcelot extends Ocelot
         EntityHelpers.removeGoalOfPriority(targetSelector, 1); // avoid / attack goals
 
         goalSelector.addGoal(3, new OcelotTemptGoal(this, 0.6, Ingredient.of(TFCTags.Items.CAT_FOOD), true));
-        targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, true, e -> !(e instanceof Player) && Helpers.isEntity(e, TFCTags.Entities.HUNTED_BY_CATS)));
+        targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, true, (e, serverLevel) -> !(e instanceof Player) && Helpers.isEntity(e, TFCTags.Entities.HUNTED_BY_CATS)));
     }
 
     @Override
@@ -89,7 +90,7 @@ public class TFCOcelot extends Ocelot
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag)
+    public void addAdditionalSaveData(ValueOutput tag)
     {
         super.addAdditionalSaveData(tag);
         tag.putFloat("familiarity", getFamiliarity());
@@ -97,7 +98,7 @@ public class TFCOcelot extends Ocelot
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag)
+    public void readAdditionalSaveData(ValueInput tag)
     {
         super.readAdditionalSaveData(tag);
         setFamiliarity(EntityHelpers.getFloatOrDefault(tag, "familiarity", 0f));

@@ -80,7 +80,7 @@ public class GlassBlowpipeItem extends BlowpipeItem
             {
                 if (!GlassOperation.BASIN_POUR.value().hasRequiredTemperature(copy))
                 {
-                    player.displayClientMessage(Component.translatable("tfc.tooltip.glass.not_hot_enough"), true);
+                    player.sendOverlayMessage(Component.translatable("tfc.tooltip.glass.not_hot_enough"));
                 }
                 else
                 {
@@ -112,7 +112,7 @@ public class GlassBlowpipeItem extends BlowpipeItem
             {
                 if (!GlassOperation.TABLE_POUR.value().hasRequiredTemperature(copy))
                 {
-                    player.displayClientMessage(Component.translatable("tfc.tooltip.glass.not_hot_enough"), true);
+                    player.sendOverlayMessage(Component.translatable("tfc.tooltip.glass.not_hot_enough"));
                 }
                 else
                 {
@@ -151,7 +151,7 @@ public class GlassBlowpipeItem extends BlowpipeItem
         {
             if (!op.hasRequiredTemperature(held))
             {
-                player.displayClientMessage(Component.translatable("tfc.tooltip.glass.not_hot_enough"), true);
+                player.sendOverlayMessage(Component.translatable("tfc.tooltip.glass.not_hot_enough"));
                 return InteractionResult.FAIL;
             }
             player.startUsingItem(hand);

@@ -7,8 +7,7 @@
 package net.dries007.tfc.common.entities.livestock;
 
 import java.util.function.Supplier;
-import com.mojang.serialization.Dynamic;
-import net.minecraft.nbt.CompoundTag;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
@@ -29,6 +28,8 @@ import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
 
@@ -77,14 +78,14 @@ public abstract class OviparousAnimal extends ProducingAnimal implements Pluckab
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag)
+    public void readAdditionalSaveData(ValueInput tag)
     {
         super.readAdditionalSaveData(tag);
-        EntityHelpers.getLongOrDefault(tag, "plucked", Long.MIN_VALUE);
+        lastPlucked = EntityHelpers.getLongOrDefault(tag, "plucked", Long.MIN_VALUE);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag)
+    public void addAdditionalSaveData(ValueOutput tag)
     {
         super.addAdditionalSaveData(tag);
         tag.putLong("plucked", lastPlucked);
@@ -116,9 +117,9 @@ public abstract class OviparousAnimal extends ProducingAnimal implements Pluckab
     }
 
     @Override
-    protected void customServerAiStep()
+    protected void customServerAiStep(ServerLevel serverLevel)
     {
-        super.customServerAiStep();
+        super.customServerAiStep(serverLevel);
         if (level().getGameTime() % 20 == 0 && random.nextInt(3) == 0 && getBrain().getActiveNonCoreActivity().filter(p -> p == Activity.AVOID).isPresent())
         {
             getJumpControl().jump();
@@ -149,15 +150,9 @@ public abstract class OviparousAnimal extends ProducingAnimal implements Pluckab
     }
 
     @Override
-    protected Brain.Provider<? extends OviparousAnimal> brainProvider()
+    protected Brain<?> makeBrain(Brain.Packed packed)
     {
-        return Brain.provider(OviparousAi.MEMORY_TYPES, OviparousAi.SENSOR_TYPES);
-    }
-
-    @Override
-    protected Brain<?> makeBrain(Dynamic<?> dynamic)
-    {
-        return OviparousAi.makeBrain(brainProvider().makeBrain(dynamic));
+        return OviparousAi.makeBrain(Brain.<OviparousAnimal>provider(OviparousAi.MEMORY_TYPES, OviparousAi.SENSOR_TYPES, OviparousAi::createActivities).makeBrain(this, packed));
     }
 
     @Override
@@ -217,7 +212,7 @@ public abstract class OviparousAnimal extends ProducingAnimal implements Pluckab
     }
 
     @Override
-    public boolean causeFallDamage(float amount, float speed, DamageSource src)
+    public boolean causeFallDamage(double amount, float speed, DamageSource src)
     {
         return false;
     }

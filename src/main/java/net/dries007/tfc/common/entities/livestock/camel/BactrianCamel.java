@@ -8,7 +8,7 @@ package net.dries007.tfc.common.entities.livestock.camel;
 
 import java.util.List;
 import java.util.function.Supplier;
-import com.mojang.serialization.Dynamic;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -24,8 +24,8 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -38,6 +38,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.IShearable;
 import net.neoforged.neoforge.common.NeoForge;
@@ -83,9 +85,9 @@ public class BactrianCamel extends AbstractCamel implements HorseProperties, ISh
     }
 
     @Override
-    protected Brain<?> makeBrain(Dynamic<?> dynamic)
+    protected Brain<Camel> makeBrain(Brain.Packed packed)
     {
-        return TFCCamelAi.makeBrain(TFCCamelAi.brainProvider().makeBrain(dynamic));
+        return (Brain<Camel>) (Brain<?>) TFCCamelAi.makeBrain(TFCCamelAi.brainProvider().makeBrain(this, packed));
     }
 
     @Override
@@ -336,7 +338,7 @@ public class BactrianCamel extends AbstractCamel implements HorseProperties, ISh
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt)
+    public void addAdditionalSaveData(ValueOutput nbt)
     {
         super.addAdditionalSaveData(nbt);
         saveCommonAnimalData(nbt);
@@ -344,7 +346,7 @@ public class BactrianCamel extends AbstractCamel implements HorseProperties, ISh
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbt)
+    public void readAdditionalSaveData(ValueInput nbt)
     {
         super.readAdditionalSaveData(nbt);
         readCommonAnimalData(nbt);
@@ -387,9 +389,9 @@ public class BactrianCamel extends AbstractCamel implements HorseProperties, ISh
     }
 
     @Override
-    protected void customServerAiStep()
+    protected void customServerAiStep(ServerLevel serverLevel)
     {
-        ((Brain<BactrianCamel>) getBrain()).tick((ServerLevel) level(), this);
+        getBrain().tick(serverLevel, this);
         TFCCamelAi.updateActivity(this);
     }
 

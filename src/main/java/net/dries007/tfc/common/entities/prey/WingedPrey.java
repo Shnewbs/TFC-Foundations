@@ -6,7 +6,6 @@
 
 package net.dries007.tfc.common.entities.prey;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -14,6 +13,8 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 
 import net.dries007.tfc.client.TFCSounds;
@@ -36,14 +37,14 @@ public class WingedPrey extends Prey implements Pluckable
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag)
+    public void readAdditionalSaveData(ValueInput tag)
     {
         super.readAdditionalSaveData(tag);
-        EntityHelpers.getLongOrDefault(tag, "plucked", Long.MIN_VALUE);
+        lastPlucked = EntityHelpers.getLongOrDefault(tag, "plucked", Long.MIN_VALUE);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag)
+    public void addAdditionalSaveData(ValueOutput tag)
     {
         super.addAdditionalSaveData(tag);
         tag.putLong("plucked", lastPlucked);
@@ -97,7 +98,7 @@ public class WingedPrey extends Prey implements Pluckable
     }
 
     @Override
-    public boolean causeFallDamage(float amount, float speed, DamageSource src)
+    public boolean causeFallDamage(double amount, float speed, DamageSource src)
     {
         return false;
     }

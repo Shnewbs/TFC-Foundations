@@ -8,6 +8,7 @@ package net.dries007.tfc.common.items;
 
 import java.util.List;
 import java.util.function.Supplier;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -117,7 +118,7 @@ public class MoldItem extends Item
                 {
                     if (mold.isMolten())
                     {
-                        player.displayClientMessage(Component.translatable("tfc.tooltip.small_vessel.alloy_molten"), true);
+                        player.sendOverlayMessage(Component.translatable("tfc.tooltip.small_vessel.alloy_molten"));
                         return InteractionResult.CONSUME.heldItemTransformedTo(stack);
                     }
                     else
@@ -150,7 +151,7 @@ public class MoldItem extends Item
                 }
                 else if (!mold.getFluidInTank(0).isEmpty())
                 {
-                    player.displayClientMessage(Component.translatable("tfc.tooltip.small_vessel.alloy_solid"), true);
+                    player.sendOverlayMessage(Component.translatable("tfc.tooltip.small_vessel.alloy_solid"));
                 }
                 return InteractionResult.SUCCESS.heldItemTransformedTo(stack);
             }

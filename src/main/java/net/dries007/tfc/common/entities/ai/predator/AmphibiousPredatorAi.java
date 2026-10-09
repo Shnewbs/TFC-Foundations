@@ -13,10 +13,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.util.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.Util;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.ActivityData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.*;
 import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder;
@@ -47,14 +48,20 @@ public class AmphibiousPredatorAi
     public static final int MAX_WANDER_DISTANCE = 100 * 100;
     public static final int MAX_ATTACK_DISTANCE = 80 * 80;
 
-    public static Brain<?> makeBrain(Brain<? extends Predator> brain, Predator predator)
+    /** Build activity metadata before the provider restores saved memories. */
+    public static <E extends Predator> List<ActivityData<E>> createActivities(E entity)
     {
-        initCoreActivity(brain);
-        initHuntActivity(brain);
-        initRetreatActivity(brain);
-        PredatorAi.initRestActivity(brain);
-        initFightActivity(brain);
+        return List.of(
+            initCoreActivity(),
+            initHuntActivity(),
+            initRetreatActivity(),
+            PredatorAi.initRestActivity(),
+            initFightActivity()
+        );
+    }
 
+    public static <E extends Predator> Brain<E> makeBrain(Brain<E> brain, Predator predator)
+    {
         brain.setSchedule(predator.diurnal ? TFCBrain.DIURNAL.get() : TFCBrain.NOCTURNAL.get());
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         brain.setDefaultActivity(TFCBrain.HUNT.get());
@@ -83,20 +90,20 @@ public class AmphibiousPredatorAi
         predator.setAggressive(brain.hasMemoryValue(MemoryModuleType.ATTACK_TARGET));
     }
 
-    public static void initCoreActivity(Brain<? extends Predator> brain)
+    public static <E extends Predator> ActivityData<E> initCoreActivity()
     {
-        brain.addActivity(Activity.CORE, 0, ImmutableList.of(
+        return ActivityData.create(Activity.CORE, 0, ImmutableList.of(
             new LookAtTargetSink(45, 90),
             new MoveToTargetSinkIfNotSleeping(),
             new CountDownCooldownTicks(TFCBrain.WAKEUP_TICKS.get())
         ));
     }
 
-    public static void initHuntActivity(Brain<? extends Predator> brain)
+    public static <E extends Predator> ActivityData<E> initHuntActivity()
     {
-        brain.addActivity(TFCBrain.HUNT.get(), ImmutableList.of(
+        return ActivityData.create(TFCBrain.HUNT.get(), ImmutableList.of(
             Pair.of(0, PredatorBehaviors.becomePassiveIf(p -> p.getHealth() < 5f, 200)),
-            Pair.of(1, StartAttacking.create(PredatorAi::getAttackTarget)),
+            Pair.of(1, StartAttacking.<E>create((serverLevel, entity) -> PredatorAi.getAttackTarget(entity))),
             Pair.of(2, SetLookTarget.create(8.0F, UniformInt.of(30, 60))),
             Pair.of(3, TryFindWater.create(6, 1F)),
             Pair.of(5, RandomStroll.swim(1.0F)),
@@ -108,18 +115,18 @@ public class AmphibiousPredatorAi
         ));
     }
 
-    public static void initRetreatActivity(Brain<? extends Predator> brain)
+    public static <E extends Predator> ActivityData<E> initRetreatActivity()
     {
-        brain.addActivityAndRemoveMemoryWhenStopped(Activity.AVOID, 10, ImmutableList.of(
+        return ActivityData.create(Activity.AVOID, 10, ImmutableList.of(
             BehaviorBuilder.triggerIf(PredatorAi::hasNearbyAttacker, SetWalkTargetAwayFrom.entity(MemoryModuleType.HURT_BY_ENTITY, 1.2f, 16, true)),
             StrollToPoi.create(MemoryModuleType.HOME, 0.7f, 5, MAX_WANDER_DISTANCE),
             createIdleMovementBehaviors()
         ), MemoryModuleType.PACIFIED);
     }
 
-    public static void initFightActivity(Brain<? extends Predator> brain)
+    public static <E extends Predator> ActivityData<E> initFightActivity()
     {
-        brain.addActivityAndRemoveMemoryWhenStopped(Activity.FIGHT, 10, ImmutableList.of(
+        return ActivityData.create(Activity.FIGHT, 10, ImmutableList.of(
             PredatorBehaviors.becomePassiveIf(p -> p.getHealth() < 5f, 200),
             SetWalkTargetFromAttackTargetIfTargetOutOfReach.create(AmphibiousPredatorAi::getSpeedModifier),
             MeleeAttack.create(40),

@@ -14,12 +14,13 @@ import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.common.entities.EntityHelpers;
 import net.dries007.tfc.config.animals.MammalConfig;
 import net.dries007.tfc.util.calendar.Calendars;
-
-import org.jetbrains.annotations.Nullable;
 
 public interface MammalProperties extends TFCAnimalProperties
 {
@@ -123,30 +124,28 @@ public interface MammalProperties extends TFCAnimalProperties
     {
         if (isFertilized())
         {
-            player.displayClientMessage(Component.translatable("tfc.tooltip.animal.pregnant", getEntity().getName().getString()), true);
+            player.sendOverlayMessage(Component.translatable("tfc.tooltip.animal.pregnant", getEntity().getName().getString()));
         }
     }
 
     @Override
-    default void saveCommonAnimalData(CompoundTag nbt)
+    default void saveCommonAnimalData(ValueOutput nbt)
     {
         TFCAnimalProperties.super.saveCommonAnimalData(nbt);
         nbt.putLong("pregnant", getPregnantTime());
         if (getGenes() != null)
         {
-            nbt.put("genes", getGenes());
+            nbt.store("genes", CompoundTag.CODEC, getGenes());
         }
     }
 
     @Override
-    default void readCommonAnimalData(CompoundTag nbt)
+    default void readCommonAnimalData(ValueInput nbt)
     {
         TFCAnimalProperties.super.readCommonAnimalData(nbt);
         setPregnantTime(nbt.getLongOr("pregnant", 0L));
-        if (nbt.contains("genes"))
-        {
-            setGenes(nbt.getCompoundOrEmpty("genes"));
-        }
+        // Missing genes must clear the previous value when an existing entity is reloaded.
+        setGenes(nbt.read("genes", CompoundTag.CODEC).orElse(null));
     }
 
     default int getChildCount()

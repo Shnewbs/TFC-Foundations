@@ -6,9 +6,8 @@
 
 package net.dries007.tfc.common.items;
 
-import net.minecraft.world.level.block.state.properties.EnumProperty;
-
 import java.util.List;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -22,6 +21,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
@@ -118,7 +118,7 @@ public class RopeItem extends Item
             knot.playPlacementSound();
             knot.setLeashedTo(player, true);
             level.gameEvent(GameEvent.BLOCK_ATTACH, pos, GameEvent.Context.of(player));
-            player.displayClientMessage(Component.translatable("tfc.tooltip.rope.throw_me"), true);
+            player.sendOverlayMessage(Component.translatable("tfc.tooltip.rope.throw_me"));
         }
     }
 

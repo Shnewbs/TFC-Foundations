@@ -7,6 +7,7 @@
 package net.dries007.tfc.common.items;
 
 import java.util.List;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
@@ -62,7 +63,7 @@ public class PanItem extends Item
         }
         if (!level.isClientSide())
         {
-            player.displayClientMessage(Component.translatable("tfc.tooltip.pan.water"), true);
+            player.sendOverlayMessage(Component.translatable("tfc.tooltip.pan.water"));
         }
         return super.use(level, player, hand);
     }

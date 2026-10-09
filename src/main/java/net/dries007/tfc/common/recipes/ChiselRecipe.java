@@ -94,7 +94,7 @@ public class ChiselRecipe implements INoopInputRecipe
 
     private static void complain(Player player, String message)
     {
-        player.displayClientMessage(Component.translatable("tfc.chisel." + message), true);
+        player.sendOverlayMessage(Component.translatable("tfc.chisel." + message));
     }
 
     @Nullable

@@ -7,11 +7,10 @@
 package net.dries007.tfc.common.entities.prey;
 
 import java.util.Optional;
-import com.mojang.serialization.Dynamic;
+
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -23,18 +22,20 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.frog.FrogVariant;
 import net.minecraft.world.entity.animal.frog.Frog;
+import net.minecraft.world.entity.animal.frog.FrogVariant;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.common.TFCTags;
@@ -62,16 +63,10 @@ public class TFCFrog extends Frog implements Temptable, BrainAnimalBehavior
     }
 
     @Override
-    protected Brain.Provider<Frog> brainProvider()
-    {
-        return Brain.provider(MEMORY_TYPES, TFCFrogAi.SENSOR_TYPES);
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
-    protected Brain<?> makeBrain(Dynamic<?> dynamic)
+    protected Brain<Frog> makeBrain(Brain.Packed packed)
     {
-        return TFCFrogAi.makeBrain((Brain<? extends Frog>) super.makeBrain(dynamic));
+        return Brain.<Frog>provider(TFCFrogAi.SENSOR_TYPES, TFCFrogAi::createActivities).makeBrain(this, packed);
     }
 
     @Override
@@ -83,7 +78,7 @@ public class TFCFrog extends Frog implements Temptable, BrainAnimalBehavior
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag)
+    public void readAdditionalSaveData(ValueInput tag)
     {
         super.readAdditionalSaveData(tag);
         setFamiliarity(tag.getFloatOr("familiarity", 0f));
@@ -93,7 +88,7 @@ public class TFCFrog extends Frog implements Temptable, BrainAnimalBehavior
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag)
+    public void addAdditionalSaveData(ValueOutput tag)
     {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("male", isMale());

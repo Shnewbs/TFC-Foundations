@@ -6,16 +6,17 @@
 
 package net.dries007.tfc.common.entities.ai.predator;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.ActivityData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.*;
 import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder;
@@ -47,14 +48,20 @@ public class PredatorAi
     public static final int MAX_WANDER_DISTANCE = 100 * 100;
     public static final int MAX_ATTACK_DISTANCE = 80 * 80;
 
-    public static Brain<?> makeBrain(Brain<? extends Predator> brain, Predator predator)
+    /** Build activity metadata before the provider restores saved memories. */
+    public static <E extends Predator> List<ActivityData<E>> createActivities(E entity)
     {
-        initCoreActivity(brain);
-        initHuntActivity(brain);
-        initRetreatActivity(brain);
-        initRestActivity(brain);
-        initFightActivity(brain);
+        return List.of(
+            initCoreActivity(),
+            initHuntActivity(),
+            initRetreatActivity(),
+            initRestActivity(),
+            initFightActivity()
+        );
+    }
 
+    public static <E extends Predator> Brain<E> makeBrain(Brain<E> brain, Predator predator)
+    {
         brain.setSchedule(predator.diurnal ? TFCBrain.DIURNAL.get() : TFCBrain.NOCTURNAL.get());
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         brain.setDefaultActivity(TFCBrain.HUNT.get());
@@ -83,9 +90,9 @@ public class PredatorAi
         predator.setAggressive(brain.hasMemoryValue(MemoryModuleType.ATTACK_TARGET));
     }
 
-    public static void initCoreActivity(Brain<? extends Predator> brain)
+    public static <E extends Predator> ActivityData<E> initCoreActivity()
     {
-        brain.addActivity(Activity.CORE, 0, ImmutableList.of(
+        return ActivityData.create(Activity.CORE, 0, ImmutableList.of(
             new AggressiveSwim(0.8F),
             new LookAtTargetSink(45, 90),
             new MoveToTargetSinkIfNotSleeping(),
@@ -93,11 +100,11 @@ public class PredatorAi
         ));
     }
 
-    public static void initHuntActivity(Brain<? extends Predator> brain)
+    public static <E extends Predator> ActivityData<E> initHuntActivity()
     {
-        brain.addActivity(TFCBrain.HUNT.get(), 10, ImmutableList.of(
+        return ActivityData.create(TFCBrain.HUNT.get(), 10, ImmutableList.of(
             PredatorBehaviors.becomePassiveIf(p -> p.getHealth() < 5f, 200),
-            StartAttacking.create(PredatorAi::getAttackTarget),
+            StartAttacking.<E>create((serverLevel, entity) -> PredatorAi.getAttackTarget(entity)),
             SetLookTarget.create(8.0F, UniformInt.of(30, 60)),
             BabyFollowAdult.create(UniformInt.of(5, 16), 1.25F), // babies follow any random adult around
             createIdleMovementBehaviors(),
@@ -105,19 +112,19 @@ public class PredatorAi
         ));
     }
 
-    public static void initRetreatActivity(Brain<? extends Predator> brain)
+    public static <E extends Predator> ActivityData<E> initRetreatActivity()
     {
-        brain.addActivityAndRemoveMemoryWhenStopped(Activity.AVOID, 10, ImmutableList.of(
+        return ActivityData.create(Activity.AVOID, 10, ImmutableList.of(
             BehaviorBuilder.triggerIf(PredatorAi::hasNearbyAttacker, SetWalkTargetAwayFrom.entity(MemoryModuleType.HURT_BY_ENTITY, 1.2f, 16, true)),
             StrollToPoi.create(MemoryModuleType.HOME, 1.2f, 5, MAX_WANDER_DISTANCE),
             createIdleMovementBehaviors()
         ), MemoryModuleType.PACIFIED);
     }
 
-    public static void initRestActivity(Brain<? extends Predator> brain)
+    public static <E extends Predator> ActivityData<E> initRestActivity()
     {
-        brain.addActivity(Activity.REST, 10, ImmutableList.of(
-            StartAttacking.create(PredatorAi::getDisturbedAttackTarget),
+        return ActivityData.create(Activity.REST, 10, ImmutableList.of(
+            StartAttacking.<E>create((serverLevel, entity) -> PredatorAi.getDisturbedAttackTarget(entity)),
             PredatorBehaviors.findNewHome(),
             StrollToPoi.create(MemoryModuleType.HOME, 1.2F, 5, MAX_WANDER_DISTANCE),
             PredatorBehaviors.startSleeping(),
@@ -126,9 +133,9 @@ public class PredatorAi
         ));
     }
 
-    public static void initFightActivity(Brain<? extends Predator> brain)
+    public static <E extends Predator> ActivityData<E> initFightActivity()
     {
-        brain.addActivityAndRemoveMemoryWhenStopped(Activity.FIGHT, 10, ImmutableList.of(
+        return ActivityData.create(Activity.FIGHT, 10, ImmutableList.of(
             PredatorBehaviors.becomePassiveIf(p -> p.getHealth() < 5f, 200),
             SetWalkTargetFromAttackTargetIfTargetOutOfReach.create(1.15F),
             MeleeAttack.create(40),

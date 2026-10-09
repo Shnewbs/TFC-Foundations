@@ -7,7 +7,7 @@
 package net.dries007.tfc.common.entities.misc;
 
 import java.util.function.Supplier;
-import net.minecraft.nbt.CompoundTag;
+
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -21,6 +21,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.common.blockentities.TFCChestBlockEntity;
@@ -87,17 +89,17 @@ public class TFCChestBoat extends ChestBoat implements ISlotCallback
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag tag)
+    protected void readAdditionalSaveData(ValueInput tag)
     {
         super.readAdditionalSaveData(tag);
-        setChestItem(ItemStack.parseOptional(level().registryAccess(), tag.getCompoundOrEmpty("chestItem")));
+        setChestItem(tag.read("chestItem", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY));
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag tag)
+    protected void addAdditionalSaveData(ValueOutput tag)
     {
         super.addAdditionalSaveData(tag);
-        tag.put("chestItem", getChestItem().save(level().registryAccess()));
+        tag.store("chestItem", ItemStack.OPTIONAL_CODEC, getChestItem());
     }
 
     @Override

@@ -6,8 +6,6 @@
 
 package net.dries007.tfc.network;
 
-import net.dries007.tfc.common.entities.livestock.pet.TamableMammal;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -16,6 +14,8 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
+
+import net.dries007.tfc.common.entities.livestock.pet.TamableMammal;
 
 public record PetCommandPacket(
     int entityId,
@@ -50,7 +50,7 @@ public record PetCommandPacket(
             }
             else
             {
-                player.displayClientMessage(Component.translatable("tfc.pet.will_not_listen"), true);
+                player.sendOverlayMessage(Component.translatable("tfc.pet.will_not_listen"));
             }
         }
     }

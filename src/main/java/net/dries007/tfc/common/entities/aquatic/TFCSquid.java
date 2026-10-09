@@ -7,18 +7,20 @@
 package net.dries007.tfc.common.entities.aquatic;
 
 import java.util.Objects;
+
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -62,9 +64,9 @@ public class TFCSquid extends Squid implements AquaticMob
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount)
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource source, float amount)
     {
-        if (super.hurt(source, amount))
+        if (super.hurtServer(serverLevel,source, amount))
         {
             if (!level().isClientSide() && getLastHurtByMob() instanceof Player player && random.nextInt(3) == 0 && player.distanceToSqr(this) < 64)
             {

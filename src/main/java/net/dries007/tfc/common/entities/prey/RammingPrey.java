@@ -7,17 +7,17 @@
 package net.dries007.tfc.common.entities.prey;
 
 import java.util.function.Supplier;
+
 import com.google.common.collect.ImmutableList;
-import com.mojang.serialization.Dynamic;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AnimationState;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -87,21 +87,15 @@ public class RammingPrey extends WildAnimal
     }
 
     @Override
-    protected Brain.Provider<? extends RammingPrey> brainProvider()
+    protected Brain<?> makeBrain(Brain.Packed packed)
     {
-        return Brain.provider(RammingPrey.MEMORY_TYPES, RammingPrey.SENSOR_TYPES);
+        return RammingPreyAi.makeBrain(Brain.<RammingPrey>provider(RammingPrey.MEMORY_TYPES, RammingPrey.SENSOR_TYPES, RammingPreyAi::createActivities).makeBrain(this, packed));
     }
 
     @Override
-    protected Brain<?> makeBrain(Dynamic<?> dynamic)
+    protected void customServerAiStep(ServerLevel serverLevel)
     {
-        return RammingPreyAi.makeBrain(brainProvider().makeBrain(dynamic));
-    }
-
-    @Override
-    protected void customServerAiStep()
-    {
-        getBrain().tick((ServerLevel) level(), this);
+        getBrain().tick(serverLevel, this);
         RammingPreyAi.updateActivity(this);
     }
 
@@ -113,9 +107,9 @@ public class RammingPrey extends WildAnimal
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount)
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource source, float amount)
     {
-        boolean hurt = super.hurt(source, amount);
+        boolean hurt = super.hurtServer(serverLevel,source, amount);
         if (!level().isClientSide() && isAlive())
         {
             brain.eraseMemory(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);

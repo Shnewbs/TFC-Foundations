@@ -6,7 +6,6 @@
 
 package net.dries007.tfc.common.entities.aquatic;
 
-import com.mojang.serialization.Dynamic;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -64,27 +63,21 @@ public class LeopardSeal extends AmphibiousAnimal
     }
 
     @Override
-    protected Brain.Provider<? extends AmphibiousAnimal> brainProvider()
+    protected Brain<?> makeBrain(Brain.Packed packed)
     {
-        return Brain.provider(PinnipedAI.MEMORY_TYPES, PinnipedAI.SENSOR_TYPES);
+        return PinnipedAI.makeBrain(Brain.<AmphibiousAnimal>provider(PinnipedAI.MEMORY_TYPES, PinnipedAI.SENSOR_TYPES, PinnipedAI::createActivities).makeBrain(this, packed));
     }
 
     @Override
-    protected Brain<?> makeBrain(Dynamic<?> dynamic)
+    protected void customServerAiStep(ServerLevel serverLevel)
     {
-        return PinnipedAI.makeBrain(brainProvider().makeBrain(dynamic));
-    }
-
-    @Override
-    protected void customServerAiStep()
-    {
-        getBrain().tick((ServerLevel) level(), this);
+        getBrain().tick(serverLevel, this);
         PinnipedAI.updateActivity(this);
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount)
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource source, float amount)
     {
-        return super.hurt(source, amount);
+        return super.hurtServer(serverLevel,source, amount);
     }
 }

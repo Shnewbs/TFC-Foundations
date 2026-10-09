@@ -157,7 +157,7 @@ public class ComposterBlockEntity extends InventoryBlockEntity<ItemStackHandler>
         {
             if (green == MAX_AMOUNT)
             {
-                if (!client) player.displayClientMessage(Component.translatable("tfc.composter.too_many_greens"), true);
+                if (!client) player.sendOverlayMessage(Component.translatable("tfc.composter.too_many_greens"));
             }
             else
             {
@@ -175,7 +175,7 @@ public class ComposterBlockEntity extends InventoryBlockEntity<ItemStackHandler>
         {
             if (brown == MAX_AMOUNT)
             {
-                if (!client) player.displayClientMessage(Component.translatable("tfc.composter.too_many_browns"), true);
+                if (!client) player.sendOverlayMessage(Component.translatable("tfc.composter.too_many_browns"));
             }
             else
             {
@@ -191,7 +191,7 @@ public class ComposterBlockEntity extends InventoryBlockEntity<ItemStackHandler>
         }
         else if (rotten)
         {
-            if (!client) player.displayClientMessage(Component.translatable("tfc.composter.rotten"), true);
+            if (!client) player.sendOverlayMessage(Component.translatable("tfc.composter.rotten"));
             return finishUse(client);
         }
         else if (compost.type == AdditionType.POISON)

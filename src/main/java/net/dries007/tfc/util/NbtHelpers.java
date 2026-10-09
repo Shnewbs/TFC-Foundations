@@ -85,4 +85,44 @@ public final class NbtHelpers
         }
         return new ListTag();
     }
+    /** Strict legacy animal-save defaults; do not accept a differently typed numeric tag. */
+    public static int getIntOrDefault(CompoundTag nbt, String key, int defaultInt)
+    {
+        return hasTag(nbt, key, Tag.TAG_INT) ? nbt.getIntOr(key, 0) : defaultInt;
+    }
+
+    public static int getIntOrDefault(ValueInput nbt, String key, int defaultInt)
+    {
+        return hasTag(nbt, key, Tag.TAG_INT) ? nbt.getIntOr(key, 0) : defaultInt;
+    }
+
+    public static String getStringOrDefault(CompoundTag nbt, String key, String defaultString)
+    {
+        return hasTag(nbt, key, Tag.TAG_STRING) ? nbt.getStringOr(key, "") : defaultString;
+    }
+
+    public static String getStringOrDefault(ValueInput nbt, String key, String defaultString)
+    {
+        return hasTag(nbt, key, Tag.TAG_STRING) ? nbt.getStringOr(key, "") : defaultString;
+    }
+
+    public static float getFloatOrDefault(CompoundTag nbt, String key, float defaultFloat)
+    {
+        return hasTag(nbt, key, Tag.TAG_FLOAT) ? nbt.getFloatOr(key, 0f) : defaultFloat;
+    }
+
+    public static float getFloatOrDefault(ValueInput nbt, String key, float defaultFloat)
+    {
+        return hasTag(nbt, key, Tag.TAG_FLOAT) ? nbt.getFloatOr(key, 0f) : defaultFloat;
+    }
+
+    public static long getLongOrDefault(CompoundTag nbt, String key, long defaultLong)
+    {
+        return hasTag(nbt, key, Tag.TAG_LONG) ? nbt.getLongOr(key, 0L) : defaultLong;
+    }
+
+    public static long getLongOrDefault(ValueInput nbt, String key, long defaultLong)
+    {
+        return hasTag(nbt, key, Tag.TAG_LONG) ? nbt.getLongOr(key, 0L) : defaultLong;
+    }
 }

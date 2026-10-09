@@ -8,10 +8,9 @@ package net.dries007.tfc.common.entities.livestock;
 
 import java.util.Locale;
 import javax.annotation.Nonnull;
-import net.minecraft.util.Util;
+
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
@@ -21,14 +20,15 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.Util;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -36,6 +36,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -204,7 +206,7 @@ public interface TFCAnimalProperties extends GenderedRenderAnimal, BrainAnimalBe
         return SoundEvents.PLAYER_BURP;
     }
 
-    default void saveCommonAnimalData(CompoundTag nbt)
+    default void saveCommonAnimalData(ValueOutput nbt)
     {
         nbt.putBoolean("gender", isMale());
         nbt.putByte("lastAge", (byte) getLastAge().ordinal());
@@ -219,7 +221,7 @@ public interface TFCAnimalProperties extends GenderedRenderAnimal, BrainAnimalBe
         nbt.putLong("lastMateTick", getLastMateTick());
     }
 
-    default void readCommonAnimalData(CompoundTag nbt)
+    default void readCommonAnimalData(ValueInput nbt)
     {
         setGender(nbt.getBooleanOr("gender", false) ? Gender.MALE : Gender.FEMALE);
         setLastAge(Age.valueOf(nbt.getIntOr("lastAge", 0)));

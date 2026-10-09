@@ -6,7 +6,9 @@
 
 package net.dries007.tfc.common.entities.prey;
 
+import java.util.List;
 import java.util.Set;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
@@ -14,6 +16,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.ActivityData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.BabyFollowAdult;
 import net.minecraft.world.entity.ai.behavior.CountDownCooldownTicks;
@@ -35,7 +38,6 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
-import net.minecraft.world.entity.animal.armadillo.Armadillo;
 import net.minecraft.world.entity.animal.armadillo.ArmadilloAi;
 import net.minecraft.world.entity.schedule.Activity;
 
@@ -89,18 +91,24 @@ public class TFCArmadilloAi
             )
     );
 
-    public static Brain.Provider<? extends Armadillo> brainProvider()
+    public static Brain.Provider<TFCArmadillo> brainProvider()
     {
-        return Brain.provider(MEMORY_TYPES, SENSOR_TYPES);
+        return Brain.provider(MEMORY_TYPES, SENSOR_TYPES, TFCArmadilloAi::createActivities);
     }
 
-    protected static Brain<?> makeBrain(Brain<? extends Armadillo> brain)
+    /** Build activity metadata before the provider restores saved memories. */
+    public static <E extends TFCArmadillo> List<ActivityData<E>> createActivities(E entity)
     {
-        initCoreActivity((Brain<TFCArmadillo>) brain);
-        initIdleActivity((Brain<TFCArmadillo>) brain);
-        initScaredActivity((Brain<TFCArmadillo>) brain);
-        initRetreatActivity((Brain<TFCArmadillo>) brain);
+        return List.of(
+            initCoreActivity(),
+            initIdleActivity(),
+            initScaredActivity(),
+            initRetreatActivity()
+        );
+    }
 
+    protected static <E extends TFCArmadillo> Brain<E> makeBrain(Brain<E> brain)
+    {
         brain.setCoreActivities(Set.of(Activity.CORE));
         brain.setDefaultActivity(Activity.IDLE);
         brain.useDefaultActivity();
@@ -108,10 +116,10 @@ public class TFCArmadilloAi
         return brain;
     }
 
-    public static void initCoreActivity(Brain<TFCArmadillo> brain)
+    public static <E extends TFCArmadillo> ActivityData<E> initCoreActivity()
     {
-        brain.addActivity(Activity.CORE, 0, ImmutableList.of(
-            new Swim(0.8F),
+        return ActivityData.create(Activity.CORE, 0, ImmutableList.of(
+            new Swim<>(0.8F),
             new ArmadilloAi.ArmadilloPanic(2.0F),
             new LookAtTargetSink(45, 90),
             new MoveToTargetSink() {
@@ -132,9 +140,9 @@ public class TFCArmadilloAi
         ));
     }
 
-    public static void initIdleActivity(Brain<TFCArmadillo> brain)
+    public static <E extends TFCArmadillo> ActivityData<E> initIdleActivity()
     {
-        brain.addActivity(Activity.IDLE, 0, ImmutableList.of(
+        return ActivityData.create(Activity.IDLE, 0, ImmutableList.of(
             SetEntityLookTargetSometimes.create(EntityType.PLAYER, 6.0F, UniformInt.of(30, 60)),
             AvoidPredatorAndRammersBehavior.create(true),
             new FollowTemptation(e -> e.isBaby() ? 1.5F: 1.25F),
@@ -144,9 +152,9 @@ public class TFCArmadilloAi
         ));
     }
 
-    public static void initRetreatActivity(Brain<TFCArmadillo> brain)
+    public static <E extends TFCArmadillo> ActivityData<E> initRetreatActivity()
     {
-        brain.addActivityAndRemoveMemoryWhenStopped(Activity.AVOID, 10, ImmutableList.of(
+        return ActivityData.create(Activity.AVOID, 10, ImmutableList.of(
             SetWalkTargetAwayFrom.entity(MemoryModuleType.AVOID_TARGET, 2.0F, 15, false),
             createIdleMovementBehaviors(),
             SetLookTarget.create(8.0F, UniformInt.of(30, 60)),
@@ -154,9 +162,9 @@ public class TFCArmadilloAi
         ), MemoryModuleType.AVOID_TARGET);
     }
 
-    public static void initScaredActivity(Brain<? extends TFCArmadillo> brain)
+    public static <E extends TFCArmadillo> ActivityData<E> initScaredActivity()
     {
-        brain.addActivityWithConditions(Activity.PANIC, ImmutableList.of(
+        return ActivityData.create(Activity.PANIC, ImmutableList.of(
                 Pair.of(0, new ArmadilloAi.ArmadilloBallUp())
             ),
             Set.of(

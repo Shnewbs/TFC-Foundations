@@ -6,19 +6,16 @@
 
 package net.dries007.tfc.common.entities.livestock.camel;
 
+import java.util.List;
+import java.util.function.Predicate;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
-
-import net.dries007.tfc.common.entities.ai.SetLookTarget;
-import net.dries007.tfc.common.entities.ai.TFCBrain;
-import net.dries007.tfc.common.entities.ai.livestock.BreedBehavior;
-import net.dries007.tfc.common.entities.ai.prey.AvoidPredatorAndRammersBehavior;
-import net.dries007.tfc.common.entities.ai.prey.PreyAi;
-
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.ActivityData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.BabyFollowAdult;
 import net.minecraft.world.entity.ai.behavior.CountDownCooldownTicks;
@@ -43,7 +40,11 @@ import net.minecraft.world.entity.animal.camel.Camel;
 import net.minecraft.world.entity.animal.camel.CamelAi;
 import net.minecraft.world.entity.schedule.Activity;
 
-import java.util.function.Predicate;
+import net.dries007.tfc.common.entities.ai.SetLookTarget;
+import net.dries007.tfc.common.entities.ai.TFCBrain;
+import net.dries007.tfc.common.entities.ai.livestock.BreedBehavior;
+import net.dries007.tfc.common.entities.ai.prey.AvoidPredatorAndRammersBehavior;
+import net.dries007.tfc.common.entities.ai.prey.PreyAi;
 
 public class TFCCamelAi
 {
@@ -72,15 +73,21 @@ public class TFCCamelAi
 
     public static Brain.Provider<AbstractCamel> brainProvider()
     {
-        return Brain.provider(MEMORY_TYPES, SENSOR_TYPES);
+        return Brain.provider(MEMORY_TYPES, SENSOR_TYPES, TFCCamelAi::createActivities);
     }
 
-    public static Brain<?> makeBrain(Brain<? extends AbstractCamel> brain)
+    /** Build activity metadata before the provider restores saved memories. */
+    public static <E extends AbstractCamel> List<ActivityData<E>> createActivities(E entity)
     {
-        initCoreActivity(brain);
-        initIdleActivity(brain);
-        initRetreatActivity(brain);
+        return List.of(
+            initCoreActivity(),
+            initIdleActivity(),
+            initRetreatActivity()
+        );
+    }
 
+    public static <E extends AbstractCamel> Brain<E> makeBrain(Brain<E> brain)
+    {
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         brain.setDefaultActivity(Activity.IDLE);
         brain.useDefaultActivity();
@@ -88,10 +95,10 @@ public class TFCCamelAi
         return brain;
     }
 
-    private static void initCoreActivity(Brain<? extends AbstractCamel> brain)
+    private static <E extends AbstractCamel> ActivityData<E> initCoreActivity()
     {
-        brain.addActivity(Activity.CORE, 0, ImmutableList.of(
-            new Swim(0.8F),
+        return ActivityData.create(Activity.CORE, 0, ImmutableList.of(
+            new Swim<>(0.8F),
             new LookAtTargetSink(45, 90),
             new MoveToTargetSink(),
             new CountDownCooldownTicks(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS),
@@ -99,9 +106,9 @@ public class TFCCamelAi
         ));
     }
 
-    public static void initIdleActivity(Brain<? extends AbstractCamel> brain)
+    public static <E extends AbstractCamel> ActivityData<E> initIdleActivity()
     {
-        brain.addActivity(Activity.IDLE, 0, ImmutableList.of(
+        return ActivityData.create(Activity.IDLE, 0, ImmutableList.of(
             SetEntityLookTargetSometimes.create(EntityType.PLAYER, 6.0F, UniformInt.of(30, 60)),
             AvoidPredatorAndRammersBehavior.create(true),
             new BreedBehavior<>(2.0F),
@@ -125,9 +132,9 @@ public class TFCCamelAi
         );
     }
 
-    public static void initRetreatActivity(Brain<? extends AbstractCamel> brain)
+    public static <E extends AbstractCamel> ActivityData<E> initRetreatActivity()
     {
-        brain.addActivityAndRemoveMemoryWhenStopped(Activity.AVOID, 10, ImmutableList.of(
+        return ActivityData.create(Activity.AVOID, 10, ImmutableList.of(
             SetWalkTargetAwayFrom.entity(MemoryModuleType.AVOID_TARGET, 3.2F, 15, false),
             new RunOne<>(
                 ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryStatus.VALUE_ABSENT),

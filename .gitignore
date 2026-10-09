@@ -12,6 +12,12 @@
 !/gradle/wrapper/gradle-wrapper.properties
 !/src/**
 
+# Port verification source (no downloaded binaries or diagnostic outputs)
+!/tools/porting/*.py
+!/tools/porting/*.java
+!/tools/porting/*.json
+!/tools/porting/*.gradle
+
 # Resource generation
 !/resources/**/*.py
 !/resources/**/*.bbmodel

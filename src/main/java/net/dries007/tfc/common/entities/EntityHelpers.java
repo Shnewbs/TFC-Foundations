@@ -6,14 +6,12 @@
 
 package net.dries007.tfc.common.entities;
 
-import net.dries007.tfc.util.NbtHelpers;
-
 import java.util.List;
 import java.util.Optional;
+
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -34,11 +32,13 @@ import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.MobBucketItem;
+import net.minecraft.world.level.storage.ValueInput;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import net.dries007.tfc.common.entities.ai.TFCAvoidEntityGoal;
 import net.dries007.tfc.common.entities.livestock.TFCAnimalProperties;
 import net.dries007.tfc.common.fluids.FluidHelpers;
+import net.dries007.tfc.util.NbtHelpers;
 import net.dries007.tfc.util.calendar.Calendars;
 import net.dries007.tfc.util.calendar.ICalendar;
 
@@ -119,22 +119,42 @@ public final class EntityHelpers
 
     public static int getIntOrDefault(CompoundTag nbt, String key, int defaultInt)
     {
-        return NbtHelpers.hasTag(nbt, key, Tag.TAG_INT) ? nbt.getIntOr(key, 0) : defaultInt;
+        return NbtHelpers.getIntOrDefault(nbt, key, defaultInt);
+    }
+
+    public static int getIntOrDefault(ValueInput nbt, String key, int defaultInt)
+    {
+        return NbtHelpers.getIntOrDefault(nbt, key, defaultInt);
     }
 
     public static String getStringOrDefault(CompoundTag nbt, String key, String defaultString)
     {
-        return NbtHelpers.hasTag(nbt, key, Tag.TAG_STRING) ? nbt.getStringOr(key, "") : defaultString;
+        return NbtHelpers.getStringOrDefault(nbt, key, defaultString);
+    }
+
+    public static String getStringOrDefault(ValueInput nbt, String key, String defaultString)
+    {
+        return NbtHelpers.getStringOrDefault(nbt, key, defaultString);
     }
 
     public static float getFloatOrDefault(CompoundTag nbt, String key, float defaultFloat)
     {
-        return NbtHelpers.hasTag(nbt, key, Tag.TAG_FLOAT) ? nbt.getFloatOr(key, 0f) : defaultFloat;
+        return NbtHelpers.getFloatOrDefault(nbt, key, defaultFloat);
+    }
+
+    public static float getFloatOrDefault(ValueInput nbt, String key, float defaultFloat)
+    {
+        return NbtHelpers.getFloatOrDefault(nbt, key, defaultFloat);
     }
 
     public static long getLongOrDefault(CompoundTag nbt, String key, long defaultLong)
     {
-        return NbtHelpers.hasTag(nbt, key, Tag.TAG_LONG) ? nbt.getLongOr(key, 0L) : defaultLong;
+        return NbtHelpers.getLongOrDefault(nbt, key, defaultLong);
+    }
+
+    public static long getLongOrDefault(ValueInput nbt, String key, long defaultLong)
+    {
+        return NbtHelpers.getLongOrDefault(nbt, key, defaultLong);
     }
 
     /**

@@ -1,0 +1,544 @@
+{
+  "baseline": "46401c030a6d2a6e8d9721147837237d8b03605d",
+  "scope": "Literal save-key and hook signature contracts; not a proof of world compatibility.",
+  "hooks": [
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/IGlow.java",
+      "method": "saveLight",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "lightX",
+        "lightY",
+        "lightZ"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/IGlow.java",
+      "method": "readLight",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "lightX",
+        "lightY",
+        "lightZ"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/ai/predator/PackPredator.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "familiarity",
+        "nextFeed",
+        "respect"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/ai/predator/PackPredator.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "familiarity",
+        "nextFeed",
+        "respect"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/ai/prey/TFCOcelot.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "familiarity",
+        "nextFeed"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/ai/prey/TFCOcelot.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "familiarity",
+        "nextFeed"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/aquatic/Jellyfish.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "Variant"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/aquatic/Jellyfish.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "Variant"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/aquatic/Octopoteuthis.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "DarkTicksRemaining"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/aquatic/Octopoteuthis.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "DarkTicksRemaining"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/livestock/MammalProperties.java",
+      "method": "saveCommonAnimalData",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "genes",
+        "pregnant"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/livestock/MammalProperties.java",
+      "method": "readCommonAnimalData",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "genes",
+        "pregnant"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/livestock/OviparousAnimal.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "plucked"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/livestock/OviparousAnimal.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "plucked"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/livestock/ProducingAnimal.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "produced"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/livestock/ProducingAnimal.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "produced"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/livestock/ProducingMammal.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "produced"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/livestock/ProducingMammal.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "produced"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/livestock/TFCAnimal.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": []
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/livestock/TFCAnimal.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": []
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/livestock/TFCAnimalProperties.java",
+      "method": "saveCommonAnimalData",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "birthTick",
+        "familiarity",
+        "fertilized",
+        "gender",
+        "geneticSize",
+        "lastAge",
+        "lastFamiliarityTick",
+        "lastFedTick",
+        "lastMateTick",
+        "oldTick",
+        "uses"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/livestock/TFCAnimalProperties.java",
+      "method": "readCommonAnimalData",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "birthTick",
+        "familiarity",
+        "fertilized",
+        "gender",
+        "geneticSize",
+        "lastAge",
+        "lastFamiliarityTick",
+        "lastFedTick",
+        "lastMateTick",
+        "oldTick",
+        "uses"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/livestock/camel/BactrianCamel.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "produced"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/livestock/camel/BactrianCamel.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "produced"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/livestock/camel/DromedaryCamel.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": []
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/livestock/camel/DromedaryCamel.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": []
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/livestock/horse/TFCChestedHorse.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "chestItem",
+        "overburdened"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/livestock/horse/TFCChestedHorse.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "chestItem",
+        "overburdened"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/livestock/horse/TFCHorse.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": []
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/livestock/horse/TFCHorse.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": []
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/livestock/pet/TFCCat.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "variant"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/livestock/pet/TFCCat.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "variant"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/livestock/pet/TamableMammal.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "CollarColor",
+        "Owner",
+        "command",
+        "petFlags"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/livestock/pet/TamableMammal.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "CollarColor",
+        "Owner",
+        "command",
+        "petFlags"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/misc/GlowArrow.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": []
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/misc/GlowArrow.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": []
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/misc/HoldingMinecart.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "TNTFuse",
+        "holdItem"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/misc/HoldingMinecart.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "TNTFuse",
+        "holdItem"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/misc/RopeKnot.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": []
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/misc/RopeKnot.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": []
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/misc/Seat.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": []
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/misc/Seat.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": []
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/misc/TFCChestBoat.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "chestItem"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/misc/TFCChestBoat.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "chestItem"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/misc/TFCFishingHook.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "exhaustion",
+        "lastPulled",
+        "strength"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/misc/TFCFishingHook.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "exhaustion",
+        "lastPulled",
+        "strength"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/misc/TFCMinecartChest.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "cartItem",
+        "chestItem"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/misc/TFCMinecartChest.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "cartItem",
+        "chestItem"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/misc/ThrownJavelin.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "dealtDamage",
+        "glow",
+        "item"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/misc/ThrownJavelin.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "dealtDamage",
+        "glow",
+        "item"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/predator/Predator.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "sleeping"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/predator/Predator.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "sleeping"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/prey/TFCArmadillo.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "PredatorLoseInterestTime",
+        "baby",
+        "male",
+        "produced"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/prey/TFCArmadillo.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "PredatorLoseInterestTime",
+        "baby",
+        "male",
+        "produced"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/prey/TFCFrog.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "familiarity",
+        "lastMated",
+        "male",
+        "nextFeed"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/prey/TFCFrog.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "familiarity",
+        "lastMated",
+        "male",
+        "nextFeed"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/prey/TFCRabbit.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "TFCMoreCarrotTicks"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/prey/TFCRabbit.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "TFCMoreCarrotTicks"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/prey/WildAnimal.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "baby",
+        "male"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/prey/WildAnimal.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "baby",
+        "male"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/prey/WingedPrey.java",
+      "method": "addAdditionalSaveData",
+      "parameter_type": "ValueOutput",
+      "keys": [
+        "plucked"
+      ]
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/prey/WingedPrey.java",
+      "method": "readAdditionalSaveData",
+      "parameter_type": "ValueInput",
+      "keys": [
+        "plucked"
+      ]
+    }
+  ]
+}

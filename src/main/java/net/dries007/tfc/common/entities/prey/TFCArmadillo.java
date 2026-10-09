@@ -6,9 +6,7 @@
 
 package net.dries007.tfc.common.entities.prey;
 
-import com.mojang.serialization.Dynamic;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -19,9 +17,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -33,6 +31,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.common.TFCTags;
@@ -59,15 +59,9 @@ public class TFCArmadillo extends Armadillo implements Temptable, Scareable
     }
 
     @Override
-    protected Brain.Provider<Armadillo> brainProvider()
+    protected Brain<Armadillo> makeBrain(Brain.Packed packed)
     {
-        return (Brain.Provider<Armadillo>) TFCArmadilloAi.brainProvider();
-    }
-
-    @Override
-    protected Brain<?> makeBrain(Dynamic<?> dynamic)
-    {
-        return TFCArmadilloAi.makeBrain(brainProvider().makeBrain(dynamic));
+        return (Brain<Armadillo>) (Brain<?>) TFCArmadilloAi.makeBrain(TFCArmadilloAi.brainProvider().makeBrain(this, packed));
     }
 
     @Nullable
@@ -100,9 +94,9 @@ public class TFCArmadillo extends Armadillo implements Temptable, Scareable
     }
 
     @Override
-    protected void customServerAiStep()
+    protected void customServerAiStep(ServerLevel serverLevel)
     {
-        ((Brain<TFCArmadillo>) getBrain()).tick((ServerLevel) level(), this);
+        getBrain().tick(serverLevel, this);
         TFCArmadilloAi.updateActivity(this);
         if (this.isScared() && predatorLoseInterestTime > 0)
         {
@@ -203,14 +197,14 @@ public class TFCArmadillo extends Armadillo implements Temptable, Scareable
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount)
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource source, float amount)
     {
         if (this.isScared())
         {
             amount -= 1.0f;
             // in super.hurt : amount = (amount - 1.0F) / 2.0F
         }
-        return super.hurt(source, amount);
+        return super.hurtServer(serverLevel,source, amount);
     }
 
     @Override
@@ -223,7 +217,7 @@ public class TFCArmadillo extends Armadillo implements Temptable, Scareable
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag)
+    public void addAdditionalSaveData(ValueOutput tag)
     {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("male", isMale());
@@ -233,7 +227,7 @@ public class TFCArmadillo extends Armadillo implements Temptable, Scareable
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag)
+    public void readAdditionalSaveData(ValueInput tag)
     {
         super.readAdditionalSaveData(tag);
         setIsMale(tag.getBooleanOr("male", false));

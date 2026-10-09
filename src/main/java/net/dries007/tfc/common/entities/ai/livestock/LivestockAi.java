@@ -6,13 +6,15 @@
 
 package net.dries007.tfc.common.entities.ai.livestock;
 
+import java.util.List;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
-
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.ActivityData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.AnimalPanic;
 import net.minecraft.world.entity.ai.behavior.BabyFollowAdult;
@@ -32,6 +34,7 @@ import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.schedule.Activity;
+
 import net.dries007.tfc.common.entities.ai.SetLookTarget;
 import net.dries007.tfc.common.entities.ai.TFCBrain;
 import net.dries007.tfc.common.entities.ai.prey.AvoidPredatorAndRammersBehavior;
@@ -58,12 +61,18 @@ public class LivestockAi
      * Activities get re-added to the Brain object each time. This means they can differ per entity instance, if we want them to!
      * Only one non-core Activity can run at once. When an Activity is run, it cycles through each prioritized Behavior and tries to run them all.
      */
-    public static Brain<?> makeBrain(Brain<? extends TFCAnimal> brain)
+    /** Build activity metadata before the provider restores saved memories. */
+    public static <E extends TFCAnimal> List<ActivityData<E>> createActivities(E entity)
     {
-        initCoreActivity(brain);
-        initIdleActivity(brain);
-        initRetreatActivity(brain);
+        return List.of(
+            initCoreActivity(),
+            initIdleActivity(),
+            initRetreatActivity()
+        );
+    }
 
+    public static <E extends TFCAnimal> Brain<E> makeBrain(Brain<E> brain)
+    {
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE)); // core activities run all the time
         brain.setDefaultActivity(Activity.IDLE); // the default activity is a useful way to have a fallback activity
         brain.useDefaultActivity();
@@ -75,10 +84,10 @@ public class LivestockAi
     /**
      * These activities are always active. So, expect them to run every tick.
      */
-    public static void initCoreActivity(Brain<? extends TFCAnimal> brain)
+    public static <E extends TFCAnimal> ActivityData<E> initCoreActivity()
     {
-        brain.addActivity(Activity.CORE, 0, ImmutableList.of(
-            new Swim(0.8F), // float in water
+        return ActivityData.create(Activity.CORE, 0, ImmutableList.of(
+            new Swim<>(0.8F), // float in water
             new LookAtTargetSink(45, 90), // if memory of look target, looks at that
             new MoveToTargetSink(), // tries to walk to its internal walk target. This could just be a random block.
             new CountDownCooldownTicks(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS) // cools down between being tempted if its concentration broke
@@ -88,9 +97,9 @@ public class LivestockAi
     /**
      * These will run whenever we don't have something better to do. Essentially walk and swim randomly, or do nothing.
      */
-    public static void initIdleActivity(Brain<? extends TFCAnimal> brain)
+    public static <E extends TFCAnimal> ActivityData<E> initIdleActivity()
     {
-        brain.addActivity(Activity.IDLE, 0, ImmutableList.of(
+        return ActivityData.create(Activity.IDLE, 0, ImmutableList.of(
             SetLookTarget.create(EntityType.PLAYER, 6.0F, UniformInt.of(30, 60)), // looks at player, but its only try it every so often -- "Run Sometimes"
             AvoidPredatorAndRammersBehavior.create(true),
             new BreedBehavior<>(1.0F), // custom TFC breed behavior
@@ -101,9 +110,9 @@ public class LivestockAi
         ));
     }
 
-    public static void initRetreatActivity(Brain<? extends TFCAnimal> brain)
+    public static <E extends TFCAnimal> ActivityData<E> initRetreatActivity()
     {
-        brain.addActivityAndRemoveMemoryWhenStopped(Activity.AVOID, 10, ImmutableList.of(
+        return ActivityData.create(Activity.AVOID, 10, ImmutableList.of(
             SetWalkTargetAwayFrom.entity(MemoryModuleType.AVOID_TARGET, 1.3F, 15, false),
             createIdleMovementBehaviors(),
             SetLookTarget.create(8.0F, UniformInt.of(30, 60)),

@@ -6,11 +6,10 @@
 
 package net.dries007.tfc.common.entities.ai.predator;
 
-import com.mojang.serialization.Dynamic;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
@@ -19,15 +18,17 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.client.TFCSounds;
@@ -122,7 +123,7 @@ public class PackPredator extends Predator implements Temptable
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag)
+    public void addAdditionalSaveData(ValueOutput tag)
     {
         super.addAdditionalSaveData(tag);
         tag.putInt("respect", getRespect());
@@ -131,7 +132,7 @@ public class PackPredator extends Predator implements Temptable
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag)
+    public void readAdditionalSaveData(ValueInput tag)
     {
         super.readAdditionalSaveData(tag);
         setRespect(EntityHelpers.getIntOrDefault(tag, "respect", 0));
@@ -140,21 +141,15 @@ public class PackPredator extends Predator implements Temptable
     }
 
     @Override
-    protected Brain.Provider<? extends Predator> brainProvider()
+    protected Brain<?> makeBrain(Brain.Packed packed)
     {
-        return Brain.provider(PackPredatorAi.MEMORY_TYPES, PackPredatorAi.SENSOR_TYPES);
+        return PackPredatorAi.makeBrain(Brain.<PackPredator>provider(PackPredatorAi.MEMORY_TYPES, PackPredatorAi.SENSOR_TYPES, PackPredatorAi::createActivities).makeBrain(this, packed), this);
     }
 
     @Override
-    protected Brain<?> makeBrain(Dynamic<?> dynamic)
+    public boolean doHurtTarget(ServerLevel serverLevel, Entity target)
     {
-        return PackPredatorAi.makeBrain(brainProvider().makeBrain(dynamic), this);
-    }
-
-    @Override
-    public boolean doHurtTarget(Entity target)
-    {
-        if (super.doHurtTarget(target))
+        if (super.doHurtTarget(serverLevel,target))
         {
             if (!target.isAlive())
             {
@@ -166,7 +161,7 @@ public class PackPredator extends Predator implements Temptable
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount)
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource source, float amount)
     {
         if (!level().isClientSide() && source.getDirectEntity() instanceof LivingEntity livingEntity && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(livingEntity))
         {
@@ -176,7 +171,7 @@ public class PackPredator extends Predator implements Temptable
         {
             PackPredatorAi.alertOthers(this, null);
         }
-        return super.hurt(source, amount);
+        return super.hurtServer(serverLevel,source, amount);
     }
 
     @Override

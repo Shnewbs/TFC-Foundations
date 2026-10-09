@@ -27,13 +27,13 @@ public class TFCAvoidEntityGoal<T extends LivingEntity> extends AvoidEntityGoal<
     public TFCAvoidEntityGoal(PathfinderMob mob, Class<T> avoidClass, float dist, double farSpeed, double nearSpeed, TagKey<EntityType<?>> tag)
     {
         super(mob, avoidClass, dist, farSpeed, nearSpeed);
-        avoidEntityTargeting = TargetingConditions.forCombat().range(dist).selector(e -> Helpers.isEntity(e, tag));
+        avoidEntityTargeting = TargetingConditions.forCombat().range(dist).selector((e, serverLevel) -> Helpers.isEntity(e, tag));
     }
 
     public TFCAvoidEntityGoal(PathfinderMob mob, Class<T> avoidClass, float dist, double farSpeed, double nearSpeed)
     {
         super(mob, avoidClass, dist, farSpeed, nearSpeed);
-        avoidEntityTargeting = TargetingConditions.forCombat().range(dist).selector(EntitySelector.NO_SPECTATORS::test);
+        avoidEntityTargeting = TargetingConditions.forCombat().range(dist).selector((entity, serverLevel) -> EntitySelector.NO_SPECTATORS.test(entity));
     }
 
     @Override

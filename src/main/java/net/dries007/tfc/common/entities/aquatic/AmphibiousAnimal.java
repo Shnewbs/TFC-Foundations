@@ -7,7 +7,7 @@
 package net.dries007.tfc.common.entities.aquatic;
 
 import java.util.Optional;
-import com.mojang.serialization.Dynamic;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -20,9 +20,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.Brain;
@@ -92,21 +92,15 @@ public abstract class AmphibiousAnimal extends WildAnimal implements Temptable
     }
 
     @Override
-    protected Brain.Provider<? extends AmphibiousAnimal> brainProvider()
+    protected Brain<?> makeBrain(Brain.Packed packed)
     {
-        return Brain.provider(AmphibianAi.MEMORY_TYPES, AmphibianAi.SENSOR_TYPES);
+        return AmphibianAi.makeBrain(Brain.<AmphibiousAnimal>provider(AmphibianAi.MEMORY_TYPES, AmphibianAi.SENSOR_TYPES, AmphibianAi::createActivities).makeBrain(this, packed));
     }
 
     @Override
-    protected Brain<?> makeBrain(Dynamic<?> dynamic)
+    protected void customServerAiStep(ServerLevel serverLevel)
     {
-        return AmphibianAi.makeBrain(brainProvider().makeBrain(dynamic));
-    }
-
-    @Override
-    protected void customServerAiStep()
-    {
-        getBrain().tick((ServerLevel) level(), this);
+        getBrain().tick(serverLevel, this);
         AmphibianAi.updateActivity(this);
         if (!isNoAi() && !isInWaterOrBubble())
         {
@@ -116,9 +110,9 @@ public abstract class AmphibiousAnimal extends WildAnimal implements Temptable
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount)
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource source, float amount)
     {
-        boolean hurt = super.hurt(source, amount);
+        boolean hurt = super.hurtServer(serverLevel,source, amount);
         if (!level().isClientSide() && getHealth() > 0 && amount > 0.5F && !isPlayingDead())
         {
             brain.setMemory(MemoryModuleType.PLAY_DEAD_TICKS, PLAY_DEAD_TIME);
@@ -205,9 +199,9 @@ public abstract class AmphibiousAnimal extends WildAnimal implements Temptable
     }
 
     @Override
-    public boolean doHurtTarget(Entity entity)
+    public boolean doHurtTarget(ServerLevel serverLevel, Entity entity)
     {
-        final boolean hurt = super.doHurtTarget(entity);
+        final boolean hurt = super.doHurtTarget(serverLevel,entity);
         if (!entity.isAlive())
         {
             getBrain().setMemoryWithExpiry(MemoryModuleType.HUNTED_RECENTLY, true, 1000);

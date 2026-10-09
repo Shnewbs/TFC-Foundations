@@ -6,10 +6,9 @@
 
 package net.dries007.tfc.common.entities.livestock.horse;
 
-import net.dries007.tfc.util.NbtHelpers;
-
 import java.util.function.DoubleSupplier;
 import java.util.function.IntUnaryOperator;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -32,6 +31,7 @@ import net.dries007.tfc.common.entities.livestock.Age;
 import net.dries007.tfc.common.entities.livestock.MammalProperties;
 import net.dries007.tfc.common.entities.livestock.TFCAnimalProperties;
 import net.dries007.tfc.util.Helpers;
+import net.dries007.tfc.util.NbtHelpers;
 
 public interface HorseProperties extends MammalProperties
 {
@@ -150,7 +150,7 @@ public interface HorseProperties extends MammalProperties
                 rejectPassengers();
                 if (livingEntity instanceof Player player)
                 {
-                    player.displayClientMessage(Component.translatable("tfc.tooltip.animal.horse_angry_overburdened"), true);
+                    player.sendOverlayMessage(Component.translatable("tfc.tooltip.animal.horse_angry_overburdened"));
                 }
                 break;
             }

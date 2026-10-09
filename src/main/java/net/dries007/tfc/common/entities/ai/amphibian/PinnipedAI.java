@@ -6,14 +6,17 @@
 
 package net.dries007.tfc.common.entities.ai.amphibian;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
-import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.ActivityData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.BabyFollowAdult;
 import net.minecraft.world.entity.ai.behavior.CountDownCooldownTicks;
@@ -61,13 +64,19 @@ public class PinnipedAI
 
     public static final int MAX_WANDER_DISTANCE = 100 * 100;
 
-    public static Brain<?> makeBrain(Brain<? extends AmphibiousAnimal> brain)
+    /** Build activity metadata before the provider restores saved memories. */
+    public static <E extends AmphibiousAnimal> List<ActivityData<E>> createActivities(E entity)
     {
-        initCoreActivity(brain);
-        initIdleActivity(brain);
-        initRetreatActivity(brain);
-        initFightActivity(brain);
+        return List.of(
+            initCoreActivity(),
+            initIdleActivity(),
+            initRetreatActivity(),
+            initFightActivity()
+        );
+    }
 
+    public static <E extends AmphibiousAnimal> Brain<E> makeBrain(Brain<E> brain)
+    {
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         brain.setDefaultActivity(Activity.IDLE);
         brain.useDefaultActivity();
@@ -78,9 +87,9 @@ public class PinnipedAI
     /**
      * These activities are always active. So, expect them to run every tick.
      */
-    private static void initCoreActivity(Brain<? extends AmphibiousAnimal> brain)
+    private static <E extends AmphibiousAnimal> ActivityData<E> initCoreActivity()
     {
-        brain.addActivity(Activity.CORE, 0, ImmutableList.of(
+        return ActivityData.create(Activity.CORE, 0, ImmutableList.of(
             new LookAtTargetSink(45, 90),
             new MoveToTargetSink(),
             new CountDownCooldownTicks(MemoryModuleType.TEMPTATION_COOLDOWN_TICKS)
@@ -90,12 +99,12 @@ public class PinnipedAI
     /**
      * These will run whenever we don't have something better to do. Essentially walk and swim randomly, or do nothing.
      */
-    private static void initIdleActivity(Brain<? extends AmphibiousAnimal> brain)
+    private static <E extends AmphibiousAnimal> ActivityData<E> initIdleActivity()
     {
-        brain.addActivity(Activity.IDLE, ImmutableList.of(
+        return ActivityData.create(Activity.IDLE, ImmutableList.of(
             Pair.of(0, SetLookTarget.create(TFCTags.Entities.TURTLE_FRIENDS, 6.0F, UniformInt.of(30, 60))),
             Pair.of(2, new RunOne<>(ImmutableList.of(
-                Pair.of(BabyFollowAdult.create(ADULT_FOLLOW_RANGE, PinnipedAI::getChasingSpeedModifier), 1),
+                Pair.of(BabyFollowAdult.create(ADULT_FOLLOW_RANGE, PinnipedAI::getChasingSpeedModifier, MemoryModuleType.NEAREST_VISIBLE_ADULT, false), 1),
                 Pair.of(new FollowTemptation(PinnipedAI::getSpeedModifier), 1)
             ))),
             Pair.of(3, TryFindWater.create(6, 0.15F)),
@@ -103,18 +112,18 @@ public class PinnipedAI
         ));
     }
 
-    public static void initRetreatActivity(Brain<? extends AmphibiousAnimal> brain)
+    public static <E extends AmphibiousAnimal> ActivityData<E> initRetreatActivity()
     {
-        brain.addActivityAndRemoveMemoryWhenStopped(Activity.AVOID, 10, ImmutableList.of(
+        return ActivityData.create(Activity.AVOID, 10, ImmutableList.of(
             BehaviorBuilder.triggerIf(PredatorAi::hasNearbyAttacker, AmphibiousSetWalkTargetAwayFrom.entity(MemoryModuleType.HURT_BY_ENTITY, PinnipedAI::getFleeingSpeedModifier, 16, true)),
             AmphibiousStrollToPoi.create(MemoryModuleType.HOME, PinnipedAI::getSpeedModifier, 5, MAX_WANDER_DISTANCE),
             createIdleMovementBehaviors()
         ), MemoryModuleType.HURT_BY_ENTITY);
     }
 
-    private static void initFightActivity(Brain<? extends AmphibiousAnimal> brain)
+    private static <E extends AmphibiousAnimal> ActivityData<E> initFightActivity()
     {
-        brain.addActivityAndRemoveMemoryWhenStopped(Activity.FIGHT, 0, ImmutableList.of(
+        return ActivityData.create(Activity.FIGHT, 0, ImmutableList.of(
             StopAttackingIfTargetInvalid.create(),
             SetWalkTargetFromAttackTargetIfTargetOutOfReach.create(PinnipedAI::getChasingSpeedModifier),
             MeleeAttack.create(20),
@@ -156,7 +165,7 @@ public class PinnipedAI
             GateBehavior.OrderPolicy.ORDERED,
             GateBehavior.RunningPolicy.TRY_ALL,
             ImmutableList.of(
-                Pair.of(StartAttacking.create(PinnipedAI::getAttackTarget), 2),
+                Pair.of(StartAttacking.<E>create((serverLevel, entity) -> PinnipedAI.getAttackTarget(entity)), 2),
                 Pair.of(RandomStroll.swim(0.5F), 2),
                 Pair.of(RandomStroll.stroll(0.15F, false), 2),
                 Pair.of(SetWalkTargetFromLookTarget.create(PinnipedAI::canSetWalkTargetFromLookTarget, PinnipedAI::getSpeedModifier, 3), 3),

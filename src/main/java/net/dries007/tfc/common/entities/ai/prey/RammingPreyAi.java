@@ -6,21 +6,23 @@
 
 package net.dries007.tfc.common.entities.ai.prey;
 
+import java.util.List;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.ActivityData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.*;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.schedule.Activity;
-
-import com.mojang.datafixers.util.Pair;
 
 import net.dries007.tfc.client.TFCSounds;
 import net.dries007.tfc.common.TFCTags;
@@ -38,11 +40,11 @@ public class RammingPreyAi
     public static final float BABY_RAM_KNOCKBACK_FORCE = 1.0F;
     private static final UniformInt TIME_BETWEEN_RAMS_MALE = UniformInt.of(600, 1000);
     private static final UniformInt TIME_BETWEEN_RAMS_FEMALE = UniformInt.of(1000, 1600);
-    protected static final TargetingConditions RAM_TARGET_CONDITIONS = TargetingConditions.forCombat().selector((target) ->
+    protected static final TargetingConditions RAM_TARGET_CONDITIONS = TargetingConditions.forCombat().selector((target, serverLevel) ->
     {
         return (target.level().getWorldBorder().isWithinBounds(target.getBoundingBox()) && !(target instanceof RammingPrey) && !Helpers.isEntity(target, TFCTags.Entities.NOT_RAMMED_BY_RAMMERS));
     });
-    protected static final TargetingConditions RAM_TARGET_CONDITIONS_ADULT_MALE = TargetingConditions.forCombat().selector((target) ->
+    protected static final TargetingConditions RAM_TARGET_CONDITIONS_ADULT_MALE = TargetingConditions.forCombat().selector((target, serverLevel) ->
     {
         return (target.level().getWorldBorder().isWithinBounds(target.getBoundingBox())
             && !(target instanceof RammingPrey && !Helpers.isEntity(target, TFCTags.Entities.NOT_RAMMED_BY_RAMMERS) && (!((RammingPrey) target).isMale() || target.isBaby() || (target.getHealth() / target.getMaxHealth() < 0.7)))
@@ -54,13 +56,19 @@ public class RammingPreyAi
         brain.setMemory(MemoryModuleType.RAM_COOLDOWN_TICKS, (rammingPrey.isMale() ? TIME_BETWEEN_RAMS_MALE : TIME_BETWEEN_RAMS_FEMALE).sample(random));
     }
 
-    public static Brain<?> makeBrain(Brain<? extends RammingPrey> brain)
+    /** Build activity metadata before the provider restores saved memories. */
+    public static <E extends RammingPrey> List<ActivityData<E>> createActivities(E entity)
     {
-        initCoreActivity(brain);
-        initIdleActivity(brain);
-        initRetreatActivity(brain);
-        initRamActivity(brain);
+        return List.of(
+            initCoreActivity(),
+            initIdleActivity(),
+            initRetreatActivity(),
+            initRamActivity()
+        );
+    }
 
+    public static <E extends RammingPrey> Brain<E> makeBrain(Brain<E> brain)
+    {
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         brain.setDefaultActivity(Activity.IDLE);
         brain.useDefaultActivity();;
@@ -68,10 +76,10 @@ public class RammingPreyAi
         return brain;
     }
 
-    public static void initCoreActivity(Brain<? extends RammingPrey> brain)
+    public static <E extends RammingPrey> ActivityData<E> initCoreActivity()
     {
-        brain.addActivity(Activity.CORE, 0, ImmutableList.of(
-            new Swim(0.7F), // float in water
+        return ActivityData.create(Activity.CORE, 0, ImmutableList.of(
+            new Swim<>(0.7F), // float in water
             new LookAtTargetSink(45, 90), // if memory of look target, looks at that
             new MoveToTargetSink(), // tries to walk to its internal walk target. This could just be a random block.
             new CountDownCooldownTicks(MemoryModuleType.RAM_COOLDOWN_TICKS),
@@ -81,9 +89,9 @@ public class RammingPreyAi
         ));
     }
 
-    public static void initIdleActivity(Brain<? extends RammingPrey> brain)
+    public static <E extends RammingPrey> ActivityData<E> initIdleActivity()
     {
-        brain.addActivity(Activity.IDLE, ImmutableList.of(
+        return ActivityData.create(Activity.IDLE, ImmutableList.of(
             Pair.of(0, SetLookTarget.create(EntityType.PLAYER, 6.0F, UniformInt.of(30, 60))), // looks at player, but its only try it every so often -- "Run Sometimes"
             Pair.of(1, AvoidPredatorsBehavior.create(true)), //Excludes players, as these animals should not fear the player
             Pair.of(2, BabyFollowAdult.create(UniformInt.of(5, 16), 1.25F)), // babies follow any random adult around
@@ -96,9 +104,9 @@ public class RammingPreyAi
      * What the name "addActivityAndRemoveMemoryWhenStopped" does not say is that the erased memory is REQUIRED to start this activity
      * In other words, this is triggered automatically by updateActivity if AVOID_TARGET is present.
      */
-    public static void initRetreatActivity(Brain<? extends RammingPrey> brain)
+    public static <E extends RammingPrey> ActivityData<E> initRetreatActivity()
     {
-        brain.addActivityAndRemoveMemoryWhenStopped(Activity.AVOID, 10, ImmutableList.of(
+        return ActivityData.create(Activity.AVOID, 10, ImmutableList.of(
             SetWalkTargetAwayFrom.entity(MemoryModuleType.AVOID_TARGET, 1.1F, 15, false),
             createIdleMovementBehaviors(),
             SetLookTarget.create(8.0F, UniformInt.of(30, 60)),
@@ -124,8 +132,9 @@ public class RammingPreyAi
     /**
      * Rams the nearest valid target on a cooldown
      */
-    private static void initRamActivity(Brain<? extends RammingPrey> brain) {
-        brain.addActivityWithConditions(Activity.RAM, ImmutableList.of(
+    private static <E extends RammingPrey> ActivityData<E> initRamActivity()
+    {
+        return ActivityData.create(Activity.RAM, ImmutableList.of(
             Pair.of(0, new RamTargetTFC(
                 (rammingPrey) -> {
                     return rammingPrey.isMale() ? TIME_BETWEEN_RAMS_MALE : TIME_BETWEEN_RAMS_FEMALE;

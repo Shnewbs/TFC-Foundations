@@ -7,9 +7,8 @@
 package net.dries007.tfc.common.entities.livestock;
 
 import java.util.function.Supplier;
-import com.mojang.serialization.Dynamic;
+
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -20,9 +19,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -33,6 +32,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.client.TFCSounds;
@@ -68,21 +69,15 @@ public abstract class TFCAnimal extends Animal implements TFCAnimalProperties, T
     // Next four overrides are the entire package needed to make Brain work
 
     @Override
-    protected Brain.Provider<? extends TFCAnimal> brainProvider()
+    protected Brain<?> makeBrain(Brain.Packed packed)
     {
-        return Brain.provider(LivestockAi.MEMORY_TYPES, LivestockAi.SENSOR_TYPES);
+        return LivestockAi.makeBrain(Brain.<TFCAnimal>provider(LivestockAi.MEMORY_TYPES, LivestockAi.SENSOR_TYPES, LivestockAi::createActivities).makeBrain(this, packed));
     }
 
     @Override
-    protected Brain<?> makeBrain(Dynamic<?> dynamic)
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource src, float amount)
     {
-        return LivestockAi.makeBrain(brainProvider().makeBrain(dynamic));
-    }
-
-    @Override
-    public boolean hurt(DamageSource src, float amount)
-    {
-        final boolean hurt = super.hurt(src, amount);
+        final boolean hurt = super.hurtServer(serverLevel,src, amount);
         if (this.level().isClientSide()) return hurt;
         if (hurt && src.getEntity() instanceof LivingEntity living)
         {
@@ -99,9 +94,9 @@ public abstract class TFCAnimal extends Animal implements TFCAnimalProperties, T
     }
 
     @Override
-    protected void customServerAiStep()
+    protected void customServerAiStep(ServerLevel serverLevel)
     {
-        super.customServerAiStep();
+        super.customServerAiStep(serverLevel);
         tickBrain();
     }
 
@@ -132,14 +127,14 @@ public abstract class TFCAnimal extends Animal implements TFCAnimalProperties, T
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt)
+    public void addAdditionalSaveData(ValueOutput nbt)
     {
         super.addAdditionalSaveData(nbt);
         saveCommonAnimalData(nbt);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbt)
+    public void readAdditionalSaveData(ValueInput nbt)
     {
         super.readAdditionalSaveData(nbt);
         readCommonAnimalData(nbt);

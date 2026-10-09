@@ -6,20 +6,22 @@
 
 package net.dries007.tfc.common.entities.ai.prey;
 
+import java.util.List;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.ActivityData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.BabyFollowAdult;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.schedule.Activity;
-
-import com.mojang.datafixers.util.Pair;
 
 import net.dries007.tfc.common.entities.ai.SetLookTarget;
 import net.dries007.tfc.common.entities.ai.TFCBrain;
@@ -37,12 +39,18 @@ public class PestAi
         MemoryModuleType.IS_PANICKING
     );
 
-    public static Brain<?> makeBrain(Brain<? extends Pest> brain)
+    /** Build activity metadata before the provider restores saved memories. */
+    public static <E extends Pest> List<ActivityData<E>> createActivities(E entity)
     {
-        initCoreActivity(brain);
-        initIdleActivity(brain);
-        initRetreatActivity(brain);
+        return List.of(
+            initCoreActivity(),
+            initIdleActivity(),
+            initRetreatActivity()
+        );
+    }
 
+    public static <E extends Pest> Brain<E> makeBrain(Brain<E> brain)
+    {
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         brain.setDefaultActivity(Activity.IDLE);
         brain.useDefaultActivity();
@@ -50,14 +58,14 @@ public class PestAi
         return brain;
     }
 
-    public static void initCoreActivity(Brain<? extends Pest> brain)
+    public static <E extends Pest> ActivityData<E> initCoreActivity()
     {
-        PreyAi.initCoreActivity(brain);
+        return PreyAi.initCoreActivity();
     }
 
-    public static void initIdleActivity(Brain<? extends Pest> brain)
+    public static <E extends Pest> ActivityData<E> initIdleActivity()
     {
-        brain.addActivity(Activity.IDLE, ImmutableList.of(
+        return ActivityData.create(Activity.IDLE, ImmutableList.of(
             Pair.of(0, SetLookTarget.create(EntityType.PLAYER, 6.0F, UniformInt.of(30, 60))), // looks at player, but its only try it every so often -- "Run Sometimes"
             Pair.of(1, AvoidPredatorAndRammersBehavior.create(false)),
             Pair.of(2, new PestFeastBehavior(TFCBrain.SMELLY_POS.get(), false)),
@@ -66,9 +74,9 @@ public class PestAi
         ));
     }
 
-    public static void initRetreatActivity(Brain<? extends Pest> brain)
+    public static <E extends Pest> ActivityData<E> initRetreatActivity()
     {
-        PreyAi.initRetreatActivity(brain);
+        return PreyAi.initRetreatActivity();
     }
 
     public static void setSmelledPos(Pest pest, BlockPos pos)

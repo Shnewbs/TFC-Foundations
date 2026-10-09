@@ -6,18 +6,6 @@
 
 package net.dries007.tfc.common.entities.livestock.camel;
 
-import com.mojang.serialization.Dynamic;
-
-import net.dries007.tfc.common.TFCTags;
-import net.dries007.tfc.common.entities.ai.TFCGroundPathNavigation;
-import net.dries007.tfc.common.entities.livestock.Age;
-import net.dries007.tfc.common.entities.livestock.CommonAnimalData;
-import net.dries007.tfc.common.entities.livestock.MammalProperties;
-import net.dries007.tfc.common.entities.livestock.TFCAnimalProperties;
-import net.dries007.tfc.common.entities.livestock.horse.HorseProperties;
-import net.dries007.tfc.config.animals.AnimalConfig;
-import net.dries007.tfc.config.animals.MammalConfig;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -30,8 +18,8 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -45,7 +33,19 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
+
+import net.dries007.tfc.common.TFCTags;
+import net.dries007.tfc.common.entities.ai.TFCGroundPathNavigation;
+import net.dries007.tfc.common.entities.livestock.Age;
+import net.dries007.tfc.common.entities.livestock.CommonAnimalData;
+import net.dries007.tfc.common.entities.livestock.MammalProperties;
+import net.dries007.tfc.common.entities.livestock.TFCAnimalProperties;
+import net.dries007.tfc.common.entities.livestock.horse.HorseProperties;
+import net.dries007.tfc.config.animals.AnimalConfig;
+import net.dries007.tfc.config.animals.MammalConfig;
 
 public class DromedaryCamel extends AbstractCamel implements HorseProperties
 {
@@ -73,9 +73,9 @@ public class DromedaryCamel extends AbstractCamel implements HorseProperties
     }
 
     @Override
-    protected Brain<?> makeBrain(Dynamic<?> dynamic)
+    protected Brain<Camel> makeBrain(Brain.Packed packed)
     {
-        return TFCCamelAi.makeBrain(TFCCamelAi.brainProvider().makeBrain(dynamic));
+        return (Brain<Camel>) (Brain<?>) TFCCamelAi.makeBrain(TFCCamelAi.brainProvider().makeBrain(this, packed));
     }
 
     @Override
@@ -245,14 +245,14 @@ public class DromedaryCamel extends AbstractCamel implements HorseProperties
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt)
+    public void addAdditionalSaveData(ValueOutput nbt)
     {
         super.addAdditionalSaveData(nbt);
         saveCommonAnimalData(nbt);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbt)
+    public void readAdditionalSaveData(ValueInput nbt)
     {
         super.readAdditionalSaveData(nbt);
         readCommonAnimalData(nbt);
@@ -295,10 +295,10 @@ public class DromedaryCamel extends AbstractCamel implements HorseProperties
     }
 
     @Override
-    protected void customServerAiStep()
+    protected void customServerAiStep(ServerLevel serverLevel)
     {
-        // Don't want to call super.customServerAiStep() here because of CamelAi.updateActivity(this)
-        ((Brain<DromedaryCamel>) getBrain()).tick((ServerLevel) level(), this);
+        // Don't want to call super.customServerAiStep(serverLevel) here because of CamelAi.updateActivity(this)
+        getBrain().tick(serverLevel, this);
         TFCCamelAi.updateActivity(this);
     }
 

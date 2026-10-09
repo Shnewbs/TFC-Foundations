@@ -7,13 +7,18 @@
 package net.dries007.tfc.common.entities.misc;
 
 import java.util.List;
+
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +31,7 @@ public class Seat extends Entity
     {
         if (!level.isClientSide())
         {
-            Seat seat = TFCEntities.SEAT.get().create(level);
+            Seat seat = TFCEntities.SEAT.get().create(level, EntitySpawnReason.TRIGGERED);
             assert seat != null;
             seat.moveTo(pos, 0f, 0f);
             level.addFreshEntity(seat);
@@ -80,11 +85,17 @@ public class Seat extends Entity
     }
 
     @Override
+    public boolean hurtServer(ServerLevel level, DamageSource source, float amount)
+    {
+        return false;
+    }
+
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {}
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag tag) {}
+    protected void readAdditionalSaveData(ValueInput tag) {}
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag tag) {}
+    protected void addAdditionalSaveData(ValueOutput tag) {}
 }

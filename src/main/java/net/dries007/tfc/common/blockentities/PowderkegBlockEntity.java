@@ -174,7 +174,7 @@ public class PowderkegBlockEntity extends TickableInventoryBlockEntity<Powderkeg
         if (!TFCConfig.SERVER.powderKegEnabled.get())
         {
             if (igniter instanceof Player player)
-                player.displayClientMessage(Component.translatable("tfc.tooltip.powderkeg.disabled"), true);
+                player.sendOverlayMessage(Component.translatable("tfc.tooltip.powderkeg.disabled"));
             return;
         }
         isLit = lit;

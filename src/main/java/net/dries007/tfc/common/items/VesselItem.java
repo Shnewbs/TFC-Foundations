@@ -8,6 +8,7 @@ package net.dries007.tfc.common.items;
 
 import java.util.List;
 import java.util.Optional;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -35,8 +36,8 @@ import net.dries007.tfc.common.component.size.ItemSizeManager;
 import net.dries007.tfc.common.container.TFCContainerProviders;
 import net.dries007.tfc.config.TFCConfig;
 import net.dries007.tfc.util.Helpers;
-import net.dries007.tfc.util.tooltip.Tooltips;
 import net.dries007.tfc.util.data.FluidHeat;
+import net.dries007.tfc.util.tooltip.Tooltips;
 
 public class VesselItem extends Item
 {
@@ -181,7 +182,7 @@ public class VesselItem extends Item
                 {
                     if (vessel.getTemperature() > 0)
                     {
-                        player.displayClientMessage(Component.translatable("tfc.tooltip.small_vessel.inventory_too_hot"), true);
+                        player.sendOverlayMessage(Component.translatable("tfc.tooltip.small_vessel.inventory_too_hot"));
                     }
                     else
                     {
@@ -194,11 +195,11 @@ public class VesselItem extends Item
                 }
                 else if (vessel.getTemperature() > 0 && !vessel.hasFluidContent())
                 {
-                    player.displayClientMessage(Component.translatable("tfc.tooltip.small_vessel.inventory_too_hot"), true);
+                    player.sendOverlayMessage(Component.translatable("tfc.tooltip.small_vessel.inventory_too_hot"));
                 }
                 else
                 {
-                    player.displayClientMessage(Component.translatable("tfc.tooltip.small_vessel.alloy_solid"), true);
+                    player.sendOverlayMessage(Component.translatable("tfc.tooltip.small_vessel.alloy_solid"));
                 }
             }
         }

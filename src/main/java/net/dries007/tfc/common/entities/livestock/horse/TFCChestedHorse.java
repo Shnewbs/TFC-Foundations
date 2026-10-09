@@ -7,6 +7,7 @@
 package net.dries007.tfc.common.entities.livestock.horse;
 
 import java.util.function.Supplier;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -21,8 +22,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.SpawnGroupData;
@@ -39,6 +40,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
@@ -379,18 +382,18 @@ public abstract class TFCChestedHorse extends AbstractChestedHorse implements Ho
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt)
+    public void addAdditionalSaveData(ValueOutput nbt)
     {
-        nbt.put("chestItem", getChestItem().saveOptional(registryAccess()));
+        nbt.store("chestItem", ItemStack.OPTIONAL_CODEC, getChestItem());
         super.addAdditionalSaveData(nbt);
         saveCommonAnimalData(nbt);
         nbt.putBoolean("overburdened", overburdened);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbt)
+    public void readAdditionalSaveData(ValueInput nbt)
     {
-        setChestItem(ItemStack.parseOptional(registryAccess(), nbt.getCompoundOrEmpty("chestItem")));
+        setChestItem(nbt.read("chestItem", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY));
         super.readAdditionalSaveData(nbt);
         readCommonAnimalData(nbt);
         overburdened = nbt.getBooleanOr("overburdened", false);

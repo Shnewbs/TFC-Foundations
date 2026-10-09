@@ -6,8 +6,6 @@
 
 package net.dries007.tfc.common.entities.prey;
 
-import net.dries007.tfc.util.NbtHelpers;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -21,9 +19,9 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -43,6 +41,8 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.Nullable;
@@ -58,6 +58,7 @@ import net.dries007.tfc.common.entities.livestock.TFCAnimalProperties;
 import net.dries007.tfc.config.animals.AnimalConfig;
 import net.dries007.tfc.config.animals.MammalConfig;
 import net.dries007.tfc.util.Helpers;
+import net.dries007.tfc.util.NbtHelpers;
 import net.dries007.tfc.world.chunkdata.ChunkData;
 
 public class TFCRabbit extends Rabbit implements MammalProperties
@@ -83,9 +84,9 @@ public class TFCRabbit extends Rabbit implements MammalProperties
     }
 
     @Override
-    public void customServerAiStep()
+    public void customServerAiStep(ServerLevel serverLevel)
     {
-        super.customServerAiStep();
+        super.customServerAiStep(serverLevel);
         if (moreCarrotTicks > 0)
         {
             moreCarrotTicks -= random.nextInt(3);
@@ -241,7 +242,7 @@ public class TFCRabbit extends Rabbit implements MammalProperties
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt)
+    public void addAdditionalSaveData(ValueOutput nbt)
     {
         super.addAdditionalSaveData(nbt);
         saveCommonAnimalData(nbt);
@@ -249,7 +250,7 @@ public class TFCRabbit extends Rabbit implements MammalProperties
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbt)
+    public void readAdditionalSaveData(ValueInput nbt)
     {
         super.readAdditionalSaveData(nbt);
         readCommonAnimalData(nbt);

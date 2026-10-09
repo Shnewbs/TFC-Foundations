@@ -6,33 +6,35 @@
 
 package net.dries007.tfc.common.entities.livestock.pet;
 
-import net.dries007.tfc.util.NbtHelpers;
-
-import java.util.List;
 import java.util.Optional;
+
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.CatVariantTags;
 import net.minecraft.tags.StructureTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.animal.feline.CatSoundVariant;
+import net.minecraft.world.entity.animal.feline.CatSoundVariants;
 import net.minecraft.world.entity.animal.feline.CatVariant;
+import net.minecraft.world.entity.animal.feline.CatVariants;
+import net.minecraft.world.entity.variant.SpawnContext;
+import net.minecraft.world.entity.variant.VariantUtils;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import net.dries007.tfc.client.TFCSounds;
 import net.dries007.tfc.common.TFCTags;
@@ -41,12 +43,12 @@ import net.dries007.tfc.common.entities.livestock.MammalProperties;
 import net.dries007.tfc.common.entities.livestock.TFCAnimalProperties;
 import net.dries007.tfc.config.TFCConfig;
 import net.dries007.tfc.util.Helpers;
+import net.dries007.tfc.util.NbtHelpers;
 
 public class TFCCat extends TamableMammal
 {
     public static final EntityDataAccessor<Holder<CatVariant>> DATA_VARIANT = SynchedEntityData.defineId(TFCCat.class, EntityDataSerializers.CAT_VARIANT);
 
-    private static final List<ResourceKey<CatVariant>> LEGACY_CAT_VARIANTS = List.of(CatVariant.TABBY, CatVariant.BLACK, CatVariant.RED, CatVariant.SIAMESE, CatVariant.BRITISH_SHORTHAIR, CatVariant.CALICO, CatVariant.PERSIAN, CatVariant.RAGDOLL, CatVariant.WHITE, CatVariant.JELLIE, CatVariant.ALL_BLACK);
 
     public TFCCat(EntityType<? extends TamableMammal> type, Level level)
     {
@@ -69,7 +71,7 @@ public class TFCCat extends TamableMammal
         super.createGenes(tag, male);
         if (male instanceof TFCCat maleCat)
         {
-            final Identifier variant = BuiltInRegistries.CAT_VARIANT.getKey(random.nextBoolean() ? maleCat.getVariant() : getVariant());
+            final Identifier variant = registryAccess().lookupOrThrow(Registries.CAT_VARIANT).getKey(random.nextBoolean() ? maleCat.getVariant() : getVariant());
             if (variant != null)
                 tag.putString("variant", variant.toString());
         }
@@ -81,9 +83,9 @@ public class TFCCat extends TamableMammal
         super.applyGenes(tag, baby);
         if (baby instanceof TFCCat cat)
         {
-            final Identifier variant = Identifier.tryParse(EntityHelpers.getStringOrDefault(tag, "variant", CatVariant.BLACK.toString()));
+            final Identifier variant = Identifier.tryParse(EntityHelpers.getStringOrDefault(tag, "variant", CatVariants.BLACK.identifier().toString()));
             if (variant != null)
-                BuiltInRegistries.CAT_VARIANT.getHolder(variant).ifPresent(cat::setVariant);
+                registryAccess().lookupOrThrow(Registries.CAT_VARIANT).get(variant).ifPresent(cat::setVariant);
         }
     }
 
@@ -92,17 +94,15 @@ public class TFCCat extends TamableMammal
     {
         super.initCommonAnimalData(level, difficulty, reason);
 
-        final boolean fullMoon = level.getMoonBrightness() > 0.9F;
-        final TagKey<CatVariant> key = fullMoon ? CatVariantTags.FULL_MOON_SPAWNS : CatVariantTags.DEFAULT_SPAWNS;
-
-        BuiltInRegistries.CAT_VARIANT.getOrCreateTag(key)
-            .getRandomElement(random)
+        // Native selectors contain the target's full-moon and structure conditions.
+        // Select from the level's data-driven registry, including datapack variants.
+        VariantUtils.selectVariantToSpawn(SpawnContext.create(level, blockPosition()), Registries.CAT_VARIANT)
             .ifPresent(this::setVariant);
 
         final ServerLevel serverlevel = level.getLevel();
         if (serverlevel.structureManager().getStructureWithPieceAt(this.blockPosition(), StructureTags.CATS_SPAWN_AS_BLACK).isValid())
         {
-            this.setVariant(BuiltInRegistries.CAT_VARIANT.getHolderOrThrow(CatVariant.ALL_BLACK));
+            this.setVariant(registryAccess().lookupOrThrow(Registries.CAT_VARIANT).getOrThrow(CatVariants.ALL_BLACK));
             this.setPersistenceRequired();
         }
     }
@@ -117,7 +117,7 @@ public class TFCCat extends TamableMammal
     protected void defineSynchedData(SynchedEntityData.Builder builder)
     {
         super.defineSynchedData(builder);
-        builder.define(DATA_VARIANT, BuiltInRegistries.CAT_VARIANT.getHolderOrThrow(CatVariant.BLACK));
+        builder.define(DATA_VARIANT, VariantUtils.getDefaultOrAny(registryAccess(), CatVariants.BLACK));
     }
 
     public CatVariant getVariant()
@@ -132,14 +132,15 @@ public class TFCCat extends TamableMammal
 
     public Identifier getTextureLocation()
     {
-        return getVariant().texture();
+        // TFC scales its existing model for kittens; keep the matching adult UV layout.
+        return getVariant().assetInfo(false).texturePath();
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag)
+    public void addAdditionalSaveData(ValueOutput tag)
     {
         super.addAdditionalSaveData(tag);
-        Identifier key = BuiltInRegistries.CAT_VARIANT.getKey(this.getVariant());
+        Identifier key = registryAccess().lookupOrThrow(Registries.CAT_VARIANT).getKey(this.getVariant());
         if (key != null)
         {
             tag.putString("variant", key.toString());
@@ -147,13 +148,13 @@ public class TFCCat extends TamableMammal
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag)
+    public void readAdditionalSaveData(ValueInput tag)
     {
         super.readAdditionalSaveData(tag);
         if (NbtHelpers.hasTag(tag, "variant", Tag.TAG_STRING))
         {
             Optional.ofNullable(Identifier.tryParse(tag.getStringOr("variant", "")))
-                .flatMap(BuiltInRegistries.CAT_VARIANT::getHolder)
+                .flatMap(registryAccess().lookupOrThrow(Registries.CAT_VARIANT)::get)
                 .ifPresent(this::setVariant);
         }
     }
@@ -169,7 +170,9 @@ public class TFCCat extends TamableMammal
     {
         if (getOwner() != null && getOwner().equals(player))
         {
-            playSound(SoundEvents.CAT_PURREOW, getSoundVolume(), getVoicePitch());
+            final CatSoundVariant sounds = registryAccess().lookupOrThrow(Registries.CAT_SOUND_VARIANT)
+                .getOrThrow(CatSoundVariants.CLASSIC).value();
+            playSound((isBaby() ? sounds.babySounds() : sounds.adultSounds()).purreowSound().value(), getSoundVolume(), getVoicePitch());
         }
         super.receiveCommand(player, command);
     }

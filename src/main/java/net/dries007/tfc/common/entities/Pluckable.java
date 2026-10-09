@@ -45,13 +45,13 @@ public interface Pluckable
                 final long remainingTicks = lastPlucked + PLUCKING_COOLDOWN - Calendars.SERVER.getTicks();
                 if (remainingTicks > 0)
                 {
-                    player.displayClientMessage(Component.translatable("tfc.tooltip.animal.cannot_pluck", Calendars.SERVER.getTimeDelta(remainingTicks)), true);
+                    player.sendOverlayMessage(Component.translatable("tfc.tooltip.animal.cannot_pluck", Calendars.SERVER.getTimeDelta(remainingTicks)));
                     return false;
                 }
             }
             if (entity.getHealth() / entity.getMaxHealth() <= 0.15f)
             {
-                player.displayClientMessage(Component.translatable("tfc.tooltip.animal.cannot_pluck_old_or_sick"), true);
+                player.sendOverlayMessage(Component.translatable("tfc.tooltip.animal.cannot_pluck_old_or_sick"));
                 return false;
             }
             ItemStack feather = new ItemStack(Items.FEATHER, Mth.nextInt(entity.getRandom(), 1, 3));
@@ -71,7 +71,7 @@ public interface Pluckable
                 }
                 else
                 {
-                    player.displayClientMessage(Component.translatable("tfc.tooltip.animal.cannot_pluck_old_or_sick"), true);
+                    player.sendOverlayMessage(Component.translatable("tfc.tooltip.animal.cannot_pluck_old_or_sick"));
                     return false;
                 }
             }

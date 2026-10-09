@@ -46,7 +46,7 @@ public class TFCDolphin extends Dolphin implements AquaticMob
         goalSelector.addGoal(5, new DolphinJumpGoal(this, 10));
         goalSelector.addGoal(8, new FollowBoatGoal(this));
 
-        targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 1000, true, false, e -> Helpers.isEntity(e, TFCTags.Entities.HUNTED_BY_OCEAN_PREDATORS)));
+        targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 1000, true, false, (e, serverLevel) -> Helpers.isEntity(e, TFCTags.Entities.HUNTED_BY_OCEAN_PREDATORS)));
     }
 
     @Override

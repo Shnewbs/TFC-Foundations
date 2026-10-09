@@ -7,9 +7,8 @@
 package net.dries007.tfc.common.entities.predator;
 
 import java.util.function.Supplier;
-import com.mojang.serialization.Dynamic;
+
 import net.minecraft.core.GlobalPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -20,10 +19,10 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -34,6 +33,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.client.TFCSounds;
@@ -84,21 +85,15 @@ public class Predator extends WildAnimal
     }
 
     @Override
-    protected Brain.Provider<? extends Predator> brainProvider()
+    protected Brain<?> makeBrain(Brain.Packed packed)
     {
-        return Brain.provider(PredatorAi.MEMORY_TYPES, PredatorAi.SENSOR_TYPES);
+        return PredatorAi.makeBrain(Brain.<Predator>provider(PredatorAi.MEMORY_TYPES, PredatorAi.SENSOR_TYPES, PredatorAi::createActivities).makeBrain(this, packed), this);
     }
 
     @Override
-    protected Brain<?> makeBrain(Dynamic<?> dynamic)
+    protected void customServerAiStep(ServerLevel serverLevel)
     {
-        return PredatorAi.makeBrain(brainProvider().makeBrain(dynamic), this);
-    }
-
-    @Override
-    protected void customServerAiStep()
-    {
-        getBrain().tick((ServerLevel) level(), this);
+        getBrain().tick(serverLevel, this);
         PredatorAi.updateActivity(this);
     }
 
@@ -137,9 +132,9 @@ public class Predator extends WildAnimal
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount)
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource source, float amount)
     {
-        boolean hurt = super.hurt(source, amount);
+        boolean hurt = super.hurtServer(serverLevel,source, amount);
         if (!level().isClientSide() && source.getDirectEntity() instanceof LivingEntity livingEntity && isAlive() && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(livingEntity))
         {
             brain.setMemory(MemoryModuleType.ATTACK_TARGET, livingEntity);
@@ -156,23 +151,23 @@ public class Predator extends WildAnimal
     }
 
     @Override
-    public boolean doHurtTarget(Entity target)
+    public boolean doHurtTarget(ServerLevel serverLevel, Entity target)
     {
-        boolean hurt = super.doHurtTarget(target);
+        boolean hurt = super.doHurtTarget(serverLevel,target);
         level().broadcastEntityEvent(this, (byte) 4);
         playSound(getAttackSound(), 1.0f, getVoicePitch());
         return hurt;
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag)
+    public void addAdditionalSaveData(ValueOutput tag)
     {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("sleeping", isSleeping());
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag)
+    public void readAdditionalSaveData(ValueInput tag)
     {
         super.readAdditionalSaveData(tag);
         setSleeping(tag.getBooleanOr("sleeping", false));

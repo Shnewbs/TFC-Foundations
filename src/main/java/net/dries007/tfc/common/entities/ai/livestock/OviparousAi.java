@@ -11,17 +11,17 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.util.Util;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.ActivityData;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.*;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.schedule.Activity;
-
-import com.mojang.datafixers.util.Pair;
 
 import net.dries007.tfc.common.entities.ai.SetLookTarget;
 import net.dries007.tfc.common.entities.ai.TFCBrain;
@@ -42,12 +42,18 @@ public class OviparousAi
         return ImmutableList.copyOf(list);
     });
 
-    public static Brain<?> makeBrain(Brain<? extends OviparousAnimal> brain)
+    /** Build activity metadata before the provider restores saved memories. */
+    public static <E extends OviparousAnimal> List<ActivityData<E>> createActivities(E entity)
     {
-        initCoreActivity(brain);
-        initIdleActivity(brain);
-        initRetreatActivity(brain);
+        return List.of(
+            initCoreActivity(),
+            initIdleActivity(),
+            initRetreatActivity()
+        );
+    }
 
+    public static <E extends OviparousAnimal> Brain<E> makeBrain(Brain<E> brain)
+    {
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE)); // core activities run all the time
         brain.setDefaultActivity(Activity.IDLE); // the default activity is a useful way to have a fallback activity
         brain.useDefaultActivity();
@@ -55,14 +61,14 @@ public class OviparousAi
         return brain;
     }
 
-    public static void initCoreActivity(Brain<? extends OviparousAnimal> brain)
+    public static <E extends OviparousAnimal> ActivityData<E> initCoreActivity()
     {
-        LivestockAi.initCoreActivity(brain);
+        return LivestockAi.initCoreActivity();
     }
 
-    public static void initIdleActivity(Brain<? extends OviparousAnimal> brain)
+    public static <E extends OviparousAnimal> ActivityData<E> initIdleActivity()
     {
-        brain.addActivity(Activity.IDLE, ImmutableList.of(
+        return ActivityData.create(Activity.IDLE, ImmutableList.of(
             Pair.of(0, SetLookTarget.create(EntityType.PLAYER, 6.0F, UniformInt.of(30, 60))), // looks at player, but its only try it every so often -- "Run Sometimes"
             Pair.of(0, AvoidPredatorAndRammersBehavior.create(true)),
             Pair.of(0, new LayEggBehavior()),
@@ -74,8 +80,8 @@ public class OviparousAi
         ));
     }
 
-    public static void initRetreatActivity(Brain<? extends OviparousAnimal> brain)
+    public static <E extends OviparousAnimal> ActivityData<E> initRetreatActivity()
     {
-        LivestockAi.initRetreatActivity(brain);
+        return LivestockAi.initRetreatActivity();
     }
 }
