@@ -6,7 +6,7 @@
 
 package net.dries007.tfc.client.screen;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
@@ -33,16 +33,16 @@ public class LargeVesselScreen extends BlockEntityScreen<LargeVesselBlockEntity,
     public void init()
     {
         super.init();
-        addRenderableWidget(new VesselSealButton(blockEntity, getGuiLeft() + 9, getGuiTop(), isSealed() ? UNSEAL : SEAL));
+        addRenderableWidget(new VesselSealButton(blockEntity, leftPos + 9, topPos, isSealed() ? UNSEAL : SEAL));
     }
 
     @Override
-    protected void renderLabels(GuiGraphics poseStack, int mouseX, int mouseY)
+    protected void extractLabels(GuiGraphicsExtractor poseStack, int mouseX, int mouseY)
     {
-        super.renderLabels(poseStack, mouseX, mouseY);
+        super.extractLabels(poseStack, mouseX, mouseY);
         if (isSealed())
         {
-            drawDisabled(poseStack, 0, LargeVesselBlockEntity.SLOTS - 1);
+            highlightDisabledSlots(0, LargeVesselBlockEntity.SLOTS - 1);
         }
     }
 

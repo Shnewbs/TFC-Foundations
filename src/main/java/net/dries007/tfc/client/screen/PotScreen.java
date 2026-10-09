@@ -8,15 +8,14 @@ package net.dries007.tfc.client.screen;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import net.dries007.tfc.TerraFirmaCraft;
@@ -37,18 +36,17 @@ public class PotScreen extends BlockEntityScreen<PotBlockEntity, PotContainer>
 
     public PotScreen(PotContainer container, Inventory playerInventory, Component name)
     {
-        super(container, playerInventory, name, BACKGROUND);
-        inventoryLabelY += 20;
-        imageHeight += 20;
+        super(container, playerInventory, name, BACKGROUND, 176, 186);
+        inventoryLabelY = 92;
     }
 
     @Override
-    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY)
+    protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
     {
-        super.renderLabels(graphics, mouseX, mouseY);
+        super.extractLabels(graphics, mouseX, mouseY);
         if (blockEntity.shouldRenderAsBoiling())
         {
-            drawDisabled(graphics, blockEntity.getInventory().inputStart(), blockEntity.getInventory().inputEnd());
+            highlightDisabledSlots(blockEntity.getInventory().inputStart(), blockEntity.getInventory().inputEnd());
         }
 
         final MutableComponent text = Component.empty();
@@ -75,20 +73,20 @@ public class PotScreen extends BlockEntityScreen<PotBlockEntity, PotContainer>
         }
 
         final int x = 118 - font.width(text) / 2;
-        graphics.drawString(font, text, x, 80, 0x404040, false);
+        graphics.text(font, text, x, 80, 0xFF404040, false);
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY)
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
     {
-        super.renderTooltip(graphics, mouseX, mouseY);
+        super.extractTooltip(graphics, mouseX, mouseY);
 
-        if (RenderHelpers.isInside(mouseX, mouseY, getGuiLeft() + 121, getGuiTop() + 30, 162 - 121, 58 - 30))
+        if (RenderHelpers.isInside(mouseX, mouseY, leftPos + 121, topPos + 30, 162 - 121, 58 - 30))
         {
             final FluidStack fluid = blockEntity.getInventory().getFluidInTank(0);
             if (!fluid.isEmpty())
             {
-                graphics.renderTooltip(font, Tooltips.fluidUnitsAndCapacityOf(fluid, FluidHelpers.BUCKET_VOLUME), mouseX, mouseY);
+                graphics.setTooltipForNextFrame(font, Tooltips.fluidUnitsAndCapacityOf(fluid, FluidHelpers.BUCKET_VOLUME), mouseX, mouseY);
             }
         }
 
@@ -97,40 +95,40 @@ public class PotScreen extends BlockEntityScreen<PotBlockEntity, PotContainer>
             final var text = TFCConfig.CLIENT.heatTooltipStyle.get().formatColored(blockEntity.getTemperature());
             if (text != null)
             {
-                graphics.renderTooltip(font, text, mouseX, mouseY);
+                graphics.setTooltipForNextFrame(font, text, mouseX, mouseY);
             }
         }
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY)
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks)
     {
-        super.renderBg(graphics, partialTicks, mouseX, mouseY);
+        super.extractBackground(graphics, mouseX, mouseY, partialTicks);
 
         if (TerraFirmaCraft.JEI)
         {
-            graphics.blit(texture, getGuiLeft() + 77, getGuiTop() + 6, 247, 0, 9, 14);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, texture, leftPos + 77, topPos + 6, 247, 0, 9, 14, 256, 256);
         }
 
         int temp = Heat.scaleTemperatureForGui(blockEntity.getTemperature());
         if (temp > 0)
         {
-            graphics.blit(texture, leftPos + 30, topPos + 76 - Math.min(51, temp), 176, 0, 15, 5);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, texture, leftPos + 30, topPos + 76 - Math.min(51, temp), 176, 0, 15, 5, 256, 256);
         }
 
         if (blockEntity.getTemperature() > 0)
         {
-            graphics.blit(BACKGROUND, leftPos + 121, topPos + 58, 192, 0, 13, 13);
-            graphics.blit(BACKGROUND, leftPos + 136, topPos + 58, 192, 0, 13, 13);
-            graphics.blit(BACKGROUND, leftPos + 151, topPos + 58, 192, 0, 13, 13);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, leftPos + 121, topPos + 58, 192, 0, 13, 13, 256, 256);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, leftPos + 136, topPos + 58, 192, 0, 13, 13, 256, 256);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, leftPos + 151, topPos + 58, 192, 0, 13, 13, 256, 256);
         }
 
         if (blockEntity.shouldRenderAsBoiling())
         {
             final int ticks = blockEntity.getBoilingTicks() % 35;
             final int vHeight = Mth.ceil(ticks / 35f * 20f);
-            graphics.blit(BACKGROUND, leftPos + 131, topPos + 10 + 20 - vHeight, 193, 16 + 21 - vHeight, 11, vHeight);
-            graphics.blit(BACKGROUND, leftPos + 144, topPos + 10 + 20 - vHeight, 193, 16 + 21 - vHeight, 11, vHeight);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, leftPos + 131, topPos + 10 + 20 - vHeight, 193, 16 + 21 - vHeight, 11, vHeight, 256, 256);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, leftPos + 144, topPos + 10 + 20 - vHeight, 193, 16 + 21 - vHeight, 11, vHeight, 256, 256);
         }
         int fluidColor = -1;
         final PotOutput output = blockEntity.getOutput();
@@ -139,7 +137,6 @@ public class PotScreen extends BlockEntityScreen<PotBlockEntity, PotContainer>
             if (output.getRenderTexture() != null)
             {
                 final TextureAtlasSprite sprite = RenderHelpers.blockTexture(output.getRenderTexture());
-                RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
                 RenderHelpers.fillAreaWithSprite(graphics, sprite, leftPos + 133, topPos + 33, 20, 6, 16, 16);
                 RenderHelpers.fillAreaWithSprite(graphics, sprite, leftPos + 131, topPos + 35, 2, 2, 16, 16);
                 RenderHelpers.fillAreaWithSprite(graphics, sprite, leftPos + 153, topPos + 35, 2, 2, 16, 16);
@@ -157,9 +154,7 @@ public class PotScreen extends BlockEntityScreen<PotBlockEntity, PotContainer>
         }
         if (fluidColor != -1)
         {
-            RenderHelpers.setShaderColor(graphics, fluidColor);
-            graphics.blit(BACKGROUND, leftPos + 131, topPos + 33, 208, 0, 24, 6);
-            resetToBackgroundSprite();
+            graphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, leftPos + 131, topPos + 33, 208, 0, 24, 6, 256, 256, fluidColor);
         }
     }
 }

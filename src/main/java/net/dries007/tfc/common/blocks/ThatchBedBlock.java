@@ -13,7 +13,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.player.Player;
@@ -71,11 +71,11 @@ public class ThatchBedBlock extends BedBlock implements EntityBlockExtension, IF
      * This is based very closely on {@link BedBlock#useItemOn} to avoid bugs. Even if it's not the best practices.
      */
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         if (level.isClientSide)
         {
-            return ItemInteractionResult.CONSUME;
+            return InteractionResult.CONSUME;
         }
         else
         {
@@ -85,7 +85,7 @@ public class ThatchBedBlock extends BedBlock implements EntityBlockExtension, IF
                 state = level.getBlockState(pos);
                 if (!Helpers.isBlock(state, this))
                 {
-                    return ItemInteractionResult.CONSUME;
+                    return InteractionResult.CONSUME;
                 }
             }
         }
@@ -98,7 +98,7 @@ public class ThatchBedBlock extends BedBlock implements EntityBlockExtension, IF
                 level.removeBlock(blockpos, false);
             }
             level.explode(null, level.damageSources().badRespawnPointExplosion(pos.getCenter()), null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 7.0F, true, Level.ExplosionInteraction.BLOCK);
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
         else if (state.getValue(OCCUPIED))
         {
@@ -106,14 +106,14 @@ public class ThatchBedBlock extends BedBlock implements EntityBlockExtension, IF
             {
                 player.displayClientMessage(Component.translatable("block.minecraft.bed.occupied"), true);
             }
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
         else if (player instanceof ServerPlayer serverPlayer)
         {
             if (level.isThundering() && TFCConfig.SERVER.thatchBedNoSleepInThunderstorms.get())
             {
                 player.displayClientMessage(Component.translatable("tfc.thatch_bed.thundering"), true);
-                return ItemInteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
             final boolean willSleep = TFCConfig.SERVER.enableThatchBedSleeping.get();
             final boolean spawnPoint = TFCConfig.SERVER.enableThatchBedSpawnSetting.get();
@@ -125,11 +125,11 @@ public class ThatchBedBlock extends BedBlock implements EntityBlockExtension, IF
                 {
                     player.displayClientMessage(Component.translatable("tfc.thatch_bed.use_no_sleep_spawn"), true);
                     serverPlayer.setRespawnPosition(level.dimension(), pos, 0, false, false);
-                    return ItemInteractionResult.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
                 // no spawn, no sleep, do nothing
                 player.displayClientMessage(Component.translatable("tfc.thatch_bed.use_no_sleep_no_spawn"), true);
-                return ItemInteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
 
             final BlockPos lastRespawnPos = serverPlayer.getRespawnPosition();
@@ -155,7 +155,7 @@ public class ThatchBedBlock extends BedBlock implements EntityBlockExtension, IF
             });
 
         }
-        return ItemInteractionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override

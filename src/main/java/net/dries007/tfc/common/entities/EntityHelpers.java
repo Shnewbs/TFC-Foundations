@@ -83,7 +83,7 @@ public final class EntityHelpers
                 }
 
                 entity.discard();
-                return Optional.of(InteractionResult.sidedSuccess(entity.level().isClientSide));
+                return Optional.of((entity.level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME));
             }
         }
         return Optional.empty();

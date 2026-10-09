@@ -13,7 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -136,7 +136,7 @@ public class LogPileBlock extends DeviceBlock implements IForgeBlockExtension, E
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         if (!player.isShiftKeyDown() && level.getBlockEntity(pos) instanceof LogPileBlockEntity logPile)
         {
@@ -146,9 +146,9 @@ public class LogPileBlock extends DeviceBlock implements IForgeBlockExtension, E
             logPile.setLastClickTick(currentTick);
             logPile.setLastClickPlacement(false);
 
-            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+            return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     public static void extractFromTop(Level level, BlockPos pos, Player player, boolean all)

@@ -12,7 +12,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
@@ -169,7 +169,7 @@ public class VesselItem extends Item
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
+    public InteractionResult use(Level level, Player player, InteractionHand hand)
     {
         final ItemStack stack = player.getItemInHand(hand);
         if (!player.isShiftKeyDown() && !level.isClientSide() && player instanceof ServerPlayer serverPlayer)
@@ -202,7 +202,7 @@ public class VesselItem extends Item
                 }
             }
         }
-        return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
+        return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME).heldItemTransformedTo(stack);
     }
 
     @Override

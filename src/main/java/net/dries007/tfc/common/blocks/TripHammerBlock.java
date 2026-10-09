@@ -9,7 +9,7 @@ package net.dries007.tfc.common.blocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -52,7 +52,7 @@ public class TripHammerBlock extends DeviceBlock
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         if (level.getBlockEntity(pos) instanceof TripHammerBlockEntity hammer)
         {
@@ -67,10 +67,10 @@ public class TripHammerBlock extends DeviceBlock
                 }
                 ItemHandlerHelper.giveItemToPlayer(player, inv.insertItem(0, toInsert, false));
                 hammer.markForSync();
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override

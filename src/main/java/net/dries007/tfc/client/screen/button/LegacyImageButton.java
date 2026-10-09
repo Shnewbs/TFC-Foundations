@@ -6,8 +6,8 @@
 
 package net.dries007.tfc.client.screen.button;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
@@ -36,7 +36,7 @@ public class LegacyImageButton extends Button
     }
 
     @Override
-    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)
+    public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick)
     {
         int vOffset = yTexStart;
         if (!isActive())
@@ -48,8 +48,7 @@ public class LegacyImageButton extends Button
             vOffset = yTexStart + yDiffTex;
         }
 
-        RenderSystem.enableDepthTest();
-        graphics.blit(texture, getX(), getY(), xTexStart, vOffset, width, height, SIZE, SIZE);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, getX(), getY(), xTexStart, vOffset, width, height, SIZE, SIZE);
     }
 
     @Override

@@ -6,7 +6,8 @@
 
 package net.dries007.tfc.client.screen;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -34,27 +35,26 @@ public class TFCContainerScreen<C extends AbstractContainerMenu> extends Abstrac
 
     public TFCContainerScreen(C container, Inventory playerInventory, Component name, Identifier texture)
     {
-        super(container, playerInventory, name);
+        this(container, playerInventory, name, texture, 176, 166);
+    }
+
+    public TFCContainerScreen(C container, Inventory playerInventory, Component name, Identifier texture, int imageWidth, int imageHeight)
+    {
+        super(container, playerInventory, name, imageWidth, imageHeight);
         this.texture = texture;
         this.playerInventory = playerInventory;
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)
+    public void extractBackground(GuiGraphicsExtractor poseStack, int mouseX, int mouseY, float partialTicks)
     {
-        super.render(graphics, mouseX, mouseY, partialTick);
-        renderTooltip(graphics, mouseX, mouseY);
-    }
-
-    @Override
-    protected void renderBg(GuiGraphics poseStack, float partialTicks, int mouseX, int mouseY)
-    {
+        super.extractBackground(poseStack, mouseX, mouseY, partialTicks);
         drawDefaultBackground(poseStack);
     }
 
-    protected void drawDefaultBackground(GuiGraphics graphics)
+    protected void drawDefaultBackground(GuiGraphicsExtractor graphics)
     {
-        graphics.blit(texture, leftPos, topPos, 0, 0, 0, imageWidth, imageHeight, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
 
@@ -62,7 +62,7 @@ public class TFCContainerScreen<C extends AbstractContainerMenu> extends Abstrac
      * Use to draw a line with a particular text alignment and a y offset
      */
 
-    protected void drawLine(GuiGraphics graphics, Component text, TextAlignment alignment, int y)
+    protected void drawLine(GuiGraphicsExtractor graphics, Component text, TextAlignment alignment, int y)
     {
         drawLine(graphics, text, alignment, 0x404040, y);
     }
@@ -70,7 +70,7 @@ public class TFCContainerScreen<C extends AbstractContainerMenu> extends Abstrac
     /**
      * Use to draw a line with a particular text alignment with a color and y offset
      */
-    protected void drawLine(GuiGraphics graphics, Component text, TextAlignment alignment, int color, int y)
+    protected void drawLine(GuiGraphicsExtractor graphics, Component text, TextAlignment alignment, int color, int y)
     {
         drawLine(graphics, text, alignment, color, 0, y);
     }
@@ -80,7 +80,7 @@ public class TFCContainerScreen<C extends AbstractContainerMenu> extends Abstrac
      * x is counted from the right with right alignment
      * color will be ignored if -1
      */
-    protected void drawLine(GuiGraphics graphics, Component text, TextAlignment alignment, int color, int x, int y)
+    protected void drawLine(GuiGraphicsExtractor graphics, Component text, TextAlignment alignment, int color, int x, int y)
     {
         if (alignment == RIGHT)
         {
@@ -96,7 +96,7 @@ public class TFCContainerScreen<C extends AbstractContainerMenu> extends Abstrac
             case CENTER -> x += (imageWidth - font.width(text)) / 2;
             default -> x += imageWidth - font.width(text) - 8;
         }
-        graphics.drawString(font, text, x, y, color, false);
+        graphics.text(font, text, x, y, (color) | 0xFF000000, false);
     }
 
     public Inventory getPlayerInventory()

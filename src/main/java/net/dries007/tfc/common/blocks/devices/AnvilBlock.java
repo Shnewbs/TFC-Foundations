@@ -15,7 +15,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -47,12 +46,12 @@ public class AnvilBlock extends DeviceBlock implements Tiered
     private static final VoxelShape SHAPE_X = box(0, 0, 3, 16, 11, 13);
     private static final VoxelShape SHAPE_Z = box(3, 0, 0, 13, 11, 16);
 
-    public static ItemInteractionResult interactWithAnvil(Level level, BlockPos pos, Player player, InteractionHand hand)
+    public static InteractionResult interactWithAnvil(Level level, BlockPos pos, Player player, InteractionHand hand)
     {
         final AnvilBlockEntity anvil = level.getBlockEntity(pos, TFCBlockEntities.ANVIL.get()).orElse(null);
         if (anvil == null)
         {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
         final IItemHandler inventory = anvil.getInventory();
         if (player.isShiftKeyDown())
@@ -68,7 +67,7 @@ public class AnvilBlock extends DeviceBlock implements Tiered
                         // Give the item to player in the main hand
                         ItemStack result = inventory.extractItem(slot, 1, false);
                         player.setItemInHand(hand, result);
-                        return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                        return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                     }
                 }
             }
@@ -89,8 +88,8 @@ public class AnvilBlock extends DeviceBlock implements Tiered
                 }
                 // SUCCESS, FAIL -> consume action, PASS -> PASS
                 return weld == InteractionResult.PASS
-                    ? ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION
-                    : ItemInteractionResult.sidedSuccess(level.isClientSide);
+                    ? InteractionResult.TRY_WITH_EMPTY_HAND
+                    : (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
             else
             {
@@ -103,7 +102,7 @@ public class AnvilBlock extends DeviceBlock implements Tiered
                     {
                         // At least one item was inserted (and so remainder < attempt)
                         player.setItemInHand(hand, resultStack);
-                        return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                        return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                     }
                 }
             }
@@ -115,9 +114,9 @@ public class AnvilBlock extends DeviceBlock implements Tiered
             {
                 serverPlayer.openMenu(anvil.anvilProvider(), pos);
             }
-            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+            return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     private final int tier;
@@ -129,7 +128,7 @@ public class AnvilBlock extends DeviceBlock implements Tiered
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         return AnvilBlock.interactWithAnvil(level, pos, player, hand);
     }

@@ -484,7 +484,7 @@ def generate(rm: ResourceManager):
             } for rock in ROCKS.keys()]
         })
         rm.placed_feature(name, 'tfc:%s' % name, decorate_heightmap('ocean_floor_wg'), decorate_flat_enough(flatness=0.2))
-        configured_placed_feature(rm, 'tfc:%s_patch' % name, 'minecraft:random_patch', {'tries': 6, 'xz_spread': 5, 'y_spread': 1, 'feature': 'tfc:%s' % name}, decorate_chance(36), decorate_square())
+        configured_placed_feature(rm, 'tfc:%s_patch' % name, 'tfc:random_patch', {'tries': 6, 'xz_spread': 5, 'y_spread': 1, 'feature': 'tfc:%s' % name}, decorate_chance(36), decorate_square())
 
     # Ocean Ridge Features
     igneous_rocks = expand_rocks(['igneous_extrusive', 'igneous_intrusive'])
@@ -992,7 +992,7 @@ def generate(rm: ResourceManager):
                 }],
             })
     configured_placed_feature(rm, 'sea_stacks', 'tfc:sea_stacks', {}, decorate_heightmap('ocean_floor_wg'), decorate_replaceable())
-    configured_placed_feature(rm, 'sea_stacks_patch', 'minecraft:random_patch', {'feature': 'tfc:sea_stacks', 'tries': 6, 'xz_spread': 8, 'y_spread': 2}, decorate_chance(120), decorate_square(), decorate_heightmap('ocean_floor_wg'))
+    configured_placed_feature(rm, 'sea_stacks_patch', 'tfc:random_patch', {'feature': 'tfc:sea_stacks', 'tries': 6, 'xz_spread': 8, 'y_spread': 2}, decorate_chance(120), decorate_square(), decorate_heightmap('ocean_floor_wg'))
 
 
     rm.configured_feature('cave_vegetation', 'tfc:cave_vegetation', {
@@ -1228,7 +1228,7 @@ def generate(rm: ResourceManager):
 
         rm.placed_feature_tag('feature/crops', patch_feature)
 
-        rm.configured_feature(patch_feature, 'minecraft:random_patch', {'tries': 6, 'xz_spread': 5, 'y_spread': 1, 'feature': singular_feature.join()})
+        rm.configured_feature(patch_feature, 'tfc:random_patch', {'tries': 6, 'xz_spread': 5, 'y_spread': 1, 'feature': singular_feature.join()})
         rm.configured_feature(singular_feature, *feature)
         rm.placed_feature(patch_feature, patch_feature, decorate_chance(90), decorate_square(), decorate_climate(crop_data.min_temp_wg, crop_data.max_temp_wg, crop_data.min_water, crop_data.max_water, min_forest=crop_data.min_forest, max_forest=crop_data.max_forest))
         rm.placed_feature(singular_feature, singular_feature, decorate_heightmap(heightmap), replaceable, decorate_would_survive(name))
@@ -1363,7 +1363,7 @@ def generate(rm: ResourceManager):
 
     # Loose Rocks - Both Surface + Underground
     configured_placed_feature(rm, 'loose_rock', 'tfc:loose_rock', {}, decorate_heightmap('ocean_floor_wg'))
-    configured_placed_feature(rm, 'surface_loose_rocks', 'minecraft:random_patch', {'tries': 8, 'xz_spread': 7, 'y_spread': 1, 'feature': 'tfc:loose_rock'}, decorate_square())
+    configured_placed_feature(rm, 'surface_loose_rocks', 'tfc:random_patch', {'tries': 8, 'xz_spread': 7, 'y_spread': 1, 'feature': 'tfc:loose_rock'}, decorate_square())
 
     # Underground decoration
     configured_placed_feature(rm, 'underground_loose_rocks', 'tfc:loose_rock', decorate_carving_mask(), decorate_chance(0.05), decorate_count(25), decorate_range(-32, 59), decorate_scanner('down', 12), decorate_random_offset(0, 1))
@@ -1467,7 +1467,7 @@ def configured_plant_patch_feature(rm: ResourceManager, name_parts: ResourceIden
     singular_feature = utils.resource_location(rm.domain, name_parts)
     predicate = decorate_air_or_empty_fluid() if not config.requires_clay else decorate_replaceable()
 
-    rm.configured_feature(patch_feature, 'minecraft:random_patch' if not config.limit_density else 'tfc:dynamic_random_patch', {
+    rm.configured_feature(patch_feature, 'tfc:random_patch' if not config.limit_density else 'tfc:dynamic_random_patch', {
         'tries': config.tries,
         'xz_spread': config.xz_spread,
         'y_spread': config.y_spread,
@@ -1541,7 +1541,7 @@ def configured_patch_feature(rm: ResourceManager, name_parts: ResourceIdentifier
     patch_feature = res.join() + '_patch'
     singular_feature = utils.resource_location(rm.domain, name_parts)
 
-    rm.configured_feature(patch_feature, 'minecraft:random_patch', {
+    rm.configured_feature(patch_feature, 'tfc:random_patch', {
         'tries': patch.tries,
         'xz_spread': patch.xz_spread,
         'y_spread': patch.y_spread,
@@ -1572,7 +1572,7 @@ def configured_noise_plant_feature(rm: ResourceManager, name_parts: ResourceIden
             'type': 'minecraft:dual_noise_provider'
         }
     })
-    rm.configured_feature(patch_feature, 'minecraft:random_patch', {
+    rm.configured_feature(patch_feature, 'tfc:random_patch', {
         'tries': config.tries,
         'xz_spread': config.xz_spread,
         'y_spread': config.y_spread,
@@ -2211,24 +2211,24 @@ def biome(rm: ResourceManager, name: str, category: str, boulders: bool = False,
     rm.lang('biome.tfc.%s' % name, lang(name))
     assert name in TFC_BIOMES, 'Error: Biome not in TFC_BIOMES list: %s' % name
     ALL_BIOMES.append(name)
-    rm.biome(
-        name_parts=name,
-        has_precipitation=True,
-        temperature=0.5,
-        downfall=0.5,
-        effects={
+    # mcresources 1.7.5 writes the obsolete air/liquid carver map. Minecraft 26.1.2
+    # has a single pass, so emit its ordered carver list explicitly.
+    rm.write(('data', rm.domain, 'worldgen', 'biome', name), {
+        'has_precipitation': True,
+        'temperature': 0.5,
+        'downfall': 0.5,
+        'effects': {
             'fog_color': 0xC0D8FF,
             'sky_color': 0x84E6FF,
             'water_color': 0x3F76E4,
             'water_fog_color': 0x050533
         },
-        spawners=spawners,
-        air_carvers=['tfc:cave', 'tfc:deep_cave', 'tfc:canyon'],
-        water_carvers=[],
-        features=feature_tags,
-        creature_spawn_probability=0.1,
-        spawn_costs=costs
-    )
+        'carvers': ['tfc:cave', 'tfc:deep_cave', 'tfc:canyon'],
+        'features': feature_tags,
+        'spawners': spawners,
+        'creature_spawn_probability': 0.1,
+        'spawn_costs': costs
+    })
 
 
 def expand_rocks(rocks: list[str]) -> list[str]:

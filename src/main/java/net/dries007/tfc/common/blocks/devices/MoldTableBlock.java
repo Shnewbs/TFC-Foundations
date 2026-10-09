@@ -9,7 +9,7 @@ package net.dries007.tfc.common.blocks.devices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -64,12 +64,12 @@ public class MoldTableBlock extends ExtendedBlock implements EntityBlockExtensio
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         return level.getBlockEntity(pos, TFCBlockEntities.MOLD_TABLE.get()).map(
             moldTable -> moldTable.onRightClick(player)
         ).orElse(
-            ItemInteractionResult.sidedSuccess(level.isClientSide)
+            (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME)
         );
     }
 

@@ -10,7 +10,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -32,7 +31,7 @@ public class CrateBlock extends DeviceBlock
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         if (level.getBlockEntity(pos) instanceof CrateBlockEntity crate)
         {
@@ -45,7 +44,7 @@ public class CrateBlock extends DeviceBlock
                 {
                     Helpers.mergeInsertAll(inv, player.getInventory());
                     Helpers.playSound(level, pos, SoundEvents.WOOD_PLACE);
-                    return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                    return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                 }
                 if (player.isShiftKeyDown())
                 {
@@ -82,7 +81,7 @@ public class CrateBlock extends DeviceBlock
                 }
 
                 Helpers.playSound(level, pos, SoundEvents.WOOD_HIT);
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
             else if (crate.isItemValid(0, stack))
             {
@@ -95,11 +94,11 @@ public class CrateBlock extends DeviceBlock
                 crate.recordInsertClick(level.getGameTime());
 
                 Helpers.playSound(level, pos, SoundEvents.WOOD_PLACE);
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
         }
 
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override

@@ -6,7 +6,8 @@
 
 package net.dries007.tfc.client.screen;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
@@ -24,32 +25,31 @@ public class CharcoalForgeScreen extends BlockEntityScreen<CharcoalForgeBlockEnt
 
     public CharcoalForgeScreen(CharcoalForgeContainer container, Inventory playerInventory, Component name)
     {
-        super(container, playerInventory, name, FORGE);
-        inventoryLabelY += 20;
-        imageHeight += 20;
+        super(container, playerInventory, name, FORGE, 176, 186);
+        inventoryLabelY = 92;
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY)
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks)
     {
-        super.renderBg(graphics, partialTicks, mouseX, mouseY);
+        super.extractBackground(graphics, mouseX, mouseY, partialTicks);
         int temp = Heat.scaleTemperatureForGui(blockEntity.getTemperature());
         if (temp > 0)
         {
-            graphics.blit(texture, leftPos + 8, topPos + 76 - Math.min(51, temp), 176, 0, 15, 5);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, texture, leftPos + 8, topPos + 76 - Math.min(51, temp), 176, 0, 15, 5, 256, 256);
         }
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY)
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
     {
-        super.renderTooltip(graphics, mouseX, mouseY);
+        super.extractTooltip(graphics, mouseX, mouseY);
         if (RenderHelpers.isInside(mouseX, mouseY, leftPos + 8, topPos + 76 - 51, 15, 51))
         {
             final var text = TFCConfig.CLIENT.heatTooltipStyle.get().formatColored(blockEntity.getTemperature());
             if (text != null)
             {
-                graphics.renderTooltip(font, text, mouseX, mouseY);
+                graphics.setTooltipForNextFrame(font, text, mouseX, mouseY);
             }
         }
     }

@@ -44,7 +44,7 @@ public class ToolRackBlockEntity extends InventoryBlockEntity<ItemStackHandler>
                     ItemHandlerHelper.giveItemToPlayer(player, extracted, player.getInventory().selected);
                 }
                 markForSync();
-                return InteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
             // Just extract
             if (!level.isClientSide)
@@ -52,7 +52,7 @@ public class ToolRackBlockEntity extends InventoryBlockEntity<ItemStackHandler>
                 ItemHandlerHelper.giveItemToPlayer(player, inventory.extractItem(slot, 1, false), player.getInventory().selected);
             }
             markForSync();
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
         }
         else if (shouldInsert)
         {
@@ -61,7 +61,7 @@ public class ToolRackBlockEntity extends InventoryBlockEntity<ItemStackHandler>
                 insertItem(slot, heldItem.split(1));
             }
             markForSync();
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
         }
 
         return InteractionResult.PASS;

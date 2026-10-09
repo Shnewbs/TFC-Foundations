@@ -9,6 +9,7 @@ package net.dries007.tfc;
 import com.mojang.logging.LogUtils;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
@@ -25,7 +26,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -114,6 +114,7 @@ import net.neoforged.neoforge.event.level.block.CropGrowEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -433,16 +434,16 @@ public final class ForgeEventHandler
 
             if (TFCConfig.SERVER.enableForcedTFCGameRules.get())
             {
-                rules.getRule(GameRules.RULE_NATURAL_REGENERATION).set(false, server);
-                rules.getRule(GameRules.RULE_DOINSOMNIA).set(false, server);
-                rules.getRule(GameRules.RULE_DO_PATROL_SPAWNING).set(false, server);
-                rules.getRule(GameRules.RULE_DO_TRADER_SPAWNING).set(false, server);
+                rules.set(GameRules.NATURAL_HEALTH_REGENERATION, false, server);
+                rules.set(GameRules.SPAWN_PHANTOMS, false, server);
+                rules.set(GameRules.SPAWN_PATROLS, false, server);
+                rules.set(GameRules.SPAWN_WANDERING_TRADERS, false, server);
 
                 LOGGER.info("Updating TFC Relevant Game Rules for level {}.", level.dimension().location());
             }
 
             // This one is non-negotiable, it's required in order for the calendar to function
-            rules.getRule(GameRules.RULE_DAYLIGHT).set(false, server);
+            rules.set(GameRules.ADVANCE_TIME, false, server);
 
             Climate.chooseModelForWorld(level);
 
@@ -1203,7 +1204,7 @@ public final class ForgeEventHandler
             if (state.getBlock() instanceof TFCLecternBlock && LecternBlock.tryPlaceBook(event.getEntity(), level, event.getPos(), state, stack))
             {
                 event.setCanceled(true);
-                event.setCancellationResult(InteractionResult.sidedSuccess(level.isClientSide));
+                event.setCancellationResult((level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME));
             }
         }
 
@@ -1241,7 +1242,7 @@ public final class ForgeEventHandler
             // Possible issues:
             // - Right-click a chest underwater -> it should open the chest, not drink
             // - Try and remove the filter from a Create 'Basin', by right-clicking with an empty hand (create cancels this event)
-            final ItemInteractionResult useBlockResult = state.useItemOn(stack, level, event.getEntity(), event.getHand(), event.getHitVec());
+            final InteractionResult useBlockResult = state.useItemOn(stack, level, event.getEntity(), event.getHand(), event.getHitVec());
             if (useBlockResult.consumesAction())
             {
                 if (event.getEntity() instanceof ServerPlayer serverPlayer)
@@ -1249,7 +1250,7 @@ public final class ForgeEventHandler
                     CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, event.getPos(), stack);
                 }
                 event.setCanceled(true);
-                event.setCancellationResult(useBlockResult.result());
+                event.setCancellationResult(useBlockResult);
             }
             else
             {
@@ -1294,7 +1295,7 @@ public final class ForgeEventHandler
             if (result.consumesAction())
             {
                 player.swing(InteractionHand.MAIN_HAND);
-                PacketDistributor.sendToServer(PlayerDrinkPacket.PACKET);
+                ClientPacketDistributor.sendToServer(PlayerDrinkPacket.PACKET);
             }
         }
     }
@@ -1304,14 +1305,7 @@ public final class ForgeEventHandler
         if (event.getUsePhase() == UseItemOnBlockEvent.UsePhase.ITEM_AFTER_BLOCK)
         {
             InteractionManager.onItemUse(event.getItemStack(), event.getUseOnContext(), false).ifPresent(result -> {
-                event.cancelWithResult(switch (result)
-                {
-                    // This is the inverse of ItemInteractionResult.result()
-                    case SUCCESS, SUCCESS_NO_ITEM_USED -> ItemInteractionResult.SUCCESS;
-                    case CONSUME, CONSUME_PARTIAL -> ItemInteractionResult.CONSUME;
-                    case PASS -> ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-                    case FAIL -> ItemInteractionResult.FAIL;
-                });
+                event.cancelWithResult(result == InteractionResult.PASS ? InteractionResult.TRY_WITH_EMPTY_HAND : result);
             });
         }
     }
@@ -1334,6 +1328,8 @@ public final class ForgeEventHandler
 
     public static void onDataPackSync(OnDatapackSyncEvent event)
     {
+        // Recipe data is no longer sent automatically; caches and guide recipes require all registered types.
+        event.sendRecipes(BuiltInRegistries.RECIPE_TYPE);
         if (event.getPlayer() == null)
         {
             PacketDistributor.sendToAllPlayers(new DataManagerSyncPacket());
@@ -1355,7 +1351,7 @@ public final class ForgeEventHandler
     {
         if (event.shouldUpdateStaticData() && event.getUpdateCause() == TagsUpdatedEvent.UpdateCause.SERVER_DATA_LOAD)
         {
-            Helpers.updateReloadableData(event.getRegistryAccess(), Helpers.getUnsafeRecipeManager());
+            Helpers.updateReloadableData(event.getRegistryAccess(), Helpers.getUnsafeRecipeMap());
         }
     }
 
@@ -1407,7 +1403,7 @@ public final class ForgeEventHandler
                     oldCart.discard();
                     player.level().addFreshEntity(minecart);
                 }
-                event.setCancellationResult(InteractionResult.sidedSuccess(player.level().isClientSide));
+                event.setCancellationResult((player.level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME));
             }
         }
     }

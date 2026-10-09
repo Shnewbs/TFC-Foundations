@@ -13,7 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -53,7 +53,7 @@ public class GearBoxBlock extends DeviceBlock implements DirectionPropertyBlock,
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         if (Helpers.isItem(player.getItemInHand(hand), TFCTags.Items.TOOLS_HAMMER))
         {
@@ -65,15 +65,15 @@ public class GearBoxBlock extends DeviceBlock implements DirectionPropertyBlock,
                 level.setBlockAndUpdate(pos, state.cycle(property));
                 level.getBlockEntity(pos, TFCBlockEntities.GEAR_BOX.get()).ifPresent(box -> box.updateDirection(direction, !prev));
                 Helpers.playPlaceSound(player, level, pos, state);
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
             else
             {
                 Helpers.playSound(level, pos, SoundEvents.ITEM_BREAK);
-                return ItemInteractionResult.FAIL;
+                return InteractionResult.FAIL;
             }
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     /**

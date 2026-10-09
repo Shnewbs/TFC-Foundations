@@ -14,7 +14,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -98,7 +98,7 @@ public class JamPotRecipe extends PotRecipe
         }
 
         @Override
-        public ItemInteractionResult onInteract(IPotInventory entity, Player player, ItemStack clickedWith)
+        public InteractionResult onInteract(IPotInventory entity, Player player, ItemStack clickedWith)
         {
             if (Helpers.isItem(clickedWith, TFCItems.EMPTY_JAR) && !unsealedStack.isEmpty())
             {
@@ -106,7 +106,7 @@ public class JamPotRecipe extends PotRecipe
                 clickedWith.shrink(1);
                 sealedStack.shrink(1);
                 ItemHandlerHelper.giveItemToPlayer(player, unsealedStack.split(1));
-                return ItemInteractionResult.sidedSuccess(player.level().isClientSide);
+                return (player.level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
             if (Helpers.isItem(clickedWith, TFCTags.Items.EMPTY_JARS_WITH_LID) && !sealedStack.isEmpty())
             {
@@ -114,9 +114,9 @@ public class JamPotRecipe extends PotRecipe
                 clickedWith.shrink(1);
                 unsealedStack.shrink(1);
                 ItemHandlerHelper.giveItemToPlayer(player, sealedStack.split(1));
-                return ItemInteractionResult.sidedSuccess(player.level().isClientSide);
+                return (player.level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
 
         @Override

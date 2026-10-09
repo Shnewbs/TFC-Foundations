@@ -167,7 +167,7 @@ public abstract class TFCChestedHorse extends AbstractChestedHorse implements Ho
                         {
                             ItemHandlerHelper.giveItemToPlayer(player, getChestItem().copy());
                             setChestItem(ItemStack.EMPTY);
-                            return InteractionResult.sidedSuccess(this.level().isClientSide);
+                            return (this.level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                         }
                         else
                         {
@@ -177,14 +177,14 @@ public abstract class TFCChestedHorse extends AbstractChestedHorse implements Ho
                             {
                                 if (FluidHelpers.transferBetweenItemAndOther(getChestItem(), destFluidItemHandler, sourceFluidItemHandler, destFluidItemHandler, FluidHelpers.Transfer.FILL, level(), blockPosition(), FluidHelpers.with(player, hand)))
                                 {
-                                    return InteractionResult.sidedSuccess(level().isClientSide);
+                                    return (level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                                 }
                             }
 
                         }
                     }
                     this.openCustomInventoryScreen(player);
-                    return InteractionResult.sidedSuccess(this.level().isClientSide);
+                    return (this.level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                 }
 
                 if (this.isVehicle())
@@ -200,7 +200,7 @@ public abstract class TFCChestedHorse extends AbstractChestedHorse implements Ho
                 if (!this.isTamed())
                 {
                     this.makeMad();
-                    return InteractionResult.sidedSuccess(this.level().isClientSide);
+                    return (this.level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                 }
 
                 if (this.getChestItem().isEmpty() && Helpers.isItem(stack, TFCTags.Items.CARRIED_BY_HORSE))
@@ -213,13 +213,13 @@ public abstract class TFCChestedHorse extends AbstractChestedHorse implements Ho
                     }
 
                     this.createInventory();
-                    return InteractionResult.sidedSuccess(this.level().isClientSide);
+                    return (this.level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                 }
 
                 if (!this.isBaby() && !this.isSaddled() && stack.is(Items.SADDLE))
                 {
                     this.openCustomInventoryScreen(player);
-                    return InteractionResult.sidedSuccess(this.level().isClientSide);
+                    return (this.level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                 }
             }
 
@@ -234,7 +234,7 @@ public abstract class TFCChestedHorse extends AbstractChestedHorse implements Ho
                     tameWithName(player);
                 }
                 this.doPlayerRide(player);
-                return InteractionResult.sidedSuccess(this.level().isClientSide);
+                return (this.level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
         }
         return result;

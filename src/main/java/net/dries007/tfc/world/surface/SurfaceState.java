@@ -19,6 +19,6 @@ public interface SurfaceState
 
     default void setState(SurfaceBuilderContext context)
     {
-        context.chunk().setBlockState(context.pos(), getState(context), false);
+        context.chunk().setBlockState(context.pos(), getState(context));
     }
 }

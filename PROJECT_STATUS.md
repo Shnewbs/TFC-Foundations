@@ -1,6 +1,6 @@
 # TFC Foundations — project status
 
-Updated: 2026-10-08. Read this file first when resuming work.
+Updated: 2026-10-09. Read this file first when resuming work.
 
 ## Current state
 
@@ -75,3 +75,11 @@ The user authorized both tracks: `26.1.2` is the priority for the first playable
 ### Active branch target
 
 This branch targets Minecraft 26.1.2, NeoForge 26.1.2.114, JEI 29.43.0.107 and Patchouli 26.1-94. Published Maven POMs/metadata were verified. Expected artifact: TFC-Foundations-26.1.2-0.0.0.jar. Earlier 26.3 entries record the shared port history. EMI/Jade/TOP adapters remain pending.
+
+
+## Playability continuation and Earth request — 2026-10-09
+
+- Latest prior builds: 26.1.2 [37864553702](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37864553702) and 26.3 [37864549536](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37864549536) reached Java compilation and failed; the prior spawn/potion/reload missing-type errors no longer appear in the first displayed diagnostics. No playable artifact exists.
+- Current source checkpoint migrates interactions, game rules, JSON data loading and read-only recipe caches, client GUI extraction and input, plus 26.1.2 cave/plant generation. Optional EMI/Jade/TOP adapters compile separately only with explicit pins; required guide dependency remains gated. Full Java/runtime validation still required.
+- Accepted request: investigate realistic worldgen improvements and optional TFC Earth without generated man-made structures. [TFC_EARTH.md](docs/foundations/TFC_EARTH.md) records projection, height and dataset limits. Coordinate/elevation math passes eight isolated tests; no Earth world preset or terrain dataset is available yet.
+- Playability exit gate remains an actual client and dedicated-server survival build: world creation, cave/plant checks, save/restart, multiplayer reconnect, recipes/guide, inventory/fluid operations, calendar and progression.

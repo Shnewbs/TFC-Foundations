@@ -314,7 +314,7 @@ public class SoilSurfaceState implements SurfaceState
         @Override
         public void setState(SurfaceBuilderContext context)
         {
-            context.chunk().setBlockState(context.pos(), getState(context), false);
+            context.chunk().setBlockState(context.pos(), getState(context));
             context.chunk().markPosForPostprocessing(context.pos());
         }
     }

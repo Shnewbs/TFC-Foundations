@@ -201,7 +201,7 @@ public class BactrianCamel extends AbstractCamel implements HorseProperties, ISh
                 if (this.isTamed() && player.isSecondaryUseActive())
                 {
                     this.openCustomInventoryScreen(player);
-                    return InteractionResult.sidedSuccess(this.level().isClientSide);
+                    return (this.level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                 }
 
                 if (this.isVehicle())
@@ -221,14 +221,14 @@ public class BactrianCamel extends AbstractCamel implements HorseProperties, ISh
                 if (!this.isTamed())
                 {
                     this.makeMad();
-                    return InteractionResult.sidedSuccess(this.level().isClientSide);
+                    return (this.level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                 }
 
                 final boolean canBeSaddled = !this.isBaby() && !this.isSaddled() && stack.is(Items.SADDLE);
                 if (this.isBodyArmorItem(stack) || canBeSaddled)
                 {
                     this.openCustomInventoryScreen(player);
-                    return InteractionResult.sidedSuccess(this.level().isClientSide);
+                    return (this.level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                 }
             }
 
@@ -246,7 +246,7 @@ public class BactrianCamel extends AbstractCamel implements HorseProperties, ISh
                 {
                     this.doPlayerRide(player);
                 }
-                return InteractionResult.sidedSuccess(this.level().isClientSide);
+                return (this.level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
         }
         return result;

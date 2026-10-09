@@ -7,11 +7,13 @@
 package net.dries007.tfc.client.screen.button;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.client.screen.BarrelScreen;
@@ -32,16 +34,16 @@ public class BarrelSealButton extends Button
     }
 
     @Override
-    public void onPress()
+    public void onPress(InputWithModifiers input)
     {
-        PacketDistributor.sendToServer(new ScreenButtonPacket(0));
+        ClientPacketDistributor.sendToServer(new ScreenButtonPacket(0));
         playDownSound(Minecraft.getInstance().getSoundManager());
     }
 
     @Override
-    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks)
+    public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks)
     {
         final int v = barrel.getBlockState().getValue(BarrelBlock.SEALED) ? 0 : 20;
-        graphics.blit(BarrelScreen.BACKGROUND, getX(), getY(), 236, v, 20, 20, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BarrelScreen.BACKGROUND, getX(), getY(), 236, v, 20, 20, 256, 256);
     }
 }

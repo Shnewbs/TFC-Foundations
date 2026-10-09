@@ -124,7 +124,7 @@ public final class SurfaceManager
                 mutablePos.set(chunkX + x, y, chunkZ + z);
                 double slope = sampleSlope(slopeMap, x, z);
                 int slopeIndex = Mth.clamp((int) slope, 0, meter.length - 1);
-                chunk.setBlockState(mutablePos, meter[slopeIndex].defaultBlockState(), false);
+                chunk.setBlockState(mutablePos, meter[slopeIndex].defaultBlockState());
             }
         }
     }

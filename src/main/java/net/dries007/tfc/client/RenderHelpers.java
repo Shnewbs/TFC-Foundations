@@ -6,35 +6,36 @@
 
 package net.dries007.tfc.client;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
+import net.minecraft.client.renderer.block.BlockStateModelSet;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import com.mojang.blaze3d.vertex.QuadInstance;
+import net.neoforged.neoforge.client.CustomBlockOutlineRenderer;
+import org.jetbrains.annotations.Nullable;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.block.BlockModelShaper;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.client.renderer.entity.layers.PlayerItemInHandLayer;
@@ -42,30 +43,24 @@ import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.FastColor.ARGB32;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.apache.commons.lang3.tuple.Pair;
-import org.joml.Matrix4f;
 
 import net.dries007.tfc.common.blocks.devices.ChannelBlock;
 import net.dries007.tfc.common.component.heat.HeatCapability;
@@ -120,12 +115,12 @@ public final class RenderHelpers
 
     public static TextureAtlasSprite missingTexture()
     {
-        return Minecraft.getInstance().getTextureAtlas(BLOCKS_ATLAS).apply(MissingTextureAtlasSprite.getLocation());
+        return Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(BLOCKS_ATLAS).getSprite(MissingTextureAtlasSprite.getLocation());
     }
 
     public static TextureAtlasSprite blockTexture(Identifier textureLocation)
     {
-        return Minecraft.getInstance().getTextureAtlas(BLOCKS_ATLAS).apply(textureLocation);
+        return Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(BLOCKS_ATLAS).getSprite(textureLocation);
     }
 
     public static Identifier animalTexture(String name)
@@ -253,7 +248,7 @@ public final class RenderHelpers
     public static void renderTexturedVertex(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float x, float y, float z, float u, float v, float normalX, float normalY, float normalZ, boolean doShade)
     {
         final float shade = doShade ? getShade(normalX, normalY, normalZ) : 1f;
-        final int color = ARGB32.colorFromFloat(1f, shade, shade, shade);
+        final int color = ARGB.colorFromFloat(1f, shade, shade, shade);
         renderTexturedVertex(poseStack, buffer, packedLight, packedOverlay, x, y, z, u, v, normalX, normalY, normalZ, color);
     }
 
@@ -484,31 +479,6 @@ public final class RenderHelpers
         };
     }
 
-    public static void setShaderColor(int color)
-    {
-        setColor(RenderSystem::setShaderColor, color);
-    }
-
-    public static void setShaderColor(GuiGraphics graphics, int color)
-    {
-        setColor(graphics::setColor, color);
-    }
-
-    private static void setColor(ARGBColorProvider provider, int color)
-    {
-        final float a = ((color >> 24) & 0xFF) / 255f;
-        final float r = ((color >> 16) & 0xFF) / 255f;
-        final float g = ((color >> 8) & 0xFF) / 255f;
-        final float b = ((color) & 0xFF) / 255f;
-
-        provider.setColor(r, g, b, a);
-    }
-
-    interface ARGBColorProvider
-    {
-        void setColor(float alpha, float red, float green, float blue);
-    }
-
     /**
      * This is the map code in {@link net.minecraft.client.renderer.ItemInHandRenderer}
      */
@@ -595,16 +565,16 @@ public final class RenderHelpers
     public static void renderFluidFace(PoseStack poseStack, FluidStack fluidStack, MultiBufferSource buffers, int color, float minX, float minZ, float maxX, float maxZ, float y, int packedOverlay, int packedLight)
     {
         final Identifier texture = IClientFluidTypeExtensions.of(fluidStack.getFluid()).getStillTexture(fluidStack);
-        final TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(RenderHelpers.BLOCKS_ATLAS).apply(texture);
-        final VertexConsumer buffer = buffers.getBuffer(RenderType.entityTranslucentCull(BLOCKS_ATLAS));
+        final TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(BLOCKS_ATLAS).getSprite(texture);
+        final VertexConsumer buffer = buffers.getBuffer(Sheets.translucentBlockSheet());
 
         renderTexturedFace(poseStack.last(), buffer, color, minX, minZ, maxX, maxZ, y, packedOverlay, packedLight, sprite);
     }
 
     public static void renderTexturedFace(PoseStack poseStack, MultiBufferSource buffers, int color, float minX, float minZ, float maxX, float maxZ, float y, int packedOverlay, int packedLight, Identifier texture)
     {
-        final VertexConsumer buffer = buffers.getBuffer(RenderType.solid());
-        final TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(RenderHelpers.BLOCKS_ATLAS).apply(texture);
+        final VertexConsumer buffer = buffers.getBuffer(Sheets.cutoutBlockSheet());
+        final TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(BLOCKS_ATLAS).getSprite(texture);
 
         renderTexturedFace(poseStack.last(), buffer, color, minX, minZ, maxX, maxZ, y, packedOverlay, packedLight, sprite);
     }
@@ -617,40 +587,55 @@ public final class RenderHelpers
         buffer.addVertex(pose, maxX, y, minZ).setColor(color).setUv(sprite.getU(maxX), sprite.getV(minX)).setOverlay(packedOverlay).setLight(packedLight).setNormal(pose, 0, 1, 0);
     }
 
-    public static boolean renderGhostBlock(Level level, BlockState state, BlockPos lookPos, PoseStack stack, MultiBufferSource buffer, boolean shouldGrowSlightly, int alpha)
+    /** Extracts all model, tint and lighting data without retaining the level in the render callback. */
+    @Nullable
+    public static CustomBlockOutlineRenderer extractGhostBlock(ClientLevel level, BlockState state, BlockPos lookPos, boolean shouldGrowSlightly, int alpha)
     {
         final Minecraft mc = Minecraft.getInstance();
-        final BlockModelShaper shaper = mc.getBlockRenderer().getBlockModelShaper();
-        final BakedModel model = shaper.getBlockModel(state);
-        if (model == shaper.getModelManager().getMissingModel())
+        final BlockStateModelSet models = mc.getModelManager().getBlockStateModelSet();
+        final BlockStateModel model = models.get(state);
+        if (model == models.missingModel()) return null;
+
+        final BlockPos pos = lookPos.immutable();
+        final List<GhostQuad> quads = new ArrayList<>();
+        // Ghost previews intentionally include occluded faces; the old renderer used checkSides=false.
+        final ModelBlockRenderer renderer = new ModelBlockRenderer(true, false, mc.getBlockColors());
+        renderer.tesselateBlock((x, y, z, quad, lighting) -> {
+            final QuadInstance snapshot = new QuadInstance();
+            for (int vertex = 0; vertex < BakedQuad.VERTEX_COUNT; vertex++)
+            {
+                snapshot.setColor(vertex, ARGB.multiplyAlpha(lighting.getColor(vertex), Mth.clamp(alpha, 0, 255) / 255f));
+                snapshot.setLightCoords(vertex, lighting.getLightCoords(vertex));
+            }
+            snapshot.setOverlayCoords(lighting.overlayCoords());
+            quads.add(new GhostQuad(x, y, z, quad, snapshot));
+        }, 0, 0, 0, level, pos, state, model, state.getSeed(pos));
+        if (quads.isEmpty()) return null;
+        final List<GhostQuad> geometry = List.copyOf(quads);
+        return (renderState, buffers, stack, translucentPass, levelState) -> {
+            final Vec3 camera = levelState.cameraRenderState.pos;
+            stack.pushPose();
+            stack.translate(pos.getX() - camera.x, pos.getY() - camera.y, pos.getZ() - camera.z);
+            if (shouldGrowSlightly)
+            {
+                stack.translate(-0.005F, -0.005F, -0.005F);
+                stack.scale(1.01F, 1.01F, 1.01F);
+            }
+            final VertexConsumer buffer = buffers.getBuffer(Sheets.translucentBlockSheet());
+            for (GhostQuad quad : geometry) quad.render(stack.last(), buffer);
+            stack.popPose();
+            return true;
+        };
+    }
+
+    private record GhostQuad(float x, float y, float z, BakedQuad quad, QuadInstance lighting)
+    {
+        private void render(PoseStack.Pose pose, VertexConsumer buffer)
         {
-            return false;
+            final PoseStack.Pose translated = pose.copy();
+            translated.translate(x, y, z);
+            buffer.putBakedQuad(translated, quad, lighting);
         }
-
-        final RandomSource random = RandomSource.create();
-        final RenderType rt = Sheets.translucentCullBlockSheet();
-        final VertexConsumer builder = new IGhostBlockHandler.ForcedAlphaVertexConsumer(buffer.getBuffer(rt), alpha);
-
-        stack.pushPose();
-        final Vec3 camera = mc.gameRenderer.getMainCamera().getPosition();
-        final Vec3 offset = Vec3.atLowerCornerOf(lookPos).subtract(camera);
-        stack.translate(offset.x, offset.y, offset.z);
-        if (shouldGrowSlightly)
-        {
-            stack.translate(-0.005F, -0.005F, -0.005F);
-            stack.scale(1.01F, 1.01F, 1.01F);
-        }
-        final BlockRenderDispatcher br = Minecraft.getInstance().getBlockRenderer();
-
-        for (RenderType type : model.getRenderTypes(state, random, ModelData.EMPTY))
-        {
-            br.renderBatched(state, lookPos, level, stack, builder, false, random, ModelData.EMPTY, type);
-        }
-
-        RenderSystem.enableCull();
-        ((MultiBufferSource.BufferSource) buffer).endBatch(rt);
-        stack.popPose();
-        return true;
     }
 
     public static Identifier getTextureForAge(TFCAnimal animal, Identifier young, Identifier old)
@@ -658,63 +643,41 @@ public final class RenderHelpers
         return animal.getAgeType() == Age.OLD ? old : young;
     }
 
-    public static TextureAtlasSprite getAndBindFluidSprite(FluidStack fluid)
+    /** Resolves the sprite without changing global render state. Tint is supplied with each GUI draw. */
+    public static TextureAtlasSprite getFluidSprite(FluidStack fluid)
     {
-        setShaderColor(getFluidColor(fluid));
-        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
-        return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(IClientFluidTypeExtensions.of(fluid.getFluid()).getStillTexture(fluid));
+        return blockTexture(IClientFluidTypeExtensions.of(fluid.getFluid()).getStillTexture(fluid));
     }
 
-    /**
-     * Renders a solid rectangle over the region {@code [x, y] x [x + width, y + height]}, composed of the given sprite. The sprite is assumed to have a regular width and height of {@code spriteWidth x spriteHeight}. This will tile the given texture as many times as necessary to cover the region.
-     */
-    public static void fillAreaWithSprite(GuiGraphics stack, TextureAtlasSprite sprite, int x, int y, int regionWidth, int regionHeight, int spriteWidth, int spriteHeight)
+    public static void fillAreaWithSprite(GuiGraphicsExtractor graphics, TextureAtlasSprite sprite, int x, int y, int regionWidth, int regionHeight, int spriteWidth, int spriteHeight)
     {
-        final int tileWidth = Helpers.ceilDiv(regionWidth, spriteWidth);
-        final int tileHeight = Helpers.ceilDiv(regionHeight, spriteHeight);
+        fillAreaWithSprite(graphics, sprite, x, y, regionWidth, regionHeight, spriteWidth, spriteHeight, -1);
+    }
 
-        for (int tileX = 0; tileX < tileWidth; tileX++)
+    /** Tiles a sprite, clipping the final row and column without stretching them. */
+    public static void fillAreaWithSprite(GuiGraphicsExtractor graphics, TextureAtlasSprite sprite, int x, int y, int regionWidth, int regionHeight, int spriteWidth, int spriteHeight, int tint)
+    {
+        if (spriteWidth <= 0 || spriteHeight <= 0)
         {
-            for (int tileY = 0; tileY < tileHeight; tileY++)
+            throw new IllegalArgumentException("Sprite dimensions must be positive");
+        }
+        if (regionWidth <= 0 || regionHeight <= 0) return;
+
+        graphics.enableScissor(x, y, x + regionWidth, y + regionHeight);
+        try
+        {
+            for (int tileX = 0; tileX < regionWidth; tileX += spriteWidth)
             {
-                // Top left (x, y) coordinate of this tile to be drawn
-                final int offsetX = tileX * spriteWidth;
-                final int offsetY = tileY * spriteHeight;
-
-                // The actual (width, height) pair of this tile, cut off by the region bounds, which are not an exact multiple of tile (width, height)
-                final int actualWidth = Math.min(spriteWidth, regionWidth - offsetX);
-                final int actualHeight = Math.min(spriteHeight, regionHeight - offsetY);
-
-                // The fraction in [0, 1] x [0, 1] of this tile that needs to be drawn
-                final float widthRatio = (float) actualWidth / spriteWidth;
-                final float heightRatio = (float) actualHeight / spriteHeight;
-
-                blit(stack, x + offsetX, y + offsetY, actualWidth, actualHeight, sprite.getU0(), sprite.getU(widthRatio), sprite.getV0(), sprite.getV(heightRatio));
+                for (int tileY = 0; tileY < regionHeight; tileY += spriteHeight)
+                {
+                    graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, x + tileX, y + tileY, spriteWidth, spriteHeight, tint);
+                }
             }
         }
-    }
-
-    /**
-     * Copied from {@link GuiGraphics#blit(Identifier, int, int, int, int, int, int)} but with explicit arguments for {@code minU, maxU, minV, maxV}.
-     */
-    public static void blit(GuiGraphics stack, int x, int y, int width, int height, float minU, float maxU, float minV, float maxV)
-    {
-        blit(stack.pose().last().pose(), x, x + width, y, y + height, 0, minU, maxU, minV, maxV);
-    }
-
-
-    /**
-     * Copied from {@link GuiGraphics#innerBlit(Identifier, int, int, int, int, int, float, float, float, float, float, float, float, float)} because it's private.
-     */
-    public static void blit(Matrix4f pose, int x1, int x2, int y1, int y2, int blitOffset, float minU, float maxU, float minV, float maxV)
-    {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        final BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.addVertex(pose, x1, y2, blitOffset).setUv(minU, maxV);
-        buffer.addVertex(pose, x2, y2, blitOffset).setUv(maxU, maxV);
-        buffer.addVertex(pose, x2, y1, blitOffset).setUv(maxU, minV);
-        buffer.addVertex(pose, x1, y1, blitOffset).setUv(minU, minV);
-        BufferUploader.drawWithShader(buffer.buildOrThrow());
+        finally
+        {
+            graphics.disableScissor();
+        }
     }
 
     public static boolean isInside(int mouseX, int mouseY, int leftX, int topY, int width, int height)

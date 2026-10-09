@@ -141,7 +141,7 @@ public final class InteractionManager
                             level.setBlock(basePos, bed.setValue(ThatchBedBlock.PART, BedPart.FOOT).setValue(ThatchBedBlock.FACING, direction), 18);
                             level.setBlock(headPos, bed.setValue(ThatchBedBlock.PART, BedPart.HEAD).setValue(ThatchBedBlock.FACING, direction), 18);
                             level.getBlockEntity(headPos, TFCBlockEntities.THATCH_BED.get()).ifPresent(entity -> entity.setBed(headState, baseState, stack.split(1)));
-                            return InteractionResult.sidedSuccess(level.isClientSide);
+                            return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                         }
 
                     }
@@ -176,7 +176,7 @@ public final class InteractionManager
                         stack.shrink(1);
                     }
 
-                    return InteractionResult.sidedSuccess(level.isClientSide);
+                    return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                 }
 
                 // Default behavior
@@ -258,9 +258,9 @@ public final class InteractionManager
                                 LogPileBlock.insertAndPushUp(stack, stateClicked, level, posClicked, logPileBlockEntity, isDoubleClick);
                                 logPileBlockEntity.setLastClickTick(currentTick);
                                 logPileBlockEntity.setLastClickPlacement(true);
-                                return InteractionResult.sidedSuccess(level.isClientSide);
+                                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                             }
-                            return InteractionResult.sidedSuccess(level.isClientSide);
+                            return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                         }).orElse(InteractionResult.PASS);
                 }
                 else if (level.getBlockState(relativePos.below()).isFaceSturdy(level, relativePos.below(), Direction.UP))
@@ -300,7 +300,7 @@ public final class InteractionManager
                             stack.setCount(stack.getCount() + entity.getInventory().insertItem(0, insertStack, false).getCount());
                             entity.updateDisplayCache();
                             level.sendBlockUpdated(abovePos, state, state, Block.UPDATE_CLIENTS);
-                            return InteractionResult.sidedSuccess(level.isClientSide);
+                            return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                         }).orElse(InteractionResult.PASS);
                 }
             }
@@ -337,7 +337,7 @@ public final class InteractionManager
                         provider.openScreen(serverPlayer, context.getHand(), buffer -> buffer.writeResourceLocation(KnappingType.MANAGER.getIdOrThrow(type)));
                     }
                 }
-                return InteractionResult.sidedSuccess(context.getLevel().isClientSide);
+                return (context.getLevel().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
             return InteractionResult.PASS;
         });
@@ -362,7 +362,7 @@ public final class InteractionManager
                 if (moldTable.isPresent())
                 {
                     moldTable.get().onRightClick(player);
-                    return InteractionResult.sidedSuccess(context.getLevel().isClientSide);
+                    return (context.getLevel().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                 }
             }
             return InteractionResult.PASS;
@@ -380,7 +380,7 @@ public final class InteractionManager
                     {
                         player.openMenu(TFCContainerProviders.SALAD);
                     }
-                    return InteractionResult.sidedSuccess(context.getLevel().isClientSide);
+                    return (context.getLevel().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                 }
                 else
                 {
@@ -409,7 +409,7 @@ public final class InteractionManager
             {
                 if (player != null && !player.isCreative())
                     stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(context.getHand()));
-                return InteractionResult.sidedSuccess(context.getLevel().isClientSide);
+                return (context.getLevel().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
 
             return InteractionResult.PASS;
@@ -420,7 +420,7 @@ public final class InteractionManager
             {
                 if (player != null && !player.isCreative())
                     stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(context.getHand()));
-                return InteractionResult.sidedSuccess(context.getLevel().isClientSide);
+                return (context.getLevel().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
             return InteractionResult.PASS;
         });
@@ -447,7 +447,7 @@ public final class InteractionManager
                     Helpers.playPlaceSound(player, level, posClicked, stateClicked);
                     level.setBlock(posClicked, stateClicked.setValue(countProperty, currentIngots + 1), Block.UPDATE_CLIENTS);
                     level.getBlockEntity(posClicked, TFCBlockEntities.INGOT_PILE.get()).ifPresent(pile -> pile.addIngot(insertStack));
-                    return InteractionResult.sidedSuccess(level.isClientSide);
+                    return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                 }
                 else
                 {
@@ -469,7 +469,7 @@ public final class InteractionManager
                         Helpers.playPlaceSound(player, level, topPos, topState);
                         level.setBlock(topPos, topState.setValue(countProperty, topIngots + 1), Block.UPDATE_CLIENTS);
                         level.getBlockEntity(topPos, TFCBlockEntities.INGOT_PILE.get()).ifPresent(topPile -> topPile.addIngot(insertStack));
-                        return InteractionResult.sidedSuccess(level.isClientSide);
+                        return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                     }
                     else if (topState.isAir())
                     {
@@ -485,7 +485,7 @@ public final class InteractionManager
                             stackBefore.setCount(1);
                             level.getBlockEntity(topPos, TFCBlockEntities.INGOT_PILE.get()).ifPresent(topPile -> topPile.addIngot(stackBefore));
                         }
-                        return InteractionResult.sidedSuccess(level.isClientSide);
+                        return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                     }
                     return InteractionResult.FAIL;
                 }

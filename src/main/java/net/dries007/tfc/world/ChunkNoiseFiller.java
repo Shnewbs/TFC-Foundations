@@ -18,7 +18,6 @@ import net.minecraft.world.level.chunk.CarvingMask;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.chunk.ProtoChunk;
 import net.minecraft.world.level.levelgen.Beardifier;
-import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
@@ -137,7 +136,7 @@ public class ChunkNoiseFiller extends ChunkHeightFiller
         this.chunkMinZ = chunk.getPos().getMinBlockZ();
         this.oceanFloor = chunk.getOrCreateHeightmapUnprimed(Heightmap.Types.OCEAN_FLOOR_WG);
         this.worldSurface = chunk.getOrCreateHeightmapUnprimed(Heightmap.Types.WORLD_SURFACE_WG);
-        this.airCarvingMask = chunk.getOrCreateCarvingMask(GenerationStep.Carving.AIR);
+        this.airCarvingMask = chunk.getOrCreateCarvingMask();
 
         this.beardifier = beardifier;
         this.mutableDensityFunctionContext = new MutableDensityFunctionContext(new BlockPos.MutableBlockPos());

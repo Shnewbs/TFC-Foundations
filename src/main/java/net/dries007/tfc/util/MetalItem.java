@@ -15,7 +15,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeMap;
 import org.slf4j.Logger;
 
 import net.dries007.tfc.config.TFCConfig;
@@ -69,7 +69,7 @@ public record MetalItem(
         }
 
         @Override
-        public void reload(RecipeManager manager)
+        public void reload(RecipeMap manager)
         {
             final Map<String, MetalItem> instances = new HashMap<>();
             final Set<String> excludedTags = Set.copyOf(TFCConfig.SERVER.excludedMetalTagNames.get());

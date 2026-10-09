@@ -69,7 +69,7 @@ public class TFCMinecartItem extends Item
                 if (createMinecartEntity(level, held, x, y, z))
                 {
                     level.gameEvent(context.getPlayer(), GameEvent.ENTITY_PLACE, pos);
-                    return InteractionResult.sidedSuccess(level.isClientSide);
+                    return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                 }
             }
             return InteractionResult.PASS;

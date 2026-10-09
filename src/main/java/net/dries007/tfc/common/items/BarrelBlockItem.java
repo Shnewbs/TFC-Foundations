@@ -10,7 +10,6 @@ import java.util.Objects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -38,12 +37,14 @@ public class BarrelBlockItem extends TooltipBlockItem implements Rackable
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
+    public InteractionResult use(Level level, Player player, InteractionHand hand)
     {
         final InteractionResult result = tryInteractWithFluid(level, player, hand);
         if (result != InteractionResult.PASS)
         {
-            return new InteractionResultHolder<>(result, player.getItemInHand(hand));
+            return result instanceof InteractionResult.Success success
+                ? success.heldItemTransformedTo(player.getItemInHand(hand))
+                : result;
         }
         return super.use(level, player, hand);
     }
@@ -101,7 +102,7 @@ public class BarrelBlockItem extends TooltipBlockItem implements Rackable
         final BlockHitResult hit = getPlayerPOVHitResult(level, player, ClipContext.Fluid.SOURCE_ONLY);
         if (FluidHelpers.transferBetweenWorldAndItem(stack, level, hit, player, hand, false, false, true))
         {
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
         }
         return InteractionResult.PASS;
     }

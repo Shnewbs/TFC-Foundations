@@ -14,7 +14,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -62,13 +61,14 @@ public abstract class PlayerMixin extends Entity implements PlayerBridge
     }
 
     /**
-     * Fixes MC-219083 by only doing natural regeneration on server
+     * Keeps natural regeneration server-authoritative, including overrides of the vanilla hook.
      */
-    @WrapOperation(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/gamerules/GameRules;getBoolean(Lnet/minecraft/world/level/GameRules$Key;)Z"), require = 0)
-    private boolean onlyDoNaturalRegenerationOnServer(GameRules instance, GameRules.Key<GameRules.BooleanValue> key, Operation<Boolean> original)
+    @WrapOperation(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;tickRegeneration()V"))
+    private void onlyDoNaturalRegenerationOnServer(Player instance, Operation<Void> original)
     {
-        return key == GameRules.RULE_NATURAL_REGENERATION
-            ? original.call(instance, key) && !level().isClientSide
-            : original.call(instance, key);
+        if (!level().isClientSide())
+        {
+            original.call(instance);
+        }
     }
 }

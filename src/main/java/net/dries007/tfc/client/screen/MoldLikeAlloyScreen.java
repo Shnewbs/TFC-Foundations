@@ -6,7 +6,7 @@
 
 package net.dries007.tfc.client.screen;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Inventory;
@@ -32,9 +32,9 @@ public class MoldLikeAlloyScreen extends TFCContainerScreen<MoldLikeAlloyContain
     }
 
     @Override
-    protected void renderLabels(GuiGraphics stack, int mouseX, int mouseY)
+    protected void extractLabels(GuiGraphicsExtractor stack, int mouseX, int mouseY)
     {
-        super.renderLabels(stack, mouseX, mouseY);
+        super.extractLabels(stack, mouseX, mouseY);
 
         // Metal and contents tooltip
         final IMold mold = IMold.get(menu.getTargetStack());

@@ -14,7 +14,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -64,7 +64,7 @@ public class CrankshaftBlock extends HorizontalDirectionalBlock implements IForg
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         final ItemStack held = player.getItemInHand(hand);
         if (state.getValue(PART) == Part.BASE && Helpers.isItem(held.getItem(), STEEL_RODS))
@@ -76,10 +76,10 @@ public class CrankshaftBlock extends HorizontalDirectionalBlock implements IForg
                 level.setBlockAndUpdate(partnerPos, state.setValue(PART, Part.SHAFT));
                 if (!player.isCreative())
                     held.shrink(1);
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override

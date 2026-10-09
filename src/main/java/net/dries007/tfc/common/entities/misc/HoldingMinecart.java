@@ -28,6 +28,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -88,7 +89,7 @@ public class HoldingMinecart extends AbstractMinecart
             copyMinecart(this, minecart);
             discard();
             level().addFreshEntity(minecart);
-            return InteractionResult.sidedSuccess(level().isClientSide);
+            return (level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
         }
         return InteractionResult.PASS;
     }
@@ -170,7 +171,7 @@ public class HoldingMinecart extends AbstractMinecart
                 return;
             }
         }
-        if (level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS))
+        if (level() instanceof ServerLevel serverLevel && serverLevel.getGameRules().get(GameRules.ENTITY_DROPS))
         {
             spawnAtLocation(getHoldItem().copy());
         }

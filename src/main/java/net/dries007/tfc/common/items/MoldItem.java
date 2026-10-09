@@ -13,7 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
@@ -103,7 +103,7 @@ public class MoldItem extends Item
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
+    public InteractionResult use(Level level, Player player, InteractionHand hand)
     {
         final ItemStack stack = player.getItemInHand(hand);
         final IMold mold = IMold.get(stack);
@@ -118,7 +118,7 @@ public class MoldItem extends Item
                     if (mold.isMolten())
                     {
                         player.displayClientMessage(Component.translatable("tfc.tooltip.small_vessel.alloy_molten"), true);
-                        return InteractionResultHolder.consume(stack);
+                        return InteractionResult.CONSUME.heldItemTransformedTo(stack);
                     }
                     else
                     {
@@ -135,7 +135,7 @@ public class MoldItem extends Item
                             stack.shrink(1);
                             level.playSound(null, player.blockPosition(), TFCSounds.CERAMIC_BREAK.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
                         }
-                        return InteractionResultHolder.pass(stack);
+                        return InteractionResult.PASS;
                     }
                 }
             }
@@ -152,10 +152,10 @@ public class MoldItem extends Item
                 {
                     player.displayClientMessage(Component.translatable("tfc.tooltip.small_vessel.alloy_solid"), true);
                 }
-                return InteractionResultHolder.success(stack);
+                return InteractionResult.SUCCESS.heldItemTransformedTo(stack);
             }
         }
-        return InteractionResultHolder.pass(stack);
+        return InteractionResult.PASS;
     }
 
     @Override

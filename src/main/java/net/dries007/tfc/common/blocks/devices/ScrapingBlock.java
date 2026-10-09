@@ -12,7 +12,7 @@ import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -63,13 +63,13 @@ public class ScrapingBlock extends DeviceBlock
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         if (Helpers.isItem(stack, TFCTags.Items.SCRAPING_WAXES) && !state.getValue(WAXED))
         {
             if (!player.isCreative()) stack.shrink(1);
             level.setBlockAndUpdate(pos, state.setValue(WAXED, true));
-            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+            return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
         }
         if (level.getBlockEntity(pos) instanceof ScrapingBlockEntity scraping)
         {
@@ -81,7 +81,7 @@ public class ScrapingBlock extends DeviceBlock
                 {
                     doParticles(level, pos, scraping, point);
                     if (!player.isCreative()) stack.shrink(1);
-                    return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                    return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                 }
             }
             else if (Helpers.isItem(stack.getItem(), TFCTags.Items.TOOLS_KNIFE))
@@ -89,10 +89,10 @@ public class ScrapingBlock extends DeviceBlock
                 scraping.onClicked((float) point.x, (float) point.z);
                 Helpers.damageItem(stack, player, hand);
                 doParticles(level, pos, scraping, point);
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     private static void doParticles(Level level, BlockPos pos, ScrapingBlockEntity scraping, Vec3 point)

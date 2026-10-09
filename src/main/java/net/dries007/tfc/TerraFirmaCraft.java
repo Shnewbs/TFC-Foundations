@@ -57,10 +57,9 @@ import net.dries007.tfc.common.recipes.TFCRecipeTypes;
 import net.dries007.tfc.common.recipes.ingredients.TFCIngredients;
 import net.dries007.tfc.common.recipes.outputs.ItemStackModifiers;
 import net.dries007.tfc.common.recipes.outputs.PotOutput;
-import net.dries007.tfc.compat.jade.JadeIntegration;
+import net.dries007.tfc.compat.OptionalIntegrations;
 import net.dries007.tfc.compat.patchouli.PatchouliClientEventHandler;
 import net.dries007.tfc.compat.patchouli.PatchouliIntegration;
-import net.dries007.tfc.compat.theoneprobe.TheOneProbeIntegration;
 import net.dries007.tfc.config.TFCConfig;
 import net.dries007.tfc.network.PacketHandler;
 import net.dries007.tfc.util.DispenserBehaviors;
@@ -93,9 +92,9 @@ public final class TerraFirmaCraft
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public static final boolean JEI = ModList.get().isLoaded("jei");
-    public static final boolean EMI = ModList.get().isLoaded("emi");
-    public static final boolean JADE = ModList.get().isLoaded("jade");
-    public static final boolean THE_ONE_PROBE = ModList.get().isLoaded("theoneprobe");
+    public static final boolean EMI = OptionalIntegrations.EMI.isAvailable();
+    public static final boolean JADE = OptionalIntegrations.JADE.isAvailable();
+    public static final boolean THE_ONE_PROBE = OptionalIntegrations.THE_ONE_PROBE.isAvailable();
 
     public static final ResourceKey<WorldPreset> PRESET = ResourceKey.create(Registries.WORLD_PRESET, Helpers.identifier("overworld"));
 
@@ -195,7 +194,7 @@ public final class TerraFirmaCraft
             PatchouliClientEventHandler.init();
         }
 
-        if (THE_ONE_PROBE) TheOneProbeIntegration.init(bus);
+        OptionalIntegrations.initTheOneProbe(bus);
 
         NeoForgeMod.enableMilkFluid();
     }
@@ -227,7 +226,7 @@ public final class TerraFirmaCraft
         });
 
         PatchouliIntegration.registerMultiBlocks();
-        if (JADE) JadeIntegration.registerToolHandlers();
+        OptionalIntegrations.registerJadeToolHandlers();
     }
 
     public void registerRegistries(NewRegistryEvent event)

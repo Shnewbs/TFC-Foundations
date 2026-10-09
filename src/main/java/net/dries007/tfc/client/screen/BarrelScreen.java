@@ -6,7 +6,8 @@
 
 package net.dries007.tfc.client.screen;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -36,25 +37,24 @@ public class BarrelScreen extends BlockEntityScreen<BarrelBlockEntity, BarrelCon
 
     public BarrelScreen(BarrelContainer container, Inventory playerInventory, Component name)
     {
-        super(container, playerInventory, name, BACKGROUND);
-        inventoryLabelY += 12;
-        imageHeight += 12;
+        super(container, playerInventory, name, BACKGROUND, 176, 178);
+        inventoryLabelY = 84;
     }
 
     @Override
     public void init()
     {
         super.init();
-        addRenderableWidget(new BarrelSealButton(blockEntity, getGuiLeft(), getGuiTop(), isSealed() ? UNSEAL : SEAL));
+        addRenderableWidget(new BarrelSealButton(blockEntity, leftPos, topPos, isSealed() ? UNSEAL : SEAL));
     }
 
     @Override
-    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY)
+    protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
     {
-        super.renderLabels(graphics, mouseX, mouseY);
+        super.extractLabels(graphics, mouseX, mouseY);
         if (isSealed())
         {
-            drawDisabled(graphics, BarrelBlockEntity.SLOT_FLUID_CONTAINER_IN, BarrelBlockEntity.SLOT_ITEM);
+            highlightDisabledSlots(BarrelBlockEntity.SLOT_FLUID_CONTAINER_IN, BarrelBlockEntity.SLOT_ITEM);
 
             // Draw the text displaying both the seal date, and the recipe name
             final @Nullable Component recipe = blockEntity.getRecipeTooltip();
@@ -66,57 +66,56 @@ public class BarrelScreen extends BlockEntityScreen<BarrelBlockEntity, BarrelCon
                     int line = 0;
                     for (FormattedCharSequence text : font.split(recipe, MAX_RECIPE_NAME_LENGTH))
                     {
-                        graphics.drawString(font, text, 70 + Math.floorDiv(MAX_RECIPE_NAME_LENGTH - font.width(text), 2), titleLabelY + (line * font.lineHeight), 0x404040, false);
+                        graphics.text(font, text, 70 + Math.floorDiv(MAX_RECIPE_NAME_LENGTH - font.width(text), 2), titleLabelY + (line * font.lineHeight), 0xFF404040, false);
                         line++;
                     }
                 }
                 else
                 {
-                    graphics.drawString(font, recipe.getString(), 70 + Math.floorDiv(MAX_RECIPE_NAME_LENGTH - font.width(recipe), 2), 61, 0x404040, false);
+                    graphics.text(font, recipe.getString(), 70 + Math.floorDiv(MAX_RECIPE_NAME_LENGTH - font.width(recipe), 2), 61, 0xFF404040, false);
                 }
             }
             final String date = Calendars.CLIENT.getExactTimeAndDate(blockEntity.getSealedTick()).getString();
-            graphics.drawString(font, date, imageWidth / 2 - font.width(date) / 2, 74, 0x404040, false);
+            graphics.text(font, date, imageWidth / 2 - font.width(date) / 2, 74, 0xFF404040, false);
         }
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY)
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks)
     {
-        super.renderBg(graphics, partialTicks, mouseX, mouseY);
+        super.extractBackground(graphics, mouseX, mouseY, partialTicks);
 
         if (TerraFirmaCraft.JEI)
         {
-            graphics.blit(texture, getGuiLeft() + 92, getGuiTop() + 21, 227, 0, 9, 14);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, texture, leftPos + 92, topPos + 21, 227, 0, 9, 14, 256, 256);
         }
 
         final FluidStack fluidStack = blockEntity.getInventory().getFluidInTank(0);
         if (!fluidStack.isEmpty())
         {
-            final TextureAtlasSprite sprite = RenderHelpers.getAndBindFluidSprite(fluidStack);
+            final TextureAtlasSprite sprite = RenderHelpers.getFluidSprite(fluidStack);
             final int fillHeight = (int) Math.ceil((float) 50 * fluidStack.getAmount() / (float) TFCConfig.SERVER.barrelCapacity.get());
 
-            RenderHelpers.fillAreaWithSprite(graphics, sprite, leftPos + 8, topPos + 70 - fillHeight, 16, fillHeight, 16, 16);
+            RenderHelpers.fillAreaWithSprite(graphics, sprite, leftPos + 8, topPos + 70 - fillHeight, 16, fillHeight, 16, 16, RenderHelpers.getFluidColor(fluidStack));
 
-            resetToBackgroundSprite();
         }
 
-        graphics.blit(texture, getGuiLeft() + 7, getGuiTop() + 19, 176, 0, 18, 52);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, texture, leftPos + 7, topPos + 19, 176, 0, 18, 52, 256, 256);
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY)
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
     {
-        super.renderTooltip(graphics, mouseX, mouseY);
-        final int relX = mouseX - getGuiLeft();
-        final int relY = mouseY - getGuiTop();
+        super.extractTooltip(graphics, mouseX, mouseY);
+        final int relX = mouseX - leftPos;
+        final int relY = mouseY - topPos;
 
         if (relX >= 7 && relY >= 19 && relX < 25 && relY < 71)
         {
             final FluidStack fluid = blockEntity.getInventory().getFluidInTank(0);
             if (!fluid.isEmpty())
             {
-                graphics.renderTooltip(font, Tooltips.fluidUnitsOf(fluid), mouseX, mouseY);
+                graphics.setTooltipForNextFrame(font, Tooltips.fluidUnitsOf(fluid), mouseX, mouseY);
             }
         }
     }

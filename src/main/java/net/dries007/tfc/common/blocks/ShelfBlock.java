@@ -9,7 +9,7 @@ package net.dries007.tfc.common.blocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -57,7 +57,7 @@ public class ShelfBlock extends PlacedItemBlock
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         // Query for a shelf block entity, and don't allow conversion into pit kilns
         // Additionally, if we interact with the top of this block, then we actually want to simulate placing a placed item above the block,
@@ -76,7 +76,7 @@ public class ShelfBlock extends PlacedItemBlock
                 {
                     level.setBlockAndUpdate(above, toPlace);
                     level.getBlockEntity(above, TFCBlockEntities.PLACED_ITEM.get()).ifPresent(e -> e.insertItem(player, stack, hitResult));
-                    return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                    return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                 }
             }
         }
@@ -87,10 +87,10 @@ public class ShelfBlock extends PlacedItemBlock
             final PlacedItemBlockEntity placedItem = level.getBlockEntity(pos, TFCBlockEntities.SHELF.get()).orElse(null);
             if (placedItem != null && placedItem.onRightClick(player, player.getItemInHand(hand), hitResult))
             {
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override

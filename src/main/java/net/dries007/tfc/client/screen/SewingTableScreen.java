@@ -9,7 +9,9 @@ package net.dries007.tfc.client.screen;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.RegistryAccess;
@@ -20,11 +22,11 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.apache.commons.lang3.function.TriFunction;
 import org.apache.logging.log4j.util.TriConsumer;
 import org.jetbrains.annotations.Nullable;
@@ -80,9 +82,8 @@ public class SewingTableScreen extends TFCContainerScreen<SewingTableContainer>
 
     public SewingTableScreen(SewingTableContainer menu, Inventory playerInventory, Component title)
     {
-        super(menu, playerInventory, title, TEXTURE);
-        imageHeight += 30;
-        inventoryLabelY += 30;
+        super(menu, playerInventory, title, TEXTURE, 176, 196);
+        inventoryLabelY = 102;
         titleLabelY -= 1;
     }
 
@@ -124,7 +125,7 @@ public class SewingTableScreen extends TFCContainerScreen<SewingTableContainer>
                 }
                 if (menu.getCarried().isEmpty() && !showRecipes)
                 {
-                    PacketDistributor.sendToServer(new ScreenButtonPacket(packetButtonId));
+                    ClientPacketDistributor.sendToServer(new ScreenButtonPacket(packetButtonId));
                 }
             }, Component.translatable(translationKey));
             button.setTooltip(Tooltip.create(Component.translatable(translationKey)));
@@ -134,7 +135,7 @@ public class SewingTableScreen extends TFCContainerScreen<SewingTableContainer>
             button = new LegacyImageButton(x, y, sizeX, sizeY, u, v, yDiffTex, true, TEXTURE, btn -> {
                 if (menu.getCarried().isEmpty() && !showRecipes)
                 {
-                    PacketDistributor.sendToServer(new ScreenButtonPacket(packetButtonId));
+                    ClientPacketDistributor.sendToServer(new ScreenButtonPacket(packetButtonId));
                 }
             }, CommonComponents.EMPTY);
         }
@@ -142,8 +143,11 @@ public class SewingTableScreen extends TFCContainerScreen<SewingTableContainer>
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button)
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick)
     {
+        final double mouseX = event.x();
+        final double mouseY = event.y();
+        final int button = event.button();
         final int sewX = getSewingX(mouseX);
         final int sewY = getSewingY(mouseY);
         if (showRecipes && isSewing(mouseX, mouseY))
@@ -184,7 +188,7 @@ public class SewingTableScreen extends TFCContainerScreen<SewingTableContainer>
                     final CompoundTag tag = new CompoundTag();
                     tag.putInt("id", i);
                     tag.putInt("stitchType", mat == SewingTableContainer.NEEDLE_ID ? 1 : 0);
-                    PacketDistributor.sendToServer(new ScreenButtonPacket(SewingTableContainer.PLACE_STITCH_ID, tag));
+                    ClientPacketDistributor.sendToServer(new ScreenButtonPacket(SewingTableContainer.PLACE_STITCH_ID, tag));
                     return true;
                 }
                 return false;
@@ -192,11 +196,11 @@ public class SewingTableScreen extends TFCContainerScreen<SewingTableContainer>
             if (mat == SewingTableContainer.NEEDLE_ID)
                 return true;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Override
-    protected void slotClicked(Slot slot, int slotId, int mouseButton, ClickType type)
+    protected void slotClicked(Slot slot, int slotId, int mouseButton, ContainerInput type)
     {
         if (slotId == SewingTableContainer.SLOT_RESULT)
             selectedRecipe = null;
@@ -204,31 +208,34 @@ public class SewingTableScreen extends TFCContainerScreen<SewingTableContainer>
     }
 
     @Override
-    public boolean mouseDragged(double x, double y, int clickType, double dragX, double dragY)
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY)
     {
+        final double x = event.x();
+        final double y = event.y();
+        final int clickType = event.button();
         if (clickType == 0 && menu.getActiveMaterial() != SewingTableContainer.NEEDLE_ID && isSewing(x, y))
         {
-            mouseClicked(x, y, clickType);
+            mouseClicked(event, false);
         }
-        return super.mouseDragged(x, y, clickType, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
-    public void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY)
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick)
     {
-        super.renderBg(graphics, partialTick, mouseX, mouseY);
+        super.extractBackground(graphics, mouseX, mouseY, partialTick);
         forEachClothSquare((x, y, i) -> {
             final int mat = menu.getPlacedMaterial(i);
             if (mat != SewingTableContainer.EMPTY_ID)
             {
-                graphics.blit(TEXTURE, getScreenX(x * 12 + 6), getScreenY(y * 12 + 6), 208, mat == SewingTableContainer.BURLAP_ID ? 16 : 0, 12, 12);
+                graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, getScreenX(x * 12 + 6), getScreenY(y * 12 + 6), 208, mat == SewingTableContainer.BURLAP_ID ? 16 : 0, 12, 12, 256, 256);
             }
             else if (selectedRecipe != null)
             {
                 final int recipeMat = selectedRecipe.getSquare(i);
                 if (recipeMat != SewingTableContainer.EMPTY_ID)
                 {
-                    graphics.blit(TEXTURE, getScreenX(x * 12 + 6), getScreenY(y * 12 + 6), 208, recipeMat == SewingTableContainer.BURLAP_ID ? 80 : 64, 12, 12);
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, getScreenX(x * 12 + 6), getScreenY(y * 12 + 6), 208, recipeMat == SewingTableContainer.BURLAP_ID ? 80 : 64, 12, 12, 256, 256);
                 }
             }
         });
@@ -237,44 +244,35 @@ public class SewingTableScreen extends TFCContainerScreen<SewingTableContainer>
             final int stitch = menu.getStitchAt(i);
             if (stitch == 1)
             {
-                graphics.blit(TEXTURE, getScreenX(x * 12 + 6) - 2, getScreenY(y * 12 + 6) - 2, 2, 192, 0, 5, 5, 256, 256);
+                graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, getScreenX(x * 12 + 6) - 2, getScreenY(y * 12 + 6) - 2, 192, 0, 5, 5, 256, 256);
             }
             else if (selectedRecipe != null && selectedRecipe.getStitch(i))
             {
-                graphics.blit(TEXTURE, getScreenX(x * 12 + 6) - 2, getScreenY(y * 12 + 6) - 2, 2, 192, 64, 5, 5, 256, 256);
+                graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, getScreenX(x * 12 + 6) - 2, getScreenY(y * 12 + 6) - 2, 192, 64, 5, 5, 256, 256);
             }
             return false;
         });
     }
 
     @Override
-    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY)
+    protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
     {
-        super.renderLabels(graphics, mouseX, mouseY);
-
-        if (!menu.canPickup(SewingTableContainer.SLOT_YARN))
-            renderSlotHighlight(graphics, 8, 83, 1);
-        if (!menu.canPickup(SewingTableContainer.SLOT_INPUT_1))
-            renderSlotHighlight(graphics, 62, 83, 1);
-        if (!menu.canPickup(SewingTableContainer.SLOT_INPUT_2))
-            renderSlotHighlight(graphics, 80, 83, 1);
-        if (!menu.canPickup(SewingTableContainer.SLOT_TOOL))
-            renderSlotHighlight(graphics, 26, 83, 1);
+        super.extractLabels(graphics, mouseX, mouseY);
 
         if (menu.getCarried().isEmpty() && RenderHelpers.isInside(mouseX, mouseY, leftPos, topPos, imageWidth, imageHeight) && !showRecipes)
         {
             final int mat = menu.getActiveMaterial();
             if (mat == SewingTableContainer.BURLAP_ID)
             {
-                graphics.blit(TEXTURE, mouseX - leftPos, mouseY - topPos, 208, 16, 12, 12);
+                graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, mouseX - leftPos, mouseY - topPos, 208, 16, 12, 12, 256, 256);
             }
             else if (mat == SewingTableContainer.WOOL_ID)
             {
-                graphics.blit(TEXTURE, mouseX - leftPos, mouseY - topPos, 208, 0, 12, 12);
+                graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, mouseX - leftPos, mouseY - topPos, 208, 0, 12, 12, 256, 256);
             }
             else if (mat == SewingTableContainer.REMOVE_ID || mat == SewingTableContainer.NEEDLE_ID)
             {
-                graphics.blit(TEXTURE, mouseX - leftPos, mouseY - topPos, 208, 48, 16, 16);
+                graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, mouseX - leftPos, mouseY - topPos, 208, 48, 16, 16, 256, 256);
             }
         }
 
@@ -282,9 +280,9 @@ public class SewingTableScreen extends TFCContainerScreen<SewingTableContainer>
         final int woolCount = menu.getWoolCount();
         final int yarnCount = menu.getYarnCount();
 
-        graphics.drawString(Minecraft.getInstance().font, String.valueOf(Math.min(burlapCount, 99)), 135, 25, burlapCount == 0 ? 0x404040 : 0xFFFFFF);
-        graphics.drawString(Minecraft.getInstance().font, String.valueOf(Math.min(woolCount, 99)), 160, 25, woolCount == 0 ? 0x404040 : 0xFFFFFF);
-        graphics.drawString(Minecraft.getInstance().font, String.valueOf(Math.min(yarnCount, 99)), 160, 48, yarnCount == 0 ? 0x404040 : 0xFFFFFF);
+        graphics.text(Minecraft.getInstance().font, String.valueOf(Math.min(burlapCount, 99)), 135, 25, (burlapCount == 0 ? 0x404040 : 0xFFFFFF) | 0xFF000000);
+        graphics.text(Minecraft.getInstance().font, String.valueOf(Math.min(woolCount, 99)), 160, 25, (woolCount == 0 ? 0x404040 : 0xFFFFFF) | 0xFF000000);
+        graphics.text(Minecraft.getInstance().font, String.valueOf(Math.min(yarnCount, 99)), 160, 48, (yarnCount == 0 ? 0x404040 : 0xFFFFFF) | 0xFF000000);
 
         if (showRecipes)
         {
@@ -292,7 +290,23 @@ public class SewingTableScreen extends TFCContainerScreen<SewingTableContainer>
         }
     }
 
-    private void renderRecipes(GuiGraphics graphics, int mouseX, int mouseY)
+    @Override
+    protected void extractSlots(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
+    {
+        super.extractSlots(graphics, mouseX, mouseY);
+
+        if (!menu.canPickup(SewingTableContainer.SLOT_YARN))
+            graphics.fill(8, 83, 24, 99, 0x80FFFFFF);
+        if (!menu.canPickup(SewingTableContainer.SLOT_INPUT_1))
+            graphics.fill(62, 83, 78, 99, 0x80FFFFFF);
+        if (!menu.canPickup(SewingTableContainer.SLOT_INPUT_2))
+            graphics.fill(80, 83, 96, 99, 0x80FFFFFF);
+        if (!menu.canPickup(SewingTableContainer.SLOT_TOOL))
+            graphics.fill(26, 83, 42, 99, 0x80FFFFFF);
+
+    }
+
+    private void renderRecipes(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
     {
         graphics.fillGradient(8, 14, 119, 77, -1072689136, -804253680);
         final RegistryAccess access = ClientHelpers.getLevelOrThrow().registryAccess();
@@ -305,21 +319,21 @@ public class SewingTableScreen extends TFCContainerScreen<SewingTableContainer>
             if (i == 16)
             {
                 if (hasLeftPage())
-                    graphics.blit(TEXTURE, x, y, 192, 144, 16, 16);
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x, y, 192, 144, 16, 16, 256, 256);
             }
             else if (i == 17)
             {
                 if (hasRightPage())
-                    graphics.blit(TEXTURE, x, y, 208, 144, 16, 16);
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x, y, 208, 144, 16, 16, 256, 256);
             }
             else if (idx < recipes.size())
             {
                 final SewingRecipe recipe = recipes.get(idx);
                 final ItemStack item = recipe.getResultItem(access);
-                graphics.renderItem(item, x, y, 1);
+                graphics.item(item, x, y, 1);
                 if (RenderHelpers.isInside(mouseX - leftPos, mouseY - topPos, x, y, 16, 16))
                 {
-                    graphics.renderTooltip(Minecraft.getInstance().font, item, x + 8, y + 8);
+                    graphics.setTooltipForNextFrame(Minecraft.getInstance().font, item, x + 8, y + 8);
                 }
             }
         }

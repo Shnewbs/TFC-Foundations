@@ -105,6 +105,6 @@ public class WingedPrey extends Prey implements Pluckable
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand)
     {
-        return pluck(player, hand, this) ? InteractionResult.sidedSuccess(level().isClientSide) : super.mobInteract(player, hand);
+        return pluck(player, hand, this) ? (level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME) : super.mobInteract(player, hand);
     }
 }

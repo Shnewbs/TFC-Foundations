@@ -246,14 +246,9 @@ public class TFCChunkGenerator extends ChunkGenerator implements ChunkGeneratorE
     }
 
     @Override
-    public void applyCarvers(WorldGenRegion level, long seed, RandomState state, BiomeManager biomeManager, StructureManager structureFeatureManager, ChunkAccess chunk, GenerationStep.Carving step)
+    public void applyCarvers(WorldGenRegion level, long seed, RandomState state, BiomeManager biomeManager, StructureManager structureFeatureManager, ChunkAccess chunk)
     {
-        // Skip water carving, only do air carving, since we use aquifers
-        if (step != GenerationStep.Carving.AIR)
-        {
-            return;
-        }
-
+        // Minecraft now has one carving pass; the TFC aquifer chooses air or fluid.
         final BiomeManager customBiomeManager = biomeManager.withDifferentSource((x, y, z) -> customBiomeSource.getBiome(x, z));
         final PositionalRandomFactory fork = new XoroshiroRandomSource(seed).forkPositional();
         final ChunkPos chunkPos = chunk.getPos();
@@ -263,7 +258,7 @@ public class TFCChunkGenerator extends ChunkGenerator implements ChunkGeneratorE
         final TFCAquifer aquifer = getOrCreateAquifer(chunk, settings, baseBlockSource);
 
         @SuppressWarnings("ConstantConditions") final CarvingContext context = new CarvingContext(stupidMojangChunkGenerator, null, chunk.getHeightAccessorForGeneration(), null, state, this.noiseSettings.value().surfaceRule());
-        final CarvingMask carvingMask = ((ProtoChunk) chunk).getOrCreateCarvingMask(step);
+        final CarvingMask carvingMask = ((ProtoChunk) chunk).getOrCreateCarvingMask();
 
         for (int offsetX = -8; offsetX <= 8; ++offsetX)
         {
@@ -274,7 +269,7 @@ public class TFCChunkGenerator extends ChunkGenerator implements ChunkGeneratorE
 
                 @SuppressWarnings("deprecation") final Iterable<Holder<ConfiguredWorldCarver<?>>> iterable = offsetChunk
                     .carverBiome(() -> customBiomeSource.getBiome(QuartPos.fromBlock(offsetChunkPos.getMinBlockX()), QuartPos.fromBlock(offsetChunkPos.getMinBlockZ())).value().getGenerationSettings())
-                    .getCarvers(step);
+                    .getCarvers();
 
                 int i = 1;
                 for (Holder<ConfiguredWorldCarver<?>> holder : iterable)
@@ -296,10 +291,10 @@ public class TFCChunkGenerator extends ChunkGenerator implements ChunkGeneratorE
     public void applyBiomeDecoration(WorldGenLevel level, ChunkAccess chunk, StructureManager structureFeatureManager)
     {
         final ChunkPos chunkPos = chunk.getPos();
-        final SectionPos sectionPos = SectionPos.of(chunkPos, level.getMinSection());
+        final SectionPos sectionPos = SectionPos.of(chunkPos, level.getMinSectionY());
         final BlockPos originPos = sectionPos.origin();
 
-        final Registry<Structure> structureFeatures = level.registryAccess().registryOrThrow(Registries.STRUCTURE);
+        final Registry<Structure> structureFeatures = level.registryAccess().lookupOrThrow(Registries.STRUCTURE);
         final Map<Integer, List<Structure>> structureFeaturesByStep = structureFeatures.stream()
             .collect(Collectors.groupingBy(feature -> feature.step().ordinal()));
 
@@ -381,7 +376,7 @@ public class TFCChunkGenerator extends ChunkGenerator implements ChunkGeneratorE
         if (!this.noiseSettings.value().disableMobGeneration())
         {
             final ChunkPos pos = level.getCenter();
-            final Holder<Biome> biome = level.getBiome(pos.getWorldPosition().atY(level.getMaxBuildHeight() - 1));
+            final Holder<Biome> biome = level.getBiome(pos.getWorldPosition().atY(level.getMaxY()));
             final WorldgenRandom random = new WorldgenRandom(new XoroshiroRandomSource(RandomSupport.generateUniqueSeed()));
             random.setDecorationSeed(level.getSeed(), pos.getMinBlockX(), pos.getMinBlockZ());
 
@@ -527,7 +522,7 @@ public class TFCChunkGenerator extends ChunkGenerator implements ChunkGeneratorE
         final ChunkPos pos = chunk.getPos();
         final int blockX = pos.getMinBlockX(), blockZ = pos.getMinBlockZ();
         final LevelHeightAccessor level = chunk.getHeightAccessorForGeneration();
-        return new BoundingBox(blockX, level.getMinBuildHeight() + 1, blockZ, blockX + 15, level.getMaxBuildHeight() - 1, blockZ + 15);
+        return new BoundingBox(blockX, level.getMinY() + 1, blockZ, blockX + 15, level.getMaxY(), blockZ + 15);
     }
 
     private BiomeExtension sampleBiomeNoRiver(int blockX, int blockZ)
@@ -553,8 +548,8 @@ public class TFCChunkGenerator extends ChunkGenerator implements ChunkGeneratorE
         final int cellWidth = noiseSettings.getCellWidth();
         final int cellHeight = noiseSettings.getCellHeight();
 
-        final int minY = Math.max(noiseSettings.minY(), level.getMinBuildHeight());
-        final int maxY = Math.min(noiseSettings.minY() + noiseSettings.height(), level.getMaxBuildHeight());
+        final int minY = Math.max(noiseSettings.minY(), level.getMinY());
+        final int maxY = Math.min(noiseSettings.minY() + noiseSettings.height(), level.getMaxY() + 1);
 
         final int cellCountY = Math.floorDiv(maxY - minY, noiseSettings.getCellHeight());
 

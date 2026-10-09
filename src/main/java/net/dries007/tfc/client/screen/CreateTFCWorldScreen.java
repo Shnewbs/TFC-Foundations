@@ -9,7 +9,7 @@ package net.dries007.tfc.client.screen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.layouts.FrameLayout;
@@ -71,11 +71,10 @@ public class CreateTFCWorldScreen extends Screen
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick)
     {
-        renderBackground(graphics, mouseX, mouseY, partialTick);
-        super.render(graphics, mouseX, mouseY, partialTick);
-        graphics.drawCenteredString(font, title, width / 2, 4, 16777215);
+        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
+        graphics.centeredText(font, title, width / 2, 4, 0xFFFFFFFF);
     }
 
     @Override
@@ -99,7 +98,7 @@ public class CreateTFCWorldScreen extends Screen
         temperatureConstant = constOption("tfc.create_world.temperature_constant", settings.temperatureConstant());
         rainfallConstant = constOption("tfc.create_world.rainfall_constant", settings.rainfallConstant());
         continentalness = pctOption("tfc.create_world.continentalness", settings.continentalness());
-        grassDensity = pctOption("tfc.create_world.grass_density", settings.continentalness());
+        grassDensity = pctOption("tfc.create_world.grass_density", settings.grassDensity());
         finiteContinents = OptionInstance.createBoolean("tfc.create_world.finite_continents", settings.finiteContinents(), value -> {});
         builder.addChild(smallButton(flatBedrock));
         builder.addChild(smallButton(spawnDistance));

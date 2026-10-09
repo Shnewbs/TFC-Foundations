@@ -14,7 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -133,10 +133,10 @@ public abstract class CropBlock extends net.minecraft.world.level.block.CropBloc
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         return CropHelpers.useFertilizer(level, player, hand, pos.below())
-            ? ItemInteractionResult.sidedSuccess(level.isClientSide)
+            ? (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME)
             : super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
 

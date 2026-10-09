@@ -12,7 +12,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -132,12 +132,12 @@ public class ComposterBlockEntity extends InventoryBlockEntity<ItemStackHandler>
         super.saveAdditional(nbt, provider);
     }
 
-    public ItemInteractionResult use(ItemStack stack, Player player, boolean client)
+    public InteractionResult use(ItemStack stack, Player player, boolean client)
     {
         assert level != null;
         final boolean rotten = isRotten();
         final BlockPos pos = getBlockPos();
-        if (player.blockPosition().equals(pos)) return ItemInteractionResult.FAIL;
+        if (player.blockPosition().equals(pos)) return InteractionResult.FAIL;
         final Compost compost = getCompost(stack);
         if (stack.isEmpty() && player.isShiftKeyDown()) // extract compost
         {
@@ -201,7 +201,7 @@ public class ComposterBlockEntity extends InventoryBlockEntity<ItemStackHandler>
             Helpers.playSound(level, pos, SoundEvents.HOE_TILL);
             return finishUse(client);
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     public void resetCounter()
@@ -216,7 +216,7 @@ public class ComposterBlockEntity extends InventoryBlockEntity<ItemStackHandler>
         return Calendars.get(level).getTicks() - lastUpdateTick;
     }
 
-    public ItemInteractionResult finishUse(boolean client)
+    public InteractionResult finishUse(boolean client)
     {
         if (!client)
         {
@@ -233,7 +233,7 @@ public class ComposterBlockEntity extends InventoryBlockEntity<ItemStackHandler>
             setState(stage);
             markForSync();
         }
-        return ItemInteractionResult.sidedSuccess(client);
+        return (client ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
     }
 
     private int getRottenCount()

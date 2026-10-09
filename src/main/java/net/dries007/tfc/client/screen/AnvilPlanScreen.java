@@ -48,7 +48,7 @@ public class AnvilPlanScreen extends BlockEntityScreen<AnvilBlockEntity, AnvilPl
         super.init();
 
         final int recipesPerPage = 18;
-        final int guiLeft = getGuiLeft(), guiTop = getGuiTop();
+        final int guiLeft = leftPos, guiTop = topPos;
 
         final ItemStack inputStack = blockEntity.getInventory().getStackInSlot(AnvilBlockEntity.SLOT_INPUT_MAIN);
         final List<RecipeHolder<AnvilRecipe>> recipes = AnvilRecipe.getAll(playerInventory.player.level(), inputStack, blockEntity.getTier());

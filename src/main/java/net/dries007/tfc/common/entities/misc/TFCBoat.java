@@ -51,7 +51,7 @@ public class TFCBoat extends Boat
                 boat.setChestItem(item.split(1));
                 level().addFreshEntity(boat);
                 discard();
-                return InteractionResult.sidedSuccess(level().isClientSide);
+                return (level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
         }
         return super.interact(player, hand);

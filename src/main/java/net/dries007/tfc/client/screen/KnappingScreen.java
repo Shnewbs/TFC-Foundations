@@ -9,9 +9,10 @@ package net.dries007.tfc.client.screen;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -37,6 +38,7 @@ public class KnappingScreen extends TFCContainerScreen<KnappingContainer>
     private final Identifier buttonLocation;
     @Nullable private final Identifier buttonDisabledLocation;
     private final List<ScreenParticle> particles = new ArrayList<>();
+    private final RandomSource random = RandomSource.create();
 
     public static Identifier getHighTexture(ItemStack stack)
     {
@@ -56,9 +58,8 @@ public class KnappingScreen extends TFCContainerScreen<KnappingContainer>
 
     public KnappingScreen(KnappingContainer container, Inventory inv, Component name)
     {
-        super(container, inv, name, BACKGROUND);
-        imageHeight = 186;
-        inventoryLabelY += 22;
+        super(container, inv, name, BACKGROUND, 176, 186);
+        inventoryLabelY = 94;
         titleLabelY -= 2;
 
         final ItemStack stack = container.getOriginalStack();
@@ -75,8 +76,8 @@ public class KnappingScreen extends TFCContainerScreen<KnappingContainer>
         {
             for (int y = 0; y < KnappingPattern.MAX_HEIGHT; y++)
             {
-                int bx = (width - getXSize()) / 2 + 12 + 16 * x;
-                int by = (height - getYSize()) / 2 + 12 + 16 * y;
+                int bx = (width - imageWidth) / 2 + 12 + 16 * x;
+                int by = (height - imageHeight) / 2 + 12 + 16 * y;
                 addRenderableWidget(new KnappingButton(x + 5 * y, bx, by, 16, 16, buttonLocation, menu.getKnappingType().clickSound(), this::spawnParticles));
             }
         }
@@ -87,7 +88,6 @@ public class KnappingScreen extends TFCContainerScreen<KnappingContainer>
     {
         if (button instanceof KnappingButton knappingButton && menu.getKnappingType().spawnsParticles() && TFCConfig.CLIENT.enableScreenParticles.get() && ClientHelpers.useFancyGraphics())
         {
-            final RandomSource random = Minecraft.getInstance().font.random;
             final int amount = Mth.nextInt(random, 0, 3);
             for (int i = 0; i < amount; i++)
             {
@@ -109,12 +109,12 @@ public class KnappingScreen extends TFCContainerScreen<KnappingContainer>
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY)
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks)
     {
         // Check if the container has been updated
         if (menu.requiresReset())
         {
-            for (Renderable widget : renderables)
+            for (var widget : children())
             {
                 if (widget instanceof KnappingButton button)
                 {
@@ -124,28 +124,28 @@ public class KnappingScreen extends TFCContainerScreen<KnappingContainer>
             menu.setRequiresReset(false);
         }
 
-        super.renderBg(graphics, partialTicks, mouseX, mouseY);
+        super.extractBackground(graphics, mouseX, mouseY, partialTicks);
 
-        for (Renderable widget : renderables)
+        for (var widget : children())
         {
             if (widget instanceof KnappingButton button)
             {
                 if (button.visible) // Active button
                 {
-                    graphics.blit(buttonLocation, button.getX(), button.getY(), 0, 0, 16, 16, 16, 16);
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, buttonLocation, button.getX(), button.getY(), 0, 0, 16, 16, 16, 16);
                 }
                 else if (buttonDisabledLocation != null) // Disabled / background texture
                 {
-                    graphics.blit(buttonDisabledLocation, button.getX(), button.getY(), 0, 0, 16, 16, 16, 16);
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, buttonDisabledLocation, button.getX(), button.getY(), 0, 0, 16, 16, 16, 16);
                 }
             }
         }
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick)
     {
-        super.render(graphics, mouseX, mouseY, partialTick);
+        super.extractRenderState(graphics, mouseX, mouseY, partialTick);
         for (ScreenParticle particle : particles)
         {
             particle.render(graphics);
@@ -153,28 +153,34 @@ public class KnappingScreen extends TFCContainerScreen<KnappingContainer>
     }
 
     @Override
-    public boolean mouseDragged(double x, double y, int clickType, double dragX, double dragY)
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY)
     {
+        final double x = event.x();
+        final double y = event.y();
+        final int clickType = event.button();
         if (clickType == 0)
         {
-            mouseClicked(x, y, clickType);
+            mouseClicked(event, false);
         }
-        return super.mouseDragged(x, y, clickType, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
-    public boolean mouseClicked(double x, double y, int clickType)
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick)
     {
+        final double x = event.x();
+        final double y = event.y();
+        final int clickType = event.button();
         if (clickType == 0)
         {
             undoAccidentalButtonPress(x, y);
         }
-        return super.mouseClicked(x, y, clickType);
+        return super.mouseClicked(event, doubleClick);
     }
 
     private void undoAccidentalButtonPress(double x, double y)
     {
-        for (Renderable widget : renderables)
+        for (var widget : children())
         {
             if (widget instanceof KnappingButton button && button.isMouseOver(x, y))
             {

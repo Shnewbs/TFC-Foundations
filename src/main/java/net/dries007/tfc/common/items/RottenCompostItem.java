@@ -56,7 +56,7 @@ public class RottenCompostItem extends Item
                 }
                 context.getItemInHand().shrink(1);
             }
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
         }
         return super.useOn(context);
     }

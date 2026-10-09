@@ -72,6 +72,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeMap;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.ItemLike;
@@ -432,17 +433,17 @@ public final class Helpers
         return state.hasProperty(property) ? state.setValue(property, value) : state;
     }
 
-    public static RecipeManager getUnsafeRecipeManager()
+    public static RecipeMap getUnsafeRecipeMap()
     {
         final MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         if (server != null)
         {
-            return server.getRecipeManager();
+            return ((RecipeManagerAccessor) server.getRecipeManager()).accessor$getRecipes();
         }
 
         try
         {
-            final RecipeManager client = ClientHelpers.tryGetSafeRecipeManager();
+            final RecipeMap client = ClientHelpers.tryGetSafeRecipeMap();
             if (client != null)
             {
                 return client;
@@ -455,7 +456,7 @@ public final class Helpers
 
         if (CACHED_RECIPE_MANAGER != null)
         {
-            return CACHED_RECIPE_MANAGER;
+            return ((RecipeManagerAccessor) CACHED_RECIPE_MANAGER).accessor$getRecipes();
         }
 
         throw new IllegalStateException("No recipe manager was present - tried server, client, and captured value. This will cause problems!");
@@ -467,6 +468,11 @@ public final class Helpers
     }
 
     public static void updateReloadableData(RegistryAccess access, RecipeManager manager)
+    {
+        updateReloadableData(access, ((RecipeManagerAccessor) manager).accessor$getRecipes());
+    }
+
+    public static void updateReloadableData(RegistryAccess access, RecipeMap manager)
     {
         // First, reload all caches
         IndirectHashCollection.reloadAllCaches(manager);
@@ -480,10 +486,9 @@ public final class Helpers
 
         SelfTests.runDataPackTests(manager);
 
-        final RecipeManagerAccessor accessor = (RecipeManagerAccessor) manager;
         for (RecipeType<?> type : BuiltInRegistries.RECIPE_TYPE)
         {
-            LOGGER.debug("Loaded {} recipes of type {}", accessor.invoke$byType((RecipeType) type).size(), BuiltInRegistries.RECIPE_TYPE.getKey(type));
+            LOGGER.debug("Loaded {} recipes of type {}", manager.byType((RecipeType) type).size(), BuiltInRegistries.RECIPE_TYPE.getKey(type));
         }
     }
 
@@ -1029,7 +1034,7 @@ public final class Helpers
      */
     public static void fireSpreaderTick(ServerLevel level, BlockPos pos, RandomSource random, int radius)
     {
-        if (level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK))
+        if (level.canSpreadFireAround(pos))
         {
             for (int i = 0; i < radius; i++)
             {
@@ -1113,7 +1118,7 @@ public final class Helpers
      */
     public static void spawnDropsAtExactCenter(Level level, BlockPos pos, ItemStack stack)
     {
-        if (!level.isClientSide && !stack.isEmpty() && level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS) && !level.restoringBlockSnapshots)
+        if (level instanceof ServerLevel serverLevel && !stack.isEmpty() && serverLevel.getGameRules().get(GameRules.BLOCK_DROPS) && !level.restoringBlockSnapshots)
         {
             ItemEntity entity = new ItemEntity(level, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, stack, 0D, 0D, 0D);
             entity.setDefaultPickUpDelay();

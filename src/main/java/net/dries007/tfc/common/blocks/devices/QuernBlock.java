@@ -6,12 +6,12 @@
 
 package net.dries007.tfc.common.blocks.devices;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import org.jetbrains.annotations.Nullable;
+
 import com.mojang.math.Constants;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -86,7 +86,7 @@ public class QuernBlock extends DeviceBlock implements IHighlightHandler
         return SelectionPlace.BASE;
     }
 
-    private static ItemInteractionResult insertOrExtract(Level level, QuernBlockEntity quern, IItemHandler inventory, Player player, ItemStack stack, int slot)
+    private static InteractionResult insertOrExtract(Level level, QuernBlockEntity quern, IItemHandler inventory, Player player, ItemStack stack, int slot)
     {
         if (!stack.isEmpty())
         {
@@ -102,7 +102,7 @@ public class QuernBlock extends DeviceBlock implements IHighlightHandler
         }
         quern.setAndUpdateSlots(slot);
         quern.markForSync();
-        return ItemInteractionResult.sidedSuccess(level.isClientSide);
+        return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
     }
 
     public static final BooleanProperty HAS_HANDSTONE = TFCBlockStateProperties.HAS_HANDSTONE;
@@ -133,7 +133,7 @@ public class QuernBlock extends DeviceBlock implements IHighlightHandler
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         final QuernBlockEntity quern = level.getBlockEntity(pos, TFCBlockEntities.QUERN.get()).orElse(null);
         if (quern != null && !quern.isGrinding())
@@ -151,14 +151,14 @@ public class QuernBlock extends DeviceBlock implements IHighlightHandler
                 case BASE -> insertOrExtract(level, quern, inventory, player, ItemStack.EMPTY, SLOT_OUTPUT);
             };
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
-    private ItemInteractionResult attemptGrind(Level level, BlockPos pos, QuernBlockEntity quern)
+    private InteractionResult attemptGrind(Level level, BlockPos pos, QuernBlockEntity quern)
     {
         return !quern.isConnectedToNetwork() && quern.startGrinding()
-            ? ItemInteractionResult.sidedSuccess(level.isClientSide)
-            : ItemInteractionResult.FAIL;
+            ? (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME)
+            : InteractionResult.FAIL;
     }
 
     @Override
@@ -174,15 +174,11 @@ public class QuernBlock extends DeviceBlock implements IHighlightHandler
     }
 
     @Override
-    public boolean drawHighlight(Level level, BlockPos pos, Player player, BlockHitResult rayTrace, PoseStack poseStack, MultiBufferSource buffers, Vec3 renderPos)
+    @Nullable
+    public IHighlightHandler.Highlight extractHighlight(Level level, BlockPos pos, Player player, BlockHitResult hit)
     {
-        SelectionPlace selection = getPlayerSelection(level, pos, player, rayTrace);
-        if (selection != SelectionPlace.BASE)
-        {
-            IHighlightHandler.drawBox(poseStack, selection.shape, buffers, pos, renderPos, 1.0F, 0.0F, 0.0F, 0.4F);
-            return true;
-        }
-        return false;
+        final SelectionPlace selection = getPlayerSelection(level, pos, player, hit);
+        return selection != SelectionPlace.BASE ? new IHighlightHandler.Highlight(selection.shape, 0x66FF0000) : null;
     }
 
     /**

@@ -17,7 +17,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.mojang.logging.LogUtils;
@@ -27,20 +26,21 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryOps;
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.util.ExtraCodecs;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import net.dries007.tfc.util.SelfTests;
 
 
-public class DataManager<T> extends SimpleJsonResourceReloadListener
+public class DataManager<T> extends SimpleJsonResourceReloadListener<JsonElement>
 {
     private static final Logger LOGGER = LogUtils.getLogger();
-    private static final Gson GSON = new Gson();
 
     private final String registryName;
     private final Codec<T> codec;
@@ -68,7 +68,7 @@ public class DataManager<T> extends SimpleJsonResourceReloadListener
      */
     public DataManager(Identifier domain, Codec<T> codec, @Nullable StreamCodec<RegistryFriendlyByteBuf, T> streamCodec)
     {
-        super(GSON, domain.getNamespace() + "/" + domain.getPath());
+        super(ExtraCodecs.JSON, FileToIdConverter.json(domain.getNamespace() + "/" + domain.getPath()));
 
         this.registryName = domain.getPath();
         this.codec = codec;

@@ -17,7 +17,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -183,7 +183,7 @@ public abstract class SeasonalPlantBlock extends BushBlock implements IForgeBloc
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         if (state.getValue(LIFECYCLE) == Lifecycle.FRUITING)
         {
@@ -194,9 +194,9 @@ public abstract class SeasonalPlantBlock extends BushBlock implements IForgeBloc
             }
             BerryBushBlockEntity.resetPickedTick(level, pos);
             level.setBlockAndUpdate(pos, stateAfterPicking(state));
-            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+            return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     public BlockState stateAfterPicking(BlockState state)

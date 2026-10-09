@@ -13,7 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -64,7 +64,7 @@ public class DryingBricksBlock extends BottomSupportedDeviceBlock
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         if (Helpers.isItem(stack, asItem()) && !player.isShiftKeyDown() && !state.getValue(DRIED))
         {
@@ -78,7 +78,7 @@ public class DryingBricksBlock extends BottomSupportedDeviceBlock
                 {
                     stack.shrink(1);
                 }
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
         }
         else if (stack.isEmpty() && player.isShiftKeyDown())
@@ -95,9 +95,9 @@ public class DryingBricksBlock extends BottomSupportedDeviceBlock
                 level.setBlockAndUpdate(pos, state.getFluidState().createLegacyBlock());
             }
             playSound(state, level, pos, player);
-            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+            return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Nullable

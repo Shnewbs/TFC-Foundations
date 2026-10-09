@@ -13,7 +13,6 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.BlockStateConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleRandomFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.SpringConfiguration;
@@ -148,7 +147,8 @@ public class TFCFeatures
     public static final Id<IfThenFeature> IF_THEN = register("if_then", IfThenFeature::new, IfThenConfig.CODEC);
     public static final Id<MultipleFeature> MULTIPLE = register("multiple", MultipleFeature::new, SimpleRandomFeatureConfiguration.CODEC);
     public static final Id<NoisyMultipleFeature> NOISY_MULTIPLE = register("noisy_multiple", NoisyMultipleFeature::new, SimpleRandomFeatureConfiguration.CODEC);
-    public static final Id<DynamicDensityRandomPatchFeature> DYNAMIC_RANDOM_PATCH = register("dynamic_random_patch", DynamicDensityRandomPatchFeature::new, RandomPatchConfiguration.CODEC);
+    public static final Id<RandomPatchFeature> RANDOM_PATCH = register("random_patch", RandomPatchFeature::new, RandomPatchConfig.CODEC);
+    public static final Id<DynamicDensityRandomPatchFeature> DYNAMIC_RANDOM_PATCH = register("dynamic_random_patch", DynamicDensityRandomPatchFeature::new, RandomPatchConfig.CODEC);
 
     private static <C extends FeatureConfiguration, F extends Feature<C>> Id<F> register(String name, Function<Codec<C>, F> factory, Codec<C> codec)
     {

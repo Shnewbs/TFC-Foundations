@@ -23,7 +23,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -253,11 +253,11 @@ public class FarmlandBlock extends Block implements ISoilBlock, HoeOverlayBlock,
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         return CropHelpers.useFertilizer(level, player, hand, pos)
-            ? ItemInteractionResult.sidedSuccess(level.isClientSide)
-            : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            ? (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME)
+            : InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override

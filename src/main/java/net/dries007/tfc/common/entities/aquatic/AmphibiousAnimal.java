@@ -199,7 +199,7 @@ public abstract class AmphibiousAnimal extends WildAnimal implements Temptable
         {
             heal(1f);
             held.shrink(1);
-            return InteractionResult.sidedSuccess(level().isClientSide);
+            return (level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
         }
         return super.mobInteract(player, hand);
     }

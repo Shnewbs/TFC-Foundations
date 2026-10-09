@@ -13,7 +13,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -39,7 +39,7 @@ public class TFCPumpkinBlock extends DecayingBlock
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         final ItemStack held = player.getItemInHand(hand);
         if (level.getBlockEntity(pos) instanceof DecayingBlockEntity decaying && (Helpers.isItem(held, TFCTags.Items.TOOLS_KNIFE) || Helpers.isItem(held, Tags.Items.TOOLS_SHEAR)) && TFCConfig.SERVER.enablePumpkinCarving.get())
@@ -58,8 +58,8 @@ public class TFCPumpkinBlock extends DecayingBlock
                 player.awardStat(Stats.ITEM_USED.get(held.getItem()));
             }
 
-            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+            return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 }

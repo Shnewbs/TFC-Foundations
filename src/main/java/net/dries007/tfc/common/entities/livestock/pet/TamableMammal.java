@@ -319,7 +319,7 @@ public abstract class TamableMammal extends Mammal implements OwnableEntity
                 {
                     held.shrink(1);
                 }
-                return InteractionResult.sidedSuccess(level().isClientSide);
+                return (level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
         }
         if (held.isEmpty() && player.isShiftKeyDown() && getOwner() != null && isOwnedBy(player) && !isOnFire())
@@ -328,7 +328,7 @@ public abstract class TamableMammal extends Mammal implements OwnableEntity
             {
                 ClientHelpers.openPetScreen(this);
             }
-            return InteractionResult.sidedSuccess(level().isClientSide);
+            return (level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
         }
         if (getFamiliarity() + 0.06f > 0.15f && getOwnerUUID() == null && isFood(held) && isHungry())
         {
@@ -398,7 +398,7 @@ public abstract class TamableMammal extends Mammal implements OwnableEntity
     {
         final Component deathMessage = getCombatTracker().getDeathMessage();
         super.die(source);
-        if (dead && getOwner() instanceof ServerPlayer serverPlayer && level().getGameRules().getBoolean(GameRules.RULE_SHOWDEATHMESSAGES))
+        if (dead && getOwner() instanceof ServerPlayer serverPlayer && serverPlayer.level().getGameRules().get(GameRules.SHOW_DEATH_MESSAGES))
         {
             serverPlayer.sendSystemMessage(deathMessage);
         }

@@ -16,6 +16,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -62,7 +63,7 @@ public abstract class GuiBookMixin extends Screen
                 } else {
                     mc.setScreen(new InventoryScreen(playerInventory.player));
                 }
-                PacketDistributor.sendToServer(new SwitchInventoryTabPacket(PlayerInventoryTabButton.Tab.INVENTORY));
+                ClientPacketDistributor.sendToServer(new SwitchInventoryTabPacket(PlayerInventoryTabButton.Tab.INVENTORY));
             }));
             addRenderableWidget(new PlayerInventoryTabButton(bookLeft, bookTop, false, true, PlayerInventoryTabButton.Tab.CALENDAR));
             addRenderableWidget(new PlayerInventoryTabButton(bookLeft, bookTop, false, true, PlayerInventoryTabButton.Tab.NUTRITION));

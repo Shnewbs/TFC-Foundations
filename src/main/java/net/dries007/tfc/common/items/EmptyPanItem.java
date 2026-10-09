@@ -53,7 +53,7 @@ public class EmptyPanItem extends Item
                         player.drop(putStack, false);
                     }
                 }
-                return InteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
         }
         return InteractionResult.PASS;

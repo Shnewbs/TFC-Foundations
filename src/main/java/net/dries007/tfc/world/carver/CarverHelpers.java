@@ -39,13 +39,13 @@ public final class CarverHelpers
             final BlockState carvingState = getCarveState(context, config, pos, aquifer);
             if (carvingState != null)
             {
-                chunk.setBlockState(pos, carvingState, false);
+                chunk.setBlockState(pos, carvingState);
                 if (reachedSurface.isTrue())
                 {
                     checkPos.setWithOffset(pos, Direction.DOWN);
                     if (chunk.getBlockState(checkPos).getBlock() instanceof IDirtBlock dirt)
                     {
-                        chunk.setBlockState(checkPos, dirt.getGrass(), false);
+                        chunk.setBlockState(checkPos, dirt.getGrass());
                     }
                 }
                 return true;

@@ -13,7 +13,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -106,7 +106,7 @@ public class LoomBlockEntity extends TickableInventoryBlockEntity<ItemStackHandl
     }
 
     //TODO sometimes if timed well the players hand will not swing but increment progress still
-    public ItemInteractionResult onRightClick(Player player)
+    public InteractionResult onRightClick(Player player)
     {
         assert level != null;
         final ItemStack heldItem = player.getMainHandItem();
@@ -119,9 +119,9 @@ public class LoomBlockEntity extends TickableInventoryBlockEntity<ItemStackHandl
                 ItemHandlerHelper.giveItemToPlayer(player, inventory.extractItem(SLOT_RECIPE, Integer.MAX_VALUE, false));
                 clearRecipe();
                 markForSync();
-                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
         // loom is complete
         if (!inventory.getStackInSlot(SLOT_OUTPUT).isEmpty())
@@ -130,7 +130,7 @@ public class LoomBlockEntity extends TickableInventoryBlockEntity<ItemStackHandl
             inventory.setStackInSlot(SLOT_OUTPUT, ItemStack.EMPTY);
             markForSync();
             clearRecipe();
-            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+            return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
         }
 
         // Loom is empty, initialize
@@ -140,7 +140,7 @@ public class LoomBlockEntity extends TickableInventoryBlockEntity<ItemStackHandl
             inventory.setStackInSlot(SLOT_RECIPE, heldItem.split(1));
             updateCachedRecipe();
             markForSync();
-            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+            return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
         }
         // Loom is not empty, add items.
         if (!recipeItem.isEmpty() && heldItem.getItem() == recipeItem.getItem() && recipe != null && recipe.getInputCount() > recipeItem.getCount())
@@ -148,7 +148,7 @@ public class LoomBlockEntity extends TickableInventoryBlockEntity<ItemStackHandl
             inventory.getStackInSlot(SLOT_RECIPE).grow(1);
             heldItem.shrink(1);
             markForSync();
-            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+            return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
         }
 
         // Push the loom
@@ -159,15 +159,15 @@ public class LoomBlockEntity extends TickableInventoryBlockEntity<ItemStackHandl
             // Animation will mess up if right click is held down, even if animation is sped up
             if (time <= 20) // we only let you update once a second
             {
-                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                return InteractionResult.TRY_WITH_EMPTY_HAND;
             }
             level.playSound(null, worldPosition, TFCSounds.LOOM_WEAVE.get(), SoundSource.BLOCKS, 1, 1 + ((level.random.nextFloat() - level.random.nextFloat()) / 16));
             lastPushed = level.getGameTime();
             needsProgressUpdate = true;
             markForSync();
-            return ItemInteractionResult.sidedSuccess(level.isClientSide); // we want to swing the player's arm
+            return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME); // we want to swing the player's arm
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     public boolean currentBoolean()

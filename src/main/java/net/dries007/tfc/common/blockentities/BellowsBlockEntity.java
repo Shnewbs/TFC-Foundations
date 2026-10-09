@@ -14,7 +14,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.Level;
@@ -155,22 +155,22 @@ public class BellowsBlockEntity extends TFCBlockEntity
         return MIN_EXTENSION;
     }
 
-    public ItemInteractionResult onRightClick()
+    public InteractionResult onRightClick()
     {
         assert level != null;
 
         if (level.getGameTime() - lastPushed < 20 || isConnectedToNetwork())
         {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
         if (getCrankBlockEntity() != null && !isConnectedToNetwork())
         {
-            return ItemInteractionResult.FAIL;
+            return InteractionResult.FAIL;
         }
         doPush();
 
         // Return success in both cases because we want the player's arm to swing, because they 'tried'
-        return ItemInteractionResult.sidedSuccess(level.isClientSide);
+        return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
     }
 
     private void doPush()

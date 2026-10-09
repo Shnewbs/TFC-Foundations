@@ -9,14 +9,11 @@
     "water_color": 4159204,
     "water_fog_color": 329011
   },
-  "carvers": {
-    "air": [
-      "tfc:cave",
-      "tfc:deep_cave",
-      "tfc:canyon"
-    ],
-    "liquid": []
-  },
+  "carvers": [
+    "tfc:cave",
+    "tfc:deep_cave",
+    "tfc:canyon"
+  ],
   "features": [
     "#tfc:in_biome/erosion",
     "#tfc:in_biome/underground_lakes",

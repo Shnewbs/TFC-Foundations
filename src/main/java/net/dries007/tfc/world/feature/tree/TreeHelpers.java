@@ -297,7 +297,7 @@ public final class TreeHelpers
     public static StructurePlaceSettings getPlacementSettings(LevelHeightAccessor level, ChunkPos chunkPos, RandomSource random)
     {
         return new StructurePlaceSettings()
-            .setBoundingBox(new BoundingBox(chunkPos.getMinBlockX() - 16, level.getMinBuildHeight(), chunkPos.getMinBlockZ() - 16, chunkPos.getMaxBlockX() + 16, level.getMaxBuildHeight(), chunkPos.getMaxBlockZ() + 16))
+            .setBoundingBox(new BoundingBox(chunkPos.getMinBlockX() - 16, level.getMinY(), chunkPos.getMinBlockZ() - 16, chunkPos.getMaxBlockX() + 16, level.getMaxY(), chunkPos.getMaxBlockZ() + 16))
             .setRandom(random)
             .addProcessor(BlockIgnoreProcessor.STRUCTURE_AND_AIR)
             .setRotation(randomRotation(random))

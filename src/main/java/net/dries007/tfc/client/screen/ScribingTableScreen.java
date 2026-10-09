@@ -8,9 +8,9 @@ package net.dries007.tfc.client.screen;
 
 import java.util.List;
 import java.util.stream.Stream;
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;
 import net.minecraft.core.component.DataComponents;
@@ -22,10 +22,8 @@ import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.neoforge.network.PacketDistributor;
-import org.lwjgl.glfw.GLFW;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.container.ScribingTableContainer;
@@ -61,7 +59,7 @@ public class ScribingTableScreen extends ItemCombinerScreen<ScribingTableContain
         name.setMaxLength(50);
         name.setResponder(this::onNameChanged);
         name.setValue("");
-        addWidget(name);
+        addRenderableWidget(name);
         setInitialFocus(name);
         name.setEditable(false);
         // Should this be done here?
@@ -69,10 +67,10 @@ public class ScribingTableScreen extends ItemCombinerScreen<ScribingTableContain
     }
 
     @Override
-    public void resize(Minecraft minecraft, int width, int height)
+    public void resize(int width, int height)
     {
         String text = name.getValue();
-        init(minecraft, width, height);
+        init(width, height);
         name.setValue(text);
         if (menu.getSlot(0).hasItem())
         {
@@ -82,13 +80,13 @@ public class ScribingTableScreen extends ItemCombinerScreen<ScribingTableContain
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers)
+    public boolean keyPressed(KeyEvent event)
     {
-        if (keyCode == GLFW.GLFW_KEY_ESCAPE)
+        if (event.isEscape())
         {
             minecraft.player.closeContainer();
         }
-        return name.keyPressed(keyCode, scanCode, modifiers) || name.canConsumeInput() || super.keyPressed(keyCode, scanCode, modifiers);
+        return name.keyPressed(event) || name.canConsumeInput() || super.keyPressed(event);
     }
 
     private void onNameChanged(String text)
@@ -102,15 +100,14 @@ public class ScribingTableScreen extends ItemCombinerScreen<ScribingTableContain
             }
 
             menu.setItemName(text);
-            PacketDistributor.sendToServer(new ScribingTablePacket(text));
+            ClientPacketDistributor.sendToServer(new ScribingTablePacket(text));
         }
     }
 
     @Override
-    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY)
+    protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
     {
-        RenderSystem.disableBlend();
-        super.renderLabels(graphics, mouseX, mouseY);
+        super.extractLabels(graphics, mouseX, mouseY);
         if (menu.getSlot(0).hasItem())
         {
             Component component = null;
@@ -126,17 +123,17 @@ public class ScribingTableScreen extends ItemCombinerScreen<ScribingTableContain
             {
                 int k = this.imageWidth - 8 - this.font.width(component) - 2;
                 graphics.fill(k - 2, 67, this.imageWidth - 8, 79, 1325400064);
-                graphics.drawString(font, component, k, 69, 16736352, false);
+                graphics.text(font, component, k, 69, 0xFFFF6060, false);
             }
         }
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY)
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks)
     {
-        super.renderBg(graphics, partialTicks, mouseX, mouseY);
+        super.extractBackground(graphics, mouseX, mouseY, partialTicks);
         this.currentTime += partialTicks;
-        if (this.currentTime > ITEM_ROTATE_TIME)
+        if (!valid.isEmpty() && this.currentTime > ITEM_ROTATE_TIME)
         {
             this.currentTime = this.currentTime % ITEM_ROTATE_TIME;
             this.currentIndex = (this.currentIndex + 1) % valid.size();
@@ -146,30 +143,24 @@ public class ScribingTableScreen extends ItemCombinerScreen<ScribingTableContain
         Slot inkSlot = menu.getSlot(1);
         if (itemSlot.hasItem())
         {
-            //graphics.blitSprite(TEXT_FIELD_SPRITE, this.leftPos + 59, this.topPos + 20, 110, 16);
-            graphics.blit(TEXTURE, this.leftPos + 59, this.topPos + 20, 0, 166, 110, 16);
+            //graphics.blitSprite(RenderPipelines.GUI_TEXTURED, TEXT_FIELD_SPRITE, this.leftPos + 59, this.topPos + 20, 110, 16);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, this.leftPos + 59, this.topPos + 20, 0, 166, 110, 16, 256, 256);
             if (!ScribingTableContainer.isInkInput(inkSlot.getItem()))
             {
-                renderErrorIcon(graphics, mouseX, mouseY);
+                extractErrorIcon(graphics, mouseX, mouseY);
             }
         }
         else
         {
-            graphics.blit(TEXTURE, this.leftPos + 59, this.topPos + 20, 0, 182, 110, 16);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, this.leftPos + 59, this.topPos + 20, 0, 182, 110, 16, 256, 256);
         }
 
-        if (!inkSlot.hasItem())
+        if (!inkSlot.hasItem() && !valid.isEmpty())
         {
-            graphics.setColor(1f, 1f, 1f, 0.25f);
-            graphics.renderItem(valid.get(this.currentIndex).getDefaultInstance(), this.leftPos + 76, this.topPos + 47);
-            graphics.setColor(1f, 1f, 1f, 1f);
+            graphics.fakeItem(valid.get(this.currentIndex).getDefaultInstance(), this.leftPos + 76, this.topPos + 47);
+            // Fade the suggestion into the slot without mutating global render state.
+            graphics.fill(this.leftPos + 76, this.topPos + 47, this.leftPos + 92, this.topPos + 63, 0xBFC6C6C6);
         }
-    }
-
-    @Override
-    public void renderFg(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks)
-    {
-        name.render(graphics, mouseX, mouseY, partialTicks);
     }
 
     @Override
@@ -184,23 +175,23 @@ public class ScribingTableScreen extends ItemCombinerScreen<ScribingTableContain
     }
 
     @Override
-    protected void renderErrorIcon(GuiGraphics graphics, int mouseX, int mouseY)
+    protected void extractErrorIcon(GuiGraphicsExtractor graphics, int mouseX, int mouseY)
     {
         if ((this.menu.getSlot(0).hasItem() || this.menu.getSlot(1).hasItem()) && !this.menu.getSlot(this.menu.getResultSlot()).hasItem())
         {
             // copied from anvil... we may not have the texture?
-            graphics.blit(TEXTURE, getGuiLeft() + 99, getGuiTop() + 45, this.imageWidth, 0, 28, 21);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, leftPos + 99, topPos + 45, this.imageWidth, 0, 28, 21, 256, 256);
         }
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics graphics, int x, int y)
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int x, int y)
     {
-        super.renderTooltip(graphics, x, y);
-        if (hoveredSlot != null && hoveredSlot.index == 1 && !hoveredSlot.hasItem())
+        super.extractTooltip(graphics, x, y);
+        if (hoveredSlot != null && hoveredSlot.index == 1 && !hoveredSlot.hasItem() && !valid.isEmpty())
         {
             ItemStack hintItem = valid.get(this.currentIndex).getDefaultInstance();
-            graphics.renderTooltip(this.font, hintItem.getTooltipLines(Item.TooltipContext.EMPTY, null, TooltipFlag.NORMAL), hintItem.getTooltipImage(), hintItem, x, y);
+            graphics.setTooltipForNextFrame(this.font, hintItem, x, y);
         }
     }
 }

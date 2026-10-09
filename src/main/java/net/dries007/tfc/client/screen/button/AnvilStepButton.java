@@ -6,10 +6,11 @@
 
 package net.dries007.tfc.client.screen.button;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.client.screen.AnvilScreen;
@@ -24,7 +25,7 @@ public class AnvilStepButton extends Button
     public AnvilStepButton(ForgeStep step, int guiLeft, int guiTop)
     {
         super(guiLeft + step.buttonX(), guiTop + step.buttonY(), 16, 16, Helpers.translateEnum(step), button -> {
-            PacketDistributor.sendToServer(new ScreenButtonPacket(step.ordinal()));
+            ClientPacketDistributor.sendToServer(new ScreenButtonPacket(step.ordinal()));
         }, RenderHelpers.NARRATION);
         setTooltip(Tooltip.create(Helpers.translateEnum(step)));
 
@@ -32,8 +33,8 @@ public class AnvilStepButton extends Button
     }
 
     @Override
-    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)
+    public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick)
     {
-        graphics.blit(AnvilScreen.BACKGROUND, getX(), getY(), 16, 16, step.iconX(), step.iconY(), 16, 16, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, AnvilScreen.BACKGROUND, getX(), getY(), step.iconX(), step.iconY(), 16, 16, 16, 16, 256, 256);
     }
 }

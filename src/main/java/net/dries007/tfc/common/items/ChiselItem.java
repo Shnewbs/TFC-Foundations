@@ -79,7 +79,7 @@ public class ChiselItem extends ToolItem
 
                 Helpers.damageItem(held, player, InteractionHand.MAIN_HAND);
                 player.getCooldowns().addCooldown(this, 10);
-                return InteractionResult.sidedSuccess(level.isClientSide);
+                return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }, Function.identity()); // returns the interaction result if we are given one
         }
         return InteractionResult.PASS;

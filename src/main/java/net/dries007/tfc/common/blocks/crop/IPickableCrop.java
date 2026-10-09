@@ -9,7 +9,7 @@ package net.dries007.tfc.common.blocks.crop;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -27,7 +27,7 @@ public interface IPickableCrop
         return new ItemStack(item, Mth.floor(Mth.lerp(yield, 1f, 5f) + random.nextInt(2)));
     }
 
-    default @Nullable ItemInteractionResult getItemInteractionResult(BlockState state, Level level, BlockPos pos, Player player, CropBlockEntity crop)
+    default @Nullable InteractionResult getItemInteractionResult(BlockState state, Level level, BlockPos pos, Player player, CropBlockEntity crop)
     {
         final CropBlock cropBlock = (CropBlock) state.getBlock();
         final float yield = crop.getYield();
@@ -40,7 +40,7 @@ public interface IPickableCrop
             crop.setYield(0f);
             cropBlock.postGrowthTick(level, pos, state, crop);
             ItemHandlerHelper.giveItemToPlayer(player, yieldItemStack(getFirstFruit(), yield, random));
-            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+            return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
         }
         else if (age == maxAge)
         {
@@ -48,7 +48,7 @@ public interface IPickableCrop
             crop.setYield(0f);
             cropBlock.postGrowthTick(level, pos, state, crop);
             ItemHandlerHelper.giveItemToPlayer(player, yieldItemStack(getSecondFruit(), yield, random));
-            return ItemInteractionResult.sidedSuccess(level.isClientSide);
+            return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
         }
         return null;
     }

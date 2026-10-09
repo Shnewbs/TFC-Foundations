@@ -7,14 +7,14 @@
 package net.dries007.tfc.client.screen;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import net.dries007.tfc.client.ClientHelpers;
 import net.dries007.tfc.client.ClimateRenderCache;
@@ -54,7 +54,7 @@ public class ClimateScreen extends TFCContainerScreen<Container>
             {
                 mc.setScreen(new InventoryScreen(playerInventory.player));
             }
-            PacketDistributor.sendToServer(new SwitchInventoryTabPacket(PlayerInventoryTabButton.Tab.INVENTORY));
+            ClientPacketDistributor.sendToServer(new SwitchInventoryTabPacket(PlayerInventoryTabButton.Tab.INVENTORY));
         }));
         addRenderableWidget(new PlayerInventoryTabButton(leftPos, topPos, false, false, PlayerInventoryTabButton.Tab.CALENDAR));
         addRenderableWidget(new PlayerInventoryTabButton(leftPos, topPos, false, false, PlayerInventoryTabButton.Tab.NUTRITION));
@@ -63,9 +63,9 @@ public class ClimateScreen extends TFCContainerScreen<Container>
     }
 
     @Override
-    protected void renderLabels(GuiGraphics stack, int mouseX, int mouseY)
+    protected void extractLabels(GuiGraphicsExtractor stack, int mouseX, int mouseY)
     {
-        super.renderLabels(stack, mouseX, mouseY);
+        super.extractLabels(stack, mouseX, mouseY);
 
         // Climate at the current player
         final float averageTemp = ClimateRenderCache.INSTANCE.getAverageTemperature();

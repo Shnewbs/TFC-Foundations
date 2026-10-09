@@ -77,3 +77,14 @@ Accepted user direction: prioritize a playable 26.1.2 branch and continue 26.3 o
 - Migrated BreakBlockEvent while preserving server-only collapse/logging. The replacement fires on both sides; client callbacks and canceled events return without world changes. Server-side logging cancellation requests a client block update.
 - Relocated CriteriaTriggers only on 26.3; 26.1.2 retains its original package.
 - Gameplay checks still required: fresh-world spawn, protected/canceled mining, collapse, tree felling with client block synchronization, normal block breaking, water splash/lingering dousing and bamboo soil TRUE/FALSE/DEFAULT cases. These are source changes, not runtime-tested fixes.
+
+
+## 2026-10-09 — Playability migration and Earth groundwork
+
+- Migrated item/block/entity interaction results without dropping held-stack replacement or empty-hand fallback. Replaced old game-rule callback accessors with supported change events and kept calendar ownership server-side.
+- Ported GUI extraction/input APIs, with branch-specific screen navigation and keyboard handling. Corrected grass-density slider initialization so accepting existing world settings does not copy continentalness into grass density.
+- Ported JSON listener construction while keeping registry-aware parsing in apply. Recipe caches now consume RecipeMap; recipes are explicitly requested for client sync and cleared on logout.
+- Isolated optional EMI/Jade/TOP source sets; missing target adapters are not compiled or linked, while included adapter errors remain visible. Patchouli remains required and blocks 26.3 packaging. License and source-set model checks passed for optional adapters; no unverified pins persisted.
+- 26.1.2 preserves single-pass caves/aquifers and adds a maintained TFC random-patch feature. Generator output matches all 125 migrated biome carver lists and177 patch references;1907 generated resources completed without errors. New patch classes compile against the actual26.1.2 client JAR. 26.3's new terrain/density pipeline still requires a substantive port.
+- Earth groundwork: nominal-scale coordinate/elevation math and explicit distortion, eight isolated Java25/JUnit tests passing. No synthetic Earth preset, dataset download, or complete generator claimed.
+- Required gameplay regressions: interaction swings/offhand/container replacement, calendar/game-rule commands, protected mining/collapse/logging, recipes after reload/disconnect/reconnect, guide and GUI navigation, cave/aquifer continuity, vegetation/loose rocks, chunk persistence, and client/dedicated-server progression.

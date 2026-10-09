@@ -158,7 +158,7 @@ public class PropickItem extends ToolItem
             NeoForge.EVENT_BUS.post(new ProspectedEvent(player, result, found));
             PacketDistributor.sendToPlayer(serverPlayer, new ProspectedPacket(found, result));
         }
-        return InteractionResult.sidedSuccess(level.isClientSide);
+        return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
     }
 
     @Override

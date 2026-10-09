@@ -306,7 +306,7 @@ public class TFCFallingBlockEntity extends FallingBlockEntity
 
     private void attemptToDropAsItem(BlockState fallingBlockState)
     {
-        if (dropItem && this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS) && level() instanceof ServerLevel server)
+        if (dropItem && level() instanceof ServerLevel server && server.getGameRules().get(GameRules.ENTITY_DROPS))
         {
             Helpers.dropWithContext(server, fallingBlockState, blockPosition(), p -> {}, true);
         }

@@ -7,14 +7,15 @@
 package net.dries007.tfc.client.screen.button;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import net.dries007.tfc.client.ClientHelpers;
 import net.dries007.tfc.client.RenderHelpers;
@@ -35,8 +36,8 @@ public class AnvilPlanSelectButton extends Button
             if (button.active)
             {
                 final CompoundTag tag = new CompoundTag();
-                tag.putString("recipe", recipe.id().toString());
-                PacketDistributor.sendToServer(new ScreenButtonPacket(0, tag));
+                tag.putString("recipe", recipe.id().identifier().toString());
+                ClientPacketDistributor.sendToServer(new ScreenButtonPacket(0, tag));
             }
         }, RenderHelpers.NARRATION);
         this.component = tooltip;
@@ -59,15 +60,15 @@ public class AnvilPlanSelectButton extends Button
     }
 
     @Override
-    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick)
+    public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick)
     {
         if (this.visible)
         {
             int x = getX();
             int y = getY();
-            graphics.blit(AnvilPlanScreen.BACKGROUND, x, y, 176, 0, width, height, 256, 256);
-            graphics.renderItem(result, x + 1, y + 1);
-            graphics.renderItemDecorations(Minecraft.getInstance().font, result, x + 1, y + 1);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, AnvilPlanScreen.BACKGROUND, x, y, 176, 0, width, height, 256, 256);
+            graphics.item(result, x + 1, y + 1);
+            graphics.itemDecorations(Minecraft.getInstance().font, result, x + 1, y + 1);
         }
     }
 }

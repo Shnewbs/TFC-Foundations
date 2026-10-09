@@ -13,14 +13,13 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.gamerules.GameRules;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.level.GameRuleChangedEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import net.dries007.tfc.config.TFCConfig;
-import net.dries007.tfc.mixin.accessor.GameRulesAccessor;
-import net.dries007.tfc.mixin.accessor.GameRulesTypeAccessor;
 import net.dries007.tfc.network.CalendarUpdatePacket;
-import net.dries007.tfc.util.ReentrantListener;
 import net.dries007.tfc.util.advancements.TFCAdvancements;
 
 public final class ServerCalendar extends Calendar
@@ -31,19 +30,18 @@ public final class ServerCalendar extends Calendar
      * We don't use this game rule - it makes tracking time complicated, and forces us to rely on the NeoForge implementation of
      * time advancing. Instead, we listen to this command and force this always to false. We take over day time tracking ourselves.
      */
-    private static final ReentrantListener DO_DAYLIGHT_CYCLE = new ReentrantListener(ServerCalendar::overrideDoDaylightCycleToFalse);
-
-    @SuppressWarnings("DataFlowIssue")
-    private static void overrideDoDaylightCycleToFalse()
-    {
-        final MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-        server.getGameRules().getRule(GameRules.RULE_DAYLIGHT).set(false, server);
-    }
-
     public static void overrideDoDaylightCycleCallback()
     {
-        final GameRulesTypeAccessor type = (GameRulesTypeAccessor) GameRulesAccessor.accessor$getGameRuleTypes().get(GameRules.RULE_DAYLIGHT);
-        type.accessor$setCallback(type.accessor$getCallback().andThen((server, t) -> DO_DAYLIGHT_CYCLE.onListenerUpdate()));
+        NeoForge.EVENT_BUS.addListener(ServerCalendar::onGameRuleChanged);
+    }
+
+    private static void onGameRuleChanged(GameRuleChangedEvent event)
+    {
+        // Only correct true updates. The resulting false event must not set the rule again.
+        if (event.getGameRule() == GameRules.ADVANCE_TIME && Boolean.TRUE.equals(event.getNewValue()))
+        {
+            event.getGameRules().set(GameRules.ADVANCE_TIME, false, event.getServer());
+        }
     }
 
     private int syncCounter;

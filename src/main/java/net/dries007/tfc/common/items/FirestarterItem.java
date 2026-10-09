@@ -15,7 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -81,13 +81,13 @@ public class FirestarterItem extends Item
     }
 
     @Override
-    public UseAnim getUseAnimation(ItemStack stack)
+    public ItemUseAnimation getUseAnimation(ItemStack stack)
     {
         if (VivecraftIntegration.isVREnabled())
         {
-            return UseAnim.NONE;
+            return ItemUseAnimation.NONE;
         }
-        return UseAnim.BOW;
+        return ItemUseAnimation.BOW;
     }
 
     @Override
