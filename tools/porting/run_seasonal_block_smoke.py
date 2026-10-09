@@ -48,7 +48,7 @@ def validate_assets(contracts):
                 if node.get('type') != 'tfc:dynamic':
                     raise AssertionError('Seasonal world model bypasses dynamic dispatch: ' + node['model'])
                 references += 1
-            elif node.get('type') == 'tfc:dynamic':
+            elif node.get('type') == 'tfc:dynamic' and loader(node.get('model', '')) not in ('tfc:ingot_pile', 'tfc:double_ingot_pile', 'tfc:scraping', 'tfc:mold_table'):
                 raise AssertionError('Unexpected dynamic dispatch target: ' + str(node.get('model')))
             for value in node.values():
                 visit(value)

@@ -53,8 +53,6 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.packs.resources.Resource;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
@@ -87,10 +85,7 @@ import net.dries007.tfc.client.extensions.FluidRendererExtension;
 import net.dries007.tfc.client.extensions.ItemRendererExtension;
 import net.dries007.tfc.client.model.BlockModelRegistration;
 import net.dries007.tfc.client.model.ContainedFluidModel;
-import net.dries007.tfc.client.model.DoubleIngotPileBlockModel;
-import net.dries007.tfc.client.model.IngotPileBlockModel;
 import net.dries007.tfc.client.model.MoldTableBlockModel;
-import net.dries007.tfc.client.model.ScrapingBlockModel;
 import net.dries007.tfc.client.model.TrimmedItemModel;
 import net.dries007.tfc.client.model.entity.AlpacaModel;
 import net.dries007.tfc.client.model.entity.AnemometerModel;
@@ -313,6 +308,7 @@ public final class ClientEventHandler
         bus.addListener(ClientEventHandler::registerModelLoaders);
         bus.addListener(BlockModelRegistration::registerLoaders);
         bus.addListener(BlockModelRegistration::registerBlockStateModels);
+        bus.addListener(MoldTableBlockModel::registerStandaloneModels);
         bus.addListener(ClientEventHandler::registerSpecialModels);
         bus.addListener(ClientEventHandler::registerColorHandlerBlocks);
         bus.addListener(ClientEventHandler::registerColorHandlerItems);
@@ -849,15 +845,6 @@ public final class ClientEventHandler
 
         event.register(CrankshaftBlockEntityRenderer.WHEEL_MODEL);
 
-        ResourceManager rm = Minecraft.getInstance().getResourceManager();
-        Map<Identifier, Resource> resources = rm.listResources("models/block/mold", r -> r.getPath().endsWith(".json"));
-        for (Identifier model : resources.keySet())
-        {
-            String path = model.getPath();
-            path = path.substring("models/".length(), path.length() - ".json".length());
-            register(event, Identifier.fromNamespaceAndPath(model.getNamespace(), path));
-        }
-
         TFCConfig.CLIENT.additionalSpecialModels.get().forEach(s -> register(event, Helpers.resourceLocation(s)));
     }
 
@@ -870,10 +857,6 @@ public final class ClientEventHandler
     {
         event.register(Helpers.identifier("fluid_container"), new ContainedFluidModel.Loader());
         event.register(Helpers.identifier("trim"), new TrimmedItemModel.Loader());
-        event.register(Helpers.identifier("ingot_pile"), IngotPileBlockModel.INSTANCE);
-        event.register(Helpers.identifier("double_ingot_pile"), DoubleIngotPileBlockModel.INSTANCE);
-        event.register(Helpers.identifier("scraping"), ScrapingBlockModel.INSTANCE);
-        event.register(Helpers.identifier("mold_table"), MoldTableBlockModel.Loader.INSTANCE);
     }
 
     public static void registerColorHandlerBlocks(RegisterColorHandlersEvent.Block event)

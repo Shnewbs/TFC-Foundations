@@ -6,197 +6,168 @@
 
 package net.dries007.tfc.client.model;
 
-import java.util.ArrayList;
-import java.util.IdentityHashMap;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.resources.model.geometry.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockModel;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.sprite.Material;
-import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.block.dispatch.ModelState;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.ResolvableModel;
+import net.minecraft.client.resources.model.ResolvedModel;
+import net.minecraft.client.resources.model.SimpleModelWrapper;
+import net.minecraft.client.resources.model.cuboid.CuboidModel;
+import net.minecraft.client.resources.model.geometry.UnbakedGeometry;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.client.renderer.block.BlockAndTintGetter;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.IDynamicBakedModel;
-import net.neoforged.neoforge.model.data.ModelData;
-import net.neoforged.neoforge.model.data.ModelProperty;
-import net.neoforged.neoforge.client.model.geometry.IGeometryBakingContext;
-import net.neoforged.neoforge.client.model.geometry.IGeometryLoader;
-import net.neoforged.neoforge.client.model.geometry.IUnbakedGeometry;
-import org.jetbrains.annotations.Nullable;
+import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.model.AbstractUnbakedModel;
+import net.neoforged.neoforge.client.model.DynamicBlockStateModel;
+import net.neoforged.neoforge.client.model.StandardModelParameters;
+import net.neoforged.neoforge.client.model.NeoForgeModelProperties;
+import net.neoforged.neoforge.client.model.UnbakedElementsHelper;
+import net.neoforged.neoforge.client.model.UnbakedModelLoader;
+import net.neoforged.neoforge.client.model.standalone.SimpleUnbakedStandaloneModel;
+import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
+import org.jspecify.annotations.Nullable;
 
-import net.dries007.tfc.TerraFirmaCraft;
-import net.dries007.tfc.client.RenderHelpers;
-import net.dries007.tfc.common.TFCTags;
-import net.dries007.tfc.common.blockentities.TFCBlockEntities;
-import net.dries007.tfc.util.collections.IndirectHashCollection;
+import net.dries007.tfc.common.blockentities.BlockEntityModelData;
 
-public class MoldTableBlockModel implements IDynamicBakedModel, IUnbakedGeometry<MoldTableBlockModel>
+/** The base table and its mold are baked together per reload; block entities retain only item identifiers. */
+public final class MoldTableBlockModel implements DynamicBlockStateModel
 {
-    private final BlockModel model;
-    private @Nullable BakedModel baked;
+    private final BlockStateModelPart base;
+    private final Map<Identifier, BlockStateModelPart> molds;
+    private final int flags;
 
-    public MoldTableBlockModel(BlockModel model)
+    // Discovery completes before ModelManager resolves dependencies. Each Unbaked captures its own immutable copy.
+    // Already-baked tables never read this catalog, so a failed/new reload cannot change their geometry.
+    private static volatile Map<Identifier, Identifier> discovered = Map.of();
+
+    public MoldTableBlockModel(BlockStateModelPart base, Map<Identifier, BlockStateModelPart> molds)
     {
-        this.model = model;
+        this.base = base;
+        this.molds = Map.copyOf(molds);
+        this.flags = molds.values().stream().mapToInt(BlockStateModelPart::materialFlags).reduce(base.materialFlags(), (a, b) -> a | b);
     }
 
-    @Override
-    public ModelData getModelData(BlockAndTintGetter level, BlockPos pos, BlockState state, ModelData modelData)
+    public static @Nullable Identifier itemForModelResource(Identifier resource)
     {
-        final BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity != null && blockEntity.getType() == TFCBlockEntities.MOLD_TABLE.get())
+        final String path = resource.getPath();
+        final String prefix = "models/block/mold/";
+        if (!path.startsWith(prefix) || !path.endsWith(".json") || path.length() <= prefix.length() + 5) return null;
+        return Identifier.fromNamespaceAndPath(resource.getNamespace(), path.substring(prefix.length(), path.length() - 5));
+    }
+
+    public static void registerStandaloneModels(ModelEvent.RegisterStandalone event)
+    {
+        registerDiscoveredModels(event, Minecraft.getInstance().getResourceManager()
+            .listResources("models/block/mold", resource -> resource.getPath().endsWith(".json")).keySet());
+    }
+
+    /** The resource collection is passed explicitly so discovery can be tested without a running client. */
+    public static void registerDiscoveredModels(ModelEvent.RegisterStandalone event, Collection<Identifier> resources)
+    {
+        final Map<Identifier, Identifier> catalog = new HashMap<>();
+        resources.stream().sorted().forEach(resource -> {
+                final Identifier item = itemForModelResource(resource);
+                if (item == null) return;
+                final Identifier model = Identifier.fromNamespaceAndPath(item.getNamespace(), "block/mold/" + item.getPath());
+                catalog.put(item, model);
+                event.register(new StandaloneModelKey<>(model::toString), SimpleUnbakedStandaloneModel.simpleModelWrapper(model));
+            });
+        discovered = Map.copyOf(catalog);
+    }
+
+    public @Nullable BlockStateModelPart mold(@Nullable Identifier item)
+    {
+        return item == null ? null : molds.get(item);
+    }
+
+    public Object geometryKey(@Nullable Identifier item)
+    {
+        return new GeometryKey(this, mold(item));
+    }
+
+    private @Nullable Identifier item(BlockAndTintGetter level, BlockPos pos)
+    {
+        return level.getModelData(pos).get(BlockEntityModelData.MOLD);
+    }
+
+    public void collect(@Nullable Identifier item, List<BlockStateModelPart> output)
+    {
+        output.add(base);
+        final BlockStateModelPart mold = mold(item);
+        if (mold != null) output.add(mold);
+    }
+
+    @Override public void collectParts(RandomSource random, List<BlockStateModelPart> output) { output.add(base); }
+    @Override public void collectParts(BlockAndTintGetter level, BlockPos pos, BlockState state, RandomSource random, List<BlockStateModelPart> output) { collect(item(level, pos), output); }
+    @Override public Object createGeometryKey(BlockAndTintGetter level, BlockPos pos, BlockState state, RandomSource random) { return geometryKey(item(level, pos)); }
+    @Override public Material.Baked particleMaterial() { return base.particleMaterial(); }
+    @Override public int materialFlags() { return flags; }
+    @Override
+    public int materialFlags(BlockAndTintGetter level, BlockPos pos, BlockState state)
+    {
+        final BlockStateModelPart mold = mold(item(level, pos));
+        return base.materialFlags() | (mold == null ? 0 : mold.materialFlags());
+    }
+
+    private record GeometryKey(MoldTableBlockModel model, @Nullable BlockStateModelPart mold) {}
+
+    public static final class Unbaked extends AbstractUnbakedModel implements DynamicBlockModel
+    {
+        private final UnbakedGeometry geometry;
+        private Map<Identifier, Identifier> catalog = Map.of();
+
+        private Unbaked(StandardModelParameters parameters, UnbakedGeometry geometry)
         {
-            return blockEntity.getModelData();
+            super(parameters);
+            this.geometry = geometry;
         }
-        return modelData;
-    }
 
-    @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction direction, RandomSource random, ModelData modelData, @Nullable RenderType renderType)
-    {
-        assert baked != null;
-        MoldModelData moldData = modelData.get(MoldModelData.PROPERTY);
-        List<BakedQuad> quads = new ArrayList<>(baked.getQuads(state, direction, random, modelData, renderType));
-        if (moldData != null && moldData.model() != null)
-        {
-            quads.addAll(moldData.model().getQuads(state, direction, random, modelData, renderType));
-        }
-        return quads;
-    }
-
-    @Override
-    public boolean useAmbientOcclusion()
-    {
-        return model.hasAmbientOcclusion();
-    }
-
-    @Override
-    public boolean isGui3d()
-    {
-        assert baked != null;
-        return baked.isGui3d();
-    }
-
-    @Override
-    public boolean usesBlockLight()
-    {
-        assert baked != null;
-        return baked.usesBlockLight();
-    }
-
-    @Override
-    public boolean isCustomRenderer()
-    {
-        assert baked != null;
-        return baked.isCustomRenderer();
-    }
-
-    @Override
-    public TextureAtlasSprite getParticleIcon()
-    {
-        assert baked != null;
-        return baked.getParticleIcon();
-    }
-
-    @Override
-    public ItemOverrides getOverrides()
-    {
-        return ItemOverrides.EMPTY;
-    }
-
-    @Override
-    public BakedModel bake(IGeometryBakingContext context, ModelBaker baker, Function<Material, TextureAtlasSprite> mapper, ModelState state, ItemOverrides overrides)
-    {
-        baked = model.bake(baker, mapper, state);
-        return this;
-    }
-
-    public record MoldModelData(@Nullable BakedModel model)
-    {
-        public static final ModelProperty<MoldModelData> PROPERTY = new ModelProperty<>();
-    }
-
-    public static class Loader implements IGeometryLoader<MoldTableBlockModel>
-    {
-        public static final Loader INSTANCE = new Loader();
-
-        private Loader() {}
+        @Override public UnbakedGeometry geometry() { return geometry; }
 
         @Override
-        public MoldTableBlockModel read(JsonObject json, JsonDeserializationContext context) throws JsonParseException
+        public void resolveDependencies(ResolvableModel.Resolver resolver)
         {
-            // Load the table model as a default model
-            json.remove("loader");
-            BlockModel model = context.deserialize(json, BlockModel.class);
-            return new MoldTableBlockModel(model);
-        }
-    }
-
-    // Beyond this point could go in MoldTableBlockEntity but that file is already very long
-    public static MoldModelData getMoldModelData(ItemStack stack)
-    {
-        if (!stack.isEmpty())
-        {
-            return new MoldModelData(MOLD_MODEL_CACHE.values.get(stack.getItem()));
-        }
-        return new MoldModelData(null);
-    }
-
-    private static final MoldModelCache MOLD_MODEL_CACHE = IndirectHashCollection.create(new MoldModelCache(new IdentityHashMap<>()));
-
-    record MoldModelCache(Map<Item, BakedModel> values) implements IndirectHashCollection.Cache
-    {
-        @Override
-        public void clear()
-        {
-            values.clear();
+            if (parent() != null) resolver.markDependency(parent());
+            // ModelManager joins the standalone-loading future before discovering model dependencies.
+            catalog = discovered;
+            catalog.values().forEach(resolver::markDependency);
         }
 
         @Override
-        public void reload(RecipeManager manager)
+        public BlockStateModel bakeBlock(ResolvedModel owner, ModelBaker baker, ModelState state)
         {
-            BuiltInRegistries.ITEM.getTagOrEmpty(TFCTags.Items.USABLE_IN_MOLD_TABLE).forEach(
-                (item) -> {
-                    Identifier moldLocation = BuiltInRegistries.ITEM.getKey(item.value());
-                    ModelResourceLocation modelLocation = RenderHelpers.modelId(
-                        Identifier.fromNamespaceAndPath(
-                            moldLocation.getNamespace(),
-                            "block/mold/" + moldLocation.getPath()
-                        )
-                    );
+            final Map<Identifier, BlockStateModelPart> parts = new HashMap<>();
+            final var root = owner.getTopAdditionalProperties().getOptional(NeoForgeModelProperties.TRANSFORM);
+            final ModelState attached = root == null ? state : UnbakedElementsHelper.composeRootTransformIntoModelState(state, root);
+            catalog.forEach((item, model) -> parts.put(item, SimpleModelWrapper.bake(baker, model, attached)));
+            return new MoldTableBlockModel(SimpleModelWrapper.bake(baker, owner, state), parts);
+        }
+    }
 
-                    BakedModel model = Minecraft.getInstance().getModelManager().getModel(modelLocation);
+    public enum Loader implements UnbakedModelLoader<Unbaked>
+    {
+        INSTANCE;
 
-                    if (model != Minecraft.getInstance().getModelManager().getMissingModel())
-                    {
-                        values.put(item.value(), model);
-                    }
-                    else
-                    {
-                        TerraFirmaCraft.LOGGER.error("No mold model loaded for mold item {}", moldLocation);
-                    }
-                }
-            );
+        @Override
+        public Unbaked read(JsonObject json, JsonDeserializationContext context)
+        {
+            // Never remove fields from the caller's JSON; other consumers may share it.
+            final JsonObject vanilla = json.deepCopy();
+            vanilla.remove("loader");
+            final CuboidModel model = context.deserialize(vanilla, CuboidModel.class);
+            return new Unbaked(StandardModelParameters.parse(vanilla, context), model.geometry());
         }
     }
 }

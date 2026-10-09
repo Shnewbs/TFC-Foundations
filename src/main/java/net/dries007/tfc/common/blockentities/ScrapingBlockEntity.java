@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.common.recipes.ScrapingRecipe;
@@ -35,6 +36,13 @@ public class ScrapingBlockEntity extends InventoryBlockEntity<ItemStackHandler>
     public ScrapingBlockEntity(BlockPos pos, BlockState state)
     {
         super(TFCBlockEntities.SCRAPING.get(), pos, state, defaultInventory(1));
+    }
+
+    @Override
+    public ModelData getModelData()
+    {
+        return super.getModelData().derive().with(BlockEntityModelData.SCRAPING,
+            new BlockEntityModelData.Scraping(inputTexture, outputTexture, positions, getColor1(), getColor2())).build();
     }
 
     public boolean isComplete()
@@ -72,6 +80,8 @@ public class ScrapingBlockEntity extends InventoryBlockEntity<ItemStackHandler>
             }
             markForSync();
         }
+        // The existing notification dirties the mesh; refresh its snapshot first.
+        if (level.isClientSide()) requestModelDataUpdate();
         level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
     }
 
@@ -80,12 +90,14 @@ public class ScrapingBlockEntity extends InventoryBlockEntity<ItemStackHandler>
         if (color1 == null)
         {
             color1 = color;
+            BlockEntityModelData.refresh(this);
             markForSync();
             return true;
         }
         else if (color2 == null)
         {
             color2 = color;
+            BlockEntityModelData.refresh(this);
             markForSync();
             return true;
         }
@@ -117,6 +129,7 @@ public class ScrapingBlockEntity extends InventoryBlockEntity<ItemStackHandler>
         outputTexture = NbtHelpers.hasTag(nbt, "outputTexture", Tag.TAG_STRING) ? Helpers.resourceLocation(nbt.getStringOr("outputTexture", "")) : null;
         color1 = NbtHelpers.hasTag(nbt, "color1", Tag.TAG_INT) ? DyeColor.byId(nbt.getIntOr("color1", 0)) : null;
         color2 = NbtHelpers.hasTag(nbt, "color2", Tag.TAG_INT) ? DyeColor.byId(nbt.getIntOr("color2", 0)) : null;
+        BlockEntityModelData.refresh(this);
     }
 
     @Override
@@ -150,6 +163,7 @@ public class ScrapingBlockEntity extends InventoryBlockEntity<ItemStackHandler>
             final ScrapingRecipe recipe = ScrapingRecipe.getRecipe(stack);
             inputTexture = recipe == null ? null : recipe.getInputTexture();
             outputTexture = recipe == null ? null : recipe.getOutputTexture();
+            BlockEntityModelData.refresh(this);
         }
     }
 }

@@ -20,6 +20,10 @@ public final class BlockModelRegistration
         event.register(Identifier.fromNamespaceAndPath("tfc", "plant"), PlantBlockModel.Loader.INSTANCE);
         event.register(Identifier.fromNamespaceAndPath("tfc", "leaves"), LeavesBlockModel.Loader.INSTANCE);
         event.register(Identifier.fromNamespaceAndPath("tfc", "mold"), new MoldsModelLoader());
+        event.register(Identifier.fromNamespaceAndPath("tfc", "ingot_pile"), IngotPileBlockModel.INSTANCE);
+        event.register(Identifier.fromNamespaceAndPath("tfc", "double_ingot_pile"), DoubleIngotPileBlockModel.INSTANCE);
+        event.register(Identifier.fromNamespaceAndPath("tfc", "scraping"), ScrapingBlockModel.INSTANCE);
+        event.register(Identifier.fromNamespaceAndPath("tfc", "mold_table"), MoldTableBlockModel.Loader.INSTANCE);
     }
 
     public static void registerBlockStateModels(RegisterBlockStateModels event)

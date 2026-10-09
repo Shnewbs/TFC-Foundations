@@ -14,6 +14,8 @@ import java.util.function.Consumer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.neoforged.neoforge.model.data.ModelData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
@@ -38,9 +40,19 @@ public class IngotPileBlockEntity extends TFCBlockEntity
         entries = new ArrayList<>();
     }
 
+    @Override
+    public ModelData getModelData()
+    {
+        final List<Identifier> textures = new ArrayList<>(Math.min(entries.size(), 64));
+        for (int i = 0; i < Math.min(entries.size(), 64); i++) textures.add(getOrCacheMetal(i).softTextureId());
+        return super.getModelData().derive().with(BlockEntityModelData.PILE,
+            new BlockEntityModelData.Pile(textures, MetalItem.unknown().softTextureId())).build();
+    }
+
     public void addIngot(ItemStack stack)
     {
         entries.add(new Entry(stack));
+        BlockEntityModelData.refresh(this);
         markForSync();
     }
 
@@ -51,6 +63,7 @@ public class IngotPileBlockEntity extends TFCBlockEntity
             ingotConsumer.accept(entry.stack);
         }
         this.entries.clear();
+        BlockEntityModelData.refresh(this);
         markForSync();
     }
 
@@ -59,6 +72,7 @@ public class IngotPileBlockEntity extends TFCBlockEntity
         if (!entries.isEmpty())
         {
             final Entry entry = entries.remove(entries.size() - 1);
+            BlockEntityModelData.refresh(this);
             markForSync();
             return entry.stack;
         }
@@ -115,6 +129,7 @@ public class IngotPileBlockEntity extends TFCBlockEntity
             entries.add(new Entry(stack));
         }
         super.loadAdditional(tag);
+        BlockEntityModelData.refresh(this);
     }
 
     public void fillTooltip(Consumer<Component> tooltip)

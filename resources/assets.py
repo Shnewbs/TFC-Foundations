@@ -612,7 +612,7 @@ def generate(rm: ResourceManager):
     # Mold
     rm.blockstate_multipart(
         'mold_table', 
-        ({'model': 'tfc:block/mold_table_base'}),
+        ({'model': 'tfc:block/mold_table_base', 'type': 'tfc:dynamic'}),
         *[
             ({rot_name: False}, {'model': 'tfc:block/mold_table_stop', 'y': rot_val})
             for rot_name, rot_val in rots.items()
@@ -762,7 +762,7 @@ def generate(rm: ResourceManager):
     rm.block_model('reinforced_fire_bricks', {'side': 'tfc:block/reinforced_fire_bricks', 'end': 'tfc:block/fire_bricks', 'particle': 'tfc:block/reinforced_fire_bricks'}, 'block/cube_column')
 
     rm.blockstate('placed_item', 'tfc:block/empty').with_lang(lang('placed items'))
-    rm.blockstate('scraping', 'tfc:block/scraping').with_lang(lang('scraped item'))
+    rm.blockstate('scraping', variants={'': {'model': 'tfc:block/scraping', 'type': 'tfc:dynamic'}}).with_lang(lang('scraped item'))
     rm.custom_block_model('scraping', 'tfc:scraping', {})
     rm.blockstate('pit_kiln', variants=dict((('stage=%d' % i), {'model': 'tfc:block/pitkiln/pitkiln_%d' % i}) for i in range(0, 1 + 16))).with_lang(lang('Pit Kiln'))
     rm.blockstate('minecraft:slime_block', 'tfc:block/glue_block')
@@ -2605,8 +2605,8 @@ def generate(rm: ResourceManager):
 
     rm.blockstate('bellows', model='tfc:block/bellows', variants=four_rotations('tfc:block/bellows', (270, 180, None, 90))).with_lang(lang('Bellows')).with_block_loot('tfc:bellows')
 
-    rm.blockstate('ingot_pile', 'tfc:block/ingot_pile').with_lang(lang('ingot pile'))
-    rm.blockstate('double_ingot_pile', 'tfc:block/double_ingot_pile').with_lang(lang('double ingot pile'))
+    rm.blockstate('ingot_pile', variants={'': {'model': 'tfc:block/ingot_pile', 'type': 'tfc:dynamic'}}).with_lang(lang('ingot pile'))
+    rm.blockstate('double_ingot_pile', variants={'': {'model': 'tfc:block/double_ingot_pile', 'type': 'tfc:dynamic'}}).with_lang(lang('double ingot pile'))
 
     rm.custom_block_model('ingot_pile', 'tfc:ingot_pile', {})
     rm.custom_block_model('double_ingot_pile', 'tfc:double_ingot_pile', {})

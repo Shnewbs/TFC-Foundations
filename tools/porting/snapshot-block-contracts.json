@@ -1,0 +1,48 @@
+{
+  "baseline": "bf289ca22c3ca3146fe5623cb66c253fb7917044",
+  "reference_sha256": "ebd148d7dbc31c9a4fef57ecee8ee4c49de12eab75290fe9a013e24facff9878",
+  "face_sources_sha256": {
+    "X": "06bf032c41923a54dd23f2bf12e222d1a3c607d29f5333a6338bd7fca0c4af59",
+    "Y": "8f8289f0e08b261172f31ba9523d260188591b655f58f01b00b06094dcfe419c",
+    "Z": "8eb58ddd30c5510ec4a44baea46c7283b75979a6d8b300dedbf9fad8715732c8"
+  },
+  "unchanged_assets": {
+    "src/main/resources/assets/tfc/models/block/ingot_pile.json": "b06b4690cd117c543fb44034a3087e9b27ed8cbfe6233632bc6ee33d1072c332",
+    "src/main/resources/assets/tfc/models/block/double_ingot_pile.json": "b83d176eed278dc719b21a5ef2bca9dab3762798c655f29d08f3a0f4926c4d08",
+    "src/main/resources/assets/tfc/models/block/scraping.json": "7b7b15a841d5dca4454bbf2cb455d6ea843bd01acf96e7be49f6901ce8118657",
+    "src/main/resources/assets/tfc/models/block/mold_table_base.json": "94559c9be56f66025d40fef33e45b432c32befe4b38b7a06ff71be3223a4cc38",
+    "src/main/resources/assets/tfc/models/block/mold/ceramic/axe_head_mold.json": "a25ac5095d0497001e712f6bdfcff3c657d8bdf9f70ac6f8490cf79dbef3738e",
+    "src/main/resources/assets/tfc/models/block/mold/ceramic/bell_mold.json": "019ed3fbda148f04ec62ccd56a44cce4a55aa27bc93604ceeb41627c0afec0fb",
+    "src/main/resources/assets/tfc/models/block/mold/ceramic/chisel_head_mold.json": "35b0bd76c6eba52fff0d3d10d1481ea6c36b50011e51057099e9980e09f35341",
+    "src/main/resources/assets/tfc/models/block/mold/ceramic/fire_ingot_mold.json": "798220d99e14861e834e57a3172737882790527d15c55dd36e1538666eb4fb0c",
+    "src/main/resources/assets/tfc/models/block/mold/ceramic/hammer_head_mold.json": "8b7a0a89a87e0e7e514a3f8e7e985a5c0f082584e93ac926589e3ec4a0a35830",
+    "src/main/resources/assets/tfc/models/block/mold/ceramic/hoe_head_mold.json": "2804e5c41bfd682883fdb547676438da59f449ac6194f3f68c1785fdbeda4033",
+    "src/main/resources/assets/tfc/models/block/mold/ceramic/ingot_mold.json": "798220d99e14861e834e57a3172737882790527d15c55dd36e1538666eb4fb0c",
+    "src/main/resources/assets/tfc/models/block/mold/ceramic/javelin_head_mold.json": "a250f3fe6772956d6943f86472b37c6e77b360930d826b95cc20293d5e60910e",
+    "src/main/resources/assets/tfc/models/block/mold/ceramic/knife_blade_mold.json": "135d992475bf3ac52226d725f8cdf1c0e4b684d9fcefc88d04ebf9cb19b3be5a",
+    "src/main/resources/assets/tfc/models/block/mold/ceramic/mace_head_mold.json": "8b8a138923b6f3cf791917cbcfed3598f92fbcb741a59b8189ca9bd41e957d80",
+    "src/main/resources/assets/tfc/models/block/mold/ceramic/pickaxe_head_mold.json": "d29b886375f14aa92926303e90cf3ef2aee59ef45b57df82853ffbbff8f8fded",
+    "src/main/resources/assets/tfc/models/block/mold/ceramic/propick_head_mold.json": "7ff1f520858062018e4ca6854666b2201a3ddb145cdb88a0f44982cad4be4cae",
+    "src/main/resources/assets/tfc/models/block/mold/ceramic/saw_blade_mold.json": "b354173a985468873f3b184a72b630b3944d9a2c05c06b56c57d8f3d167bbccc",
+    "src/main/resources/assets/tfc/models/block/mold/ceramic/scythe_blade_mold.json": "a85616fda70ec24caf7f65f89b6aa44389f367116a2431df9bae4f21c6260316",
+    "src/main/resources/assets/tfc/models/block/mold/ceramic/shovel_head_mold.json": "09a381d66c0b8fa11bc260f47b5de42b83770dec313f6c9d3103df5aee040bce",
+    "src/main/resources/assets/tfc/models/block/mold/ceramic/sword_blade_mold.json": "23519a768f1012e5a69af656826efb6801bce72d986b92ae380bdd2afa22eb09"
+  },
+  "blockstates": {
+    "src/main/resources/assets/tfc/blockstates/ingot_pile.json": "e406571ece87385041e0a7a209cb41266210c4f8287380b18a67b1d5c4bb7e72",
+    "src/main/resources/assets/tfc/blockstates/double_ingot_pile.json": "52a92260e7f14a673b5da6121568eedd1cb088eb98ca60c7f561425663c376c5",
+    "src/main/resources/assets/tfc/blockstates/scraping.json": "14c3d9312b4dfef9bc7656308b4b3f219ba79b6857172f18f20d7fbb61f01d63",
+    "src/main/resources/assets/tfc/blockstates/mold_table.json": "6be058e41f86f29819123ad4acf56e2f746eef8f43368202a9a604bab95cd7b7"
+  },
+  "targets": {
+    "tfc:block/ingot_pile": "tfc:ingot_pile",
+    "tfc:block/double_ingot_pile": "tfc:double_ingot_pile",
+    "tfc:block/scraping": "tfc:scraping",
+    "tfc:block/mold_table_base": "tfc:mold_table"
+  },
+  "save_writers_sha256": {
+    "src/main/java/net/dries007/tfc/common/blockentities/IngotPileBlockEntity.java": "d1aa341832a3c6aaab0126157589def8691c0bb2c4586e65837e602ce3327ca7",
+    "src/main/java/net/dries007/tfc/common/blockentities/ScrapingBlockEntity.java": "fc5be8974a9817b2f8d446460eb5be74e92f2f1fb6901e42b6c02b787b3cdbd6",
+    "src/main/java/net/dries007/tfc/common/blockentities/MoldTableBlockEntity.java": "41f627d1af52cfaac118b291dd14350d6ea4bbdf01a7df14f3211dd126c7e7a2"
+  }
+}

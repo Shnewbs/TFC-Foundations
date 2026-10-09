@@ -6,84 +6,63 @@
 
 package net.dries007.tfc.client.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.resources.model.geometry.BakedQuad;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.core.BlockPos;
-import net.minecraft.client.renderer.block.BlockAndTintGetter;
-import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.model.data.ModelData;
-import net.neoforged.neoforge.client.model.pipeline.QuadBakingVertexConsumer;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.ResolvedModel;
+import net.minecraft.client.resources.model.SimpleModelWrapper;
+import net.minecraft.client.resources.model.geometry.QuadCollection;
+import net.minecraft.client.resources.model.geometry.UnbakedGeometry;
+import net.minecraft.resources.Identifier;
+import net.neoforged.neoforge.client.model.AbstractUnbakedModel;
+import net.neoforged.neoforge.client.model.StandardModelParameters;
+import net.neoforged.neoforge.client.model.NeoForgeModelProperties;
+import net.neoforged.neoforge.client.model.UnbakedElementsHelper;
 
-public interface SimpleStaticBlockEntityModel<T extends IBakedGeometry<T>, B extends BlockEntity> extends IBakedGeometry<T>, IStaticBakedModel
+import net.dries007.tfc.common.blockentities.BlockEntityModelData;
+
+/** World-only snapshot models for piles and scraped items. Inventory items use their own static models. */
+public final class SimpleStaticBlockEntityModel extends AbstractUnbakedModel implements DynamicBlockModel
 {
+    public enum Kind { INGOT, DOUBLE_INGOT, SCRAPING }
+    private static final Identifier MISSING = Identifier.withDefaultNamespace("missingno");
+    private final Kind kind;
+
+    public SimpleStaticBlockEntityModel(StandardModelParameters parameters, Kind kind)
+    {
+        super(parameters);
+        this.kind = kind;
+    }
+
+    @Override public UnbakedGeometry geometry() { return UnbakedGeometry.EMPTY; }
+
     @Override
-    @NotNull
-    @SuppressWarnings("unchecked")
-    default ModelData getModelData(BlockAndTintGetter level, BlockPos pos, BlockState state, ModelData modelData)
+    public BlockStateModel bakeBlock(ResolvedModel owner, ModelBaker baker, ModelState state)
     {
-        final BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity != null && blockEntity.getType() == type())
+        final BlockStateModelPart empty = new SimpleModelWrapper(QuadCollection.EMPTY, owner.getTopAmbientOcclusion(), baker.missingBlockModelPart().particleMaterial());
+        final var root = owner.getTopAdditionalProperties().getOptional(NeoForgeModelProperties.TRANSFORM);
+        final ModelState transformed = root == null ? state : UnbakedElementsHelper.composeRootTransformIntoModelState(state, root);
+        final StaticBlockMeshBaker meshBaker = new StaticBlockMeshBaker(baker.materials(), owner, transformed, owner.getTopAmbientOcclusion());
+        if (kind == Kind.SCRAPING)
         {
-            return modelData.derive()
-                .with(StaticModelData.PROPERTY, render(level, pos, (B) blockEntity))
-                .build();
+            return new SnapshotBlockStateModel<>(
+                (data, block) -> data.get(BlockEntityModelData.SCRAPING),
+                value -> meshBaker.bake(StaticBlockMesh.scraping(value, MISSING)), empty);
         }
-        return modelData;
-    }
-
-    default StaticModelData render(BlockAndTintGetter level, BlockPos pos, B blockEntity)
-    {
-        final int packedLight = LightTexture.pack(level.getBrightness(LightLayer.BLOCK, pos), level.getBrightness(LightLayer.SKY, pos));
-        final int packedOverlay = OverlayTexture.NO_OVERLAY;
-        final List<BakedQuad> quads = new ArrayList<>(faces(blockEntity));
-
-        class Baker extends QuadBakingVertexConsumer
-        {
+        final boolean doubled = kind == Kind.DOUBLE_INGOT;
+        return new SnapshotBlockStateModel<PileKey>((data, block) -> {
+            final var pile = data.get(BlockEntityModelData.PILE);
+            if (pile == null) return null;
+            // The geometry count comes from the current block state, not a potentially older inventory packet.
             int count = 0;
-
-            @Override
-            public VertexConsumer addVertex(float x, float y, float z)
+            for (var property : block.getProperties())
             {
-                if (count == 4)
-                {
-                    count = 0;
-                    quads.add(bakeQuad());
-                }
-                count++;
-                return super.addVertex(x, y, z);
+                if (property.getName().equals("count") && block.getValue(property) instanceof Integer value) count = value;
             }
-        }
-
-        // Inconveniently, this vertex consumer has to be manually baked after each quad. So, we listen to each
-        // addVertex(x, y, z) to empty it, except the first call, and then remember to retrieve the final vertex
-        final Baker baker = new Baker();
-        final TextureAtlasSprite particle = render(blockEntity, new PoseStack(), baker, packedLight, packedOverlay);
-        if (baker.count > 0) // We baked at least one quad, so get the last one
-        {
-            quads.add(baker.bakeQuad());
-        }
-        return new StaticModelData(quads, particle);
+            return new PileKey(pile, count);
+        }, value -> meshBaker.bake(StaticBlockMesh.pile(value.data(), value.count(), doubled)), empty);
     }
 
-    /**
-     * @return {@link TextureAtlasSprite a particle texture}
-     */
-    TextureAtlasSprite render(B blockEntity, PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay);
-
-    BlockEntityType<B> type();
-
-    /**
-     * @return An estimate for the number of {@link BakedQuad}s to be created, for capacity-allocation.
-     */
-    int faces(B blockEntity);
+    private record PileKey(BlockEntityModelData.Pile data, int count) {}
 }

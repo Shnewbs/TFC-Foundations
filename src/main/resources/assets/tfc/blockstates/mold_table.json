@@ -3,7 +3,8 @@
   "multipart": [
     {
       "apply": {
-        "model": "tfc:block/mold_table_base"
+        "model": "tfc:block/mold_table_base",
+        "type": "tfc:dynamic"
       }
     },
     {

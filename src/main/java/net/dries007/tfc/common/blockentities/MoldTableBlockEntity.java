@@ -33,7 +33,6 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.model.data.ModelData;
 import org.apache.commons.lang3.tuple.Pair;
 
-import net.dries007.tfc.client.model.MoldTableBlockModel;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.capabilities.DelegateItemHandler;
 import net.dries007.tfc.common.capabilities.InventoryItemHandler;
@@ -268,7 +267,9 @@ public class MoldTableBlockEntity extends TickableInventoryBlockEntity<MoldTable
     @Override
     public ModelData getModelData()
     {
-        return ModelData.of(MoldTableBlockModel.MoldModelData.PROPERTY, MoldTableBlockModel.getMoldModelData(getMoldStack()));
+        final ItemStack mold = getMoldStack();
+        if (mold.isEmpty() || !mold.is(TFCTags.Items.USABLE_IN_MOLD_TABLE)) return super.getModelData();
+        return super.getModelData().derive().with(BlockEntityModelData.MOLD, BuiltInRegistries.ITEM.getKey(mold.getItem())).build();
     }
 
     public Fluid getFluidToRender()
@@ -393,6 +394,7 @@ public class MoldTableBlockEntity extends TickableInventoryBlockEntity<MoldTable
             fluid = Optional.empty();
         }
         super.loadAdditional(nbt);
+        BlockEntityModelData.refresh(this);
     }
 
     @Override
