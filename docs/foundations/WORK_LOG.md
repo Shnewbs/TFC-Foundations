@@ -1,94 +1,74 @@
 # TFC Foundations — Work Log
 
-The complete earlier work log is retained byte-for-byte in [WORK_LOG_BEFORE_LOOT_MIGRATION](history/WORK_LOG_BEFORE_LOOT_MIGRATION.md). It records the initial source publication, toolchain/dependency work, dual-target decision, gameplay API migrations and Earth groundwork. This file continues that history; it does not replace the recorded validation limits.
+The complete previous work log is preserved byte-for-byte in [WORK_LOG_BEFORE_VISUAL_SAVE_API](history/WORK_LOG_BEFORE_VISUAL_SAVE_API.md). It records the public-source decision, dual targets, loot migration, exact-target compiler setup and the 346-file common API checkpoint. The earlier initial history is also retained in [WORK_LOG_BEFORE_LOOT_MIGRATION](history/WORK_LOG_BEFORE_LOOT_MIGRATION.md). This log continues those records; it does not replace or upgrade their validation claims.
 
-## 2026-10-09 UTC — Loot migration and reproducible target evidence
+## 2026-10-09 UTC — Particle and block-entity save API continuation
 
-### Starting points and public commits
+### Source and publication
 
-The continuation resumed `26.1.2` from `1811814ee1e2bd7bbe1d5b1fdf6067bf4fe0d3f9` and `26.x` from `2d45ee32ceed4d5c8341cc0ed33dcafad3e095a3`. The user's prior public-push authorization remains in effect. No force push, branch deletion, release or version increment was performed.
+Resumed public branch `26.1.2` at `47839e6fbba714ce9c5ac5e9bb1222636a3b28cc`. The last code/test checkpoint was `8d27f34a1d76535f6b359b5151295ff8fc16f0e6`; its full Gradle compilation reported 3,438 errors. The user's public-push authorization remains in force. Target and dependency versions did not change.
 
-- `5f2800b86d44f7a4e694928b755c3065637f7a8f` on 26.1.2: bounded CI summaries with full logs and exact source archives.
-- `e8928686036cd13b137e129ec7b9dde25a3288b9` on 26.1.2: deduplicated compiler reports and exact resolved API inspection.
-- `6d3180c130b9a907be5f31511fb34e17039d5210` on 26.x: the same diagnostic infrastructure, independently resolved against 26.3.
-- `cc04e4f1f37fa62f59f30ca5f8d23d301dbc56d9` on 26.1.2: 14 production loot Java files ported to direct codecs/context keys, with a focused actual-source validation probe.
+- `f6e34d0c7fe831059d2b3afa09986e7c97b7823b`: staged a checksum-guarded, one-time source transfer on the existing branch.
+- `46401c030a6d2a6e8d9721147837237d8b03605d`: applied the reviewed 72-file particle/save checkpoint, removed the temporary transfer files and workflow, and dispatched normal validation.
+- No force push, branch deletion, version increment, release or CurseForge upload was performed. The 26.x/26.3 source and Earth work were not changed.
 
-### Source changes and preservation checks
+All 72 file preimages and postimages were checked. The exact patch passed `git apply --check --index` and a clean replay with whitespace errors rejected. The downloaded CI source archive was then checked against the final manifest and local source; every reviewed file matched and all temporary transfer paths were absent.
 
-26.1.2's loot condition, number-provider and function registries now register MapCodec instances directly rather than the removed wrapper types. Each implementation returns the same static codec instance that is registered. Custom context keys preserve `tfc:isolated`, `tfc:burnt_out` and `tfc:sluice`. All 11 loot registry identifiers are preserved. The presence-based flag semantics are unchanged; a present Boolean false is not silently reinterpreted as an absent flag.
+### Production changes
 
-Animal/crop yield formulas are unchanged apart from the required context accessor renames. Fluid-copy behavior still uses the original SIMULATE/EXECUTE flow. MinMaxProvider now validates each nested provider with a field-specific context. Loot package defaults and CopyFluidFunction's explicit nullable declarations use JSpecify. The repository-wide nullability migration is not complete.
+**Particles:** 14 production source files were migrated from removed TextureSheetParticle/render-type APIs to the exact target SingleQuadParticle, sprite construction, provider RandomSource and layer interfaces. The patch keeps motion and tint logic where the APIs permit, rather than replacing particles with empty implementations. Falling leaves use the target vanilla falling-leaf constructor verified from the resolved target bytecode; the old vanilla motion is not assumed identical. Fluid-drip light behavior keeps its existing glowing light value while adopting the target method name. Actual client appearance and rendering are not tested.
 
-Local source audits passed for all 11 registered IDs, all three context IDs, both yield calculations and absence of removed loot wrapper/context accessor names in the migrated package. These were structural source checks, not game-runtime tests.
+**Block-entity persistence:** 89 old save/load hooks across 45 classes now use ValueInput/ValueOutput. Related base/interface files, nested inventory serializers, pot-output codecs, component readers and synchronization hooks were updated. Inventory constraints now use ValueIOSerializable; native ItemStackHandler serialization and custom composite inventories keep the relevant nested item layout. Pot outputs and inventory names clear stale state when those fields are absent on a later synchronization.
 
-### Exact commands and observed results
+The TFCBlockEntity base now calls superclass saveAdditional/loadAdditional, preserving NeoForge's data/attachment hooks. Its onDataPacket/handleUpdateTag signatures match the target and continue delegating through the superclass. The bytecode probe checks these four delegations. This is not a live attachment round-trip test.
 
-CI runs the full build without hiding its exit status:
+**Strict and legacy reads:** ValueInput overloads in NbtHelpers preserve explicit numeric tag kinds and reject mixed lists where the older format required homogeneity. ValueIoHelpers keeps list positions when an individual codec value is invalid, handles optional item stacks, and accepts legacy JSON custom names alongside native component representations. Source checks found no unexplained scalar save-key loss across the migrated hooks. Crucible alloy decoding retains its codec field layout and now defaults invalid/missing decoded alloy data to empty; compatibility with corrupt or modded worlds still needs runtime validation.
+
+**Fluid layout correction before publication:** review found an initially flattened tank writer would not preserve NeoForge's 1.21.1 layout. The primary source at `neoforged/NeoForge`, commit `a2d6402a3c1eec093aef7e7d10ac5145906c199e`, `src/main/java/net/neoforged/neoforge/fluids/capability/templates/FluidTank.java`, confirms writeToNBT writes a nested `Fluid` child. Exact target bytecode also stores `Fluid`. The published writer therefore delegates to `tank.serialize(output.child(key))`. The reader accepts the canonical wrapped format and an additional flat-stack fallback. The test fixture and emitted-bytecode assertion were corrected before the final patch was generated. The tests do not execute a registry-backed fluid round trip.
+
+Core gameplay, visual systems, guide sources, identifiers and release gates remain enabled/preserved. FluidTank's deprecation warnings remain visible; the wider capability port is still required.
+
+### Exact tools and commands
+
+Local checks use the previously verified Java 25 compiler and all 84 JARs from the exact pinned Minecraft 26.1.2 / NeoForge 26.1.2.114 / JEI 29.43.0.107 / Patchouli 26.1-94 classpath. No Minecraft or TFC stubs were introduced.
+
+```sh
+# JAVA_HOME and PATH must both select the resolved Java 25 JDK.
+python tools/porting/compile_main_diagnostics.py
+python tools/porting/inspect_api.py
+```
+
+The main-source runner records exit status and timeouts and uses `-proc:none`; it remains diagnostic-only. Local completed passes reported 2,995 errors after particle migration and 2,920 after the save migration. The final corrected tank writer was retested with the same completed 2,920 result across 1,632 main Java files. There were no particle-package diagnostics; 33 raw block-entity diagnostics remain, mostly unrelated inventory/holder/particle-constructor APIs. Counts are not gameplay progress or independent bugs.
+
+One standalone loot invocation initially used the host Java executable and failed because it could not target release 25. Rerunning with both JAVA_HOME and PATH pointing to the resolved JDK passed. The final complete inspect_api invocation passed all standalone suites; the failed environment attempt is not treated as a source regression or a successful test.
+
+Normal GitHub validation continues to run:
 
 ```sh
 ./gradlew -I tools/porting/diagnostics.gradle writePortClasspath compileJava compileDataJava compileTestJava build --continue --no-daemon --no-configuration-cache --console=plain
 ```
 
-Build output is retained in `port-diagnostics/build.log`. The init script only records the resolved classpath; it does not remove production source sets or relax packaging/release gates. `inspect_api.py` scans actual resolved JARs and records public javap signatures, rather than assuming API compatibility from class names. Diagnostic artifacts contain signatures, reports and this project's source, not copies of Minecraft binaries.
+`inspect_api.py` invokes the existing common and loot suites plus the new `run_visual_save_smoke.py`, propagating any failure. The new script compiles actual production classes against the exact classpath, executes SaveIoSmoke, checks emitted bytecode delegation contracts and rejects remaining legacy APIs in the migrated particle/save paths. The normal build still fails when compilation fails; passing probes do not override that outcome.
 
-[26.1.2 run 37872611533](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37872611533), source commit `cc04e4f`:
+### Independent GitHub validation
 
-- Full build: FAIL, still reaches javac's configured 1,000-error display cap. Grouped/repeated diagnostics are not a reliable total-backlog or progress percentage.
-- `python3 tools/porting/inspect_api.py`: PASS, inspected 23 exact target API types and ran the focused source probe.
-- Focused Java 25 compilation: PASS for the actual production AlwaysTrueCondition, MinMaxProvider and their package metadata. The empty source path prevents an accidental whole-project compile; no fake game/TFC implementations are supplied.
-- Focused runtime probe: PASS, four checks on the actual AlwaysTrueCondition codec: stable identity, singleton builder, encoding and round trip. This is not mod loading or validation of all 11 registered codecs.
-- `python resources validate`: PASS. Reported zero errors for the checked language, model-parent, texture, blockstate and unused-model categories. This does not prove target rendering compatibility.
-- Artifact: `11590039374`, named `tfc-port-diagnostics-37872611533-1`, seven-day retention. Earlier exact-API artifacts: 26.1.2 `11590293535` from run `37871566668`; 26.3 `11589869160` from run `37871626426`.
+[Run 37881633084](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37881633084), testing source `46401c03`, completed with overall **failure**:
 
-The local container only had Java 21 and no resolved target dependency cache, so these Java 25 results came from GitHub Actions, not an alleged local full build.
+- **FAIL:** full Gradle build/main compilation, exit 1; javac reports 2,920 errors, independently matching the final local diagnostic pass. The summary groups them into 2,795 path/line/message entries, including 32 grouped block-entity entries. Do not conflate these grouped entries with 33 raw block-entity messages or the full javac count.
+- **PASS:** 51 existing common utility/API checks, four actual production loot codec checks, and 49 new real NBT/ValueIO checks: **104 standalone checks total**.
+- **PASS:** separate compilation of seven actual production particle classes, TFCBlockEntity, NbtHelpers and ValueIoHelpers. All 113 main/data/test package-info files also compile in the common probe.
+- **PASS:** four superclass save/sync delegations and delegation to the native tank serializer verified in emitted bytecode.
+- **PASS:** main/data/test license tasks and the existing resource-validation step.
+- **NOT RUN:** client rendering, actual block-entity/world save/reload, registry-backed item/fluid/name round trips, bootstrap-dependent chunk/component/provider execution, multiplayer, survival progression or performance measurements. Downstream full data/test compilation and packaging remain blocked by main compilation.
 
-### Branch divergence discovered before sharing the patch
+The 49 new executed checks test NBT/ValueIO utilities, type/list handling, defaults and generic nested fixtures. The inventory/tank fixture structure checks are not real inventory/tank registry round trips. The successful separate particle/base compilation is not full-mod compilation or mod loading.
 
-The 14 original loot files were byte-identical on both branch checkpoints, but their resolved target APIs were not. 26.3 LootContext exposes `getOptional` instead of 26.1.2's getParameter/getOptionalParameter pair; conditional function builders have holder-based conditions; NumberProvider and NumberProviders no longer exist. The target class inventory contains separate ContextIntProvider and ContextFloatProvider families. Minecraft's official 26.3 notes independently document the integer/float registry split.
+Artifact **11594941066**, `tfc-port-diagnostics-37881633084-1`, contains build/probe logs, reports and the exact source snapshot, with seven-day retention ending October 16, 2026 UTC. Downloaded SHA-256 **381b4560e4bccc60b09fa733d5ac9898eef33d1803e8d721e995ec1b47fb3169** was verified. The public source snapshot reproduces every reviewed changed file byte-for-byte.
 
-Consequently, the 26.1.2 loot patch was NOT blindly copied to 26.x. The 26.3 source/data migration must select appropriate provider registries and preserve integer drop counts, codec references, optional context handling and conditional-function behavior. The 26.3 full build remains failed; its diagnostic infrastructure is usable.
+The delivered source patch `TFC-Foundations-26.1.2-visual-save-api.patch` is 202,115 bytes, with SHA-256 **8194497a201bbe22bc6b83fdea09ac8c69826c72c512bfab46e63e2fbdecf1ca**. It contains the 72-file code/test checkpoint; it is not a runnable JAR or release.
 
-### Outstanding work and release boundary
+### Remaining milestone
 
-Remaining displayed failures include obsolete rendering/model classes, JEI/Patchouli adapters, legacy package nullability defaults, gameplay type relocations, old tool/armor APIs and serialization/dependency changes. The next source pass should work through common API blockers and then rendering/integration adapters. After compilation, validate all inherited interaction, recipe reload/sync, calendar, worldgen, save/restart, multiplayer and survival-progression regressions recorded in the earlier log.
+The completed compiler count decreased from 3,438 to 2,920, or 518 fewer diagnostics. Rendering/model and ClientEventHandler migration, entity save hooks, equipment, capabilities, registry/holder and world-generation APIs, and JEI/Patchouli integration remain major blockers. No error count is a completion percentage. The next milestone is still a fully compiled 26.1.2 build, followed by actual client and server playability testing.
 
-Earth's existing coordinate/elevation groundwork remains preserved but untouched in this continuation. No Earth preset, dataset integration or complete world generator was added. No playable JAR, client/server startup result, gameplay regression result, performance claim, GitHub release or CurseForge upload is claimed.
-
-Current decision/status is in [PROJECT_STATUS](../../PROJECT_STATUS.md). Continue appending exact commit/run outcomes here; never mark planned work as tested.
-
-
-## 2026-10-09 UTC — Common API continuation toward the compiler milestone
-
-Resumed source `2854e31b81b3f159dcabaf74f0805ac70a762321` on 26.1.2. Public tooling commit `c52eed5fceeca8083b012993719cac07333d2ceb` produced a bounded exact-target compiler bundle in successful workflow `37873949671`. All 84 classpath JAR hashes were checked after download. Local compilation uses that Java 25 runtime and the exact Minecraft 26.1.2 / NeoForge 26.1.2.114 / JEI 29.43.0.107 / Patchouli 26.1-94 inputs, not guessed libraries.
-
-Production changes update legacy package defaults to JSpecify, DirectionProperty to EnumProperty<Direction>, ContainerInput and teleport APIs, moved model data/advancement packages and ARGB calls. The tooltip debug path uses DataComponentPatch.getPatch so absent patches, explicit removal and explicit values remain distinct. Level field reads, ChunkPos record accessors/factories and NBT reads were planned with javac-resolved receiver types, not broad field-name replacement. Source preimages and final contents are verified before public application.
-
-The new NbtHelpers implements strict saved-tag checks and validates every element of a formerly homogeneous list, returning a fresh empty list on invalid/missing input. Existing numeric/string reads now state their old fallback values explicitly. The independently testable Unchecked utility replaces reliance on a removed transitive library while keeping Helpers as the calling facade and preserving throwable identity.
-
-Validation:
-
-- Diagnostic Java main pass initially terminated with 1,341 reported errors; the first source slice reported 846 before the same early stop. Those are not full counts.
-- After repairing the debug component-patch accessor, javac completed a larger diagnostic traversal with 3,979 errors. The typed common pass then completed with 3,490; the utility/type-check follow-up completed with 3,438. Error counts are not an estimate of project completion, nor proof that all downstream errors are exposed.
-- Some local full-compile attempts were interrupted by execution timeouts. Only logs ending with javac's final error/warning totals are treated as completed diagnostic passes. The normal Gradle release gate is not replaced by this manual `-proc:none` pass.
-- `JAVA_HOME=<resolved Java 25> python tools/porting/run_common_smoke.py`: PASS, 51 standalone actual-utility/API checks; independently compiled all 113 package-info files across main/data/test. The first run caught remaining stale annotation imports; those were corrected and retested.
-- Chunk-position, component-patch and integer-provider runtime probes: NOT RUN successfully. A plain-Java attempt failed because Minecraft/NeoForge bootstrap was absent. Their code compiles but they are excluded from the standalone runtime count, explicitly reported as not run, and must be executed in a genuine bootstrapped harness later.
-- `python tools/porting/run_loot_smoke.py` with the resolved JDK on PATH: PASS, the existing four production AlwaysTrueCondition checks; MinMaxProvider also compiles.
-- `git diff --check`: PASS. No registry/resource/save-key rename or release gate relaxation is intended. The compiler error display limit is raised to 10,000 to expose diagnostics, not to suppress failures.
-
-The standalone probes are integrated into `inspect_api.py`; normal CI still fails when the Gradle build fails. `compile_main_diagnostics.py` provides the separate reproducible main-source diagnostic command and records timeouts/exit codes explicitly. The 26.x/26.3 branch, Earth terrain work, gameplay behavior redesign, feature exclusions and dependency/version pins were not changed. The compiler milestone, playable JAR and release remain outstanding.
-
-
-### Published common API checkpoint and final verification
-
-- `a50ff2545829b8de30191fcccd1936476c699ffe`: staged the bounded checksum-guarded source transfer, preserving real repository ancestry.
-- `fd86c879b08723d8253d95b1304a67d266268dde`: applied all 345 reviewed files and removed the temporary transfer files/workflow. Apply run `37878007059` succeeded; its success meant source application only, not a mod build.
-- Initial source validation `37878039473` failed compileJava with 3,438 errors; licenses and resource validation passed. Artifact `11593590960` was downloaded and checksum-verified. Comparing its actual source against the local working tree caught one omitted CI invocation in tools/porting/inspect_api.py; no other existing source differences remained.
-- `8d27f34a1d76535f6b359b5151295ff8fc16f0e6`: explicitly connected both the common and loot probes to API inspection, propagating failures. This corrects the earlier statement that common checks were already running in CI at the first source checkpoint.
-
-[Final validation 37878610233](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37878610233) tested `8d27f34a`: full Gradle build FAIL (exit 1, compileJava, 3,438 errors); main/data/test license checks PASS; API inspection PASS; 51 common utility/API checks PASS; four production loot codec checks PASS; existing resource validation PASS. All 113 package-info files compile separately. Bootstrap-dependent chunk/component/provider checks explicitly remain compiled-only, not successful runtime checks. The diagnostic summary groups errors by path/line/message into 3,199 entries; the full log contains repeated Gradle presentations, so grouped entries, occurrences and javac's final count must not be conflated.
-
-Artifact `11593477212`, `tfc-port-diagnostics-37878610233-1`, has seven-day retention. Download SHA-256: `3553f7d569d7fcde4d395451bb0b8f9bda0e4b5ca4e6b699a144def9fb1447de`. Verified its exact source snapshot against the local reviewed source and confirmed the one-time transport files were absent. The combined 346-file migration patch passed a clean apply check against the recorded baseline and reproduced all reviewed changed files byte-for-byte.
-
-The shipped `compile_main_diagnostics.py` was also exercised locally against the final source: 1,631 main Java files, exit 1, 3,438 displayed errors, timed_out=false. This remains a -proc:none diagnostic command, not a substitute for Gradle/mixin/data/test/runtime validation.
-
-Next source work: rendering/model/particle APIs and entity/block-entity save lifecycle changes, with equipment, capabilities and registry/holder migration also outstanding. ClientEventHandler, entity models and block-entity renderers are prominent diagnostic clusters. Existing CI logs additionally warn about deprecated action versions and a cache-service 400; those are non-blocking tooling issues, not the source compilation failure. No 26.3 source changes, performance claim, playable JAR, version increment or release was made in this checkpoint. The compiler milestone is still open.
+The prior common API and earlier loot patches are not blindly copied to 26.3: the exact target APIs diverge. No 26.3 source or Earth generator was implemented during this checkpoint. No playable JAR, successful client/server startup, performance improvement or release is claimed. Current direction and validation limits are summarized in [PROJECT_STATUS](../../PROJECT_STATUS.md).
