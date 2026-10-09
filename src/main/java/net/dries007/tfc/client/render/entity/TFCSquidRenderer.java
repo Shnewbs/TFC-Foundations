@@ -7,7 +7,7 @@
 package net.dries007.tfc.client.render.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.model.SquidModel;
+import net.minecraft.client.model.animal.squid.SquidModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.SquidRenderer;
 

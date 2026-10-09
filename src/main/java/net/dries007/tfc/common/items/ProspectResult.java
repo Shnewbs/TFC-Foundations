@@ -7,7 +7,7 @@
 package net.dries007.tfc.common.items;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;

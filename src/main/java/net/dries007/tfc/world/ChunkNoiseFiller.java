@@ -8,7 +8,7 @@ package net.dries007.tfc.world;
 
 import java.util.Map;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Block;

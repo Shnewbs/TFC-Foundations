@@ -8,7 +8,7 @@ package net.dries007.tfc.common.blocks.devices;
 
 import java.util.Map;
 import java.util.Optional;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;

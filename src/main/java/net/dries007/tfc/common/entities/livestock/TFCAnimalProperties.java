@@ -8,7 +8,7 @@ package net.dries007.tfc.common.entities.livestock;
 
 import java.util.Locale;
 import javax.annotation.Nonnull;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;

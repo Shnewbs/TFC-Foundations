@@ -7,7 +7,7 @@
 package net.dries007.tfc.common.blocks;
 
 import java.util.Map;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;

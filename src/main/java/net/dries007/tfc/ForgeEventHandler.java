@@ -53,7 +53,7 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
@@ -82,7 +82,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.TriState;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.ItemStackedOnOtherEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -1322,9 +1322,9 @@ public final class ForgeEventHandler
         }
     }
 
-    public static void addReloadListeners(AddReloadListenerEvent event)
+    public static void addReloadListeners(AddServerReloadListenersEvent event)
     {
-        DataManagers.REGISTRY.forEach(event::addListener);
+        DataManagers.REGISTRY.forEach(manager -> event.addListener(DataManagers.REGISTRY.getKey(manager), manager));
         Helpers.setCachedRecipeManager(event.getServerResources().getRecipeManager());
     }
 
@@ -1344,7 +1344,7 @@ public final class ForgeEventHandler
      * This is when tags are safe to be loaded, so we can do post reload actions that involve querying ingredients.
      * It is fired on both logical server and client after resources are reloaded (or, sent from server).
      * In addition, during the first load on a server in {@link Main}, the server won't exist yet at all.
-     * In that case, we need to rely on the fact that {@link AddReloadListenerEvent} will be fired before that point, and we can capture the server's recipe manager there.
+     * In that case, we need to rely on the fact that {@link AddServerReloadListenersEvent} will be fired before that point, and we can capture the server's recipe manager there.
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static void onTagsUpdated(TagsUpdatedEvent event)

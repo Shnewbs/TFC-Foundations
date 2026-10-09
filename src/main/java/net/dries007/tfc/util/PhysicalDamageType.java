@@ -195,7 +195,7 @@ public enum PhysicalDamageType implements StringRepresentable
 
     /**
      * A set of defensive multipliers for damage type specific resistances.
-     * This is applied when on the {@link net.minecraft.world.item.ArmorMaterial} used by a {@link ArmorItem}, and when defined via a {@link EntityDamageResistance}.
+     * This is applied when on the {@link net.minecraft.world.item.equipment.ArmorMaterial} used by a {@link ArmorItem}, and when defined via a {@link EntityDamageResistance}.
      */
     public interface Multiplier
     {

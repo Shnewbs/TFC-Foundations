@@ -58,3 +58,12 @@ Migrated 36 entity class locations plus MobSpawnType → EntitySpawnReason acros
 ### Dual-target build setup — 2026-10-08
 
 Accepted user direction: prioritize a playable 26.1.2 branch and continue 26.3 on 26.x for eventual 26.4. CI now listens to both branches and runs compiler, test and packaging checks independently. Modern Patchouli Maven coordinates use patchouli-neoforge; 26.1.2 pins released 26.1-94, while 26.3 remains blocked pending a compatible guide dependency. No runtime compatibility or release claimed.
+
+
+## 2026-10-09 — Shared relocations and keyed reload registration
+
+- Compared official client JAR inventories for 26.1.2 and 26.3; applied 26 shared class package relocations, including JVM descriptor paths. Class existence does not prove method compatibility. Kept Bucketable in its target-specific package on 26.1.2.
+- Migrated server/client reload registration to AddServerReloadListenersEvent/AddClientReloadListenersEvent and unique namespaced listener keys, using both NeoForge source distributions. Preserved vanilla recipe-manager access after checking both target signatures.
+- Initial dual-track CI runs 37863900030 (26.1.2) and 37863876836 (26.3) reached Java compilation and failed with the first 100 displayed errors; this is not a total error count. Remaining failures include model/rendering, interaction, worldgen and optional integration APIs.
+- Local 26.1.2 metadata generation, dependency resolution and license checks passed. Full local compilation remains blocked by the documented host executable-discovery failure. No playable JAR or runtime verification is claimed.
+- Required regression checks after compilation: initial client resource load and F3+T (all color maps/stars), server start and repeated /reload (all data managers), recipes after reload, multiplayer data sync/reconnect, dedicated-server class loading, entity/model rendering, survival progression and save/restart.
