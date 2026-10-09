@@ -9,7 +9,7 @@ package net.dries007.tfc.mixin.accessor;
 import java.util.function.BiConsumer;
 
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;

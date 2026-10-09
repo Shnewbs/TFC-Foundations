@@ -1,11 +1,11 @@
 # Port milestones and release gates
 
-Pending unless PROJECT_STATUS.md explicitly records completion. Target 26.3 first, then released 26.4 with a usable matching toolchain. Never broaden version ranges to claim untested compatibility.
+Pending unless PROJECT_STATUS.md explicitly records completion. Prioritize a playable 26.1.2 alpha while maintaining a separate 26.3 foundation for released 26.4 with a usable matching toolchain. Never broaden version ranges to claim untested compatibility.
 
 | Milestone | Deliverable | Exit evidence |
 | --- | --- | --- |
 | 0 — Baseline | Public fork, preserved history, safe publishing, audit and reproducible tests | Public source publication authorized, upstream SHA recorded, baseline build/data validation results |
-| 1 — 26.3 compilation | Verified toolchain; registration, components, recipes, networking, worldgen, entities and rendering ported | Clean build/test/resource reports, no no-op gameplay substitutes |
+| 1 — Target compilation | Verified toolchain; registration, components, recipes, networking, worldgen, entities and rendering ported | Clean build/test/resource reports, no no-op gameplay substitutes |
 | 2 — Playable alpha | Core survival on client and dedicated server, usable guide | New world, save/restart/reconnect, stone tools, firepit, pottery, copper/bronze, bloomery/iron, food/thirst, seasons, crops and animals tested |
 | 3 — Extensions | Public API and datapack examples; scripting adapters where target releases exist | Same operations verified through each supported route, reload errors and multiplayer sync tested |
 | 4 — Building/art | Optional Conquest compatibility and coherent material palette | Permissions/versions recorded, tool/recipe/support balance checked, dense-build profiling |
@@ -14,8 +14,7 @@ Pending unless PROJECT_STATUS.md explicitly records completion. Target 26.3 firs
 
 ## Version policy
 
-The first 26.x candidate is `0.0.0`, targeting Minecraft `26.3`.
-Expected filename: `TFC-Foundations-26.3-0.0.0.jar`.
+Both tracks start at `0.0.0`: `TFC-Foundations-26.1.2-0.0.0.jar` and `TFC-Foundations-26.3-0.0.0.jar`.
 This is a candidate identifier, not evidence of a working port or a published release.
 Use exact Minecraft compatibility until each later target is validated.
 

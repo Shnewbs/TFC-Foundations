@@ -8,8 +8,8 @@ package net.dries007.tfc.client.render.entity;
 
 import java.util.Map;
 import com.google.common.collect.Maps;
-import net.minecraft.Util;
-import net.minecraft.client.model.HorseModel;
+import net.minecraft.util.Util;
+import net.minecraft.client.model.animal.equine.HorseModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.AbstractHorseRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

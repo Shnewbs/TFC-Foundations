@@ -7,7 +7,7 @@
 package net.dries007.tfc.client.model.entity;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.model.PigModel;
+import net.minecraft.client.model.animal.pig.PigModel;
 import net.minecraft.client.model.QuadrupedModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;

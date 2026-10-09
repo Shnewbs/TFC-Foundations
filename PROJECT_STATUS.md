@@ -7,10 +7,10 @@ Updated: 2026-10-08. Read this file first when resuming work.
 - Destination: `Shnewbs/TFC-Foundations`, default branch `26.x`.
 - Publication policy (2026-10-08): the user explicitly authorized public source pushes to this existing fork. This supersedes the earlier private-repository requirement. Continue using `Shnewbs/TFC-Foundations`; no detachment/new repository is needed.
 - Source baseline: `e9d9a88a187d5a33064e2d86b2803f54238cadd6`, originally identical to upstream `1.21.x`. The branch name does not indicate a completed port.
-- First candidate version: **0.0.0**, expected filename `TFC-Foundations-26.3-0.0.0.jar`.
-- Build configuration now targets Minecraft 26.3, NeoForge 26.3.0.58-beta, Java 25, Gradle 9.2.1 and ModDevGradle 2.0.148. Gameplay port is underway: the first source migration replaces ResourceLocation with Identifier across 179 Java files. Full 26.3 compilation has NOT passed.
-- Requested target: Minecraft 26.3, then released 26.4 with a usable NeoForge toolchain. Official metadata currently lists release 26.3, snapshot 26.4-snapshot-3 and NeoForge 26.3.0.58-beta. These are observed versions, not a tested dependency set.
-- No playable Foundations build, 26.3 compilation, benchmark result, KubeJS/CraftTweaker adapter or Conquest integration exists yet.
+- First candidate version: **0.0.0** on both tracks; neither is playable yet.
+- Playable-alpha priority: branch `26.1.2`, Minecraft 26.1.2, NeoForge 26.1.2.114, JEI 29.43.0.107, Patchouli 26.1-94.
+- Forward-port foundation: branch `26.x`, Minecraft 26.3, NeoForge 26.3.0.58-beta, JEI 31.9.0.61. Continue toward 26.4 when its release and matching dependencies are available.
+- Shared toolchain: Java 25, Gradle 9.2.1, ModDevGradle 2.0.148. Both GitHub builds reach Java compilation and fail on remaining source migration errors. No gameplay or full Java tests have passed.
 - Daily upstream/version monitoring was enabled on 2026-10-08. It reports meaningful changes, not automatic merges of untested fixes.
 
 ## Decisions
@@ -25,8 +25,8 @@ Updated: 2026-10-08. Read this file first when resuming work.
 
 ## Next actions
 
-1. Push source checkpoints publicly to the existing 26.x branch; preserve upstream history and notices.
-2. Run the 26.x validation workflow on GitHub to get compilation diagnostics outside this host.
+1. Push reviewed checkpoints to both target branches, prioritizing playable 26.1.2; preserve history and notices.
+2. Use each branch’s GitHub validation run for target-specific compilation diagnostics.
 3. Run the prepared 26.3 build on a host where NeoFormRuntime can identify its Java executable. Current host fails in `createMinecraftArtifacts`, before TFC compilation. Then port/isolate unavailable integration adapters and work through source compile errors. See DEPENDENCIES.md.
 4. Port registration, components/codecs, recipes, networking, worldgen, entities and rendering in reviewable slices. Re-audit every mixin/access transformer.
 5. Complete dedicated-server/client survival checks, then extension adapters and presentation integration.

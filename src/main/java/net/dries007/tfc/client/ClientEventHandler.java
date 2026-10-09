@@ -19,22 +19,22 @@ import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CraftingScreen;
-import net.minecraft.client.model.BoatModel;
-import net.minecraft.client.model.CamelModel;
+import net.minecraft.client.model.object.boat.BoatModel;
+import net.minecraft.client.model.animal.camel.CamelModel;
 import net.minecraft.client.model.ChestBoatModel;
 import net.minecraft.client.model.ChestRaftModel;
 import net.minecraft.client.model.ChestedHorseModel;
-import net.minecraft.client.model.CodModel;
-import net.minecraft.client.model.GoatModel;
-import net.minecraft.client.model.MinecartModel;
+import net.minecraft.client.model.animal.fish.CodModel;
+import net.minecraft.client.model.animal.goat.GoatModel;
+import net.minecraft.client.model.object.cart.MinecartModel;
 import net.minecraft.client.model.OcelotModel;
-import net.minecraft.client.model.RaftModel;
-import net.minecraft.client.model.SquidModel;
+import net.minecraft.client.model.object.boat.RaftModel;
+import net.minecraft.client.model.animal.squid.SquidModel;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BellRenderer;
 import net.minecraft.client.renderer.blockentity.LecternRenderer;
@@ -68,7 +68,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
-import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
+import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterDimensionSpecialEffectsEvent;
@@ -987,24 +987,24 @@ public final class ClientEventHandler
         );
     }
 
-    public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event)
+    public static void registerClientReloadListeners(AddClientReloadListenersEvent event)
     {
         // Color maps
         // We maintain a series of color maps independent and beyond the vanilla color maps
         // Sky, Fog, Water and Water Fog color to replace hardcoded per-biome water colors
         // Grass and foliage (which we replace vanilla's anyway, but use our own for better indexing)
         // Foliage winter and fall (for deciduous trees which have leaves which change color during those seasons)
-        event.registerReloadListener(new ColorMapReloadListener(TFCColors::setSkyColors, TFCColors.SKY_COLORS_LOCATION));
-        event.registerReloadListener(new ColorMapReloadListener(TFCColors::setFogColors, TFCColors.FOG_COLORS_LOCATION));
-        event.registerReloadListener(new ColorMapReloadListener(TFCColors::setWaterColors, TFCColors.WATER_COLORS_LOCATION));
-        event.registerReloadListener(new ColorMapReloadListener(TFCColors::setWaterFogColors, TFCColors.WATER_FOG_COLORS_LOCATION));
-        event.registerReloadListener(new ColorMapReloadListener(TFCColors::setGrassColors, TFCColors.GRASS_COLORS_LOCATION));
-        event.registerReloadListener(new ColorMapReloadListener(TFCColors::setTallGrassColors, TFCColors.TALL_GRASS_COLORS_LOCATION));
-        event.registerReloadListener(new ColorMapReloadListener(TFCColors::setFoliageColors, TFCColors.FOLIAGE_COLORS_LOCATION));
-        event.registerReloadListener(new ColorMapReloadListener(TFCColors::setFoliageSummerColors, TFCColors.FOLIAGE_SUMMER_COLORS_LOCATION));
-        event.registerReloadListener(new ColorMapReloadListener(TFCColors::setFoliageFallColors, TFCColors.FOLIAGE_FALL_COLORS_LOCATION));
+        event.addListener(TFCColors.SKY_COLORS_LOCATION, new ColorMapReloadListener(TFCColors::setSkyColors, TFCColors.SKY_COLORS_LOCATION));
+        event.addListener(TFCColors.FOG_COLORS_LOCATION, new ColorMapReloadListener(TFCColors::setFogColors, TFCColors.FOG_COLORS_LOCATION));
+        event.addListener(TFCColors.WATER_COLORS_LOCATION, new ColorMapReloadListener(TFCColors::setWaterColors, TFCColors.WATER_COLORS_LOCATION));
+        event.addListener(TFCColors.WATER_FOG_COLORS_LOCATION, new ColorMapReloadListener(TFCColors::setWaterFogColors, TFCColors.WATER_FOG_COLORS_LOCATION));
+        event.addListener(TFCColors.GRASS_COLORS_LOCATION, new ColorMapReloadListener(TFCColors::setGrassColors, TFCColors.GRASS_COLORS_LOCATION));
+        event.addListener(TFCColors.TALL_GRASS_COLORS_LOCATION, new ColorMapReloadListener(TFCColors::setTallGrassColors, TFCColors.TALL_GRASS_COLORS_LOCATION));
+        event.addListener(TFCColors.FOLIAGE_COLORS_LOCATION, new ColorMapReloadListener(TFCColors::setFoliageColors, TFCColors.FOLIAGE_COLORS_LOCATION));
+        event.addListener(TFCColors.FOLIAGE_SUMMER_COLORS_LOCATION, new ColorMapReloadListener(TFCColors::setFoliageSummerColors, TFCColors.FOLIAGE_SUMMER_COLORS_LOCATION));
+        event.addListener(TFCColors.FOLIAGE_FALL_COLORS_LOCATION, new ColorMapReloadListener(TFCColors::setFoliageFallColors, TFCColors.FOLIAGE_FALL_COLORS_LOCATION));
 
-        event.registerReloadListener(new StarsReloadListener());
+        event.addListener(Helpers.identifier("stars"), new StarsReloadListener());
     }
 
     public static void registerParticleFactories(RegisterParticleProvidersEvent event)

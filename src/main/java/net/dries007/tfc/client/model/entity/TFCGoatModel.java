@@ -6,7 +6,7 @@
 
 package net.dries007.tfc.client.model.entity;
 
-import net.minecraft.client.model.GoatModel;
+import net.minecraft.client.model.animal.goat.GoatModel;
 import net.minecraft.client.model.QuadrupedModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.builders.LayerDefinition;

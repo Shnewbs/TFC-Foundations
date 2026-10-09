@@ -7,7 +7,7 @@
 package net.dries007.tfc.mixin.client;
 
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.SkeletonModel;
+import net.minecraft.client.model.monster.skeleton.SkeletonModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;

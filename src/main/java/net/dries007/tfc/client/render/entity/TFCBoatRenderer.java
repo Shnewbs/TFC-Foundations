@@ -7,9 +7,9 @@
 package net.dries007.tfc.client.render.entity;
 
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.client.model.BoatModel;
+import net.minecraft.client.model.object.boat.BoatModel;
 import net.minecraft.client.model.ListModel;
-import net.minecraft.client.model.RaftModel;
+import net.minecraft.client.model.object.boat.RaftModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.BoatRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

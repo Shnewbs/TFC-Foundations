@@ -6,7 +6,7 @@
 
 package net.dries007.tfc.client.render.entity;
 
-import net.minecraft.client.model.SquidModel;
+import net.minecraft.client.model.animal.squid.SquidModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
