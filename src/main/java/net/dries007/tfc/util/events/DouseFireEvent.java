@@ -10,7 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ThrownPotion;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.AbstractThrownPotion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -28,9 +28,9 @@ public class DouseFireEvent extends Event implements ICancellableEvent
 
     public static void douse(Level level, AABB bounds, @Nullable Player player)
     {
-        if (!level.isClientSide) // follows vanilla pattern in ThrownPotion
+        if (!level.isClientSide()) // follows vanilla pattern in AbstractThrownPotion
         {
-            for (LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, bounds, ThrownPotion.WATER_SENSITIVE_OR_ON_FIRE))
+            for (LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, bounds, AbstractThrownPotion.WATER_SENSITIVE_OR_ON_FIRE))
             {
                 if (entity.isOnFire() && entity.isAlive())
                 {

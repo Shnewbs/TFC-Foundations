@@ -11,7 +11,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 import com.mojang.serialization.Dynamic;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;

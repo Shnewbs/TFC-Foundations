@@ -7,7 +7,7 @@
 package net.dries007.tfc;
 
 import com.mojang.logging.LogUtils;
-import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -15,7 +15,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.Main;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.PlayerRespawnLogic;
+import net.minecraft.server.level.PlayerSpawnFinder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -40,7 +40,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.skeleton.Skeleton;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.ThrownPotion;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.AbstractThrownPotion;
 import net.minecraft.world.entity.vehicle.boat.Boat;
 import net.minecraft.world.entity.vehicle.minecart.Minecart;
 import net.minecraft.world.inventory.ClickAction;
@@ -81,7 +81,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.util.TriState;
+import net.minecraft.util.TriState;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.ItemStackedOnOtherEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
@@ -105,6 +105,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.entity.player.UseItemOnBlockEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 import net.neoforged.neoforge.event.level.ChunkWatchEvent;
 import net.neoforged.neoforge.event.level.ExplosionEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
@@ -277,7 +278,7 @@ public final class ForgeEventHandler
             {
                 if (x > -16 && x <= 16 && z > -16 && z <= 16)
                 {
-                    final BlockPos spawnPos = PlayerRespawnLogic.getSpawnPosInChunk(level, new ChunkPos(chunkPos.x + x, chunkPos.z + z));
+                    final BlockPos spawnPos = PlayerSpawnFinder.getSpawnPosInChunk(level, new ChunkPos(chunkPos.x + x, chunkPos.z + z));
                     if (spawnPos != null)
                     {
                         levelData.setSpawn(spawnPos, 0);
@@ -328,8 +329,10 @@ public final class ForgeEventHandler
         TFCCommands.registerCommands(event.getDispatcher(), event.getBuildContext());
     }
 
-    public static void onBlockBroken(BlockEvent.BreakEvent event)
+    public static void onBlockBroken(BreakBlockEvent event)
     {
+        // The replacement event also fires on clients; collapse and logging remain server-owned.
+        if (event.getLevel().isClientSide() || event.isCanceled()) return;
         // Trigger a collapse
         final LevelAccessor levelAccess = event.getLevel();
         final BlockPos pos = event.getPos();
@@ -347,6 +350,7 @@ public final class ForgeEventHandler
             !NeoForge.EVENT_BUS.post(new LoggingEvent(levelAccess, pos, state, stack)).isCanceled())
         {
             event.setCanceled(true); // Cancel regardless of outcome of logging
+            event.setNotifyClient(true);
             AxeLoggingHelper.doLogging(levelAccess, pos, event.getPlayer(), stack);
         }
     }
@@ -745,7 +749,7 @@ public final class ForgeEventHandler
         final Projectile projectile = event.getProjectile();
         final HitResult result = event.getRayTraceResult();
         final Level level = projectile.level();
-        if (projectile instanceof ThrownPotion potion)
+        if (projectile instanceof AbstractThrownPotion potion)
         {
             final PotionContents contents = potion.getItem().get(DataComponents.POTION_CONTENTS);
             if (contents != null && contents.is(Potions.WATER) && !contents.hasEffects())

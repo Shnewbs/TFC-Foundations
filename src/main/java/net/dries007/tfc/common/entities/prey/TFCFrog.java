@@ -8,7 +8,7 @@ package net.dries007.tfc.common.entities.prey;
 
 import java.util.Optional;
 import com.mojang.serialization.Dynamic;
-import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;

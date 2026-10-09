@@ -8,7 +8,7 @@ package net.dries007.tfc.common.entities;
 
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
