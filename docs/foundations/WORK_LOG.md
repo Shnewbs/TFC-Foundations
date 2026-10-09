@@ -1,72 +1,73 @@
 # TFC Foundations — Work Log
 
-The complete preceding log is preserved byte-for-byte in [WORK_LOG_BEFORE_ENTITY_AI_API](history/WORK_LOG_BEFORE_ENTITY_AI_API.md), which links to the earlier common API and loot history. This record does not upgrade earlier test results.
+The complete preceding log is preserved byte-for-byte in [WORK_LOG_BEFORE_MODEL_RENDER_STATE](history/WORK_LOG_BEFORE_MODEL_RENDER_STATE.md), which links to the entity, particle/save, common API and loot history. This checkpoint does not upgrade those earlier validation claims.
 
-## 2026-10-09 UTC — Entity persistence, brain factories and server lifecycle
+## 2026-10-09 UTC — Hierarchical animal models and detached render state
 
 ### Source and publication
 
-Resumed public 26.1.2 at `c350b69e1300c128e3db53af947a896aa37dbca5` (code baseline `46401c030a6d2a6e8d9721147837237d8b03605d`, 2,920 reported compilation errors). Target pins and the 26.3 branch were not changed.
+Resumed `26.1.2` at `fb5741b1c1b9918435baef726b395f1acc0756c3` (code `4ea0a94b771091573f461610cf6613378d47b398`, 2,583 reported compiler errors). Public source authorization remains in effect. Minecraft 26.1.2, NeoForge 26.1.2.114, JEI 29.43.0.107, Patchouli 26.1-94, Java 25 and Gradle 9.2.1 pins did not change.
 
-Public staging `798d1d2beba0238a68d3286c42600d7f05e6912a` applied in successful run `37885605570`. Applied source commit: **`4ea0a94b771091573f461610cf6613378d47b398`**. Normal validation run: **`37885637990`**. The source application validated every preimage/postimage for **79 files**, removed its one-time transfer files, and used a normal push. Source application success is not a successful mod build. No force push, version increment, release, CurseForge publication or Earth change was made.
+Staging commit **80fd233bc22be98e8ce52cc73c0ab6337f464494** transported the reviewed 68-file patch with SHA-256 verification, all source preimage/postimage checks, bounded decoding, exact path membership and symlink/traversal protection. It also required the exact staging parent and a clean index. Source commit **bcbdf950ff4280199adcfeaa15122cf6bf85e186** applied the patch and removed its one-time transport files/workflow with a normal push. No force push or concurrent-source overwrite was used. This source application was not a successful mod build.
 
-The compressed transport contained a bounded edit manifest with SHA-256 `13d7d7ac516cdf8ed9c466356db4b1dd5ad0c1123a0569ed010baa0442b3dcc1`. Every source preimage/postimage was checked before any file was written, with duplicate/traversal/symlink protection. The standard Git patch was separately replayed against clean preimages and reproduced all 79 final files byte-for-byte.
+Patch **TFC-Foundations-26.1.2-model-render-state.patch**: 68 files, 211,826 bytes, SHA-256 **645072a44c2b9cbecb92c28def8377e4831a155bf5c2c2d21a8ab230fb6cc53a**. XZ transport SHA-256: **6a69f63db5667883e4f149fda87d7e4fab9664ee4c2f0e00e7797a6cffd19a42**. Clean Git application with whitespace errors rejected reproduces all 68 postimages. The delivered patch contains code/tests, not the later documentation checkpoint or a runnable JAR.
 
-### Production changes
+### Model and renderer implementation
 
-**Entity persistence:** 62 entity/helper save hooks across 31 Java files now use ValueInput/ValueOutput. Existing literal save keys, strict numeric/default handling, nested items/genes and horse chest-before-superclass inventory load order are retained. EntityHelpers delegates strict CompoundTag and ValueInput reads to the actual production NbtHelpers utility. Optional item codecs retain existing saved field names for horse chests, held minecart items, chest boats, chest carts and thrown javelins.
+The shared HierarchicalAnimatedModel now extends native EntityModel<TFCAnimalRenderState>. Native setup resets the pose. Per-model IdentityHashMap caching bakes each static/constructor-owned animation definition against that model's root, then uses native walk/timeline application. There is no cross-model mutable root cache.
 
-OviparousAnimal and WingedPrey now assign the saved plucking cooldown that the earlier loader read and discarded. Missing owner/genes values clear stale state. These repairs require later real entity/world round trips; source tests alone do not prove compatibility with existing saves.
+The migrated concrete models consume detached snapshot fields rather than live TFC entities, calendars, brain memories or world access. TFCAnimalRenderStateExtractor captures those values after the native superclass extraction, copies each custom animation timeline into independently owned state, and preserves texture callback ordering. Custom state clears between captures. Seasonal flags, sex/product appearance, movement, owner/collar, sleeping/sitting/climbing, aggression and camel saddle/animation values are captured for the appropriate species. The field-guide origin exemption uses the actual entity position during extraction rather than interpolated render coordinates. Native water-state semantics replace the removed legacy predicate; live-world water/bubble behavior is not independently tested.
 
-**Pets and variants:** pet owners use native EntityReference synchronization; existing UUID-facing helpers and Owner/owner save keys remain. Native UUID codecs retain the legacy four-int representation. Cat variants use the data-driven target registry/spawn selector, with witch-hut handling retained. The existing scaled TFC kitten model keeps its adult-layout texture lookup; no new baby model is claimed. Pet collar dye and cat sound lookup use target components/registries. Live spawning, sound, synchronization and visual behavior are untested.
+SimpleMobRenderer and associated dog/collar, camel, penguin, jellyfish and pest renderers adopt target render-state hooks. Four seasonal bird builder calls in ClientEventHandler receive explicit generic parameters; the rest of that handler remains incomplete. No item-in-mouth layer or unfinished climbing behavior is newly claimed. The dog collar submission retains native outline handling; its integer submission-order argument was checked against target bytecode.
 
-**Brains and activities:** 52 activity initializers across 14 AI families were adapted to ActivityData/provider factories. Activity registration precedes saved-memory restoration. Priorities, conditions, erased-memory sets and ordering are retained by the source migration. Frog copies native activity definitions and replaces only idle, retaining native non-idle definitions. Camel/armadillo generic bridges are explicit rather than pretending the native superclass exposes a different generic brain type. The native Brain constructor was inspected to verify activity registration, packed-memory restoration and core/default initialization order. TFCBrain schedules and related APIs still require migration; no AI gameplay result is claimed.
+Geometry factories and declared keyframe definitions remain guarded by 48 source contracts. The dog is an explicit reviewed factory migration to AdultWolfModel.createBodyLayer(CubeDeformation.NONE), retaining a 64x32 LayerDefinition and the verified native adult/collar textures. Its old prepare/setup animation phases are combined after pose reset. The camel baby transform preserves the old scale-then-translation matrix and returns to the adult pose after reset. Redundant jellyfish/manatee/orca draw overrides are replaced by native root rendering; native supplied tint is retained. These are source/CPU geometry checks, not a rendered screenshot comparison.
 
-**Server lifecycle:** server damage, attack, AI-step and fall hooks adopt exact target signatures. Forty player-message calls preserve chat versus overlay routing. The seat entity implements the required server damage hook with its previous non-health behavior. Core gameplay, renderers, guide sources and packaging gates remain enabled.
+### Missing animation bones found by execution
 
-**Tests and tracking:** four new entity test source files are tracked and invoked by inspect_api.py. Explicit tools/porting ignore-rule exceptions prevent Python/Java/JSON/Gradle test sources from being silently omitted; binary/cache outputs remain excluded. This addresses source tracking, not a claim that the unfinished main source now compiles.
+The expanded real-model test initially failed when the target's strict keyframe binder encountered Bongo's missing tail1 bone. Other models sharing definitions had analogous legacy omissions. A temporary diagnostic filter was used to enumerate the cases, then replaced before publication with explicit per-model allowlists. The final code does not silently skip arbitrary missing names or accept an entirely incompatible nonempty animation.
 
-### Local verification
+Reviewed omissions: Bongo tail1; Caribou right_hind_leg; Deer tail1; Gazelle tail1; Grouse neck1/snood; HorseshoeCrab antena1/antena2; Hyena tail2; Jerboa 1/2; Peafowl snood; Wildebeest tail1. They are recorded in the contract manifest and model overrides. This retains the old lookup's behavior for those known cases, not a claim that the absent bones have been added or animated. Tests deliberately exercise rejection of unknown names and wholly incompatible animations.
 
-The actual pinned Java 25 JDK and all 84 JARs from the resolved Minecraft 26.1.2 / NeoForge 26.1.2.114 / JEI 29.43.0.107 / Patchouli 26.1-94 classpath were used; no game/TFC stubs were introduced.
+### Local tests and limitations
 
-Completed main-source passes moved from 2,920 to 2,820 after the first save slice, then 2,727, 2,674, 2,611 and finally **2,583** after the reviewed brain/lifecycle/pet changes. The final portable runner covers **1,632 sources**, exit 1, timed_out=false. Its `-proc:none` mode remains diagnostic-only, not a substitute for Gradle/mixin/data/test/package validation.
-
-All **173 standalone Java checks** pass: 51 common, four actual production loot, 49 previous NBT/ValueIO and **69 new entity-save/UUID/activity API checks**. The new suite compiles actual NbtHelpers and exercises strict saved numeric types/defaults, cooldown sentinels and long precision, legacy/native UUID codec shapes and round trips, nested generic data and ActivityData priority order/identity. Six Python regression-guard tests pass, including deliberate cooldown/key/owner/genes regressions and balanced source scanning. All 62 source save-hook signature/key contracts pass. Native Brain bytecode order/default-activity contracts pass.
-
-Existing separate actual production particle/base/save-utility compilation and all 113 package-info checks continue to pass. These are not complete mod compilation or game execution. An additional clean replay extracted the previous source archive, applied the standard Git patch, and ran the standalone probes successfully from that clean source directory; this checks for missing/local-only source.
-
-`git diff --cached --check` passes. The standard patch passes clean `git apply --check` and reproduces every reviewed postimage. Patch **TFC-Foundations-26.1.2-entity-save-ai.patch**: 259,662 bytes, 79 files, 1,682 insertions / 655 deletions, SHA-256 **ef950d3a871980031272ac3334d4bf1064b3b3e67ff9b1a875fad1d196c23e80**. It is a source patch, not a playable JAR.
-
-### Independent GitHub verification
-
-[Run 37885637990](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37885637990), source `4ea0a94b771091573f461610cf6613378d47b398`, completed with overall **failure**. Full Gradle/main compilation reports **2,583 errors**, exit 1, matching the final local diagnostic pass. Its summary groups these into **2,471 path/line/message entries**; grouped entries and raw javac totals are different measures, neither a project completion estimate.
-
-- PASS: all 173 standalone Java checks, six Python regression-guard tests, 62 source-hook contracts and native Brain initialization-order/default-activity checks.
-- PASS: existing separate production particle/base/utility and 113 package-info compilation checks.
-- PASS: main/data/test license tasks and the existing resource-validation step.
-- FAIL: full main compilation; downstream full data/test compilation and packaging remain blocked.
-- NOT RUN: entity construction/ticking, AI gameplay, synchronized ownership, cat variants/audio/rendering, registry-backed item/fluid/name round trips, world save/reload, client/server launch, multiplayer, survival progression and performance. Earlier bootstrap-dependent probes remain unexecuted.
-
-The new runtime suite compiles the actual production NbtHelpers. UUID and ActivityData checks exercise native target APIs. Source contracts and negative fixtures do not instantiate TFC entities or prove behavior. No bootstrap-dependent check was relabeled as a runtime pass.
-
-Artifact **11595744632**, `tfc-port-diagnostics-37885637990-1`, retains exact logs, reports and source until October 16, 2026 UTC. Downloaded ZIP SHA-256 **765c1118ef9ce071a6f963f79e6a616be1bb16191dc2d1cccfdeace02770633c** was verified. All 79 source postimages match the tested local tree and downloaded CI archive; no temporary entity transfer files remain.
-
-### Reproduction and next work
-
-With JAVA_HOME and PATH selecting the exact Java 25 JDK and the pinned classpath resolved:
+Used the previously resolved exact Java 25 JDK and 84-JAR target classpath; the offline archive and JAR hashes were verified. No Minecraft/TFC stubs, placeholder model substitutions or excluded core systems were introduced.
 
 ```sh
+# JAVA_HOME and PATH select the exact target's Java 25 JDK.
 python tools/porting/compile_main_diagnostics.py
+python tools/porting/run_model_render_smoke.py
 python tools/porting/inspect_api.py
 ```
 
-The first command is a `-proc:none` diagnostic pass. Normal CI remains:
+The first is diagnostic-only (-proc:none). Completed main passes moved from 2,583 to 2,365, then **2,361** after the reviewed seasonal-renderer fixes. The final edited source and a separate clean Git replay each cover **1,635 main sources**, exit 1, timed_out=false, 2,361 errors. The minimally changed ClientEventHandler remains erroneous; the migrated model/state/renderer files have no diagnostics in this traversal. Counts include cascades and are not fixed-bug counts, completion percentages or guarantees that every downstream error is visible.
+
+The new standalone runner compiles and constructs **48 actual production models**, applies **384 model/scenario combinations**, evaluates **1,720 assertions** and checks **152,544 finite CPU vertices** using the native model path and a counting VertexConsumer. It checks pose reuse/reset, independent model roots and baked animations, bison charge, speed clamps, baby/adult camel transform order, dog sitting/head-roll, and strict missing-bone validation. The runner verifies 48 geometry/keyframe source contracts, explicit omission lists, extraction/reset/copy ordering, and two actual native texture dimensions. It is tracked and called by inspect_api.py.
+
+The 173 prior standalone Java checks and six Python guards passed locally. One combined local inspect_api invocation was stopped by the host's 45-second command limit after the prior suites passed, before the model suite completed; it is NOT counted as a successful overall invocation. The model suite ran separately to completion and passed, then passed again after clean Git replay with all 68 source hashes verified. The clean replay also repeated the entity suite successfully. GitHub independently executed the entire inspection/probe step successfully below.
+
+### Independent GitHub validation and preservation
+
+[Run **37889572978**](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37889572978), source **bcbdf950ff4280199adcfeaa15122cf6bf85e186**, finished with overall **failure**:
+
+- FAIL: full Gradle/main compilation, exit 1, **2,361 javac errors**. The summary groups them into **2,250 path/line/message entries**. This matches the completed local raw count; these are different diagnostic measures.
+- PASS: the complete API-inspection/probe step, including all 173 prior Java checks, six Python guards, 62 save-hook contracts, native Brain order checks, and prior particle/base/save utility compilation.
+- PASS: all 48 new concrete models, 384 scenarios, 1,720 assertions and 152,544 CPU vertices; model/keyframe and native texture checks independently reproduce the local result.
+- PASS: all 114 package-info files compile separately; main/data/test license tasks pass.
+- PASS: the existing resource-validation step. This is not GPU or in-game visual validation.
+- PASS: downloaded CI source matches every one of the 68 reviewed postimages, and no temporary model transfer files/workflow remain.
+
+Normal CI command remains unchanged:
 
 ```sh
 ./gradlew -I tools/porting/diagnostics.gradle writePortClasspath compileJava compileDataJava compileTestJava build --continue --no-daemon --no-configuration-cache --console=plain
 ```
 
-The completed diagnostic difference is **2,920 to 2,583 (337 fewer)**. Counts include cascades and are not individual bugs or a completion percentage. Remaining clusters include ClientEventHandler, entity and block/item models, LevelRendererExtension/overlays, equipment/materials, capabilities, TFCBrain schedules, registry/holder and world-generation interfaces, and JEI/Patchouli.
+Artifact **11598051560**, `tfc-port-diagnostics-37889572978-1`, retains logs, reports and exact source until October 16, 2026 UTC. Downloaded ZIP SHA-256 **615759954bed4906c6ac5d5a8d7fbf615380ffc5616f2464e30dca512ab4cec3** was verified. The archived source includes the tracked new test invocation and all reviewed source changes. Passing diagnostic/model tests do not override the failed build.
 
-The compiler/playability milestone stays open. The repository remains an incomplete source port, not a playable release. No client/server/world/AI/performance success, GitHub release or CurseForge publication is claimed. Current targets and next work are in [PROJECT_STATUS](../../PROJECT_STATUS.md).
+### Remaining work and release boundary
+
+NOT RUN: live TFC entity extraction, GPU rendering, in-game model/texture appearance, client/server launch, actual entity ticking, world save/reload, multiplayer, survival progression or performance measurements. Registry-backed item/fluid/name round trips and earlier bootstrap-dependent runtime probes remain unexecuted. Full downstream data/test compilation and packaging remain blocked.
+
+Remaining work includes other livestock/native entity models and renderers; block/item/block-entity rendering; ClientEventHandler/overlays; recipes, equipment/materials, capabilities, TFCBrain schedules, registry/holder/world-generation APIs; and JEI/Patchouli integration. No model test substitutes for those systems or for the compiler/playability gate.
+
+The completed raw diagnostic reduction is **2,583 to 2,361 (222 fewer)**. No 26.3 source, Earth generation, version increment, playable JAR, GitHub release, CurseForge publication or measured performance improvement is claimed. Continue with the targets and release gates in [PROJECT_STATUS](../../PROJECT_STATUS.md).
