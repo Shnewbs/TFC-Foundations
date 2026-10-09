@@ -2,61 +2,55 @@
 
 Updated 2026-10-09 UTC (October 8 in America/Los_Angeles).
 
-**Version 0.0.0 remains an incomplete source port. Neither target has passed full compilation or client/server survival testing. No playable JAR or release exists from this checkpoint.**
+**Version 0.0.0 remains an incomplete source port. Full compilation and client/server survival testing have not passed. No playable JAR or release was produced by this checkpoint.**
 
-## Authorized direction
+## Direction and targets
 
-Continue public development in `Shnewbs/TFC-Foundations`, preserving upstream history, EUPL notices, credits and `tfc` resource IDs. Prioritize a playable Minecraft 26.1.2 build. Maintain Minecraft 26.3 on `26.x` as the foundation for a separately verified 26.4 port. Do not equate a version-number change with compatibility. Normal TFC world generation remains the default; the optional natural Earth request is still in scope.
+Continue public source development in `Shnewbs/TFC-Foundations`, preserving Git history, EUPL notices, credits and `tfc` IDs. First-playable priority: Minecraft 26.1.2, NeoForge 26.1.2.114, JEI 29.43.0.107, Patchouli 26.1-94. Forward track `26.x` remains Minecraft 26.3, NeoForge 26.3.0.58-beta, JEI 31.9.0.61, with its required guide dependency unresolved at its previous checkpoint. Both tracks use Java 25 and Gradle 9.2.1. Exact-target verification remains required before sharing changes or moving to 26.4.
 
-| Track | Pinned target | Latest verified checkpoint |
-| --- | --- | --- |
-| Priority playable track, `26.1.2` | Minecraft 26.1.2; NeoForge 26.1.2.114; JEI 29.43.0.107; Patchouli 26.1-94 | `46401c030a6d2a6e8d9721147837237d8b03605d`: 72-file particle/save API checkpoint; 104 standalone checks pass; full compilation fails with 2,920 reported errors. |
-| Forward-port track, `26.x` | Minecraft 26.3; NeoForge 26.3.0.58-beta; JEI 31.9.0.61 | Unchanged in this continuation. Earlier exact-target diagnostics confirmed compilation failures and an unresolved required Patchouli target. |
+## Entity persistence and brain API checkpoint
 
-Both tracks use Java 25 and Gradle 9.2.1. EMI/Jade/TOP adapters remain isolated and incomplete. Core gameplay, rendering and the required guide have not been excluded to obtain a successful build. Publication gates remain intact.
+Public source commit **`4ea0a94b771091573f461610cf6613378d47b398`** follows staging `798d1d2beba0238a68d3286c42600d7f05e6912a`. Apply run `37885605570` succeeded after checking all preimages/postimages for exactly **79 files**, then removed the temporary transfer files and used a normal push. No force push, version change, source-system exclusion or publication-gate relaxation was used.
 
-## Particle and block-entity save checkpoint
+The source migrates **62 entity/helper save hooks across 31 Java files** to ValueInput/ValueOutput, retaining literal save keys and strict numeric/default handling. Item and genetic data retain their nested fields. Horse chests are restored before superclass inventory loading. OviparousAnimal and WingedPrey now assign the saved plucking cooldown that the previous read discarded. Missing owner/genes values clear stale state. These checks do not establish whole-world save compatibility.
 
-Source commit `46401c03` follows public staging commit `f6e34d0c7fe831059d2b3afa09986e7c97b7823b`. The one-time application checked every preimage and postimage, applied exactly 72 files, removed its temporary transport files and used a normal fast-forward push. The downloaded CI source snapshot independently matches all 72 reviewed source files.
+Pet ownership uses native EntityReference synchronization while retaining UUID-facing helper methods and the existing Owner/owner keys. Native UUID codecs retain the legacy four-int form. Cat variants use the target data-driven registry/spawn selection and retain witch-hut handling; the TFC scaled kitten model still uses its existing adult-layout texture. Live ownership synchronization, spawning, sounds and appearance are not tested.
 
-The checkpoint updates 14 particle source files to the target sprite, provider and layer APIs. Smoke, bubbles, leaves, sparks, sleep effects, glints, wind and fluid-drip behavior remain implemented rather than being removed. Falling leaves now use the target vanilla falling-leaf implementation; their appearance and motion still need an actual client test.
+**52 activity initializers across 14 AI families** now use target ActivityData/provider factories so activities exist before packed memories are restored. Activity priority order, conditions and memory-erasure sets are retained by the migration. Frog retains native non-idle activities. Server damage/attack/AI-step/fall hooks and 40 player-message calls adopt target APIs, preserving chat versus overlay routing. This does not complete AI migration; TFCBrain schedules and other behavior APIs remain blockers.
 
-Block-entity persistence migrates 89 save/load hooks across 45 classes to ValueInput/ValueOutput. Related inventory interfaces, composite serializers, pot outputs and synchronization entry points are updated. The base block entity delegates to NeoForge's superclass save/load hooks so its attachment data is not omitted. Pots clear removed output on synchronization; inventories clear removed custom names.
+The new entity regression suite is tracked and invoked by inspect_api.py. Explicit tools/porting source ignore-rule exceptions prevent source tests from being silently omitted; binary/cache outputs remain excluded.
 
-Legacy item, fluid, timer and nested inventory fields are retained by the source migration. Strict tag/list reads remain strict. Custom names accept legacy JSON and native component representations. Fluid tanks retain the legacy nested `Fluid` child through the native tank serializer; accepting a flat stack as a read fallback does not change the canonical writer. These implementation and format checks are not proof of full-world save compatibility.
+## Verified validation
 
-## Verified validation results
-
-[GitHub validation 37881633084](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37881633084), source `46401c03`, completed with an overall **failure**, as required while compilation is broken.
+[GitHub validation 37885637990](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37885637990), testing source `4ea0a94b`, completed with overall **failure**:
 
 | Check | Observed result |
 | --- | --- |
-| Full Gradle build / main compilation | FAIL: exit 1; javac reports 2,920 errors. The summary groups them into 2,795 path/line/message entries. |
-| Reproducible local main diagnostic pass | FAIL: 1,632 source files; 2,920 errors; completed without timeout. This uses `-proc:none`, not the full Gradle/mixin pipeline. |
-| Standalone execution | PASS: 51 existing utility/API checks, four existing production loot codec checks, and 49 new NBT/ValueIO checks; 104 total. |
-| Separate compilation | PASS: seven actual production particle classes, the base block entity and save utilities. The common probe also compiles all 113 package-info files. |
-| Emitted bytecode contracts | PASS: four superclass save/sync delegations and delegation to the native fluid-tank writer. |
-| Main/data/test license checks | PASS. |
-| Existing resource validation | PASS. This does not establish target rendering correctness. |
-| Client/server launch, world save/reload and survival | NOT RUN; full compilation still blocks them. |
+| Full Gradle/main compilation | FAIL: exit 1, 2,583 javac errors; the summary groups them into 2,471 path/line/message entries. |
+| Standalone suites | PASS: 173 Java checks and six Python regression-guard tests. |
+| Source/API contracts | PASS: 62 save-hook signature/key contracts and native Brain initialization-order checks. |
+| Separate production compilation | PASS: existing particle/base/save-utility checks and all 113 package-info files. |
+| Main/data/test license tasks | PASS. |
+| Existing resource-validation step | PASS; this is not visual or gameplay validation. |
+| CI source preservation | PASS: all 79 reviewed files match the downloaded source snapshot; temporary transport files are absent. |
 
-The completed compiler count decreased from 3,438 to 2,920, or 518 fewer diagnostics. Earlier error caps and grouped reports are not comparable totals. Counts include cascading errors and are not individual bug counts or a completion percentage. No diagnostics remain in the particle package in this pass; this is narrower than proving its runtime correctness.
+The 173 standalone Java checks comprise 51 common, four production loot, 49 prior NBT/ValueIO and 69 new entity-save/UUID/activity checks. They pass locally, in a clean extracted-source patch replay, and independently in GitHub Actions. No Minecraft/TFC stubs were used. The six Python tests include deliberate key/cooldown/stale-state regressions; these and the 62 source contracts do not instantiate or simulate the TFC entities.
 
-Registry-backed item/fluid/name round trips and bootstrap-dependent chunk/component/provider probes remain unexecuted. FluidTank deprecation warnings remain visible; broader capability migration is unfinished. There are no measured gameplay or performance results.
+The completed local main diagnostic pass covers 1,632 source files and reports **2,583 errors**, exit 1, without timeout; its `-proc:none` mode is not the full Gradle/mixin/data/test pipeline. Compared with the prior 2,920 pass, this is **337 fewer diagnostics**, not individual fixed bugs or a completion percentage. The standard patch passes a clean Git application and reproduces all 79 reviewed postimages.
 
-Artifact `11594941066`, `tfc-port-diagnostics-37881633084-1`, preserves logs, reports and the exact source snapshot until October 16, 2026 UTC. Its downloaded SHA-256 is `381b4560e4bccc60b09fa733d5ac9898eef33d1803e8d721e995ec1b47fb3169` and was verified.
+Artifact `11595744632`, `tfc-port-diagnostics-37885637990-1`, retains logs/reports/source until October 16, 2026 UTC. Downloaded SHA-256 `765c1118ef9ce071a6f963f79e6a616be1bb16191dc2d1cccfdeace02770633c` was verified.
+
+NOT RUN: actual entity construction/ticks, AI gameplay, synchronized ownership, cat variants/audio/rendering, world save/reload, client/server launch, multiplayer, survival progression and performance. Registry-backed item/fluid/name round trips and earlier bootstrap-dependent probes also remain unexecuted. Downstream complete data/test compilation and packaging remain blocked by main compilation.
 
 ## Next compiler and playability gates
 
-1. Continue entity save lifecycle migration, equipment and capability APIs, registry/holder changes and the remaining world-generation interfaces.
-2. Complete entity/block-entity render-state and model migration, ClientEventHandler/overlays, and JEI/Patchouli adapters. Do not remove those systems merely to compile.
-3. Pass main/data/test compilation, license checks, resource generation and packaging. Then test actual client and dedicated-server launch, new-world creation, save/reload, multiplayer reconnect, calendar, inventories/fluids, recipes/guide and survival progression.
-4. Share only changes independently verified against 26.3. Its loot providers, holder-based conditions and world-generation APIs diverge from 26.1.2; neither this patch nor the earlier loot patch should be copied blindly. Publish target-specific releases only after their stated gates pass.
+1. Continue entity/block-entity rendering, block/item/entity models, ClientEventHandler/overlays and JEI/Patchouli adapters without deleting those systems to get a green build.
+2. Finish equipment/materials, capabilities, TFCBrain schedules, registry/holder and world-generation interfaces; then complete main/data/test compilation, licenses, generated resources and packaging.
+3. Run genuine client/dedicated-server launch, new-world generation, save/reload, reconnect, calendar, inventory/fluid, guide/recipe and survival-progression checks before calling an artifact playable.
+4. Verify shared work independently on 26.3; its loot providers, conditions and generation APIs diverge. No 26.3 or Earth code changed in this checkpoint.
 
-## Earth option
+## Earth and history
 
-The requested optional natural Earth mode remains nominally one block per meter horizontally, without generated manmade structures. Existing coordinate/elevation utilities and eight previously recorded isolated checks are groundwork only. There is still no implemented Earth preset, licensed dataset pipeline or complete Earth chunk generator. Projection distortion, world height, geology/climate integration, caching and chunk performance remain explicit requirements. No Earth code changed in this checkpoint.
+Normal TFC generation remains the default. The optional natural Earth request remains nominally one block per horizontal meter without generated manmade structures. Existing coordinate/elevation groundwork and eight previously recorded isolated checks are not an implemented Earth preset, licensed dataset pipeline or complete chunk generator. Projection, height, geology/climate, caching and performance requirements remain open.
 
-## Evidence and history
-
-See [WORK_LOG](docs/foundations/WORK_LOG.md) for exact commits, commands, validation boundaries and source-preservation checks. The complete previous status is retained byte-for-byte in [STATUS_BEFORE_VISUAL_SAVE_API](docs/foundations/history/STATUS_BEFORE_VISUAL_SAVE_API.md), which records the earlier common API and loot checkpoints. Historical target recommendations are superseded by the authorized direction above.
+See [WORK_LOG](docs/foundations/WORK_LOG.md) for commits, commands and validation limits. The previous complete status and work log are preserved byte-for-byte in [STATUS_BEFORE_ENTITY_AI_API](docs/foundations/history/STATUS_BEFORE_ENTITY_AI_API.md) and [WORK_LOG_BEFORE_ENTITY_AI_API](docs/foundations/history/WORK_LOG_BEFORE_ENTITY_AI_API.md).
