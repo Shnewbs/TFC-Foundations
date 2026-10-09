@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BambooLeaves;
 import net.minecraft.world.level.material.FluidState;
-import net.neoforged.neoforge.common.util.TriState;
+import net.minecraft.util.TriState;
 
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.util.Helpers;
@@ -48,14 +48,14 @@ public class TFCBambooStalkBlock extends BambooStalkBlock
         {
             final BlockState state = context.getLevel().getBlockState(context.getClickedPos().below());
             final TriState soilDecision = state.canSustainPlant(context.getLevel(), context.getClickedPos().below(), Direction.UP, this.defaultBlockState());
-            if (soilDecision.isDefault())
+            if (soilDecision == TriState.DEFAULT)
             {
                 if (!Helpers.isBlock(state, BlockTags.BAMBOO_PLANTABLE_ON))
                 {
                     return null;
                 }
             }
-            else if (!soilDecision.isTrue())
+            else if (soilDecision != TriState.TRUE)
             {
                 return null;
             }

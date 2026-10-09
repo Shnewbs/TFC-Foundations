@@ -67,3 +67,13 @@ Accepted user direction: prioritize a playable 26.1.2 branch and continue 26.3 o
 - Initial dual-track CI runs 37863900030 (26.1.2) and 37863876836 (26.3) reached Java compilation and failed with the first 100 displayed errors; this is not a total error count. Remaining failures include model/rendering, interaction, worldgen and optional integration APIs.
 - Local 26.1.2 metadata generation, dependency resolution and license checks passed. Full local compilation remains blocked by the documented host executable-discovery failure. No playable JAR or runtime verification is claimed.
 - Required regression checks after compilation: initial client resource load and F3+T (all color maps/stars), server start and repeated /reload (all data managers), recipes after reload, multiplayer data sync/reconnect, dedicated-server class loading, entity/model rendering, survival progression and save/restart.
+
+
+## 2026-10-09 — Spawn, potion and block-break API migration
+
+- Replaced PlayerRespawnLogic with PlayerSpawnFinder after verifying getSpawnPosInChunk on both target JARs.
+- Used AbstractThrownPotion for water dousing, preserving both splash and lingering potion handling. Verified the water-sensitive predicate and shared inheritance on both versions.
+- Migrated TriState to Minecraft's enum and replaced removed helper methods with explicit enum comparisons, preserving bamboo soil override/default behavior.
+- Migrated BreakBlockEvent while preserving server-only collapse/logging. The replacement fires on both sides; client callbacks and canceled events return without world changes. Server-side logging cancellation requests a client block update.
+- Relocated CriteriaTriggers only on 26.3; 26.1.2 retains its original package.
+- Gameplay checks still required: fresh-world spawn, protected/canceled mining, collapse, tree felling with client block synchronization, normal block breaking, water splash/lingering dousing and bamboo soil TRUE/FALSE/DEFAULT cases. These are source changes, not runtime-tested fixes.
