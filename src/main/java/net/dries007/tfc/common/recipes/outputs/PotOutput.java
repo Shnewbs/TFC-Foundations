@@ -64,7 +64,7 @@ public interface PotOutput
      */
     static PotOutput read(HolderLookup.Provider provider, CompoundTag nbt)
     {
-        return REGISTRY.get(Helpers.resourceLocation(nbt.getString("type"))).read(provider, nbt);
+        return REGISTRY.get(Helpers.resourceLocation(nbt.getStringOr("type", ""))).read(provider, nbt);
     }
 
     /**

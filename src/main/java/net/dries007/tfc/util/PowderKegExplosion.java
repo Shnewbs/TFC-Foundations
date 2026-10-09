@@ -63,7 +63,7 @@ public class PowderKegExplosion extends Explosion
     @Override
     public void finalizeExplosion(boolean spawnParticles)
     {
-        assert !level.isClientSide;
+        assert !level.isClientSide();
 
         final List<BlockPos> affectedBlockPositions = this.getToBlow();
         final ObjectArrayList<Pair<ItemStack, BlockPos>> allDrops = new ObjectArrayList<>();

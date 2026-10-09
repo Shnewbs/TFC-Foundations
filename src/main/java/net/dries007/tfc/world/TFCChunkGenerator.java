@@ -264,8 +264,8 @@ public class TFCChunkGenerator extends ChunkGenerator implements ChunkGeneratorE
         {
             for (int offsetZ = -8; offsetZ <= 8; ++offsetZ)
             {
-                final ChunkPos offsetChunkPos = new ChunkPos(chunkPos.x + offsetX, chunkPos.z + offsetZ);
-                final ChunkAccess offsetChunk = level.getChunk(offsetChunkPos.x, offsetChunkPos.z);
+                final ChunkPos offsetChunkPos = new ChunkPos(chunkPos.x() + offsetX, chunkPos.z() + offsetZ);
+                final ChunkAccess offsetChunk = level.getChunk(offsetChunkPos.x(), offsetChunkPos.z());
 
                 @SuppressWarnings("deprecation") final Iterable<Holder<ConfiguredWorldCarver<?>>> iterable = offsetChunk
                     .carverBiome(() -> customBiomeSource.getBiome(QuartPos.fromBlock(offsetChunkPos.getMinBlockX()), QuartPos.fromBlock(offsetChunkPos.getMinBlockZ())).value().getGenerationSettings())
@@ -274,7 +274,7 @@ public class TFCChunkGenerator extends ChunkGenerator implements ChunkGeneratorE
                 int i = 1;
                 for (Holder<ConfiguredWorldCarver<?>> holder : iterable)
                 {
-                    final RandomSource chunkRandom = fork.at(offsetChunkPos.x, i, offsetChunkPos.z);
+                    final RandomSource chunkRandom = fork.at(offsetChunkPos.x(), i, offsetChunkPos.z());
 
                     final ConfiguredWorldCarver<?> carver = holder.value();
                     if (carver.isStartChunk(chunkRandom))
@@ -304,7 +304,7 @@ public class TFCChunkGenerator extends ChunkGenerator implements ChunkGeneratorE
 
         final Set<Holder<Biome>> allAdjacentBiomes = new ObjectArraySet<>();
         ChunkPos.rangeClosed(sectionPos.chunk(), 1).forEach((chunkPos1_) -> {
-            final ChunkAccess adjChunk = level.getChunk(chunkPos1_.x, chunkPos1_.z);
+            final ChunkAccess adjChunk = level.getChunk(chunkPos1_.x(), chunkPos1_.z());
             for (LevelChunkSection adjSection : adjChunk.getSections())
             {
                 adjSection.getBiomes().getAll(allAdjacentBiomes::add);
@@ -416,7 +416,7 @@ public class TFCChunkGenerator extends ChunkGenerator implements ChunkGeneratorE
         final ChunkNoiseSamplingSettings settings = createNoiseSamplingSettingsForChunk(chunk);
         final LevelAccessor actualLevel = (LevelAccessor) ((ChunkAccessAccessor) chunk).accessor$getLevelHeightAccessor();
         final ChunkPos chunkPos = chunk.getPos();
-        final RandomSource random = new XoroshiroRandomSource(chunkPos.x * 1842639486192314L, chunkPos.z * 579238196380231L);
+        final RandomSource random = new XoroshiroRandomSource(chunkPos.x() * 1842639486192314L, chunkPos.z() * 579238196380231L);
         final ChunkData chunkData = chunkDataGenerator.generate(chunk);
 
         // Lock sections
@@ -444,7 +444,7 @@ public class TFCChunkGenerator extends ChunkGenerator implements ChunkGeneratorE
             filler.fillFromNoise();
             chunkData.modifyBaseGroundwater(filler.surfaceHeight());
 
-            aquiferCache.set(chunkPos.x, chunkPos.z, filler.aquifer());
+            aquiferCache.set(chunkPos.x(), chunkPos.z(), filler.aquifer());
 
             sections.forEach(LevelChunkSection::release);
 
@@ -491,7 +491,7 @@ public class TFCChunkGenerator extends ChunkGenerator implements ChunkGeneratorE
     private void makeBedrock(ChunkAccess chunk)
     {
         final ChunkPos chunkPos = chunk.getPos();
-        final RandomSource random = new XoroshiroRandomSource(chunkPos.x * 2369412341L, chunkPos.z * 8192836412341L);
+        final RandomSource random = new XoroshiroRandomSource(chunkPos.x() * 2369412341L, chunkPos.z() * 8192836412341L);
         final LevelChunkSection bottomSection = chunk.getSection(0);
         final BlockState bedrock = Blocks.BEDROCK.defaultBlockState();
 
@@ -564,7 +564,7 @@ public class TFCChunkGenerator extends ChunkGenerator implements ChunkGeneratorE
     {
         final ChunkPos chunkPos = chunk.getPos();
 
-        TFCAquifer aquifer = aquiferCache.getIfPresent(chunkPos.x, chunkPos.z);
+        TFCAquifer aquifer = aquiferCache.getIfPresent(chunkPos.x(), chunkPos.z());
         if (aquifer == null)
         {
             final ChunkData chunkData = ChunkData.get(chunk);
@@ -572,7 +572,7 @@ public class TFCChunkGenerator extends ChunkGenerator implements ChunkGeneratorE
             aquifer = new TFCAquifer(chunkPos, settings, baseBlockSource, getSeaLevel(), noiseSampler.positionalRandomFactory, noiseSampler.barrierNoise);
             aquifer.setSurfaceHeights(chunkData.getAquiferSurfaceHeight());
 
-            aquiferCache.set(chunkPos.x, chunkPos.z, aquifer);
+            aquiferCache.set(chunkPos.x(), chunkPos.z(), aquifer);
         }
         return aquifer;
     }

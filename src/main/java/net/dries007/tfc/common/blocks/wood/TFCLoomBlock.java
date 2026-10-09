@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blocks.wood;
 
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
@@ -23,7 +25,6 @@ import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
@@ -42,7 +43,7 @@ import net.dries007.tfc.common.fluids.IFluidLoggable;
 
 public class TFCLoomBlock extends BottomSupportedDeviceBlock implements IFluidLoggable
 {
-    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
     public static final FluidProperty FLUID = TFCBlockStateProperties.WATER;
 
     private static final VoxelShape SHAPE_EAST = box(2, 0, 1, 8, 16, 15);

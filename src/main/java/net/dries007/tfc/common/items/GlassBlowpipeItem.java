@@ -176,7 +176,7 @@ public class GlassBlowpipeItem extends BlowpipeItem
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity)
     {
-        if (entity instanceof Player player && !level.isClientSide)
+        if (entity instanceof Player player && !level.isClientSide())
         {
             final ItemStack otherHand = getOtherHandItem(player);
             final GlassOperation op = GlassOperation.get(otherHand, player);

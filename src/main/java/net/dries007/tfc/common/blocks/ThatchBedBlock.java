@@ -73,7 +73,7 @@ public class ThatchBedBlock extends BedBlock implements EntityBlockExtension, IF
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
-        if (level.isClientSide)
+        if (level.isClientSide())
         {
             return InteractionResult.CONSUME;
         }

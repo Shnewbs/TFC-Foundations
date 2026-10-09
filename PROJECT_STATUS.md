@@ -28,13 +28,27 @@ On 26.1.2, loot registries now hold their direct MapCodec values, custom context
 
 Both branches now preserve build logs, structured compiler reports, resolved API signatures, and exact source snapshots as short-lived CI artifacts. Build failures remain failures; successful diagnostic or resource steps do not make the job green.
 
+## Common API checkpoint — 2026-10-09 UTC
+
+The next playable milestone remains **a fully compiled 26.1.2 build**, not merely passing isolated probes. The common-source checkpoint updates package defaults, facing properties, inventory input, teleport entry points, model-data packages, level accessors, chunk-position records and NBT reads. It preserves serialized IDs and leaves core gameplay, guide and rendering sources enabled.
+
+- Exact-target local tooling is now available: the resolved 84-JAR classpath and Java 25 compiler from successful run `37873949671` were downloaded and SHA-256 verified. This supersedes the earlier local-toolchain limitation. These development inputs are not a playable mod.
+- **PASS:** all 113 main/data/test package-info files compile independently against the exact classpath. Existing nullability imports elsewhere have not all been standardized; this is not a complete nullness analysis.
+- **PASS:** 51 standalone checks for the actual new NbtHelpers and Unchecked utilities, NBT defaults/type preservation, facing property values and inventory input actions. Four existing actual loot codec checks also still pass.
+- **COMPILE ONLY / NOT RUN:** ChunkPos, component-patch and integer-provider runtime probes require the real NeoForge bootstrap. A plain-Java attempt exposed that requirement; no fake loader or Minecraft stub was substituted.
+- **FAIL:** the completed diagnostic main-source pass reports 3,438 errors, compared with 3,979 at the earlier full traversal in this session. Earlier 1,341/846 counts ended prematurely and are not comparable backlog totals. These numbers are diagnostics, not a completion percentage. Full Gradle/mixin/data/test validation and gameplay remain separate gates.
+
+NBT list reads retain all-or-nothing element-type validation, including mixed-list rejection. Missing numeric values retain explicit legacy defaults; old strict tag checks do not silently become numeric coercions. Reflective exception helpers no longer rely on the removed transitive noexception library and preserve the original thrown object. These changes do not finish entity/block-entity ValueInput/ValueOutput migration.
+
+The 26.3 source is unchanged by this checkpoint. Remaining major areas include render-state/model and JEI/Patchouli migration, save lifecycle hooks, registration/holder APIs, tool/equipment changes, fluid/inventory capability APIs and world generation. No client/server launch, world creation, save/reload, survival test, performance result, playable JAR or release is claimed.
+
 ## Important 26.3 divergence
 
 Compared the exact resolved APIs from both branches. On 26.3, LootContext uses `getOptional`, conditional loot functions use holder-based conditions, and the old NumberProvider/NumberProviders pair has been replaced by separate context integer/float provider families. **The 26.1.2 loot patch has not been copied to 26.x.** It requires a dedicated source and data-format migration, including preserving integer drop-count behavior.
 
 ## Next playability gates
 
-1. Finish common API blockers: remaining legacy nullability package defaults, removed/relocated gameplay classes, serialization and registry APIs. Preserve behavior and validate each slice against the exact target.
+1. Finish common API blockers: removed/relocated gameplay classes, ValueInput/ValueOutput save hooks, capabilities, equipment, serialization and registry APIs. Preserve behavior and validate each slice against the exact target.
 2. Complete rendering/model, JEI and Patchouli adapters; do not remove core visuals or the guide merely to achieve compilation.
 3. Pass main/data/test compilation, licenses, resource generation and packaging. Then test client and dedicated-server launch, new-world creation, save/reload, multiplayer and survival progression.
 4. Validate 26.3's separate loot, holder and world-generation migrations before sharing branch changes. Publish target-specific GitHub releases only after their stated gates pass.

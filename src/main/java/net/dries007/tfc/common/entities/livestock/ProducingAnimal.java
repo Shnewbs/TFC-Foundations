@@ -61,7 +61,7 @@ public abstract class ProducingAnimal extends TFCAnimal
     public void readAdditionalSaveData(CompoundTag nbt)
     {
         super.readAdditionalSaveData(nbt);
-        setProducedTick(nbt.getLong("produced"));
+        setProducedTick(nbt.getLongOr("produced", 0L));
     }
 
     @Override

@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blockentities;
 
+import net.dries007.tfc.util.NbtHelpers;
+
 import java.util.Collection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -170,9 +172,9 @@ public class AnvilBlockEntity extends InventoryBlockEntity<AnvilBlockEntity.Anvi
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
         super.loadAdditional(nbt, provider);
-        if (nbt.contains("lastRecipe", CompoundTag.TAG_STRING))
+        if (NbtHelpers.hasTag(nbt, "lastRecipe", CompoundTag.TAG_STRING))
         {
-            lastRecipe = Identifier.tryParse(nbt.getString("lastRecipe"));
+            lastRecipe = Identifier.tryParse(nbt.getStringOr("lastRecipe", ""));
         }
     }
 
@@ -199,7 +201,7 @@ public class AnvilBlockEntity extends InventoryBlockEntity<AnvilBlockEntity.Anvi
             if (recipe == null)
             {
                 // Select a default recipe if we only find a single recipe for this item
-                if (!level.isClientSide)
+                if (!level.isClientSide())
                 {
                     final Collection<RecipeHolder<AnvilRecipe>> all = AnvilRecipe.getAll(level, stack, getTier());
                     if (all.size() == 1)
@@ -345,7 +347,7 @@ public class AnvilBlockEntity extends InventoryBlockEntity<AnvilBlockEntity.Anvi
     {
         assert level != null;
 
-        if (level.isClientSide)
+        if (level.isClientSide())
         {
             return false;
         }
@@ -426,9 +428,9 @@ public class AnvilBlockEntity extends InventoryBlockEntity<AnvilBlockEntity.Anvi
         level.playSound(null, worldPosition, TFCSounds.ANVIL_HIT.get(), SoundSource.PLAYERS, 0.4f, 1.0f);
         if (level instanceof ServerLevel server)
         {
-            final double x = worldPosition.getX() + Mth.nextDouble(level.random, 0.2, 0.8);
-            final double z = worldPosition.getZ() + Mth.nextDouble(level.random, 0.2, 0.8);
-            final double y = worldPosition.getY() + Mth.nextDouble(level.random, 0.8, 1.0);
+            final double x = worldPosition.getX() + Mth.nextDouble(level.getRandom(), 0.2, 0.8);
+            final double z = worldPosition.getZ() + Mth.nextDouble(level.getRandom(), 0.2, 0.8);
+            final double y = worldPosition.getY() + Mth.nextDouble(level.getRandom(), 0.8, 1.0);
             server.sendParticles(TFCParticles.SPARK.get(), x, y, z, 5, 0, 0, 0, 0.2f);
         }
     }

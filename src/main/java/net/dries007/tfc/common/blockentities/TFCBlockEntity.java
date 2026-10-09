@@ -137,7 +137,7 @@ public abstract class TFCBlockEntity extends BlockEntity
         final BlockPos pos = getBlockPos();
         if (packet != null && level instanceof ServerLevel serverLevel)
         {
-            serverLevel.getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false).forEach(e -> e.connection.send(packet));
+            serverLevel.getChunkSource().chunkMap.getPlayers(ChunkPos.containing(pos), false).forEach(e -> e.connection.send(packet));
         }
     }
 }

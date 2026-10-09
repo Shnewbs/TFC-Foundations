@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.blocks.plant.fruit;
 
+import net.minecraft.core.Direction;
+
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -22,7 +26,6 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -40,7 +43,7 @@ import net.dries007.tfc.util.climate.ClimateRange;
 
 public class SpreadingCaneBlock extends SpreadingBushBlock
 {
-    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     private static final VoxelShape CANE_EAST = Block.box(0.0D, 3.0D, 0.0D, 8.0D, 12.0D, 16.0D);
     private static final VoxelShape CANE_WEST = Block.box(8.0D, 3.0D, 0.0D, 16.0D, 12.0D, 16.0D);
@@ -109,7 +112,7 @@ public class SpreadingCaneBlock extends SpreadingBushBlock
         {
             final BlockState newState = state.setValue(STAGE, state.getValue(STAGE) + 1);
             placeBlockAndResetCounter(level, pos, newState, cycles, growthsRemaining);
-            level.getBlockState(pos).randomTick(level, pos, level.random);
+            level.getBlockState(pos).randomTick(level, pos, level.getRandom());
             return; // Increment stage if possible
         }
 
@@ -136,7 +139,7 @@ public class SpreadingCaneBlock extends SpreadingBushBlock
             {
                 TerraFirmaCraft.LOGGER.error("Failed to update growing berry bush block entity at: {}", pos);
             }
-            level.getBlockState(pos).tick(level, pos, level.random);
+            level.getBlockState(pos).tick(level, pos, level.getRandom());
         }
     }
 

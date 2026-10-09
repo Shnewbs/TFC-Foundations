@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blockentities;
 
+import net.dries007.tfc.util.NbtHelpers;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -50,8 +52,8 @@ public class TickingPlantBlockEntity extends TickCounterBlockEntity
     @Override
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
-        stemPos = nbt.contains("stemPos", CompoundTag.TAG_LONG) ? BlockPos.of(nbt.getLong("stemPos")) : worldPosition;
-        lastPickedTick = nbt.getLong("lastPickedTick");
+        stemPos = NbtHelpers.hasTag(nbt, "stemPos", CompoundTag.TAG_LONG) ? BlockPos.of(nbt.getLongOr("stemPos", 0L)) : worldPosition;
+        lastPickedTick = nbt.getLongOr("lastPickedTick", 0L);
         super.loadAdditional(nbt, provider);
     }
 

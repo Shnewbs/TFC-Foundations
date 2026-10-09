@@ -122,11 +122,11 @@ public class TFCHorse extends Horse implements HorseProperties
             final int i = this.random.nextInt(9);
             if (i < 4)
             {
-                variant = Variant.byId(tag.getInt("variant1"));
+                variant = Variant.byId(tag.getIntOr("variant1", 0));
             }
             else if (i < 8)
             {
-                variant = Variant.byId(tag.getInt("variant2"));
+                variant = Variant.byId(tag.getIntOr("variant2", 0));
             }
             else
             {
@@ -137,11 +137,11 @@ public class TFCHorse extends Horse implements HorseProperties
             Markings markings;
             if (j < 2)
             {
-                markings = Markings.byId(tag.getInt("markings1"));
+                markings = Markings.byId(tag.getIntOr("markings1", 0));
             }
             else if (j < 4)
             {
-                markings = Markings.byId(tag.getInt("markings2"));
+                markings = Markings.byId(tag.getIntOr("markings2", 0));
             }
             else
             {
@@ -171,7 +171,7 @@ public class TFCHorse extends Horse implements HorseProperties
     public EntityType<?> getEntityTypeForBaby()
     {
         final CompoundTag genes = getGenes();
-        return genes != null && genes.contains("isMule") && genes.getBoolean("isMule") ? TFCEntities.MULE.get() : TFCEntities.HORSE.get();
+        return genes != null && genes.contains("isMule") && genes.getBooleanOr("isMule", false) ? TFCEntities.MULE.get() : TFCEntities.HORSE.get();
     }
 
     @Override
@@ -459,12 +459,12 @@ public class TFCHorse extends Horse implements HorseProperties
     @Override
     public boolean isInWall()
     {
-        return !level().isClientSide && super.isInWall();
+        return !level().isClientSide() && super.isInWall();
     }
 
     @Override
     protected void pushEntities()
     {
-        if (!level().isClientSide) super.pushEntities();
+        if (!level().isClientSide()) super.pushEntities();
     }
 }

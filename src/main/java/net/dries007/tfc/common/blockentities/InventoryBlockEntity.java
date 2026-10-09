@@ -141,9 +141,9 @@ public abstract class InventoryBlockEntity<C extends IItemHandlerModifiable & IN
     {
         if (nbt.contains("CustomName"))
         {
-            customName = parseCustomNameSafe(nbt.getString("CustomName"), provider);
+            customName = parseCustomNameSafe(nbt.getStringOr("CustomName", ""), provider);
         }
-        inventory.deserializeNBT(provider, nbt.getCompound("inventory"));
+        inventory.deserializeNBT(provider, nbt.getCompoundOrEmpty("inventory"));
         super.loadAdditional(nbt, provider);
     }
 

@@ -39,7 +39,7 @@ public class SoilForestAreaFeature extends Feature<SoilForestAreaConfig>
         final SoilForestAreaConfig config = context.config();
 
         // Sum forest densities of adjacent chunks
-        final ChunkPos chunkPos = new ChunkPos(pos);
+        final ChunkPos chunkPos = ChunkPos.containing(pos);
         final int densityCenter = ChunkData.get(level, chunkPos).getForestType().getDensity();
         final int densityNorth = ChunkData.get(level, pos.north(16)).getForestType().getDensity();
         final int densitySouth = ChunkData.get(level, pos.south(16)).getForestType().getDensity();

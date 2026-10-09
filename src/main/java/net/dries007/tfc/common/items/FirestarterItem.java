@@ -47,7 +47,7 @@ public class FirestarterItem extends Item
             if (level.isClientSide())
             {
                 Vec3 location = result.getLocation();
-                makeEffects(level, player, location.x(), location.y(), location.z(), countLeft, getUseDuration(stack, player), level.random);
+                makeEffects(level, player, location.x(), location.y(), location.z(), countLeft, getUseDuration(stack, player), level.getRandom());
             }
             else if (countLeft == 1)
             {

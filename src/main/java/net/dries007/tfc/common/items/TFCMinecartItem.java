@@ -53,7 +53,7 @@ public class TFCMinecartItem extends Item
         else
         {
             ItemStack held = context.getItemInHand();
-            if (!level.isClientSide)
+            if (!level.isClientSide())
             {
                 RailShape railshape = state.getBlock() instanceof BaseRailBlock ? ((BaseRailBlock) state.getBlock()).getRailDirection(state, level, pos, null) : RailShape.NORTH_SOUTH;
                 double offset = 0.0D;

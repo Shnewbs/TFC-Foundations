@@ -39,7 +39,7 @@ public interface MammalProperties extends TFCAnimalProperties
     {
         TFCAnimalProperties.super.tickAnimalData();
         Level level = getEntity().level();
-        if (!level.isClientSide && level.getGameTime() % 20 == 0)
+        if (!level.isClientSide() && level.getGameTime() % 20 == 0)
         {
             if (getPregnantTime() > 0 && Calendars.SERVER.getTotalCalendarDays() >= getPregnantTime() + getGestationDays() && isFertilized())
             {
@@ -112,7 +112,7 @@ public interface MammalProperties extends TFCAnimalProperties
     default void applyGenes(CompoundTag tag, MammalProperties baby)
     {
         baby.setGeneticSize(Mth.floor(EntityHelpers.getIntOrDefault(tag, "size", 16) / 2d + Mth.nextInt(baby.getEntity().getRandom(), -3, 3)));
-        if (tag.getBoolean("runt"))
+        if (tag.getBooleanOr("runt", false))
         {
             baby.setGeneticSize(1);
         }
@@ -142,10 +142,10 @@ public interface MammalProperties extends TFCAnimalProperties
     default void readCommonAnimalData(CompoundTag nbt)
     {
         TFCAnimalProperties.super.readCommonAnimalData(nbt);
-        setPregnantTime(nbt.getLong("pregnant"));
+        setPregnantTime(nbt.getLongOr("pregnant", 0L));
         if (nbt.contains("genes"))
         {
-            setGenes(nbt.getCompound("genes"));
+            setGenes(nbt.getCompoundOrEmpty("genes"));
         }
     }
 

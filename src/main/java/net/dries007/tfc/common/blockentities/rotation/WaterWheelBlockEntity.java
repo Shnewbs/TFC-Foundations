@@ -212,9 +212,9 @@ public class WaterWheelBlockEntity extends TickableBlockEntity implements Rotati
     {
         super.loadAdditional(tag, provider);
         node.rotation().loadFromTag(tag);
-        invalid = tag.getBoolean("invalid");
-        targetSpeed = tag.getFloat("targetSpeed");
-        obstructed = tag.getBoolean("obstructed");
+        invalid = tag.getBooleanOr("invalid", false);
+        targetSpeed = tag.getFloatOr("targetSpeed", 0f);
+        obstructed = tag.getBooleanOr("obstructed", false);
     }
 
     @Override

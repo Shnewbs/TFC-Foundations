@@ -107,7 +107,7 @@ public class RamTargetTFC extends Behavior<RammingPrey>
     protected void finishRam(ServerLevel serverLevel, RammingPrey rammingPrey)
     {
         serverLevel.broadcastEntityEvent(rammingPrey, (byte) 59);
-        rammingPrey.getBrain().setMemory(MemoryModuleType.RAM_COOLDOWN_TICKS, this.getTimeBetweenRams.apply(rammingPrey).sample(serverLevel.random));
+        rammingPrey.getBrain().setMemory(MemoryModuleType.RAM_COOLDOWN_TICKS, this.getTimeBetweenRams.apply(rammingPrey).sample(serverLevel.getRandom()));
         rammingPrey.getBrain().eraseMemory(MemoryModuleType.RAM_TARGET);
     }
 }

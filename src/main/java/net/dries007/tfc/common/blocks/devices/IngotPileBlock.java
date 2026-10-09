@@ -145,7 +145,7 @@ public class IngotPileBlock extends ExtendedBlock implements EntityBlockExtensio
             pile.removeAllIngots(ingot -> {});
         }
 
-        return level.setBlock(pos, fluid.createLegacyBlock(), level.isClientSide ? 11 : 3);
+        return level.setBlock(pos, fluid.createLegacyBlock(), level.isClientSide() ? 11 : 3);
     }
 
     @Override

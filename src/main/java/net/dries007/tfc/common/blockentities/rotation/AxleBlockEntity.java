@@ -64,7 +64,7 @@ public class AxleBlockEntity extends TFCBlockEntity implements RotatingBlockEnti
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
     {
         super.loadAdditional(tag, provider);
-        invalid = tag.getBoolean("invalid");
+        invalid = tag.getBooleanOr("invalid", false);
     }
 
     @Override

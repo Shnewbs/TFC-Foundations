@@ -153,7 +153,7 @@ public abstract class CreepingWaterPlantBlock extends CreepingPlantBlock impleme
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random)
     {
-        if (!level.isClientSide && level.getFluidState(pos).getType().isSame(TFCFluids.SALT_WATER.getSource()))
+        if (!level.isClientSide() && level.getFluidState(pos).getType().isSame(TFCFluids.SALT_WATER.getSource()))
         {
             if (level.getEntitiesOfClass(LivingEntity.class, AABB.ofSize(pos.getCenter(), 1, 1, 1)).isEmpty())
             {
@@ -169,10 +169,10 @@ public abstract class CreepingWaterPlantBlock extends CreepingPlantBlock impleme
     @Override
     protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity)
     {
-        if (!level.isClientSide && state.getValue(OPEN))
+        if (!level.isClientSide() && state.getValue(OPEN))
         {
             level.setBlock(pos, state.setValue(OPEN, false), Block.UPDATE_ALL);
-            level.scheduleTick(pos, this, level.random.nextInt(40, 160));
+            level.scheduleTick(pos, this, level.getRandom().nextInt(40, 160));
         }
     }
 }

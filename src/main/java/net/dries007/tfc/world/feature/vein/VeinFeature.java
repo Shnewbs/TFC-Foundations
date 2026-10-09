@@ -46,7 +46,7 @@ public abstract class VeinFeature<C extends IVeinConfig, V extends IVein> extend
         final C config = context.config();
         final WorldGenerationContext generationContext = new WorldGenerationContext(context.chunkGenerator(), level);
 
-        final ChunkPos chunkPos = new ChunkPos(pos);
+        final ChunkPos chunkPos = ChunkPos.containing(pos);
         final List<V> veins = getNearbyVeins(level, generationContext, chunkPos, config.chunkRadius(), config);
         if (!veins.isEmpty())
         {
@@ -62,9 +62,9 @@ public abstract class VeinFeature<C extends IVeinConfig, V extends IVein> extend
     public final List<V> getNearbyVeins(WorldGenLevel level, WorldGenerationContext context, ChunkPos pos, int radius, C config)
     {
         final List<V> veins = new ArrayList<>();
-        for (int x = pos.x - radius; x <= pos.x + radius; x++)
+        for (int x = pos.x() - radius; x <= pos.x() + radius; x++)
         {
-            for (int z = pos.z - radius; z <= pos.z + radius; z++)
+            for (int z = pos.z() - radius; z <= pos.z() + radius; z++)
             {
                 getVeinsAtChunk(level, context, x, z, veins, config);
             }

@@ -277,7 +277,7 @@ public final class WeatherHelpers
                 handleSnowMelting(level, chunkPos, netChangeInSnow);
             }
         }
-        else if (level.random.nextInt(TICKS_PER_SNOW_ACCUMULATION) == 0)
+        else if (level.getRandom().nextInt(TICKS_PER_SNOW_ACCUMULATION) == 0)
         {
             // Trigger either accumulation event or snow melt
             final float realTemperature = model.getInstantTemperature(level, snowPlacementSurfacePos);
@@ -290,7 +290,7 @@ public final class WeatherHelpers
                 data.iterateSnowPos(chunk);
             }
             // Use the random surface pos for melting to avoid getting stuck on a block
-            else if (model.getInstantTemperature(level, climateCheckSurfacePos) > 2f && level.random.nextInt(TICKS_PER_SNOW_MELT_PER_SNOW_ACCUMULATION) == 0)
+            else if (model.getInstantTemperature(level, climateCheckSurfacePos) > 2f && level.getRandom().nextInt(TICKS_PER_SNOW_MELT_PER_SNOW_ACCUMULATION) == 0)
             {
                 // Trigger melting
                 handleSnowMelting(level, chunkPos, 1);
@@ -361,7 +361,7 @@ public final class WeatherHelpers
                 }
                 else
                 {
-                    final List<PoiRecord> sampleOfEntries = Helpers.uniqueRandomSample(copyOfEntries, amount, level.random);
+                    final List<PoiRecord> sampleOfEntries = Helpers.uniqueRandomSample(copyOfEntries, amount, level.getRandom());
                     for (PoiRecord entry : sampleOfEntries)
                     {
                         removeSnowAt(level, entry.getPos());
@@ -386,7 +386,7 @@ public final class WeatherHelpers
     @Nullable
     private static Set<PoiRecord> getPoiRecords(SectionStorageAccessor<PoiSection> poi, ChunkPos chunkPos, int sectionY)
     {
-        final long sectionKey = SectionPos.asLong(chunkPos.x, sectionY, chunkPos.z);
+        final long sectionKey = SectionPos.asLong(chunkPos.x(), sectionY, chunkPos.z());
         final Optional<PoiSection> section = poi.invoke$getOrLoad(sectionKey);
         return section.isPresent()
             ? ((PoiSectionAccessor) section.get()).accessor$byType().get(CLIMATE)
@@ -424,7 +424,7 @@ public final class WeatherHelpers
         IcePileBlock.placeIcePileOrIce(level, groundPos, groundState, false);
 
         // Then place icicles at a lower rate, under overhangs. The lower rate is because the search for icicles is mildly expensive of a check
-        if (level.random.nextInt(16) == 0)
+        if (level.getRandom().nextInt(16) == 0)
         {
             // Place icicles under overhangs
             final BlockPos iciclePos = findIcicleLocation(level, surfacePos);
@@ -507,7 +507,7 @@ public final class WeatherHelpers
                     && Blocks.SNOW.defaultBlockState().canSurvive(level, adjPos))
                 {
                     found++;
-                    if (targetPos == null || level.random.nextInt(found) == 0)
+                    if (targetPos == null || level.getRandom().nextInt(found) == 0)
                     {
                         targetPos = adjPos;
                     }
@@ -524,7 +524,7 @@ public final class WeatherHelpers
     @Nullable
     private static BlockPos findIcicleLocation(ServerLevel level, BlockPos pos)
     {
-        final Direction side = Direction.Plane.HORIZONTAL.getRandomDirection(level.random);
+        final Direction side = Direction.Plane.HORIZONTAL.getRandomDirection(level.getRandom());
         BlockPos adjacentPos = pos.relative(side);
         final int adjacentHeight = level.getHeight(Heightmap.Types.MOTION_BLOCKING, adjacentPos.getX(), adjacentPos.getZ());
         BlockPos foundPos = null;
@@ -538,7 +538,7 @@ public final class WeatherHelpers
             if (stateAt.isAir() && (stateAbove.getBlock() == TFCBlocks.ICICLE.get() || stateAbove.isFaceSturdy(level, posAbove, Direction.DOWN)))
             {
                 found++;
-                if (foundPos == null || level.random.nextInt(found) == 0)
+                if (foundPos == null || level.getRandom().nextInt(found) == 0)
                 {
                     foundPos = adjacentPos;
                 }

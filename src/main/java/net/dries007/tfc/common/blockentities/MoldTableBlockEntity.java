@@ -22,7 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelData;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -378,12 +378,12 @@ public class MoldTableBlockEntity extends TickableInventoryBlockEntity<MoldTable
     {
         if (nbt.contains("sourcePosition"))
         {
-            sourcePosition = Optional.of(BlockPos.of(nbt.getLong("sourcePosition")));
+            sourcePosition = Optional.of(BlockPos.of(nbt.getLongOr("sourcePosition", 0L)));
             flowSource = Optional.of(
                 Pair.of(
-                    Helpers.DIRECTIONS[nbt.getByte("flowSource")],
-                    nbt.contains("flowSourceDistance") ? nbt.getByte("flowSourceDistance") : 1));
-            fluid = Optional.of(BuiltInRegistries.FLUID.get(Identifier.parse(nbt.getString("fluid"))));
+                    Helpers.DIRECTIONS[nbt.getByteOr("flowSource", (byte) 0)],
+                    nbt.contains("flowSourceDistance") ? nbt.getByteOr("flowSourceDistance", (byte) 0) : 1));
+            fluid = Optional.of(BuiltInRegistries.FLUID.get(Identifier.parse(nbt.getStringOr("fluid", ""))));
         }
         else
         {
@@ -421,7 +421,7 @@ public class MoldTableBlockEntity extends TickableInventoryBlockEntity<MoldTable
     {
         super.setAndUpdateSlots(slot);
         requestModelDataUpdate();
-        if (level != null && level.isClientSide)
+        if (level != null && level.isClientSide())
         {
             // Need to make sure that this gets called at least on the client
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS | Block.UPDATE_IMMEDIATE);
@@ -463,7 +463,7 @@ public class MoldTableBlockEntity extends TickableInventoryBlockEntity<MoldTable
         @Override
         public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt)
         {
-            inventory.deserializeNBT(provider, nbt.getCompound("inventory"));
+            inventory.deserializeNBT(provider, nbt.getCompoundOrEmpty("inventory"));
         }
 
         private Optional<IFluidHandler> getMoldFluidHandler()

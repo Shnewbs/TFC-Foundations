@@ -267,7 +267,7 @@ public final class ForgeEventHandler
             final ChunkGenerator generator = extension.self();
             final ServerLevelData levelData = event.getSettings();
             final RandomSource random = new XoroshiroRandomSource(level.getSeed());
-            final ChunkPos chunkPos = new ChunkPos(extension.findSpawnBiome(random));
+            final ChunkPos chunkPos = ChunkPos.containing(extension.findSpawnBiome(random));
 
             levelData.setSpawn(chunkPos.getWorldPosition().offset(8, generator.getSpawnHeight(level), 8), 0.0F);
             boolean foundExactSpawn = false;
@@ -279,7 +279,7 @@ public final class ForgeEventHandler
             {
                 if (x > -16 && x <= 16 && z > -16 && z <= 16)
                 {
-                    final BlockPos spawnPos = PlayerSpawnFinder.getSpawnPosInChunk(level, new ChunkPos(chunkPos.x + x, chunkPos.z + z));
+                    final BlockPos spawnPos = PlayerSpawnFinder.getSpawnPosInChunk(level, new ChunkPos(chunkPos.x() + x, chunkPos.z() + z));
                     if (spawnPos != null)
                     {
                         levelData.setSpawn(spawnPos, 0);
@@ -411,7 +411,7 @@ public final class ForgeEventHandler
     public static void onExplosionDetonate(ExplosionEvent.Detonate event)
     {
         final Level level = event.getLevel();
-        if (!level.isClientSide)
+        if (!level.isClientSide())
         {
             WorldTracker.get(level).addCollapsePositions(BlockPos.containing(event.getExplosion().center()), event.getExplosion().getToBlow());
         }
@@ -926,7 +926,7 @@ public final class ForgeEventHandler
         final Level level = event.getLevel();
 
         Entity entity = event.getEntity();
-        if (entity instanceof ItemEntity itemEntity && !level.isClientSide && TFCConfig.SERVER.coolHotItemEntities.get())
+        if (entity instanceof ItemEntity itemEntity && !level.isClientSide() && TFCConfig.SERVER.coolHotItemEntities.get())
         {
             final ItemStack item = itemEntity.getItem();
             if (HeatCapability.isHot(item))
@@ -934,14 +934,14 @@ public final class ForgeEventHandler
                 itemEntity.lifespan = TFCConfig.SERVER.ticksBeforeItemCool.get();
             }
         }
-        else if (entity instanceof LightningBolt lightning && !level.isClientSide && !event.isCanceled())
+        else if (entity instanceof LightningBolt lightning && !level.isClientSide() && !event.isCanceled())
         {
             if (!TFCConfig.SERVER.enableLightning.get())
             {
                 event.setCanceled(true);
                 return;
             }
-            if (TFCConfig.SERVER.enableLightningStrippingLogs.get() && level.random.nextFloat() < 0.2f)
+            if (TFCConfig.SERVER.enableLightningStrippingLogs.get() && level.getRandom().nextFloat() < 0.2f)
             {
                 final BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
                 BlockPos pos = lightning.blockPosition();
@@ -951,7 +951,7 @@ public final class ForgeEventHandler
                     {
                         for (int z = -5; z <= 5; z++)
                         {
-                            if (level.random.nextInt(3) == 0 && x * x + y * y + z * z <= 25)
+                            if (level.getRandom().nextInt(3) == 0 && x * x + y * y + z * z <= 25)
                             {
                                 mutable.setWithOffset(pos, x, y, z);
                                 BlockState state = level.getBlockState(mutable);
@@ -1013,7 +1013,7 @@ public final class ForgeEventHandler
     {
         if (!TFCConfig.SERVER.coolHotItemEntities.get()) return;
         final ItemEntity entity = event.getEntity();
-        if (entity.level().isClientSide) return;
+        if (entity.level().isClientSide()) return;
 
         final ServerLevel level = (ServerLevel) entity.level();
         final ItemStack stack = entity.getItem();
@@ -1034,7 +1034,7 @@ public final class ForgeEventHandler
                 if (FluidHelpers.canFluidExtinguishFire(state.getFluidState().getType()))
                 {
                     coolAmount = 50f;
-                    if (level.random.nextFloat() < 0.001F && FluidHelpers.isAirOrEmptyFluid(state))
+                    if (level.getRandom().nextFloat() < 0.001F && FluidHelpers.isAirOrEmptyFluid(state))
                     {
                         level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
                     }
@@ -1042,7 +1042,7 @@ public final class ForgeEventHandler
                 else if (Helpers.isBlock(state, Blocks.SNOW))
                 {
                     coolAmount = 70f;
-                    if (level.random.nextFloat() < 0.1F)
+                    if (level.getRandom().nextFloat() < 0.1F)
                     {
                         final int layers = state.getValue(SnowLayerBlock.LAYERS);
                         if (layers > 1)
@@ -1063,7 +1063,7 @@ public final class ForgeEventHandler
                     if (Helpers.isBlock(belowState, Blocks.SNOW_BLOCK))
                     {
                         coolAmount = 75f;
-                        if (level.random.nextFloat() < 0.1F)
+                        if (level.getRandom().nextFloat() < 0.1F)
                         {
                             level.destroyBlock(belowPos, false);
                         }
@@ -1071,7 +1071,7 @@ public final class ForgeEventHandler
                     else if (belowState.getBlock() == Blocks.ICE || belowState.getBlock() == Blocks.FROSTED_ICE || Helpers.isBlock(belowState, TFCBlocks.SEA_ICE.get()))
                     {
                         coolAmount = 100f;
-                        if (level.random.nextFloat() < 0.01F)
+                        if (level.getRandom().nextFloat() < 0.01F)
                         {
                             level.setBlockAndUpdate(belowPos, Helpers.isBlock(belowState, TFCBlocks.SEA_ICE.get()) ? TFCBlocks.SALT_WATER.get().defaultBlockState() : Blocks.WATER.defaultBlockState());
                         }
@@ -1079,7 +1079,7 @@ public final class ForgeEventHandler
                     else if (belowState.getBlock() == Blocks.PACKED_ICE || belowState.getBlock() == Blocks.BLUE_ICE)
                     {
                         coolAmount = 125f;
-                        if (level.random.nextFloat() < 0.005F)
+                        if (level.getRandom().nextFloat() < 0.005F)
                         {
                             level.setBlockAndUpdate(belowPos, Blocks.WATER.defaultBlockState());
                         }
@@ -1395,7 +1395,7 @@ public final class ForgeEventHandler
                 {
                     holdingItem = held.split(1);
                 }
-                if (!player.level().isClientSide)
+                if (!player.level().isClientSide())
                 {
                     final HoldingMinecart minecart = new HoldingMinecart(player.level(), oldCart.getX(), oldCart.getY(), oldCart.getZ());
                     HoldingMinecart.copyMinecart(oldCart, minecart);
@@ -1430,7 +1430,7 @@ public final class ForgeEventHandler
         {
             final Player player = event.getEntity();
             final Level level = player.level();
-            if (level.isClientSide) return;
+            if (level.isClientSide()) return;
             int amount = 0;
             if (TFCConfig.SERVER.enableInfestations.get())
             {
@@ -1456,7 +1456,7 @@ public final class ForgeEventHandler
         final LevelAccessor level = event.getLevel();
         if (state.getBlock() instanceof BambooStalkBlock)
         {
-            if (level instanceof ServerLevel server && server.random.nextFloat() > TFCConfig.SERVER.plantLongGrowthChance.get())
+            if (level instanceof ServerLevel server && server.getRandom().nextFloat() > TFCConfig.SERVER.plantLongGrowthChance.get())
             {
                 event.setResult(CropGrowEvent.Pre.Result.DO_NOT_GROW);
             }

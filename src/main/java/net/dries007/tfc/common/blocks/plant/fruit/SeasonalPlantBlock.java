@@ -190,7 +190,7 @@ public abstract class SeasonalPlantBlock extends BushBlock implements IForgeBloc
             level.playSound(player, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.PLAYERS, 1.0f, level.getRandom().nextFloat() + 0.7f + 0.3f);
             if (!level.isClientSide())
             {
-                ItemHandlerHelper.giveItemToPlayer(player, getProductItem(level.random));
+                ItemHandlerHelper.giveItemToPlayer(player, getProductItem(level.getRandom()));
             }
             BerryBushBlockEntity.resetPickedTick(level, pos);
             level.setBlockAndUpdate(pos, stateAfterPicking(state));

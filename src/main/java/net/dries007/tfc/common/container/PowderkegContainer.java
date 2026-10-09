@@ -9,7 +9,7 @@ package net.dries007.tfc.common.container;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -32,7 +32,7 @@ public class PowderkegContainer extends BlockEntityContainer<PowderkegBlockEntit
     }
 
     @Override
-    public void clicked(int slot, int button, ClickType clickType, Player player)
+    public void clicked(int slot, int button, ContainerInput clickType, Player player)
     {
         if (slot >= 0 && slot < PowderkegBlockEntity.SLOTS && blockEntity.getBlockState().getValue(SealableDeviceBlock.SEALED))
         {

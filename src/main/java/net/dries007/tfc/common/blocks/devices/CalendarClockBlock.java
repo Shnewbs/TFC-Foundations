@@ -24,7 +24,6 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
@@ -41,7 +40,7 @@ import net.dries007.tfc.util.Helpers;
 public class CalendarClockBlock extends DeviceBlock
 {
     public static EnumProperty<Mode> MODE = TFCBlockStateProperties.CLOCK_MODE;
-    public static DirectionProperty FACING = BlockStateProperties.FACING;
+    public static EnumProperty<Direction> FACING = BlockStateProperties.FACING;
     private static final VoxelShape SHAPE_UP = box(1D, 0D, 1D, 15D, 2.0D, 15D);
     private static final VoxelShape SHAPE_DOWN = box(1D, 14D, 1D, 15D, 16.0D, 15D);
     private static final VoxelShape SHAPE_NORTH = box(1D, 1D, 14D, 15D, 15D, 16D);
@@ -98,7 +97,7 @@ public class CalendarClockBlock extends DeviceBlock
     {
         if (player.mayBuild())
         {
-            if (level.isClientSide)
+            if (level.isClientSide())
             {
                 if (level.getBlockEntity(pos) instanceof CalendarClockBlockEntity clock)
                 {

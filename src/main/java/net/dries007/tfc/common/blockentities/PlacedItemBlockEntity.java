@@ -232,11 +232,11 @@ public class PlacedItemBlockEntity extends InventoryBlockEntity<ItemStackHandler
     @Override
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
-        isHoldingLargeItem = nbt.getBoolean("isHoldingLargeItem");
-        rotations[0] = nbt.getFloat("rotation1");
-        rotations[1] = nbt.getFloat("rotation2");
-        rotations[2] = nbt.getFloat("rotation3");
-        rotations[3] = nbt.getFloat("rotation4");
+        isHoldingLargeItem = nbt.getBooleanOr("isHoldingLargeItem", false);
+        rotations[0] = nbt.getFloatOr("rotation1", 0f);
+        rotations[1] = nbt.getFloatOr("rotation2", 0f);
+        rotations[2] = nbt.getFloatOr("rotation3", 0f);
+        rotations[3] = nbt.getFloatOr("rotation4", 0f);
         super.loadAdditional(nbt, provider);
     }
 

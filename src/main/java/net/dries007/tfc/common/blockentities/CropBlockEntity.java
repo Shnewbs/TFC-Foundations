@@ -167,14 +167,14 @@ public class CropBlockEntity extends TFCBlockEntity implements ICalendarTickable
     @Override
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
-        growth = nbt.getFloat("growth");
-        yield = nbt.getFloat("yield");
-        expiry = nbt.getFloat("expiry");
-        nAbsorbed = nbt.getFloat("n");
-        pAbsorbed = nbt.getFloat("p");
-        kAbsorbed = nbt.getFloat("k");
-        lastUpdateTick = nbt.getLong("tick");
-        lastGrowthTick = nbt.getLong("lastGrowthTick");
+        growth = nbt.getFloatOr("growth", 0f);
+        yield = nbt.getFloatOr("yield", 0f);
+        expiry = nbt.getFloatOr("expiry", 0f);
+        nAbsorbed = nbt.getFloatOr("n", 0f);
+        pAbsorbed = nbt.getFloatOr("p", 0f);
+        kAbsorbed = nbt.getFloatOr("k", 0f);
+        lastUpdateTick = nbt.getLongOr("tick", 0L);
+        lastGrowthTick = nbt.getLongOr("lastGrowthTick", 0L);
         super.loadAdditional(nbt, provider);
     }
 

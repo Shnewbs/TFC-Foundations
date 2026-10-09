@@ -23,7 +23,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.portal.DimensionTransition;
+import net.minecraft.world.level.portal.TeleportTransition;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.common.effect.TFCEffects;
@@ -89,7 +89,7 @@ public class Octopoteuthis extends TFCSquid implements IGlow
     public void readAdditionalSaveData(CompoundTag tag)
     {
         super.readAdditionalSaveData(tag);
-        this.setDarkTicks(tag.getInt("DarkTicksRemaining"));
+        this.setDarkTicks(tag.getIntOr("DarkTicksRemaining", 0));
         readLight(tag);
     }
 
@@ -127,10 +127,10 @@ public class Octopoteuthis extends TFCSquid implements IGlow
 
     @Nullable
     @Override
-    public Entity changeDimension(DimensionTransition transition)
+    public Entity teleport(TeleportTransition transition)
     {
         tryRemoveLight();
-        return super.changeDimension(transition);
+        return super.teleport(transition);
     }
 
     @Override

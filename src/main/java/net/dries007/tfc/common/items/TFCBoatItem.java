@@ -91,7 +91,7 @@ public class TFCBoatItem extends BoatItem
                 }
                 else
                 {
-                    if (!level.isClientSide)
+                    if (!level.isClientSide())
                     {
                         level.addFreshEntity(boat);
                         level.gameEvent(player, GameEvent.ENTITY_PLACE, hitresult.getLocation());

@@ -238,7 +238,7 @@ public class SewingTableContainer extends Container implements ISlotCallback, Bu
             if (getYarnCount() <= 0)
                 return;
             usedString.set(usedString.get() + 1);
-            stitchData.set(extraNBT.getInt("id"), extraNBT.getInt("stitchType"));
+            stitchData.set(extraNBT.getIntOr("id", 0), extraNBT.getIntOr("stitchType", 0));
             access.execute((level, pos) -> Helpers.playSound(level, pos, SoundEvents.WOOL_HIT));
         }
         activeMaterialData.set(activeMaterial);

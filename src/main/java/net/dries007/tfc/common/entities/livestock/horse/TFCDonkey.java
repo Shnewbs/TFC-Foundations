@@ -41,7 +41,7 @@ public class TFCDonkey extends TFCChestedHorse
     public EntityType<?> getEntityTypeForBaby()
     {
         final CompoundTag genes = getGenes();
-        return genes != null && genes.contains("isMule") && genes.getBoolean("isMule") ? TFCEntities.MULE.get() : TFCEntities.DONKEY.get();
+        return genes != null && genes.contains("isMule") && genes.getBooleanOr("isMule", false) ? TFCEntities.MULE.get() : TFCEntities.DONKEY.get();
     }
 
     @Override

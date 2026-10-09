@@ -82,7 +82,7 @@ public class SluiceBlockEntity extends TickableInventoryBlockEntity<ItemStackHan
                     final LootTable table = serverLevel.getServer().reloadableRegistries().getLootTable(deposit.lootTable());
                     final List<ItemStack> items = table.getRandomItems(builder.create(LootContextParamSets.EMPTY));
                     final Direction dir = state.getValue(SluiceBlock.FACING);
-                    items.forEach(item -> Helpers.spawnItem(level, sluice.getWaterOutputPos(), item, 1.125, dir.getStepX() * 0.12 * level.random.nextFloat(), 0, dir.getStepZ() * 0.12 * level.random.nextFloat()));
+                    items.forEach(item -> Helpers.spawnItem(level, sluice.getWaterOutputPos(), item, 1.125, dir.getStepX() * 0.12 * level.getRandom().nextFloat(), 0, dir.getStepZ() * 0.12 * level.getRandom().nextFloat()));
                 }
                 stack.setCount(0);
                 itemUsed = true;
@@ -139,7 +139,7 @@ public class SluiceBlockEntity extends TickableInventoryBlockEntity<ItemStackHan
     @Override
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
-        ticksRemaining = nbt.getInt("ticksRemaining");
+        ticksRemaining = nbt.getIntOr("ticksRemaining", 0);
         super.loadAdditional(nbt, provider);
     }
 

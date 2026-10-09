@@ -120,7 +120,7 @@ public class QuernBlockEntity extends TickableInventoryBlockEntity<ItemStackHand
 
     private static void sendParticle(ServerLevel level, BlockPos pos, ItemStack item, int count)
     {
-        level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, item), pos.getX() + 0.5D, pos.getY() + 0.875D, pos.getZ() + 0.5D, count, Helpers.triangle(level.random) / 2.0D, level.random.nextDouble() / 4.0D, Helpers.triangle(level.random) / 2.0D, 0.15f);
+        level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, item), pos.getX() + 0.5D, pos.getY() + 0.875D, pos.getZ() + 0.5D, count, Helpers.triangle(level.getRandom()) / 2.0D, level.getRandom().nextDouble() / 4.0D, Helpers.triangle(level.getRandom()) / 2.0D, 0.15f);
     }
 
     private final SinkNode node;
@@ -187,7 +187,7 @@ public class QuernBlockEntity extends TickableInventoryBlockEntity<ItemStackHand
     @Override
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
-        recipeTimer = nbt.getFloat("recipeTimer");
+        recipeTimer = nbt.getFloatOr("recipeTimer", 0f);
         super.loadAdditional(nbt, provider);
         needsStateUpdate = true;
     }
@@ -232,7 +232,7 @@ public class QuernBlockEntity extends TickableInventoryBlockEntity<ItemStackHand
             if (recipe != null && recipe.matches(inputStack))
             {
                 recipeTimer = MANUAL_TICKS;
-                level.playSound(null, worldPosition, TFCSounds.QUERN_DRAG.get(), SoundSource.BLOCKS, 1, 1 + ((level.random.nextFloat() - level.random.nextFloat()) / 16));
+                level.playSound(null, worldPosition, TFCSounds.QUERN_DRAG.get(), SoundSource.BLOCKS, 1, 1 + ((level.getRandom().nextFloat() - level.getRandom().nextFloat()) / 16));
                 markForSync();
                 previousRotationDirection = 1;
                 previousRotationSpeed = MANUAL_SPEED;
@@ -310,7 +310,7 @@ public class QuernBlockEntity extends TickableInventoryBlockEntity<ItemStackHand
             {
                 ItemStack outputStack = recipe.assemble(inputStack);
                 outputStack = Helpers.mergeInsertStack(inventory, SLOT_OUTPUT, outputStack);
-                if (!outputStack.isEmpty() && !level.isClientSide)
+                if (!outputStack.isEmpty() && !level.isClientSide())
                 {
                     Helpers.spawnItem(level, worldPosition, outputStack);
                 }

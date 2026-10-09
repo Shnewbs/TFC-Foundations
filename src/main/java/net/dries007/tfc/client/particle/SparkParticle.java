@@ -16,11 +16,11 @@ public class SparkParticle extends TextureSheetParticle
     public SparkParticle(ClientLevel level, double x, double y, double z)
     {
         super(level, x, y, z);
-        this.rCol = level.random.nextFloat() * 0.3f + 0.6f;
-        this.gCol = this.rCol - (level.random.nextFloat() / 5f);
+        this.rCol = level.getRandom().nextFloat() * 0.3f + 0.6f;
+        this.gCol = this.rCol - (level.getRandom().nextFloat() / 5f);
         this.bCol = 0;
-        this.lifetime = 60 + level.random.nextInt(40);
-        scale(Mth.nextFloat(level.random, 0.7f, 0.9f));
+        this.lifetime = 60 + level.getRandom().nextInt(40);
+        scale(Mth.nextFloat(level.getRandom(), 0.7f, 0.9f));
     }
 
     @Override

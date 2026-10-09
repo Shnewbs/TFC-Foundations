@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blocks.plant;
 
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+
 import java.util.Map;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.BlockPos;
@@ -23,7 +25,6 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -35,7 +36,7 @@ import net.dries007.tfc.util.registry.RegistryPlant;
 
 public abstract class EpiphytePlantBlock extends PlantBlock
 {
-    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     protected static final VoxelShape NORTH_SHAPE = box(0.0, 0.0, 4.0, 16.0, 16.0, 16.0);
     protected static final VoxelShape SOUTH_SHAPE = box(0.0, 0.0, 0.0, 16.0, 16.0, 12.0);

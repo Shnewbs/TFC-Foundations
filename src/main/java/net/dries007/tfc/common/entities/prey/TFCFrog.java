@@ -86,10 +86,10 @@ public class TFCFrog extends Frog implements Temptable, BrainAnimalBehavior
     public void readAdditionalSaveData(CompoundTag tag)
     {
         super.readAdditionalSaveData(tag);
-        setFamiliarity(tag.getFloat("familiarity"));
-        setIsMale(tag.getBoolean("male"));
-        lastMated = tag.getLong("lastMated");
-        nextFeedTime = tag.getLong("nextFeed");
+        setFamiliarity(tag.getFloatOr("familiarity", 0f));
+        setIsMale(tag.getBooleanOr("male", false));
+        lastMated = tag.getLongOr("lastMated", 0L);
+        nextFeedTime = tag.getLongOr("nextFeed", 0L);
     }
 
     @Override
@@ -204,7 +204,7 @@ public class TFCFrog extends Frog implements Temptable, BrainAnimalBehavior
         final ItemStack held = player.getItemInHand(hand);
         if (isFood(held))
         {
-            if (!level().isClientSide)
+            if (!level().isClientSide())
             {
                 final long ticks = Calendars.SERVER.getTicks();
                 if (ticks > nextFeedTime)

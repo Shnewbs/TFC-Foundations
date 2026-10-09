@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blockentities;
 
+import net.dries007.tfc.util.NbtHelpers;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -53,7 +55,7 @@ public class ScrapingBlockEntity extends InventoryBlockEntity<ItemStackHandler>
         positions |= 1 << (xPos + zPos * 4);
 
         assert level != null;
-        if (!level.isClientSide)
+        if (!level.isClientSide())
         {
             if (isComplete())
             {
@@ -111,11 +113,11 @@ public class ScrapingBlockEntity extends InventoryBlockEntity<ItemStackHandler>
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
         super.loadAdditional(nbt, provider);
-        positions = nbt.getShort("positions");
-        inputTexture = nbt.contains("inputTexture", Tag.TAG_STRING) ? Helpers.resourceLocation(nbt.getString("inputTexture")) : null;
-        outputTexture = nbt.contains("outputTexture", Tag.TAG_STRING) ? Helpers.resourceLocation(nbt.getString("outputTexture")) : null;
-        color1 = nbt.contains("color1", Tag.TAG_INT) ? DyeColor.byId(nbt.getInt("color1")) : null;
-        color2 = nbt.contains("color2", Tag.TAG_INT) ? DyeColor.byId(nbt.getInt("color2")) : null;
+        positions = nbt.getShortOr("positions", (short) 0);
+        inputTexture = NbtHelpers.hasTag(nbt, "inputTexture", Tag.TAG_STRING) ? Helpers.resourceLocation(nbt.getStringOr("inputTexture", "")) : null;
+        outputTexture = NbtHelpers.hasTag(nbt, "outputTexture", Tag.TAG_STRING) ? Helpers.resourceLocation(nbt.getStringOr("outputTexture", "")) : null;
+        color1 = NbtHelpers.hasTag(nbt, "color1", Tag.TAG_INT) ? DyeColor.byId(nbt.getIntOr("color1", 0)) : null;
+        color2 = NbtHelpers.hasTag(nbt, "color2", Tag.TAG_INT) ? DyeColor.byId(nbt.getIntOr("color2", 0)) : null;
     }
 
     @Override

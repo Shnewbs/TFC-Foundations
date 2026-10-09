@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blockentities;
 
+import net.dries007.tfc.util.NbtHelpers;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -113,9 +115,9 @@ public class BloomeryBlockEntity extends TickableBlockEntity implements ICalenda
     @Override
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
-        Helpers.readItemStacksFromNbt(provider, inputStacks, nbt.getList("inputStacks", Tag.TAG_COMPOUND));
-        litTick = nbt.getLong("litTick");
-        lastPlayerTick = nbt.getLong("lastTick");
+        Helpers.readItemStacksFromNbt(provider, inputStacks, NbtHelpers.getHomogeneousListOrEmpty(nbt, "inputStacks", Tag.TAG_COMPOUND));
+        litTick = nbt.getLongOr("litTick", 0L);
+        lastPlayerTick = nbt.getLongOr("lastTick", 0L);
         super.loadAdditional(nbt, provider);
     }
 
@@ -229,7 +231,7 @@ public class BloomeryBlockEntity extends TickableBlockEntity implements ICalenda
         {
             updateCachedRecipe();
         }
-        if (level.isClientSide || cachedRecipe == null || !level.getBlockState(worldPosition).getValue(BloomeryBlock.LIT))
+        if (level.isClientSide() || cachedRecipe == null || !level.getBlockState(worldPosition).getValue(BloomeryBlock.LIT))
         {
             return;
         }

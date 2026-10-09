@@ -40,7 +40,7 @@ public class BurningLogPileBlockEntity extends TickCounterBlockEntity
     @Override
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
-        logs = nbt.getInt("logs");
+        logs = nbt.getIntOr("logs", 0);
         super.loadAdditional(nbt, provider);
     }
 

@@ -18,7 +18,7 @@ public record KrummholzConfig(Block block, IntProvider height, boolean spawnsOnS
 {
     public static final Codec<KrummholzConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
         Codecs.BLOCK.fieldOf("block").forGetter(c -> c.block),
-        IntProvider.CODEC.fieldOf("height").forGetter(c -> c.height),
+        net.minecraft.util.valueproviders.IntProviders.CODEC.fieldOf("height").forGetter(c -> c.height),
         Codec.BOOL.optionalFieldOf("spawns_on_stone", false).forGetter(c -> c.spawnsOnStone),
         Codec.BOOL.optionalFieldOf("spawns_on_gravel", false).forGetter(c -> c.spawnsOnGravel)
     ).apply(instance, KrummholzConfig::new));

@@ -123,8 +123,8 @@ public class BellowsBlockEntity extends TFCBlockEntity
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
     {
         super.loadAdditional(tag, provider);
-        lastPushed = tag.getLong("pushed");
-        justPushed = tag.getBoolean("justPushed");
+        lastPushed = tag.getLongOr("pushed", 0L);
+        justPushed = tag.getBooleanOr("justPushed", false);
     }
 
     public float getExtensionLength(float partialTick)
@@ -177,7 +177,7 @@ public class BellowsBlockEntity extends TFCBlockEntity
     {
         assert level != null;
 
-        if (level.isClientSide)
+        if (level.isClientSide())
         {
             // Run the effects on server just after we successfully push, as this will reset the lastPushed and justPushed flags
             // Those will be synced to client, and as soon as it receives them, it will run afterPush() through it's tick() method
@@ -226,7 +226,7 @@ public class BellowsBlockEntity extends TFCBlockEntity
         final Direction direction = getBlockState().getValue(BellowsBlock.FACING);
         final BlockPos facingPos = worldPosition.relative(direction);
 
-        level.playSound(null, worldPosition, TFCSounds.BELLOWS_BLOW.get(), SoundSource.BLOCKS, 1, 1 + ((level.random.nextFloat() - level.random.nextFloat()) / 16));
+        level.playSound(null, worldPosition, TFCSounds.BELLOWS_BLOW.get(), SoundSource.BLOCKS, 1, 1 + ((level.getRandom().nextFloat() - level.getRandom().nextFloat()) / 16));
         level.addParticle(ParticleTypes.POOF, facingPos.getX() + 0.5f - 0.3f * direction.getStepX(), facingPos.getY() + 0.5f, facingPos.getZ() + 0.5f - 0.3f * direction.getStepZ(), 0, 0.005D, 0);
     }
 

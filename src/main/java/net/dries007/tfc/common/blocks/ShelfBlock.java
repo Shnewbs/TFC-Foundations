@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blocks;
 
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -24,7 +26,6 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -37,7 +38,7 @@ import net.dries007.tfc.util.Helpers;
 
 public class ShelfBlock extends PlacedItemBlock
 {
-    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final VoxelShape TOP_SHAPE = box(0, 15, 0, 16, 16, 16);
     public static final VoxelShape TOP_SHAPE_TALL = box(0, 14, 0, 16, 16, 16);
 

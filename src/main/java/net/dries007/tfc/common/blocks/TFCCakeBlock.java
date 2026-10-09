@@ -62,7 +62,7 @@ public class TFCCakeBlock extends CakeBlock
         {
             return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
-        if (level.isClientSide)
+        if (level.isClientSide())
         {
             if (eatCake(level, pos, state, player).consumesAction())
             {

@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.entities.misc;
 
+import net.dries007.tfc.util.NbtHelpers;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -175,12 +177,12 @@ public class ThrownJavelin extends AbstractArrow
     public void readAdditionalSaveData(CompoundTag tag)
     {
         super.readAdditionalSaveData(tag);
-        if (tag.contains("item", Tag.TAG_COMPOUND))
+        if (NbtHelpers.hasTag(tag, "item", Tag.TAG_COMPOUND))
         {
-            setItem(ItemStack.parseOptional(level().registryAccess(), tag.getCompound("item")));
-            setIsEnchantGlowing(tag.getBoolean("glow"));
+            setItem(ItemStack.parseOptional(level().registryAccess(), tag.getCompoundOrEmpty("item")));
+            setIsEnchantGlowing(tag.getBooleanOr("glow", false));
         }
-        dealtDamage = tag.getBoolean("dealtDamage");
+        dealtDamage = tag.getBooleanOr("dealtDamage", false);
     }
 
     @Override

@@ -55,7 +55,7 @@ public interface IGlow
 
     default void readLight(CompoundTag tag)
     {
-        setLightPos(new BlockPos(tag.getInt("lightX"), tag.getInt("lightY"), tag.getInt("lightZ")));
+        setLightPos(new BlockPos(tag.getIntOr("lightX", 0), tag.getIntOr("lightY", 0), tag.getIntOr("lightZ", 0)));
     }
 
     @SuppressWarnings("deprecation") // hasChunkAt

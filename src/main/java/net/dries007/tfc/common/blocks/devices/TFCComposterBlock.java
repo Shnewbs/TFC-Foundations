@@ -66,7 +66,7 @@ public class TFCComposterBlock extends BottomSupportedDeviceBlock implements Ent
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         return level.getBlockEntity(pos, TFCBlockEntities.COMPOSTER.get())
-            .map(composter -> composter.use(player.getItemInHand(hand), player, level.isClientSide))
+            .map(composter -> composter.use(player.getItemInHand(hand), player, level.isClientSide()))
             .orElse(InteractionResult.TRY_WITH_EMPTY_HAND);
     }
 

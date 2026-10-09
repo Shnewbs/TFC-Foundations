@@ -60,7 +60,7 @@ public class TFCBellBlock extends BellBlock implements IForgeBlockExtension, Ent
     public boolean attemptToRing(@Nullable Entity entity, Level level, BlockPos pos, @Nullable Direction side)
     {
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (!level.isClientSide && blockEntity instanceof BellBlockEntity bell)
+        if (!level.isClientSide() && blockEntity instanceof BellBlockEntity bell)
         {
             if (side == null)
             {

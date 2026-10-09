@@ -95,7 +95,7 @@ public class StoveBlock extends FirepitBlock
         {
             if (stack.getItem() == TFCItems.POT.get())
             {
-                if (!level.isClientSide)
+                if (!level.isClientSide())
                 {
                     final Block newBlock = TFCBlocks.STOVE_POT.get();
                     AbstractFirepitBlockEntity.convertTo(level, pos, state, firepit, newBlock);

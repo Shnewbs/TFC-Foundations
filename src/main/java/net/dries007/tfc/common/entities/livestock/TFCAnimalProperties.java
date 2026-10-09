@@ -116,7 +116,7 @@ public interface TFCAnimalProperties extends GenderedRenderAnimal, BrainAnimalBe
             getEntity().refreshDimensions();
         }
         // because this is a random value it's not deterministic, we will allow the entity to sync it on its own
-        if (!level().isClientSide && age == Age.ADULT && getUses() > getUsesToElderly() && getOldTick() == -1L)
+        if (!level().isClientSide() && age == Age.ADULT && getUses() > getUsesToElderly() && getOldTick() == -1L)
         {
             setOldTick(calendar().getTicks() + (1L + getEntity().getRandom().nextInt(5)) * ICalendar.TICKS_IN_DAY);
         }
@@ -165,7 +165,7 @@ public interface TFCAnimalProperties extends GenderedRenderAnimal, BrainAnimalBe
         }
 
         entity.heal(1f);
-        if (!level.isClientSide)
+        if (!level.isClientSide())
         {
             setLastFedNow();
             if (!player.isCreative())
@@ -221,17 +221,17 @@ public interface TFCAnimalProperties extends GenderedRenderAnimal, BrainAnimalBe
 
     default void readCommonAnimalData(CompoundTag nbt)
     {
-        setGender(nbt.getBoolean("gender") ? Gender.MALE : Gender.FEMALE);
-        setLastAge(Age.valueOf(nbt.getInt("lastAge")));
+        setGender(nbt.getBooleanOr("gender", false) ? Gender.MALE : Gender.FEMALE);
+        setLastAge(Age.valueOf(nbt.getIntOr("lastAge", 0)));
         setGeneticSize(EntityHelpers.getIntOrDefault(nbt, "geneticSize", 16));
-        setUses(nbt.getInt("uses"));
-        setFertilized(nbt.getBoolean("fertilized"));
-        getEntityData().set(animalData().familiarity(), nbt.getFloat("familiarity")); // Don't use the behavior method, it updates familiarity
-        getEntityData().set(animalData().lastFamiliarityTick(), nbt.getLong("lastFamiliarityTick"));
-        setBirthTick(nbt.getLong("birthTick"));
-        setOldTick(nbt.getLong("oldTick"));
-        getEntityData().set(animalData().lastFedTick(), nbt.getLong("lastFedTick")); // Don't use the behavior method, it updates familiarity
-        getEntityData().set(animalData().lastMateTick(), nbt.getLong("lastMateTick"));
+        setUses(nbt.getIntOr("uses", 0));
+        setFertilized(nbt.getBooleanOr("fertilized", false));
+        getEntityData().set(animalData().familiarity(), nbt.getFloatOr("familiarity", 0f)); // Don't use the behavior method, it updates familiarity
+        getEntityData().set(animalData().lastFamiliarityTick(), nbt.getLongOr("lastFamiliarityTick", 0L));
+        setBirthTick(nbt.getLongOr("birthTick", 0L));
+        setOldTick(nbt.getLongOr("oldTick", 0L));
+        getEntityData().set(animalData().lastFedTick(), nbt.getLongOr("lastFedTick", 0L)); // Don't use the behavior method, it updates familiarity
+        getEntityData().set(animalData().lastMateTick(), nbt.getLongOr("lastMateTick", 0L));
     }
 
     default void initCommonAnimalData(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason reason)

@@ -60,7 +60,7 @@ public class JavelinItem extends SwordItem
             int i = this.getUseDuration(stack, entity) - ticksLeft;
             if (i >= 10)
             {
-                if (!level.isClientSide)
+                if (!level.isClientSide())
                 {
                     Helpers.damageItem(stack, player, entity.getUsedItemHand());
 

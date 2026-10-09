@@ -16,7 +16,7 @@ public class TickEntry
 
     public TickEntry(CompoundTag nbt)
     {
-        this(BlockPos.of(nbt.getLong("pos")), nbt.getInt("ticks"));
+        this(BlockPos.of(nbt.getLongOr("pos", 0L)), nbt.getIntOr("ticks", 0));
     }
 
     public TickEntry(BlockPos pos, int ticks)

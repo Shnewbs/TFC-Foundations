@@ -245,7 +245,7 @@ public class StationaryBerryBushBlock extends SeasonalPlantBlock implements HoeO
         {
             TerraFirmaCraft.LOGGER.error("Failed to update propagated berry bush block entity at: {}", pos);
         }
-        level.getBlockState(pos).tick(level, pos, level.random);
+        level.getBlockState(pos).tick(level, pos, level.getRandom());
     }
 
     protected BlockState getNewState(Level level, BlockPos pos)

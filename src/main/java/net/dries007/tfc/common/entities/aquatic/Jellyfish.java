@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.entities.aquatic;
 
+import net.dries007.tfc.util.NbtHelpers;
+
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.IntFunction;
@@ -95,9 +97,9 @@ public class Jellyfish extends AbstractSchoolingFish implements AquaticMob
     public void loadFromBucketTag(CompoundTag tag)
     {
         super.loadFromBucketTag(tag);
-        if (tag.contains("BucketVariantTag", 3))
+        if (NbtHelpers.hasTag(tag, "BucketVariantTag", 3))
         {
-            this.setVariant(Type.byId(tag.getInt("BucketVariantTag")));
+            this.setVariant(Type.byId(tag.getIntOr("BucketVariantTag", 0)));
         }
     }
 
@@ -119,7 +121,7 @@ public class Jellyfish extends AbstractSchoolingFish implements AquaticMob
     public void readAdditionalSaveData(CompoundTag tag)
     {
         super.readAdditionalSaveData(tag);
-        this.setVariant(Jellyfish.Type.byName(tag.getString("Variant")));
+        this.setVariant(Jellyfish.Type.byName(tag.getStringOr("Variant", "")));
     }
 
     @Override

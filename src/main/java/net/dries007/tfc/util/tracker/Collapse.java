@@ -28,9 +28,9 @@ public class Collapse
 
     public Collapse(CompoundTag nbt)
     {
-        centerPos = BlockPos.of(nbt.getLong("centerPos"));
-        nextPositions = Arrays.stream(nbt.getLongArray("nextPositions")).mapToObj(BlockPos::of).collect(Collectors.toList());
-        radiusSquared = nbt.getDouble("radiusSquared");
+        centerPos = BlockPos.of(nbt.getLongOr("centerPos", 0L));
+        nextPositions = Arrays.stream(nbt.getLongArray("nextPositions").orElseGet(() -> new long[0])).mapToObj(BlockPos::of).collect(Collectors.toList());
+        radiusSquared = nbt.getDoubleOr("radiusSquared", 0d);
     }
 
     public CompoundTag serializeNBT()

@@ -156,9 +156,9 @@ public class CalendarClockBlockEntity extends TickableBlockEntity
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
     {
         super.loadAdditional(tag, provider);
-        hourAngle = tag.getFloat("hourAngle");
-        minuteAngle = tag.getFloat("minuteAngle");
-        monthAngle = tag.getFloat("monthAngle");
+        hourAngle = tag.getFloatOr("hourAngle", 0f);
+        minuteAngle = tag.getFloatOr("minuteAngle", 0f);
+        monthAngle = tag.getFloatOr("monthAngle", 0f);
         needsUpdate = true;
     }
 }

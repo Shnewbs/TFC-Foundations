@@ -55,3 +55,24 @@ Remaining displayed failures include obsolete rendering/model classes, JEI/Patch
 Earth's existing coordinate/elevation groundwork remains preserved but untouched in this continuation. No Earth preset, dataset integration or complete world generator was added. No playable JAR, client/server startup result, gameplay regression result, performance claim, GitHub release or CurseForge upload is claimed.
 
 Current decision/status is in [PROJECT_STATUS](../../PROJECT_STATUS.md). Continue appending exact commit/run outcomes here; never mark planned work as tested.
+
+
+## 2026-10-09 UTC — Common API continuation toward the compiler milestone
+
+Resumed source `2854e31b81b3f159dcabaf74f0805ac70a762321` on 26.1.2. Public tooling commit `c52eed5fceeca8083b012993719cac07333d2ceb` produced a bounded exact-target compiler bundle in successful workflow `37873949671`. All 84 classpath JAR hashes were checked after download. Local compilation uses that Java 25 runtime and the exact Minecraft 26.1.2 / NeoForge 26.1.2.114 / JEI 29.43.0.107 / Patchouli 26.1-94 inputs, not guessed libraries.
+
+Production changes update legacy package defaults to JSpecify, DirectionProperty to EnumProperty<Direction>, ContainerInput and teleport APIs, moved model data/advancement packages and ARGB calls. The tooltip debug path uses DataComponentPatch.getPatch so absent patches, explicit removal and explicit values remain distinct. Level field reads, ChunkPos record accessors/factories and NBT reads were planned with javac-resolved receiver types, not broad field-name replacement. Source preimages and final contents are verified before public application.
+
+The new NbtHelpers implements strict saved-tag checks and validates every element of a formerly homogeneous list, returning a fresh empty list on invalid/missing input. Existing numeric/string reads now state their old fallback values explicitly. The independently testable Unchecked utility replaces reliance on a removed transitive library while keeping Helpers as the calling facade and preserving throwable identity.
+
+Validation:
+
+- Diagnostic Java main pass initially terminated with 1,341 reported errors; the first source slice reported 846 before the same early stop. Those are not full counts.
+- After repairing the debug component-patch accessor, javac completed a larger diagnostic traversal with 3,979 errors. The typed common pass then completed with 3,490; the utility/type-check follow-up completed with 3,438. Error counts are not an estimate of project completion, nor proof that all downstream errors are exposed.
+- Some local full-compile attempts were interrupted by execution timeouts. Only logs ending with javac's final error/warning totals are treated as completed diagnostic passes. The normal Gradle release gate is not replaced by this manual `-proc:none` pass.
+- `JAVA_HOME=<resolved Java 25> python tools/porting/run_common_smoke.py`: PASS, 51 standalone actual-utility/API checks; independently compiled all 113 package-info files across main/data/test. The first run caught remaining stale annotation imports; those were corrected and retested.
+- Chunk-position, component-patch and integer-provider runtime probes: NOT RUN successfully. A plain-Java attempt failed because Minecraft/NeoForge bootstrap was absent. Their code compiles but they are excluded from the standalone runtime count, explicitly reported as not run, and must be executed in a genuine bootstrapped harness later.
+- `python tools/porting/run_loot_smoke.py` with the resolved JDK on PATH: PASS, the existing four production AlwaysTrueCondition checks; MinMaxProvider also compiles.
+- `git diff --check`: PASS. No registry/resource/save-key rename or release gate relaxation is intended. The compiler error display limit is raised to 10,000 to expose diagnostics, not to suppress failures.
+
+The standalone probes are integrated into `inspect_api.py`; normal CI still fails when the Gradle build fails. `compile_main_diagnostics.py` provides the separate reproducible main-source diagnostic command and records timeouts/exit codes explicitly. The 26.x/26.3 branch, Earth terrain work, gameplay behavior redesign, feature exclusions and dependency/version pins were not changed. The compiler milestone, playable JAR and release remain outstanding.

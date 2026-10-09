@@ -128,7 +128,7 @@ public abstract class TFCTallGrassBlock extends ShortGrassBlock implements ITall
     @Override
     public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player)
     {
-        if (!level.isClientSide)
+        if (!level.isClientSide())
         {
             if (player.isCreative())
             {

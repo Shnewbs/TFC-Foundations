@@ -200,7 +200,7 @@ public final class PlayerInfo extends net.minecraft.world.food.FoodData implemen
         // It is important to add nutrients before calling `FoodData#eat`, otherwise `getFoodLevel` will return the food level _after_ eating, instead of the food level at time of eating.
         // We can't rely on `getLastFoodLevel` either since that value only gets set in `FoodData#tick`, so a tick-perfect call to this method would lead to an incorrect value being used.
         // This only leaves splitting the call to `INutritionData#addNutrients` and the call to `INutritionData#setHungerAndUpdate` into separate parts before and after calling `FoodData#eat`
-        if (!player.level().isClientSide)
+        if (!player.level().isClientSide())
         {
             nutrition.addNutrients(food, getFoodLevel());
         }
@@ -212,7 +212,7 @@ public final class PlayerInfo extends net.minecraft.world.food.FoodData implemen
         }
 
         // Add nutrients and update the hunger value in NutritionData
-        if (!player.level().isClientSide)
+        if (!player.level().isClientSide())
         {
             nutrition.setHungerAndUpdate(getFoodLevel());
         }
@@ -356,15 +356,15 @@ public final class PlayerInfo extends net.minecraft.world.food.FoodData implemen
     @Override
     public void readAdditionalSaveData(CompoundTag root)
     {
-        final CompoundTag tag = root.getCompound("tfc:food");
+        final CompoundTag tag = root.getCompoundOrEmpty("tfc:food");
 
         food.readAdditionalSaveData(root);
-        lastDrinkTick = tag.getLong("lastDrinkTick");
-        thirst = tag.getFloat("thirst");
-        chiselMode = ChiselMode.REGISTRY.get(Identifier.tryParse(tag.getString("chiselMode")));
+        lastDrinkTick = tag.getLongOr("lastDrinkTick", 0L);
+        thirst = tag.getFloatOr("thirst", 0f);
+        chiselMode = ChiselMode.REGISTRY.get(Identifier.tryParse(tag.getStringOr("chiselMode", "")));
         nutrition.setHunger(getFoodLevel());
         nutrition.readFromNbt(tag.get("nutrition"));
-        intoxicationTick = tag.getLong("intoxication");
+        intoxicationTick = tag.getLongOr("intoxication", 0L);
     }
 
     @Override
@@ -441,7 +441,7 @@ public final class PlayerInfo extends net.minecraft.world.food.FoodData implemen
     @Override
     public void setFoodLevel(int foodLevel)
     {
-        if (!this.player.level().isClientSide)
+        if (!this.player.level().isClientSide())
         {
             modified = true;
             nutrition.setHungerAndUpdate(foodLevel);

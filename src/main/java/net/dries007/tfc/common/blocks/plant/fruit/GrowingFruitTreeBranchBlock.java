@@ -267,7 +267,7 @@ public class GrowingFruitTreeBranchBlock extends FruitTreeBranchBlock implements
         {
             TerraFirmaCraft.LOGGER.error("Failed to update fruit tree branch block entity at: {}", childPos);
         }
-        level.getBlockState(childPos).randomTick(level, childPos, level.random);
+        level.getBlockState(childPos).randomTick(level, childPos, level.getRandom());
     }
 
     /**

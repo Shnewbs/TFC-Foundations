@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.entities.prey;
 
+import net.dries007.tfc.util.NbtHelpers;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -148,9 +150,9 @@ public class TFCRabbit extends Rabbit implements MammalProperties
         MammalProperties.super.applyGenes(tag, baby);
         if (baby instanceof TFCRabbit rabbit)
         {
-            if (tag.contains("variant2", Tag.TAG_INT) && random.nextInt(10) != 0)
+            if (NbtHelpers.hasTag(tag, "variant2", Tag.TAG_INT) && random.nextInt(10) != 0)
             {
-                rabbit.setVariant(Variant.byId(random.nextBoolean() ? tag.getInt("variant1") : tag.getInt("variant2")));
+                rabbit.setVariant(Variant.byId(random.nextBoolean() ? tag.getIntOr("variant1", 0) : tag.getIntOr("variant2", 0)));
             }
             else if (level() instanceof ServerLevelAccessor server)
             {
@@ -251,7 +253,7 @@ public class TFCRabbit extends Rabbit implements MammalProperties
     {
         super.readAdditionalSaveData(nbt);
         readCommonAnimalData(nbt);
-        moreCarrotTicks = nbt.getInt("TFCMoreCarrotTicks");
+        moreCarrotTicks = nbt.getIntOr("TFCMoreCarrotTicks", 0);
     }
 
     @Override
@@ -324,13 +326,13 @@ public class TFCRabbit extends Rabbit implements MammalProperties
     @Override
     public boolean isInWall()
     {
-        return !level().isClientSide && super.isInWall();
+        return !level().isClientSide() && super.isInWall();
     }
 
     @Override
     protected void pushEntities()
     {
-        if (!level().isClientSide) super.pushEntities();
+        if (!level().isClientSide()) super.pushEntities();
     }
 
     @Override

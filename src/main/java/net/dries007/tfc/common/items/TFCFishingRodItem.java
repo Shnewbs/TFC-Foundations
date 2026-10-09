@@ -69,7 +69,7 @@ public class TFCFishingRodItem extends FishingRodItem
         else
         {
             level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.FISHING_BOBBER_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
-            if (!level.isClientSide)
+            if (!level.isClientSide())
             {
                 ItemStack bait = Bait.getBait(rod);
                 if (bait.isEmpty())

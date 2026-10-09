@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.entities;
 
+import net.dries007.tfc.util.NbtHelpers;
+
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -117,22 +119,22 @@ public final class EntityHelpers
 
     public static int getIntOrDefault(CompoundTag nbt, String key, int defaultInt)
     {
-        return nbt.contains(key, Tag.TAG_INT) ? nbt.getInt(key) : defaultInt;
+        return NbtHelpers.hasTag(nbt, key, Tag.TAG_INT) ? nbt.getIntOr(key, 0) : defaultInt;
     }
 
     public static String getStringOrDefault(CompoundTag nbt, String key, String defaultString)
     {
-        return nbt.contains(key, Tag.TAG_STRING) ? nbt.getString(key) : defaultString;
+        return NbtHelpers.hasTag(nbt, key, Tag.TAG_STRING) ? nbt.getStringOr(key, "") : defaultString;
     }
 
     public static float getFloatOrDefault(CompoundTag nbt, String key, float defaultFloat)
     {
-        return nbt.contains(key, Tag.TAG_FLOAT) ? nbt.getFloat(key) : defaultFloat;
+        return NbtHelpers.hasTag(nbt, key, Tag.TAG_FLOAT) ? nbt.getFloatOr(key, 0f) : defaultFloat;
     }
 
     public static long getLongOrDefault(CompoundTag nbt, String key, long defaultLong)
     {
-        return nbt.contains(key, Tag.TAG_LONG) ? nbt.getLong(key) : defaultLong;
+        return NbtHelpers.hasTag(nbt, key, Tag.TAG_LONG) ? nbt.getLongOr(key, 0L) : defaultLong;
     }
 
     /**

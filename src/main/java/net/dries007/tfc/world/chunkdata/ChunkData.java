@@ -55,7 +55,7 @@ public sealed class ChunkData
      */
     public static ChunkData get(LevelReader level, ChunkPos pos)
     {
-        return get(level.getChunk(pos.x, pos.z));
+        return get(level.getChunk(pos.x(), pos.z()));
     }
 
     /**
@@ -358,23 +358,23 @@ public sealed class ChunkData
 
     public void deserializeNBT(CompoundTag nbt)
     {
-        status = Status.valueOf(nbt.getByte("status"));
+        status = Status.valueOf(nbt.getByteOr("status", (byte) 0));
         if (status == Status.FULL)
         {
             assert generator != null;
 
-            rockData.setSurfaceHeight(nbt.getIntArray("surfaceHeight"));
-            aquiferSurfaceHeight = nbt.getIntArray("aquiferSurfaceHeight");
+            rockData.setSurfaceHeight(nbt.getIntArray("surfaceHeight").orElseGet(() -> new int[0]));
+            aquiferSurfaceHeight = nbt.getIntArray("aquiferSurfaceHeight").orElseGet(() -> new int[0]);
         }
         if (status == Status.FULL || status == Status.PARTIAL)
         {
-            rainfallLayer = new LerpFloatLayer(nbt.getCompound("rainfall"));
-            rainVarianceLayer = new LerpFloatLayer(nbt.getCompound("rainVariance"));
-            baseGroundwaterLayer = new LerpFloatLayer(nbt.getCompound("baseGroundwater"));
-            temperatureLayer = new LerpFloatLayer(nbt.getCompound("temperature"));
-            forestType = ForestType.valueOf(nbt.getByte("forestType"));
-            lastRandomTick = nbt.getLong("lastRandomTick");
-            nextSnowPosition = nbt.getByte("nextSnowPosition");
+            rainfallLayer = new LerpFloatLayer(nbt.getCompoundOrEmpty("rainfall"));
+            rainVarianceLayer = new LerpFloatLayer(nbt.getCompoundOrEmpty("rainVariance"));
+            baseGroundwaterLayer = new LerpFloatLayer(nbt.getCompoundOrEmpty("baseGroundwater"));
+            temperatureLayer = new LerpFloatLayer(nbt.getCompoundOrEmpty("temperature"));
+            forestType = ForestType.valueOf(nbt.getByteOr("forestType", (byte) 0));
+            lastRandomTick = nbt.getLongOr("lastRandomTick", 0L);
+            nextSnowPosition = nbt.getByteOr("nextSnowPosition", (byte) 0);
         }
     }
 
@@ -408,7 +408,7 @@ public sealed class ChunkData
     {
         private Immutable()
         {
-            super(new ChunkPos(ChunkPos.INVALID_CHUNK_POS));
+            super(ChunkPos.unpack(ChunkPos.INVALID_CHUNK_POS));
         }
 
         @Override

@@ -41,7 +41,7 @@ public class HotWaterBlock extends LiquidBlock
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity)
     {
-        if (level.random.nextInt(10) == 0 && entity instanceof LivingEntity living && living.getHealth() < living.getMaxHealth())
+        if (level.getRandom().nextInt(10) == 0 && entity instanceof LivingEntity living && living.getHealth() < living.getMaxHealth())
         {
             living.heal(TFCConfig.SERVER.hotWaterHealAmount.get().floatValue());
         }

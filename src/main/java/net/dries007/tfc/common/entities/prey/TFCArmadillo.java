@@ -236,10 +236,10 @@ public class TFCArmadillo extends Armadillo implements Temptable, Scareable
     public void readAdditionalSaveData(CompoundTag tag)
     {
         super.readAdditionalSaveData(tag);
-        setIsMale(tag.getBoolean("male"));
-        setBaby(tag.getBoolean("baby"));
-        setProducedTick(tag.getLong("produced"));
-        predatorLoseInterestTime = tag.getInt("PredatorLoseInterestTime");
+        setIsMale(tag.getBooleanOr("male", false));
+        setBaby(tag.getBooleanOr("baby", false));
+        setProducedTick(tag.getLongOr("produced", 0L));
+        predatorLoseInterestTime = tag.getIntOr("PredatorLoseInterestTime", 0);
     }
 
     @Override

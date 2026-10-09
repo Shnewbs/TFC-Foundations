@@ -11,7 +11,7 @@ import java.util.Set;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 
@@ -20,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
  */
 public class ItemStackContainer extends Container
 {
-    private static final Set<ClickType> ILLEGAL_ITEM_CLICKS = EnumSet.of(ClickType.QUICK_MOVE, ClickType.PICKUP, ClickType.THROW, ClickType.SWAP);
+    private static final Set<ContainerInput> ILLEGAL_ITEM_CLICKS = EnumSet.of(ContainerInput.QUICK_MOVE, ContainerInput.PICKUP, ContainerInput.THROW, ContainerInput.SWAP);
 
     protected final ItemStack stack;
     protected final Player player;
@@ -82,16 +82,16 @@ public class ItemStackContainer extends Container
      * Prevent any movement of the item stack from which this container was opened.
      */
     @Override
-    public void clicked(int slot, int button, ClickType clickType, Player player)
+    public void clicked(int slot, int button, ContainerInput clickType, Player player)
     {
         // We can't move if:
         // the slot is the item index, and it's an illegal action (like, swapping the items)
         // the hotbar item is being swapped out
         // the action is "pickup all" (this ignores every slot, so we cannot allow it)
         if ((slot == itemIndex && ILLEGAL_ITEM_CLICKS.contains(clickType)) ||
-            (button == hotbarIndex && clickType == ClickType.SWAP) ||
-            ((button == 40 || (button >= 0 && button <= 9)) && clickType == ClickType.SWAP) ||
-            clickType == ClickType.PICKUP_ALL)
+            (button == hotbarIndex && clickType == ContainerInput.SWAP) ||
+            ((button == 40 || (button >= 0 && button <= 9)) && clickType == ContainerInput.SWAP) ||
+            clickType == ContainerInput.PICKUP_ALL)
         {
             return;
         }

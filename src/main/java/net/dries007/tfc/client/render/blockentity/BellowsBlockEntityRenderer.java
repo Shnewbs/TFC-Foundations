@@ -17,7 +17,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.FastColor.ARGB32;
+import net.minecraft.util.ARGB;
 
 import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.common.blockentities.BellowsBlockEntity;
@@ -135,6 +135,6 @@ public class BellowsBlockEntityRenderer implements BlockEntityRenderer<BellowsBl
     private static int shadeColor(int stepX, int stepY, int stepZ)
     {
         final float shade = RenderHelpers.getShadeForStep(stepX, stepY, stepZ);
-        return ARGB32.colorFromFloat(1f, shade, shade, shade);
+        return ARGB.colorFromFloat(1f, shade, shade, shade);
     }
 }

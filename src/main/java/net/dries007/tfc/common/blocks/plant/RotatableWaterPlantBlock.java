@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blocks.plant;
 
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
@@ -26,7 +28,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -43,7 +44,7 @@ import net.dries007.tfc.util.registry.RegistryPlant;
 public abstract class RotatableWaterPlantBlock extends WaterPlantBlock
 {
     public static final BooleanProperty OPEN = TFCBlockStateProperties.OPEN;
-    public static final DirectionProperty FACING = BlockStateProperties.FACING;
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
 
     protected static final VoxelShape NORTH_SHAPE = box(4.0, 4.0, 10.0, 12.0, 12.0, 16.0);
     protected static final VoxelShape SOUTH_SHAPE = box(4.0, 4.0, 0.0, 12.0, 12.0, 6.0);
@@ -151,7 +152,7 @@ public abstract class RotatableWaterPlantBlock extends WaterPlantBlock
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random)
     {
-        if (!level.isClientSide && level.getFluidState(pos).getType().isSame(TFCFluids.SALT_WATER.getSource()))
+        if (!level.isClientSide() && level.getFluidState(pos).getType().isSame(TFCFluids.SALT_WATER.getSource()))
         {
             level.setBlock(pos, state.setValue(OPEN, true), Block.UPDATE_ALL);
         }
@@ -160,7 +161,7 @@ public abstract class RotatableWaterPlantBlock extends WaterPlantBlock
     @Override
     protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity)
     {
-        if (!level.isClientSide)
+        if (!level.isClientSide())
         {
             level.setBlock(pos, state.setValue(OPEN, false), Block.UPDATE_ALL);
             level.scheduleTick(pos, this, 150);

@@ -31,15 +31,15 @@ public interface IFarmland
         final float n = fertilizer.nitrogen(), p = fertilizer.phosphorus(), k = fertilizer.potassium();
         for (int i = 0; i < (int) (n > 0 ? Mth.clamp(n * 10, 1, 5) : 0); i++)
         {
-            level.sendParticles(TFCParticles.NITROGEN.get(), pos.getX() + level.random.nextFloat(), pos.getY() + level.random.nextFloat() / 5D, pos.getZ() + level.random.nextFloat(), 0, 0D, 0D, 0D, 1D);
+            level.sendParticles(TFCParticles.NITROGEN.get(), pos.getX() + level.getRandom().nextFloat(), pos.getY() + level.getRandom().nextFloat() / 5D, pos.getZ() + level.getRandom().nextFloat(), 0, 0D, 0D, 0D, 1D);
         }
         for (int i = 0; i < (int) (p > 0 ? Mth.clamp(p * 10, 1, 5) : 0); i++)
         {
-            level.sendParticles(TFCParticles.PHOSPHORUS.get(), pos.getX() + level.random.nextFloat(), pos.getY() + level.random.nextFloat() / 5D, pos.getZ() + level.random.nextFloat(), 0, 0D, 0D, 0D, 1D);
+            level.sendParticles(TFCParticles.PHOSPHORUS.get(), pos.getX() + level.getRandom().nextFloat(), pos.getY() + level.getRandom().nextFloat() / 5D, pos.getZ() + level.getRandom().nextFloat(), 0, 0D, 0D, 0D, 1D);
         }
         for (int i = 0; i < (int) (k > 0 ? Mth.clamp(k * 10, 1, 5) : 0); i++)
         {
-            level.sendParticles(TFCParticles.POTASSIUM.get(), pos.getX() + level.random.nextFloat(), pos.getY() + level.random.nextFloat() / 5D, pos.getZ() + level.random.nextFloat(), 0, 0D, 0D, 0D, 1D);
+            level.sendParticles(TFCParticles.POTASSIUM.get(), pos.getX() + level.getRandom().nextFloat(), pos.getY() + level.getRandom().nextFloat() / 5D, pos.getZ() + level.getRandom().nextFloat(), 0, 0D, 0D, 0D, 1D);
         }
     }
 
@@ -142,21 +142,21 @@ public interface IFarmland
 
     default void loadNutrients(CompoundTag nbt)
     {
-        setNutrient(NITROGEN, nbt.getFloat("n"));
-        setNutrient(PHOSPHOROUS, nbt.getFloat("p"));
-        setNutrient(POTASSIUM, nbt.getFloat("k"));
+        setNutrient(NITROGEN, nbt.getFloatOr("n", 0f));
+        setNutrient(PHOSPHOROUS, nbt.getFloatOr("p", 0f));
+        setNutrient(POTASSIUM, nbt.getFloatOr("k", 0f));
     }
 
     default void loadNutrientsWithoutSync(CompoundTag nbt)
     {
-        setNutrientWithoutSync(NITROGEN, nbt.getFloat("n"));
-        setNutrientWithoutSync(PHOSPHOROUS, nbt.getFloat("p"));
-        setNutrientWithoutSync(POTASSIUM, nbt.getFloat("k"));
+        setNutrientWithoutSync(NITROGEN, nbt.getFloatOr("n", 0f));
+        setNutrientWithoutSync(PHOSPHOROUS, nbt.getFloatOr("p", 0f));
+        setNutrientWithoutSync(POTASSIUM, nbt.getFloatOr("k", 0f));
     }
 
     default void loadAdditionalWaterWithoutSync(CompoundTag nbt)
     {
-        setAdditionalWaterWithoutSync(nbt.getFloat("water"));
+        setAdditionalWaterWithoutSync(nbt.getFloatOr("water", 0f));
     }
 
     default void saveAdditionalWater(CompoundTag nbt)

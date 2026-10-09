@@ -24,7 +24,7 @@ public class Seat extends Entity
 {
     public static void sit(Level level, BlockPos pos, Entity sitter)
     {
-        if (!level.isClientSide)
+        if (!level.isClientSide())
         {
             Seat seat = TFCEntities.SEAT.get().create(level);
             assert seat != null;

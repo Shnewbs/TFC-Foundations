@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blockentities;
 
+import net.dries007.tfc.util.NbtHelpers;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -42,7 +44,7 @@ public class LoomBlockEntity extends TickableInventoryBlockEntity<ItemStackHandl
             loom.updateCachedRecipe();
             loom.needsRecipeUpdate = false;
         }
-        if (!level.isClientSide)
+        if (!level.isClientSide())
         {
             loom.checkForLastTickSync();
         }
@@ -65,7 +67,7 @@ public class LoomBlockEntity extends TickableInventoryBlockEntity<ItemStackHandl
                     // Without checking if this is the client, it increments the already changed value on the server and gets desynced
                     // Causes this https://github.com/TerraFirmaCraft/TerraFirmaCraft/issues/3276 (actually a bug)
                     loom.needsProgressUpdate = false;
-                    if (!level.isClientSide)
+                    if (!level.isClientSide())
                     {
                         loom.progress++;
                     }
@@ -161,7 +163,7 @@ public class LoomBlockEntity extends TickableInventoryBlockEntity<ItemStackHandl
             {
                 return InteractionResult.TRY_WITH_EMPTY_HAND;
             }
-            level.playSound(null, worldPosition, TFCSounds.LOOM_WEAVE.get(), SoundSource.BLOCKS, 1, 1 + ((level.random.nextFloat() - level.random.nextFloat()) / 16));
+            level.playSound(null, worldPosition, TFCSounds.LOOM_WEAVE.get(), SoundSource.BLOCKS, 1, 1 + ((level.getRandom().nextFloat() - level.getRandom().nextFloat()) / 16));
             lastPushed = level.getGameTime();
             needsProgressUpdate = true;
             markForSync();
@@ -255,10 +257,10 @@ public class LoomBlockEntity extends TickableInventoryBlockEntity<ItemStackHandl
     @Override
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
     {
-        progress = tag.getInt("progress");
-        lastTexture = tag.contains("lastTexture", Tag.TAG_STRING) ? Helpers.resourceLocation(tag.getString("lastTexture")) : null;
+        progress = tag.getIntOr("progress", 0);
+        lastTexture = NbtHelpers.hasTag(tag, "lastTexture", Tag.TAG_STRING) ? Helpers.resourceLocation(tag.getStringOr("lastTexture", "")) : null;
         needsRecipeUpdate = true;
-        lastPushed = tag.getLong("lastPushed");
+        lastPushed = tag.getLongOr("lastPushed", 0L);
         super.loadAdditional(tag, provider);
     }
 

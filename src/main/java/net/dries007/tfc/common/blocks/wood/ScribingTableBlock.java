@@ -81,7 +81,7 @@ public class ScribingTableBlock extends HorizontalDirectionalBlock implements IF
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
-        if (!level.isClientSide)
+        if (!level.isClientSide())
         {
             player.openMenu(state.getMenuProvider(level, pos));
         }

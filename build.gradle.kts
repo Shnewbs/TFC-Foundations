@@ -205,7 +205,7 @@ val verifyPortDependencies = tasks.register("verifyPortDependencies") {
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
     // Expose the migration backlog in one CI pass without suppressing any errors.
-    options.compilerArgs.addAll(listOf("-Xmaxerrs", "1000"))
+    options.compilerArgs.addAll(listOf("-Xmaxerrs", "10000"))
 }
 tasks.named("jar") { dependsOn(verifyPortDependencies) }
 

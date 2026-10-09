@@ -115,7 +115,7 @@ public class FireboxBlockEntity extends TickableInventoryBlockEntity<ItemStackHa
     {
         record Path(BlockPos pos, int cost) {}
 
-        if (level.isClientSide || firebox.temperature <= 0f)
+        if (level.isClientSide() || firebox.temperature <= 0f)
         {
             return new ArrayList<>();
         }
@@ -187,7 +187,7 @@ public class FireboxBlockEntity extends TickableInventoryBlockEntity<ItemStackHa
         filled.forEach(testPos -> {
             if (level.getBlockEntity(testPos) instanceof PlacedItemBlockEntity placedItem)
             {
-                if (level instanceof ServerLevel server && level.random.nextFloat() < 0.01f)
+                if (level instanceof ServerLevel server && level.getRandom().nextFloat() < 0.01f)
                     server.sendParticles(ParticleTypes.FLAME, testPos.getX() + 0.5, testPos.getY() + 0.5, testPos.getZ() + 0.5, 1, 0, 0, 0, 0.01);
                 final IItemHandler inv = placedItem.getInventory();
                 for (int i = 0; i < inv.getSlots(); i++)
@@ -388,13 +388,13 @@ public class FireboxBlockEntity extends TickableInventoryBlockEntity<ItemStackHa
     @Override
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
-        temperature = nbt.getFloat("temperature");
-        burnTicks = nbt.getInt("burnTicks");
-        airTicks = nbt.getInt("airTicks");
-        heatingCount = nbt.getInt("heatingCount");
-        burnTemperature = nbt.getFloat("burnTemperature");
-        lastPlayerTick = nbt.getLong("lastPlayerTick");
-        heatingTimestamp = nbt.getLong("heatingTimestamp");
+        temperature = nbt.getFloatOr("temperature", 0f);
+        burnTicks = nbt.getIntOr("burnTicks", 0);
+        airTicks = nbt.getIntOr("airTicks", 0);
+        heatingCount = nbt.getIntOr("heatingCount", 0);
+        burnTemperature = nbt.getFloatOr("burnTemperature", 0f);
+        lastPlayerTick = nbt.getLongOr("lastPlayerTick", 0L);
+        heatingTimestamp = nbt.getLongOr("heatingTimestamp", 0L);
         super.loadAdditional(nbt, provider);
     }
 

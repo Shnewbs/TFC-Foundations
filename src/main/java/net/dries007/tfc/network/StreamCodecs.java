@@ -29,8 +29,8 @@ import net.minecraft.world.level.block.state.BlockState;
 public interface StreamCodecs
 {
     StreamCodec<ByteBuf, ChunkPos> CHUNK_POS = StreamCodec.composite(
-        ByteBufCodecs.VAR_INT, c -> c.x,
-        ByteBufCodecs.VAR_INT, c -> c.z,
+        ByteBufCodecs.VAR_INT, c -> c.x(),
+        ByteBufCodecs.VAR_INT, c -> c.z(),
         ChunkPos::new
     );
 

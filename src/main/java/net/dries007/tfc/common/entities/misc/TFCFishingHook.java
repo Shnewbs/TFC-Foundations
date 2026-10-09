@@ -123,7 +123,7 @@ public class TFCFishingHook extends FishingHook implements IEntityWithComplexSpa
             pullExhaustion += (25 - diff) * 2;
             if (pullExhaustion > 100)
             {
-                if (player != null && level().isClientSide)
+                if (player != null && level().isClientSide())
                 {
                     player.displayClientMessage(Component.translatable("tfc.fishing.pulled_too_hard"), true);
                 }
@@ -139,7 +139,7 @@ public class TFCFishingHook extends FishingHook implements IEntityWithComplexSpa
             }
         }
         lastPulled = level().getGameTime();
-        if (!level().isClientSide && player != null && !shouldStopFishing(player))
+        if (!level().isClientSide() && player != null && !shouldStopFishing(player))
         {
             if (hookedIn != null)
             {
@@ -213,9 +213,9 @@ public class TFCFishingHook extends FishingHook implements IEntityWithComplexSpa
     public void readAdditionalSaveData(CompoundTag tag)
     {
         super.readAdditionalSaveData(tag);
-        lastPulled = tag.getLong("lastPulled");
-        pullExhaustion = tag.getInt("exhaustion");
-        strength = tag.getFloat("strength");
+        lastPulled = tag.getLongOr("lastPulled", 0L);
+        pullExhaustion = tag.getIntOr("exhaustion", 0);
+        strength = tag.getFloatOr("strength", 0f);
     }
 
     public void eatBait()

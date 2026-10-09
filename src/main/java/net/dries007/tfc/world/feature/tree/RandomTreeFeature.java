@@ -35,7 +35,7 @@ public class RandomTreeFeature extends Feature<RandomTreeConfig>
         final RandomSource random = context.random();
         final RandomTreeConfig config = context.config();
 
-        final ChunkPos chunkPos = new ChunkPos(pos);
+        final ChunkPos chunkPos = ChunkPos.containing(pos);
         final BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos().set(pos);
         final StructureTemplateManager manager = TreeHelpers.getStructureManager(level);
         final StructurePlaceSettings settings = TreeHelpers.getPlacementSettings(level, chunkPos, random);

@@ -43,7 +43,7 @@ public class SoupPotRecipe extends PotRecipe
     public static final StreamCodec<RegistryFriendlyByteBuf, SoupPotRecipe> STREAM_CODEC = PotRecipe.STREAM_CODEC.map(SoupPotRecipe::new, Function.identity());
 
     public static final PotOutput.OutputType OUTPUT_TYPE = (provider, nbt) -> {
-        ItemStack stack = ItemStack.parseOptional(provider, nbt.getCompound("item"));
+        ItemStack stack = ItemStack.parseOptional(provider, nbt.getCompoundOrEmpty("item"));
         return new SoupOutput(stack);
     };
 

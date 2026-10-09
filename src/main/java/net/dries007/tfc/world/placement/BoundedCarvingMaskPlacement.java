@@ -51,7 +51,7 @@ public class BoundedCarvingMaskPlacement extends PlacementModifier
     @Override
     public Stream<BlockPos> getPositions(PlacementContext context, RandomSource random, BlockPos pos)
     {
-        final ChunkPos chunkPos = new ChunkPos(pos);
+        final ChunkPos chunkPos = ChunkPos.containing(pos);
         final CarvingMask carvingMask = context.getCarvingMask(chunkPos);
         final int minY = this.minY.resolveY(context);
         final int maxY = this.maxY.resolveY(context);

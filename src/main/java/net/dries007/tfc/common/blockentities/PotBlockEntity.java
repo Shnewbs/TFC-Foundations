@@ -94,10 +94,10 @@ public class PotBlockEntity extends AbstractFirepitBlockEntity<PotBlockEntity.Po
     {
         if (nbt.contains("output"))
         {
-            output = PotOutput.read(provider, nbt.getCompound("output"));
+            output = PotOutput.read(provider, nbt.getCompoundOrEmpty("output"));
         }
-        boilingTicks = nbt.getInt("boilingTicks");
-        preBoilingTicks = nbt.getInt("preBoilingTicks");
+        boilingTicks = nbt.getIntOr("boilingTicks", 0);
+        preBoilingTicks = nbt.getIntOr("preBoilingTicks", 0);
         super.loadAdditional(nbt, provider);
     }
 
@@ -313,7 +313,7 @@ public class PotBlockEntity extends AbstractFirepitBlockEntity<PotBlockEntity.Po
         public void fluidTankChanged()
         {
             // Fluid may be inserted or extracted via capability (i.e. pipes), so we need to update the recipe and sync to client
-            if (pot.getLevel() != null && !pot.getLevel().isClientSide)
+            if (pot.getLevel() != null && !pot.getLevel().isClientSide())
             {
                 pot.setAndUpdateSlots(-1);
             }
@@ -373,8 +373,8 @@ public class PotBlockEntity extends AbstractFirepitBlockEntity<PotBlockEntity.Po
         @Override
         public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt)
         {
-            inventory.deserializeNBT(provider, nbt.getCompound("inventory"));
-            tank.readFromNBT(provider, nbt.getCompound("tank"));
+            inventory.deserializeNBT(provider, nbt.getCompoundOrEmpty("inventory"));
+            tank.readFromNBT(provider, nbt.getCompoundOrEmpty("tank"));
         }
 
         @Override

@@ -9,7 +9,7 @@ package net.dries007.tfc.common.container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.SlotItemHandler;
 import org.jetbrains.annotations.Nullable;
@@ -42,7 +42,7 @@ public class SmallVesselInventoryContainer extends ItemStackContainer
     }
 
     /**
-     * In {@link net.minecraft.world.inventory.AbstractContainerMenu#doClick(int, int, ClickType, Player)} there is a call path through which
+     * In {@link net.minecraft.world.inventory.AbstractContainerMenu#doClick(int, int, ContainerInput, Player)} there is a call path through which
      * {@link net.minecraft.world.inventory.Slot#onTake(Player, ItemStack)} is not called. It just directly sets the slot, and the carried
      * in the container.
      * <p>

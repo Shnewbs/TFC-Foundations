@@ -112,7 +112,7 @@ public class Predator extends WildAnimal
     @Override
     public void tick()
     {
-        if (level().isClientSide)
+        if (level().isClientSide())
         {
             tickAnimationStates();
         }
@@ -140,11 +140,11 @@ public class Predator extends WildAnimal
     public boolean hurt(DamageSource source, float amount)
     {
         boolean hurt = super.hurt(source, amount);
-        if (!level().isClientSide && source.getDirectEntity() instanceof LivingEntity livingEntity && isAlive() && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(livingEntity))
+        if (!level().isClientSide() && source.getDirectEntity() instanceof LivingEntity livingEntity && isAlive() && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(livingEntity))
         {
             brain.setMemory(MemoryModuleType.ATTACK_TARGET, livingEntity);
         }
-        if (!level().isClientSide && isAlive())
+        if (!level().isClientSide() && isAlive())
         {
             brain.eraseMemory(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
             brain.eraseMemory(MemoryModuleType.HUNTED_RECENTLY);
@@ -175,7 +175,7 @@ public class Predator extends WildAnimal
     public void readAdditionalSaveData(CompoundTag tag)
     {
         super.readAdditionalSaveData(tag);
-        setSleeping(tag.getBoolean("sleeping"));
+        setSleeping(tag.getBooleanOr("sleeping", false));
     }
 
     @Override

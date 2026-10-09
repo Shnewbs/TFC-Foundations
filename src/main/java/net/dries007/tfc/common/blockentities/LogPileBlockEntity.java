@@ -182,8 +182,8 @@ public class LogPileBlockEntity extends InventoryBlockEntity<ItemStackHandler>
     @Override
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
     {
-        isLastClickPlacement = tag.getBoolean("placement");
-        lastClickTick = tag.getLong("tick");
+        isLastClickPlacement = tag.getBooleanOr("placement", false);
+        lastClickTick = tag.getLongOr("tick", 0L);
         super.loadAdditional(tag, provider);
     }
 

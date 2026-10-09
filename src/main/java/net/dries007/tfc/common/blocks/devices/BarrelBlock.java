@@ -156,7 +156,7 @@ public class BarrelBlock extends SealableDeviceBlock
             final IFluidHandler tank = barrel.getInventory();
             final float fill = (float) tank.getFluidInTank(0).getAmount() / tank.getTankCapacity(0);
             final int note = Mth.ceil(fill * 24); // note blocks are 0 -> 24
-            level.playSeededSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, SoundEvents.NOTE_BLOCK_BASEDRUM, SoundSource.RECORDS, 3.0F, NoteBlock.getPitchFromNote(note), level.random.nextLong());
+            level.playSeededSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, SoundEvents.NOTE_BLOCK_BASEDRUM, SoundSource.RECORDS, 3.0F, NoteBlock.getPitchFromNote(note), level.getRandom().nextLong());
         }
     }
 
@@ -303,7 +303,7 @@ public class BarrelBlock extends SealableDeviceBlock
         {
             // Replace with a barrel rack, and drop + destroy the barrel
             playerWillDestroy(level, pos, state, player);
-            return level.setBlock(pos, TFCBlocks.BARREL_RACK.get().defaultBlockState(), level.isClientSide ? Block.UPDATE_ALL_IMMEDIATE : Block.UPDATE_ALL);
+            return level.setBlock(pos, TFCBlocks.BARREL_RACK.get().defaultBlockState(), level.isClientSide() ? Block.UPDATE_ALL_IMMEDIATE : Block.UPDATE_ALL);
         }
         else
         {

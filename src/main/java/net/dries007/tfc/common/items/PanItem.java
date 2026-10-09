@@ -60,7 +60,7 @@ public class PanItem extends Item
         {
             return ItemUtils.startUsingInstantly(level, player, hand);
         }
-        if (!level.isClientSide)
+        if (!level.isClientSide())
         {
             player.displayClientMessage(Component.translatable("tfc.tooltip.pan.water"), true);
         }
@@ -70,7 +70,7 @@ public class PanItem extends Item
     @Override
     public void onUseTick(Level level, LivingEntity entity, ItemStack stack, int countLeft)
     {
-        if (countLeft % 16 == 0 && !level.isClientSide)
+        if (countLeft % 16 == 0 && !level.isClientSide())
         {
             level.playSound(null, entity, TFCSounds.PANNING.get(), SoundSource.PLAYERS, 1f, 1f);
         }

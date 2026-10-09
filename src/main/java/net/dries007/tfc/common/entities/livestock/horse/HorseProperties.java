@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.entities.livestock.horse;
 
+import net.dries007.tfc.util.NbtHelpers;
+
 import java.util.function.DoubleSupplier;
 import java.util.function.IntUnaryOperator;
 import net.minecraft.nbt.CompoundTag;
@@ -85,27 +87,27 @@ public interface HorseProperties extends MammalProperties
         MammalProperties.super.applyGenes(tag, babyProperties);
         AbstractHorse baby = (AbstractHorse) babyProperties;
         double maxHealth;
-        if (tag.contains("maxHealth1", Tag.TAG_DOUBLE))
+        if (NbtHelpers.hasTag(tag, "maxHealth1", Tag.TAG_DOUBLE))
         {
-            maxHealth = EntityHelpers.createOffspringAttribute(tag.getDouble("maxHealth1"), tag.getDouble("maxHealth2"), MIN_HEALTH, MAX_HEALTH, getEntity().getRandom());
+            maxHealth = EntityHelpers.createOffspringAttribute(tag.getDoubleOr("maxHealth1", 0d), tag.getDoubleOr("maxHealth2", 0d), MIN_HEALTH, MAX_HEALTH, getEntity().getRandom());
         }
         else
         {
             maxHealth = generateMaxHealth(getEntity().getRandom()::nextInt);
         }
         double jumpStrength;
-        if (tag.contains("jumpStrength1", Tag.TAG_DOUBLE))
+        if (NbtHelpers.hasTag(tag, "jumpStrength1", Tag.TAG_DOUBLE))
         {
-            jumpStrength = EntityHelpers.createOffspringAttribute(tag.getDouble("jumpStrength1"), tag.getDouble("jumpStrength2"), MIN_JUMP_STRENGTH, MAX_JUMP_STRENGTH, getEntity().getRandom());
+            jumpStrength = EntityHelpers.createOffspringAttribute(tag.getDoubleOr("jumpStrength1", 0d), tag.getDoubleOr("jumpStrength2", 0d), MIN_JUMP_STRENGTH, MAX_JUMP_STRENGTH, getEntity().getRandom());
         }
         else
         {
             jumpStrength = HorseProperties.generateJumpStrength(() -> getEntity().getRandom().nextDouble());
         }
         double speed;
-        if (tag.contains("movementSpeed1", Tag.TAG_DOUBLE))
+        if (NbtHelpers.hasTag(tag, "movementSpeed1", Tag.TAG_DOUBLE))
         {
-            speed = EntityHelpers.createOffspringAttribute(tag.getDouble("movementSpeed1"), tag.getDouble("movementSpeed2"), MIN_MOVEMENT_SPEED, MAX_MOVEMENT_SPEED, getEntity().getRandom());
+            speed = EntityHelpers.createOffspringAttribute(tag.getDoubleOr("movementSpeed1", 0d), tag.getDoubleOr("movementSpeed2", 0d), MIN_MOVEMENT_SPEED, MAX_MOVEMENT_SPEED, getEntity().getRandom());
         }
         else
         {

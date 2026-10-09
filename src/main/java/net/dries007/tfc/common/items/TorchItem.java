@@ -56,7 +56,7 @@ public class TorchItem extends StandingAndWallBlockItem
 
         if (FluidHelpers.canFluidExtinguishFire(stateAt.getFluidState().getType()))
         {
-            final int amount = stack.getCount() > 5 ? 1 + level.random.nextInt(5) : stack.getCount();
+            final int amount = stack.getCount() > 5 ? 1 + level.getRandom().nextInt(5) : stack.getCount();
             if (level instanceof ServerLevel serverLevel)
             {
                 for (int i = 0; i < amount; i++)
@@ -83,7 +83,7 @@ public class TorchItem extends StandingAndWallBlockItem
 
         if (Helpers.isBlock(checkState, TFCTags.Blocks.LIT_BY_DROPPED_TORCH))
         {
-            if (itemEntity.getAge() > ageRequirement && level.random.nextFloat() < 0.01f && !level.isClientSide())
+            if (itemEntity.getAge() > ageRequirement && level.getRandom().nextFloat() < 0.01f && !level.isClientSide())
             {
                 StartFireEvent.startFire(level, isNotInBlock ? downPos : pos, checkState, Direction.UP, null, ItemStack.EMPTY, StartFireEvent.FireStrength.STRONG, -1);
                 itemEntity.kill();

@@ -47,9 +47,9 @@ public class JamPotRecipe extends PotRecipe
     );
 
     public static final PotOutput.OutputType OUTPUT_TYPE = (provider, nbt) -> {
-        ItemStack stack = ItemStack.parseOptional(provider, nbt.getCompound("unsealed_result"));
-        ItemStack stack2 = ItemStack.parseOptional(provider, nbt.getCompound("sealed_result"));
-        Identifier texture = Helpers.resourceLocation(nbt.getString("texture"));
+        ItemStack stack = ItemStack.parseOptional(provider, nbt.getCompoundOrEmpty("unsealed_result"));
+        ItemStack stack2 = ItemStack.parseOptional(provider, nbt.getCompoundOrEmpty("sealed_result"));
+        Identifier texture = Helpers.resourceLocation(nbt.getStringOr("texture", ""));
         return new JamPotRecipe.JamOutput(stack, stack2, texture);
     };
 

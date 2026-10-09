@@ -50,9 +50,9 @@ public class BloomBlockEntity extends TFCBlockEntity
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
     {
         super.loadAdditional(tag, provider);
-        item = ItemStack.parseOptional(provider, tag.getCompound("item"));
-        count = tag.getInt("count");
-        maxCount = tag.getInt("maxCount");
+        item = ItemStack.parseOptional(provider, tag.getCompoundOrEmpty("item"));
+        count = tag.getIntOr("count", 0);
+        maxCount = tag.getIntOr("maxCount", 0);
     }
 
     public void setBloom(ItemStack item, int count)
@@ -87,7 +87,7 @@ public class BloomBlockEntity extends TFCBlockEntity
         ItemStack item = this.item.copy();
         item.setCount(1);
         Helpers.spawnItem(level, dropPos, item);
-        return level.setBlock(worldPosition, getState(), level.isClientSide ? 11 : 3);
+        return level.setBlock(worldPosition, getState(), level.isClientSide() ? 11 : 3);
     }
 
     public BlockState getState()

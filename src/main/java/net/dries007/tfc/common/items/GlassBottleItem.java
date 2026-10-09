@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -55,7 +55,7 @@ public class GlassBottleItem extends FluidContainerItem
             if (entity instanceof Player player)
             {
                 final Drinkable drinkable = Drinkable.get(drained.getFluid());
-                if (drinkable != null && !level.isClientSide)
+                if (drinkable != null && !level.isClientSide())
                 {
                     drinkable.onDrink(player, drained.getAmount());
                 }
@@ -117,10 +117,10 @@ public class GlassBottleItem extends FluidContainerItem
         if (!fluid.isEmpty())
         {
             final int color = RenderHelpers.getFluidColor(fluid);
-            final int r = FastColor.ARGB32.red(color);
-            final int g = FastColor.ARGB32.green(color);
-            final int b = FastColor.ARGB32.blue(color);
-            return FastColor.ARGB32.color(0, r, g, b);
+            final int r = ARGB.red(color);
+            final int g = ARGB.green(color);
+            final int b = ARGB.blue(color);
+            return ARGB.color(0, r, g, b);
         }
         return 0xFFFFF;
     }

@@ -194,7 +194,7 @@ public class LampBlock extends ExtendedBlock implements EntityBlockExtension
             if (state.getValue(LIT))
             {
                 projectile.igniteForTicks(5 * 20);
-                final Direction fireDir = Direction.Plane.HORIZONTAL.getRandomDirection(level.random);
+                final Direction fireDir = Direction.Plane.HORIZONTAL.getRandomDirection(level.getRandom());
                 final BlockPos pos = projectile.blockPosition();
                 if (FireBlock.canBePlacedAt(level, pos, fireDir))
                 {

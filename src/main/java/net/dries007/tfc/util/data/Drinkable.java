@@ -117,7 +117,7 @@ public record Drinkable(
                 final Drinkable drinkable = get(fluid);
                 if (drinkable != null && (info.getThirst() < PlayerInfo.MAX_THIRST || drinkable.food.water() == 0 || drinkable.mayDrinkWhenFull))
                 {
-                    if (!level.isClientSide && doDrink)
+                    if (!level.isClientSide() && doDrink)
                     {
                         doDrink(level, player, state, pos, info, drinkable);
                     }
@@ -134,7 +134,7 @@ public record Drinkable(
 
     private static void doDrink(Level level, Player player, BlockState state, BlockPos pos, IPlayerInfo info, Drinkable drinkable)
     {
-        assert !level.isClientSide;
+        assert !level.isClientSide();
 
         info.onDrink();
         level.playSound(null, pos, SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 1.0f, 1.0f);
@@ -159,7 +159,7 @@ public record Drinkable(
      */
     public void onDrink(Player player, int mB)
     {
-        assert !player.level().isClientSide;
+        assert !player.level().isClientSide();
 
         final float multiplier = mB / (float) HAND_DRINK_MB;
         final RandomSource random = player.getRandom();

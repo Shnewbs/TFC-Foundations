@@ -32,7 +32,7 @@ public class OverlayTreeFeature extends Feature<OverlayTreeConfig>
         final var random = context.random();
         final OverlayTreeConfig config = context.config();
 
-        final ChunkPos chunkPos = new ChunkPos(pos);
+        final ChunkPos chunkPos = ChunkPos.containing(pos);
         final BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos().set(pos);
         final StructureTemplateManager manager = TreeHelpers.getStructureManager(level);
         final StructurePlaceSettings settings = TreeHelpers.getPlacementSettings(level, chunkPos, random);

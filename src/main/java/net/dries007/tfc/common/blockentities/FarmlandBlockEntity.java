@@ -94,8 +94,8 @@ public class FarmlandBlockEntity extends TFCBlockEntity implements IFarmland, IC
     {
         loadNutrientsWithoutSync(nbt);
         loadAdditionalWaterWithoutSync(nbt);
-        lastUpdateTick = nbt.getLong("tick");
-        lastWaterTick = nbt.getLong("waterTick");
+        lastUpdateTick = nbt.getLongOr("tick", 0L);
+        lastWaterTick = nbt.getLongOr("waterTick", 0L);
         super.loadAdditional(nbt, provider);
     }
 

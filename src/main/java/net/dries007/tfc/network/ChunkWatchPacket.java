@@ -69,7 +69,7 @@ public record ChunkWatchPacket(
         final Level level = ClientHelpers.getLevel();
         if (level != null)
         {
-            final LevelChunk chunk = level.getChunk(pos.x, pos.z);
+            final LevelChunk chunk = level.getChunk(pos.x(), pos.z());
             final ChunkData data = ChunkData.get(chunk);
             if (data.status() != ChunkData.Status.INVALID)
             {

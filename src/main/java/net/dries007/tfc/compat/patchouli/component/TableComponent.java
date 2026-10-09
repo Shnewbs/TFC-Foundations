@@ -20,7 +20,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +37,7 @@ public class TableComponent extends CustomComponent
 
     private static int convert(int color)
     {
-        return FastColor.ARGB32.color(255, FastColor.ARGB32.red(color), FastColor.ARGB32.green(color), FastColor.ARGB32.blue(color));
+        return ARGB.color(255, ARGB.red(color), ARGB.green(color), ARGB.blue(color));
     }
 
     @SerializedName("strings") JsonElement jsonStrings;

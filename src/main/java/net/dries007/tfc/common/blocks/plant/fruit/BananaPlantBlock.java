@@ -53,7 +53,7 @@ public class BananaPlantBlock extends SeasonalPlantBlock implements HoeOverlayBl
     {
         // picking bananas or being in the wrong climate kills the plant. this propagates death to the whole stalk.
         Block deadBlock = TFCBlocks.DEAD_BANANA_PLANT.get();
-        if (!level.isClientSide)
+        if (!level.isClientSide())
         {
             BlockState deadState = deadBlock.defaultBlockState();
             BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos().set(pos.below());
@@ -296,7 +296,7 @@ public class BananaPlantBlock extends SeasonalPlantBlock implements HoeOverlayBl
         {
             TerraFirmaCraft.LOGGER.error("Failed to update growing berry bush block entity at: {}", oldPos);
         }
-        level.getBlockState(newPos).tick(level, newPos, level.random);
+        level.getBlockState(newPos).tick(level, newPos, level.getRandom());
     }
 
     @Override

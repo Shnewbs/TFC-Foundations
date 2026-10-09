@@ -104,7 +104,7 @@ public class GearBoxBlockEntity extends TFCBlockEntity implements RotatingBlockE
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
     {
         super.loadAdditional(tag, provider);
-        invalid = tag.getBoolean("invalid");
+        invalid = tag.getBooleanOr("invalid", false);
     }
 
     @Override

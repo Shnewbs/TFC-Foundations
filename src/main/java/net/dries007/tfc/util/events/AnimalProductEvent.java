@@ -50,7 +50,7 @@ public final class AnimalProductEvent extends Event implements ICancellableEvent
         if (!NeoForge.EVENT_BUS.post(event).isCanceled())
         {
             // spawning items is server only
-            if (!level.isClientSide)
+            if (!level.isClientSide())
             {
                 if (player != null)
                 {

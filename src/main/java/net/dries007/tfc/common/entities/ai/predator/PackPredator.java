@@ -168,11 +168,11 @@ public class PackPredator extends Predator implements Temptable
     @Override
     public boolean hurt(DamageSource source, float amount)
     {
-        if (!level().isClientSide && source.getDirectEntity() instanceof LivingEntity livingEntity && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(livingEntity))
+        if (!level().isClientSide() && source.getDirectEntity() instanceof LivingEntity livingEntity && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(livingEntity))
         {
             PackPredatorAi.alertOthers(this, livingEntity);
         }
-        else if (!level().isClientSide && isSleeping())
+        else if (!level().isClientSide() && isSleeping())
         {
             PackPredatorAi.alertOthers(this, null);
         }
@@ -214,7 +214,7 @@ public class PackPredator extends Predator implements Temptable
         final ItemStack held = player.getItemInHand(hand);
         if (isFood(held))
         {
-            if (!level().isClientSide)
+            if (!level().isClientSide())
             {
                 final long ticks = Calendars.SERVER.getTicks();
                 if (ticks > nextFeedTime)

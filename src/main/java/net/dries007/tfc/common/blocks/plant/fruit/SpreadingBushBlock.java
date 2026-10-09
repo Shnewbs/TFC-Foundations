@@ -191,7 +191,7 @@ public class SpreadingBushBlock extends StationaryBerryBushBlock implements IFor
         {
             TerraFirmaCraft.LOGGER.error("Failed to update growing berry bush block entity at: {}", oldPos);
         }
-        level.getBlockState(oldPos).tick(level, oldPos, level.random);
-        level.getBlockState(newPos).tick(level, newPos, level.random);
+        level.getBlockState(oldPos).tick(level, oldPos, level.getRandom());
+        level.getBlockState(newPos).tick(level, newPos, level.getRandom());
     }
 }

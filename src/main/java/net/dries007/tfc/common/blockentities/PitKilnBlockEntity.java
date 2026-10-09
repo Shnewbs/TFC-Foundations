@@ -147,10 +147,10 @@ public class PitKilnBlockEntity extends PlacedItemBlockEntity
     @Override
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
-        isLit = nbt.getBoolean("isLit");
-        litTick = nbt.getLong("litTick");
-        ContainerHelper.loadAllItems(nbt.getCompound("strawItems"), strawItems, provider);
-        ContainerHelper.loadAllItems(nbt.getCompound("logItems"), logItems, provider);
+        isLit = nbt.getBooleanOr("isLit", false);
+        litTick = nbt.getLongOr("litTick", 0L);
+        ContainerHelper.loadAllItems(nbt.getCompoundOrEmpty("strawItems"), strawItems, provider);
+        ContainerHelper.loadAllItems(nbt.getCompoundOrEmpty("logItems"), logItems, provider);
         updateCache();
         super.loadAdditional(nbt, provider);
     }

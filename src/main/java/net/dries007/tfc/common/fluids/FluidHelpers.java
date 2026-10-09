@@ -386,7 +386,7 @@ public final class FluidHelpers
         {
             // Don't allow placing water type fluids in ultrawarm dimensions
             handler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE);
-            level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5f, 2.6f + (level.random.nextFloat() - level.random.nextFloat()) * 0.8f);
+            level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5f, 2.6f + (level.getRandom().nextFloat() - level.getRandom().nextFloat()) * 0.8f);
             for (int i = 0; i < 8; ++i)
             {
                 level.addParticle(ParticleTypes.LARGE_SMOKE, pos.getX() + Math.random(), pos.getY() + Math.random(), pos.getZ() + Math.random(), 0d, 0d, 0d);
@@ -433,7 +433,7 @@ public final class FluidHelpers
 
             if (toPlace != state && (state.getBlock() != toPlace.getBlock() || (fluid instanceof FlowingFluid && toPlace.getFluidState().isSource())))
             {
-                if (!level.isClientSide && state.canBeReplaced(fluid) && !state.liquid())
+                if (!level.isClientSide() && state.canBeReplaced(fluid) && !state.liquid())
                 {
                     level.destroyBlock(pos, true);
                 }

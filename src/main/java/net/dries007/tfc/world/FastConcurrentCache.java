@@ -39,7 +39,7 @@ public class FastConcurrentCache<T>
     @Nullable
     public T getIfPresent(int x, int z)
     {
-        final long key = ChunkPos.asLong(x, z);
+        final long key = ChunkPos.pack(x, z);
         final int index = (int) HashCommon.mix(key) & mask;
         final long stamp = lock.readLock();
 
@@ -55,7 +55,7 @@ public class FastConcurrentCache<T>
 
     public void set(int x, int z, T value)
     {
-        final long key = ChunkPos.asLong(x, z);
+        final long key = ChunkPos.pack(x, z);
         final int index = (int) HashCommon.mix(key) & mask;
         final long stamp = lock.writeLock();
 

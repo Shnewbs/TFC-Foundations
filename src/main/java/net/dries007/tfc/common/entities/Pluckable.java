@@ -35,7 +35,7 @@ public interface Pluckable
     default boolean pluck(Player player, InteractionHand hand, LivingEntity entity)
     {
         final Level level = entity.level();
-        if (level.isClientSide || hand == InteractionHand.OFF_HAND)
+        if (level.isClientSide() || hand == InteractionHand.OFF_HAND)
             return false;
         if (player.getItemInHand(hand).isEmpty() && player.isShiftKeyDown() && (entity.getHealth() / entity.getMaxHealth() > 0.15001f))
         {

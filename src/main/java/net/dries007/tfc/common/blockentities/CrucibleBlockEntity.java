@@ -316,10 +316,10 @@ public class CrucibleBlockEntity extends TickableInventoryBlockEntity<CrucibleBl
     @Override
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
-        temperature = nbt.getFloat("temperature");
-        targetTemperature = nbt.getFloat("targetTemperature");
-        targetTemperatureStabilityTicks = nbt.getInt("targetTemperatureStabilityTicks");
-        lastUpdateTick = nbt.getLong("lastUpdateTick");
+        temperature = nbt.getFloatOr("temperature", 0f);
+        targetTemperature = nbt.getFloatOr("targetTemperature", 0f);
+        targetTemperatureStabilityTicks = nbt.getIntOr("targetTemperatureStabilityTicks", 0);
+        lastUpdateTick = nbt.getLongOr("lastUpdateTick", 0L);
         needsRecipeUpdate = true;
         super.loadAdditional(nbt, provider);
     }
@@ -416,8 +416,8 @@ public class CrucibleBlockEntity extends TickableInventoryBlockEntity<CrucibleBl
         @Override
         public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt)
         {
-            inventory.deserializeNBT(provider, nbt.getCompound("inventory"));
-            alloy.deserializeNBT(nbt.getCompound("alloy"));
+            inventory.deserializeNBT(provider, nbt.getCompoundOrEmpty("inventory"));
+            alloy.deserializeNBT(nbt.getCompoundOrEmpty("alloy"));
         }
 
         @Override

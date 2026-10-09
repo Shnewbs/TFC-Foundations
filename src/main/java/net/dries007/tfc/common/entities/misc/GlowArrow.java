@@ -20,7 +20,7 @@ import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.portal.DimensionTransition;
+import net.minecraft.world.level.portal.TeleportTransition;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.common.effect.TFCEffects;
@@ -71,10 +71,10 @@ public class GlowArrow extends AbstractArrow implements IGlow
 
     @Nullable
     @Override
-    public Entity changeDimension(DimensionTransition transition)
+    public Entity teleport(TeleportTransition transition)
     {
         tryRemoveLight();
-        return super.changeDimension(transition);
+        return super.teleport(transition);
     }
 
 
@@ -114,7 +114,7 @@ public class GlowArrow extends AbstractArrow implements IGlow
     {
         super.tick();
         IGlow.super.tickGlow();
-        if (level().isClientSide && !inGround)
+        if (level().isClientSide() && !inGround)
         {
             level().addParticle(ParticleTypes.GLOW_SQUID_INK, getX(), getY(), getZ(), 0.0D, 0.0D, 0.0D);
         }

@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blockentities;
 
+import net.dries007.tfc.util.NbtHelpers;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -328,18 +330,18 @@ public class BlastFurnaceBlockEntity extends TickableInventoryBlockEntity<BlastF
     @Override
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
-        Helpers.readItemStacksFromNbt(provider, inputStacks, nbt.getList("inputStacks", Tag.TAG_COMPOUND));
-        Helpers.readItemStacksFromNbt(provider, catalystStacks, nbt.getList("catalystStacks", Tag.TAG_COMPOUND));
-        Helpers.readItemStacksFromNbt(provider, fuelStacks, nbt.getList("fuelStacks", Tag.TAG_COMPOUND));
+        Helpers.readItemStacksFromNbt(provider, inputStacks, NbtHelpers.getHomogeneousListOrEmpty(nbt, "inputStacks", Tag.TAG_COMPOUND));
+        Helpers.readItemStacksFromNbt(provider, catalystStacks, NbtHelpers.getHomogeneousListOrEmpty(nbt, "catalystStacks", Tag.TAG_COMPOUND));
+        Helpers.readItemStacksFromNbt(provider, fuelStacks, NbtHelpers.getHomogeneousListOrEmpty(nbt, "fuelStacks", Tag.TAG_COMPOUND));
 
-        inputFluid = FluidStack.parseOptional(provider, nbt.getCompound("inputFluid"));
-        outputFluidTank.readFromNBT(provider, nbt.getCompound("outputFluidTank"));
+        inputFluid = FluidStack.parseOptional(provider, nbt.getCompoundOrEmpty("inputFluid"));
+        outputFluidTank.readFromNBT(provider, nbt.getCompoundOrEmpty("outputFluidTank"));
 
-        temperature = nbt.getFloat("temperature");
-        burnTicks = nbt.getInt("burnTicks");
-        airTicks = nbt.getInt("airTicks");
-        burnTemperature = nbt.getFloat("burnTemperature");
-        lastPlayerTick = nbt.getLong("lastPlayerTick");
+        temperature = nbt.getFloatOr("temperature", 0f);
+        burnTicks = nbt.getIntOr("burnTicks", 0);
+        airTicks = nbt.getIntOr("airTicks", 0);
+        burnTemperature = nbt.getFloatOr("burnTemperature", 0f);
+        lastPlayerTick = nbt.getLongOr("lastPlayerTick", 0L);
 
         super.loadAdditional(nbt, provider);
     }

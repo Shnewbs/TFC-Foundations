@@ -128,7 +128,7 @@ public final class StartFireEvent extends Event implements ICancellableEvent
                 if (sticks >= 3 && !initialLogs.isEmpty())
                 {
                     final float kindlingModifier = Math.min(0.1F * (float) kindling, 0.5F);
-                    if (level.random.nextFloat() < firepitBaseChance + kindlingModifier)
+                    if (level.getRandom().nextFloat() < firepitBaseChance + kindlingModifier)
                     {
                         usableItems.forEach(Entity::kill);
 

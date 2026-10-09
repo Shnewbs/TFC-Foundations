@@ -35,10 +35,10 @@ public record LerpFloatLayer(
     public LerpFloatLayer(CompoundTag nbt)
     {
         this(
-            nbt.getFloat("00"),
-            nbt.getFloat("01"),
-            nbt.getFloat("10"),
-            nbt.getFloat("11")
+            nbt.getFloatOr("00", 0f),
+            nbt.getFloatOr("01", 0f),
+            nbt.getFloatOr("10", 0f),
+            nbt.getFloatOr("11", 0f)
         );
     }
 

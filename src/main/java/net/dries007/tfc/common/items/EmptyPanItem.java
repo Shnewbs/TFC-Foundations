@@ -38,7 +38,7 @@ public class EmptyPanItem extends Item
             final ItemStack depositStack = new ItemStack(level.getBlockState(pos).getBlock());
             if (Deposit.get(depositStack) != null)
             {
-                if (!level.isClientSide)
+                if (!level.isClientSide())
                 {
                     level.destroyBlock(pos, false, player);
                     if (!player.isCreative())

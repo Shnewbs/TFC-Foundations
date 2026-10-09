@@ -41,7 +41,7 @@ public class ErosionFeature extends Feature<NoneFeatureConfiguration>
         final BlockPos pos = context.origin();
 
         final ChunkAccess chunk = level.getChunk(pos);
-        final ChunkPos chunkPos = new ChunkPos(pos);
+        final ChunkPos chunkPos = ChunkPos.containing(pos);
         final int chunkX = chunkPos.getMinBlockX(), chunkZ = chunkPos.getMinBlockZ();
         final BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
         final RockData rockData = ChunkData.get(chunk).getRockData();

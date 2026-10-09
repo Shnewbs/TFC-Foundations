@@ -104,7 +104,7 @@ public class BurningLogPileBlock extends Block implements IForgeBlockExtension, 
                 // If we can, try and spawn fire in the offset position - but don't delete anything in the process
                 level.setBlockAndUpdate(cursor, Blocks.FIRE.defaultBlockState());
             }
-            else if (level.random.nextInt(7) == 0)
+            else if (level.getRandom().nextInt(7) == 0)
             {
                 // If we can't spawn fire directly above, but we don't have a valid cover, then this block is invalid, but it can't spawn fire and let it burn itself away
                 // So, we have a low chance of replacing this block, with fire.

@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blockentities;
 
+import net.dries007.tfc.util.NbtHelpers;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -111,10 +113,10 @@ public class IngotPileBlockEntity extends TFCBlockEntity
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
     {
         entries.clear();
-        final ListTag list = tag.getList("stacks", Tag.TAG_COMPOUND);
+        final ListTag list = NbtHelpers.getHomogeneousListOrEmpty(tag, "stacks", Tag.TAG_COMPOUND);
         for (int i = 0; i < list.size(); i++)
         {
-            entries.add(new Entry(ItemStack.parseOptional(provider, list.getCompound(i))));
+            entries.add(new Entry(ItemStack.parseOptional(provider, list.getCompoundOrEmpty(i))));
         }
         super.loadAdditional(tag, provider);
     }

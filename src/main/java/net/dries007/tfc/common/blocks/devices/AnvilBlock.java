@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blocks.devices;
 
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -26,7 +28,6 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -41,7 +42,7 @@ import net.dries007.tfc.util.Helpers;
 
 public class AnvilBlock extends DeviceBlock implements Tiered
 {
-    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     private static final VoxelShape SHAPE_X = box(0, 0, 3, 16, 11, 13);
     private static final VoxelShape SHAPE_Z = box(3, 0, 0, 13, 11, 16);
@@ -79,9 +80,9 @@ public class AnvilBlock extends DeviceBlock implements Tiered
                     // Welding occurred
                     if (level instanceof ServerLevel server)
                     {
-                        final double x = pos.getX() + Mth.nextDouble(level.random, 0.2, 0.8);
-                        final double z = pos.getZ() + Mth.nextDouble(level.random, 0.2, 0.8);
-                        final double y = pos.getY() + Mth.nextDouble(level.random, 0.8, 1.0);
+                        final double x = pos.getX() + Mth.nextDouble(level.getRandom(), 0.2, 0.8);
+                        final double z = pos.getZ() + Mth.nextDouble(level.getRandom(), 0.2, 0.8);
+                        final double y = pos.getY() + Mth.nextDouble(level.getRandom(), 0.8, 1.0);
                         server.sendParticles(TFCParticles.SPARK.get(), x, y, z, 8, 0, 0, 0, 0.2f);
                     }
                     level.playSound(null, pos, SoundEvents.ANVIL_USE, SoundSource.PLAYERS, 0.6f, 1.0f);

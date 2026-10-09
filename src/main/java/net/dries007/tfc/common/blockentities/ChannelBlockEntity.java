@@ -206,16 +206,16 @@ public class ChannelBlockEntity extends TFCBlockEntity
     @Override
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
-        numFlows = nbt.getByte("numFlowsOut");
-        isConnectedToAnotherChannel = nbt.getBoolean("useLongRenderBox");
-        byte flowSourceByte = nbt.getByte("flowSource");
-        byte flowSourceDistance = nbt.contains("flowSourceDistance") ? nbt.getByte("flowSourceDistance") : 1;
+        numFlows = nbt.getByteOr("numFlowsOut", (byte) 0);
+        isConnectedToAnotherChannel = nbt.getBooleanOr("useLongRenderBox", false);
+        byte flowSourceByte = nbt.getByteOr("flowSource", (byte) 0);
+        byte flowSourceDistance = nbt.contains("flowSourceDistance") ? nbt.getByteOr("flowSourceDistance", (byte) 0) : 1;
 
         flowSource = flowSourceByte != NO_FLOW_BYTE
             ? Optional.of(Pair.of(Helpers.DIRECTIONS[flowSourceByte], flowSourceDistance))
             : Optional.empty();
 
-        fluid = Identifier.parse(nbt.getString("texture"));
+        fluid = Identifier.parse(nbt.getStringOr("texture", ""));
         super.loadAdditional(nbt, provider);
     }
 

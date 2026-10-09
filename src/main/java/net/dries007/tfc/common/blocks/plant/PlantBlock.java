@@ -236,7 +236,7 @@ public abstract class PlantBlock extends TFCBushBlock implements ISlowEntities
     {
         if (Helpers.isItem(stack, Tags.Items.TOOLS_SHEAR) && Helpers.isBlock(state, BlockTags.FLOWERS))
         {
-            if (!level.isClientSide)
+            if (!level.isClientSide())
             {
                 Helpers.damageItem(stack, player, hand);
                 level.playSound(null, pos, SoundEvents.SHEEP_SHEAR, SoundSource.BLOCKS, 1.0f, 1.0f);

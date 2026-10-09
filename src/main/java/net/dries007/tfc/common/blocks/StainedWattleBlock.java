@@ -137,12 +137,12 @@ public class StainedWattleBlock extends ExtendedBlock implements IGhostBlockHand
             BlockState dyed = getPossibleDyedState(item, state);
             if (dyed != null)
             {
-                if (level.isClientSide)
+                if (level.isClientSide())
                 {
                     for (int i = 0; i < 5; i++)
                     {
                         Vec3 loc = hitResult.getLocation();
-                        level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, item), loc.x, loc.y, loc.z, Helpers.triangle(level.random) / 3, Helpers.triangle(level.random) / 3, Helpers.triangle(level.random) / 3);
+                        level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, item), loc.x, loc.y, loc.z, Helpers.triangle(level.getRandom()) / 3, Helpers.triangle(level.getRandom()) / 3, Helpers.triangle(level.getRandom()) / 3);
                     }
                 }
                 Helpers.playSound(level, pos, TFCSounds.WATTLE_DYED.get());

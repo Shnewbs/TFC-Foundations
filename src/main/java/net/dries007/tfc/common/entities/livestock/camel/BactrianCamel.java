@@ -348,7 +348,7 @@ public class BactrianCamel extends AbstractCamel implements HorseProperties, ISh
     {
         super.readAdditionalSaveData(nbt);
         readCommonAnimalData(nbt);
-        setProducedTick(nbt.getLong("produced"));
+        setProducedTick(nbt.getLongOr("produced", 0L));
     }
 
     @Override
@@ -427,12 +427,12 @@ public class BactrianCamel extends AbstractCamel implements HorseProperties, ISh
     @Override
     public boolean isInWall()
     {
-        return !level().isClientSide && super.isInWall();
+        return !level().isClientSide() && super.isInWall();
     }
 
     @Override
     protected void pushEntities()
     {
-        if (!level().isClientSide) super.pushEntities();
+        if (!level().isClientSide()) super.pushEntities();
     }
 }

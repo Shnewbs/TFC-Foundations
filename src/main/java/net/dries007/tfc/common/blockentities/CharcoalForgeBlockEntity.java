@@ -86,7 +86,7 @@ public class CharcoalForgeBlockEntity extends TickableInventoryBlockEntity<ItemS
         boolean isRaining = level.isRainingAt(pos.above()) || level.isRainingAt(pos.above(2));
         if (state.getValue(CharcoalForgeBlock.HEAT) > 0)
         {
-            if (isRaining && level.random.nextFloat() < 0.15F)
+            if (isRaining && level.getRandom().nextFloat() < 0.15F)
             {
                 Helpers.playSound(level, pos, TFCSounds.ITEM_COOL.get());
             }
@@ -268,11 +268,11 @@ public class CharcoalForgeBlockEntity extends TickableInventoryBlockEntity<ItemS
     @Override
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
-        temperature = nbt.getFloat("temperature");
-        burnTicks = nbt.getInt("burnTicks");
-        airTicks = nbt.getInt("airTicks");
-        burnTemperature = nbt.getFloat("burnTemperature");
-        lastPlayerTick = nbt.getLong("lastPlayerTick");
+        temperature = nbt.getFloatOr("temperature", 0f);
+        burnTicks = nbt.getIntOr("burnTicks", 0);
+        airTicks = nbt.getIntOr("airTicks", 0);
+        burnTemperature = nbt.getFloatOr("burnTemperature", 0f);
+        lastPlayerTick = nbt.getLongOr("lastPlayerTick", 0L);
         super.loadAdditional(nbt, provider);
     }
 

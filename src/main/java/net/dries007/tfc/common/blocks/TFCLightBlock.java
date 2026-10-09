@@ -68,7 +68,7 @@ public class TFCLightBlock extends Block implements IFluidLoggable
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult)
     {
-        if (!level.isClientSide && player.canUseGameMasterBlocks())
+        if (!level.isClientSide() && player.canUseGameMasterBlocks())
         {
             level.setBlock(pos, state.cycle(LEVEL), 2);
             return InteractionResult.SUCCESS;

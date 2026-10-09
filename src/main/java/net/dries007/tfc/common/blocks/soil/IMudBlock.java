@@ -62,15 +62,15 @@ public interface IMudBlock
                 FluidHelpers.playTransferSound(level, pos, water, Transfer.DRAIN);
 
                 // Particles
-                if (!level.isClientSide)
+                if (!level.isClientSide())
                 {
                     for (int i = 0; i < 5; ++i)
                     {
                         ((ServerLevel) level).sendParticles(
                             ParticleTypes.SPLASH,
-                            (double) pos.getX() + level.random.nextDouble(),
+                            (double) pos.getX() + level.getRandom().nextDouble(),
                             (double) pos.getY() + 1,
-                            (double) pos.getZ() + level.random.nextDouble(),
+                            (double) pos.getZ() + level.getRandom().nextDouble(),
                             1, 0.0, 0.0, 0.0, 1.0);
                     }
                 }

@@ -73,7 +73,7 @@ public class TFCLeavesBlock extends Block implements ILeavesBlock, IForgeBlockEx
         {
             entity.kill();
         }
-        if (level.random.nextInt(20) == 0 && level instanceof ServerLevel server && Helpers.hasMoved(entity))
+        if (level.getRandom().nextInt(20) == 0 && level instanceof ServerLevel server && Helpers.hasMoved(entity))
         {
             doParticles(server, entity.getX(), entity.getEyeY() - 0.25D, entity.getZ(), 3);
         }

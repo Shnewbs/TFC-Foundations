@@ -41,7 +41,7 @@ public class BerryBushBlockEntity extends TickingPlantBlockEntity
     @Override
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
-        growthsRemaining = nbt.getInt("growthsRemaining");
+        growthsRemaining = nbt.getIntOr("growthsRemaining", 0);
         super.loadAdditional(nbt, provider);
     }
 

@@ -39,7 +39,7 @@ public class WildDoubleCropBlock extends WildCropBlock
 {
     public static void onPlayerWillDestroy(Level level, BlockPos pos, BlockState state, Player player)
     {
-        if (!level.isClientSide)
+        if (!level.isClientSide())
         {
             if (player.isCreative())
             {

@@ -48,7 +48,7 @@ public class JugItem extends FluidContainerItem
             if (entity instanceof Player player)
             {
                 final Drinkable drinkable = Drinkable.get(drained.getFluid());
-                if (drinkable != null && !level.isClientSide)
+                if (drinkable != null && !level.isClientSide())
                 {
                     drinkable.onDrink(player, drained.getAmount());
                 }

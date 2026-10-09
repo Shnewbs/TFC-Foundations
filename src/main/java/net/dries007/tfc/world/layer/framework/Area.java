@@ -39,7 +39,7 @@ public class Area
 
     public int get(int x, int z)
     {
-        final long key = ChunkPos.asLong(x, z);
+        final long key = ChunkPos.pack(x, z);
         final int index = (int) HashCommon.mix(key) & mask;
         if (keys[index] == key)
         {

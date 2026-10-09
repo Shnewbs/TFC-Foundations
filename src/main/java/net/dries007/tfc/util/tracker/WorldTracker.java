@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.util.tracker;
 
+import net.dries007.tfc.util.NbtHelpers;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -237,22 +239,22 @@ public final class WorldTracker
             collapsesInProgress.clear();
             isolatedPositions.clear();
 
-            ListTag landslideNbt = nbt.getList("landslideTicks", Tag.TAG_COMPOUND);
+            ListTag landslideNbt = NbtHelpers.getHomogeneousListOrEmpty(nbt, "landslideTicks", Tag.TAG_COMPOUND);
             for (int i = 0; i < landslideNbt.size(); i++)
             {
-                landslideTicks.add(new TickEntry(landslideNbt.getCompound(i)));
+                landslideTicks.add(new TickEntry(landslideNbt.getCompoundOrEmpty(i)));
             }
 
-            long[] isolatedNbt = nbt.getLongArray("isolatedPositions");
+            long[] isolatedNbt = nbt.getLongArray("isolatedPositions").orElseGet(() -> new long[0]);
             Arrays.stream(isolatedNbt).mapToObj(BlockPos::of).forEach(isolatedPositions::add);
 
-            ListTag collapseNbt = nbt.getList("collapsesInProgress", Tag.TAG_COMPOUND);
+            ListTag collapseNbt = NbtHelpers.getHomogeneousListOrEmpty(nbt, "collapsesInProgress", Tag.TAG_COMPOUND);
             for (int i = 0; i < collapseNbt.size(); i++)
             {
-                collapsesInProgress.add(new Collapse(collapseNbt.getCompound(i)));
+                collapsesInProgress.add(new Collapse(collapseNbt.getCompoundOrEmpty(i)));
             }
 
-            weatherEnabled = nbt.getBoolean("weatherEnabled");
+            weatherEnabled = nbt.getBooleanOr("weatherEnabled", false);
         }
     }
 

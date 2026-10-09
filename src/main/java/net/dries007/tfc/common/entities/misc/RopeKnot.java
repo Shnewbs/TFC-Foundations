@@ -124,7 +124,7 @@ public class RopeKnot extends LeashFenceKnotEntity implements Leashable
     @Override
     public void remove(Entity.RemovalReason reason)
     {
-        if (!this.level().isClientSide && reason.shouldDestroy() && this.isLeashed())
+        if (!this.level().isClientSide() && reason.shouldDestroy() && this.isLeashed())
             this.dropLeash(true, false);
 
         super.remove(reason);

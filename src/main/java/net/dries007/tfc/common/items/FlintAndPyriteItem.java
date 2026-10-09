@@ -48,7 +48,7 @@ public class FlintAndPyriteItem extends Item
             level.playSound(player, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.4F + 0.8F);
             final double chance = TFCConfig.SERVER.flintAndPyriteChance.get();
             // If the following is run on the client, it will sometimes get out of sync with the server leading to visual glitches including invisible items when starting a campfire
-            if (level.random.nextFloat() < chance && !level.isClientSide)
+            if (level.getRandom().nextFloat() < chance && !level.isClientSide())
             {
                 StartFireEvent.startFire(level, pos, level.getBlockState(pos), result.getDirection(), player, stack, StartFireEvent.FireStrength.STRONG, level.isRainingAt(abovePos) ? 0.3 : 1 * chance);
             }

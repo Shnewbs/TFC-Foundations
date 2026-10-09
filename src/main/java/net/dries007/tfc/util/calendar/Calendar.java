@@ -119,12 +119,12 @@ public class Calendar implements ICalendar
 
     public void read(CompoundTag nbt)
     {
-        daysInMonth = nbt.getInt("daysInMonth");
-        playerTicks = nbt.getLong("playerTime");
-        calendarTicks = nbt.getLong("calendarTime");
-        calendarTickRate = nbt.getFloat("calendarTickRate");
-        calendarPartialTick = nbt.getFloat("calendarPartialTick");
-        arePlayersLoggedOn = nbt.getBoolean("arePlayersLoggedOn");
+        daysInMonth = nbt.getIntOr("daysInMonth", 0);
+        playerTicks = nbt.getLongOr("playerTime", 0L);
+        calendarTicks = nbt.getLongOr("calendarTime", 0L);
+        calendarTickRate = nbt.getFloatOr("calendarTickRate", 0f);
+        calendarPartialTick = nbt.getFloatOr("calendarPartialTick", 0f);
+        arePlayersLoggedOn = nbt.getBooleanOr("arePlayersLoggedOn", false);
     }
 
     /**

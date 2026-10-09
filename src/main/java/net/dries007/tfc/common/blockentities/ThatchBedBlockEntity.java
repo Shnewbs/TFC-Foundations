@@ -61,8 +61,8 @@ public class ThatchBedBlockEntity extends InventoryBlockEntity<ItemStackHandler>
     @Override
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
     {
-        headState = NbtUtils.readBlockState(provider.lookupOrThrow(Registries.BLOCK), tag.getCompound("HeadBlockState"));
-        footState = NbtUtils.readBlockState(provider.lookupOrThrow(Registries.BLOCK), tag.getCompound("FootBlockState"));
+        headState = NbtUtils.readBlockState(provider.lookupOrThrow(Registries.BLOCK), tag.getCompoundOrEmpty("HeadBlockState"));
+        footState = NbtUtils.readBlockState(provider.lookupOrThrow(Registries.BLOCK), tag.getCompoundOrEmpty("FootBlockState"));
         super.loadAdditional(tag, provider);
     }
 }

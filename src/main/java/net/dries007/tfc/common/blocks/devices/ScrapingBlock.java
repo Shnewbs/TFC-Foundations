@@ -99,7 +99,7 @@ public class ScrapingBlock extends DeviceBlock
     {
         if (level instanceof ServerLevel server)
         {
-            server.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, scraping.getInventory().getStackInSlot(0)), pos.getX() + point.x, pos.getY() + 0.0625, pos.getZ() + point.z, 2, Helpers.triangle(level.random) / 2.0D, level.random.nextDouble() / 4.0D, Helpers.triangle(level.random) / 2.0D, 0.15f);
+            server.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, scraping.getInventory().getStackInSlot(0)), pos.getX() + point.x, pos.getY() + 0.0625, pos.getZ() + point.z, 2, Helpers.triangle(level.getRandom()) / 2.0D, level.getRandom().nextDouble() / 4.0D, Helpers.triangle(level.getRandom()) / 2.0D, 0.15f);
         }
     }
 

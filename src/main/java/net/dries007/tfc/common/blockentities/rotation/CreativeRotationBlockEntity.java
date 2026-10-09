@@ -98,8 +98,8 @@ public class CreativeRotationBlockEntity extends TickableBlockEntity implements 
     {
         super.loadAdditional(tag, provider);
         node.rotation().loadFromTag(tag);
-        step = tag.getInt("step");
-        invalid = tag.getBoolean("invalid");
+        step = tag.getIntOr("step", 0);
+        invalid = tag.getBooleanOr("invalid", false);
     }
 
     @Override

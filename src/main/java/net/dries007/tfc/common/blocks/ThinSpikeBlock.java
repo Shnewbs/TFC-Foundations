@@ -128,7 +128,7 @@ public class ThinSpikeBlock extends Block implements IFluidLoggable
     protected void onProjectileHit(Level level, BlockState state, BlockHitResult hit, Projectile projectile)
     {
         final BlockPos pos = hit.getBlockPos();
-        if (!level.isClientSide && projectile.mayInteract(level, pos) && Helpers.isEntity(projectile, EntityTypeTags.IMPACT_PROJECTILES))
+        if (!level.isClientSide() && projectile.mayInteract(level, pos) && Helpers.isEntity(projectile, EntityTypeTags.IMPACT_PROJECTILES))
         {
             level.destroyBlock(pos, true, projectile);
         }

@@ -18,7 +18,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.logging.LogUtils;
-import net.minecraft.ResourceLocationException;
+import net.minecraft.IdentifierException;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.HolderLookup;
@@ -200,7 +200,7 @@ public abstract class CustomComponent implements ICustomComponent
         {
             return Optional.of(Helpers.resourceLocation(variable));
         }
-        catch (ResourceLocationException e)
+        catch (IdentifierException e)
         {
             LOGGER.error(e.getMessage());
             return Optional.empty();

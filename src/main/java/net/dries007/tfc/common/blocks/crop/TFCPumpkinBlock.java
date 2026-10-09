@@ -44,7 +44,7 @@ public class TFCPumpkinBlock extends DecayingBlock
         final ItemStack held = player.getItemInHand(hand);
         if (level.getBlockEntity(pos) instanceof DecayingBlockEntity decaying && (Helpers.isItem(held, TFCTags.Items.TOOLS_KNIFE) || Helpers.isItem(held, Tags.Items.TOOLS_SHEAR)) && TFCConfig.SERVER.enablePumpkinCarving.get())
         {
-            if (!level.isClientSide && !decaying.isRotten())
+            if (!level.isClientSide() && !decaying.isRotten())
             {
                 Direction hitDir = hitResult.getDirection();
                 Direction facing = hitDir.getAxis() == Direction.Axis.Y ? player.getDirection().getOpposite() : hitDir;

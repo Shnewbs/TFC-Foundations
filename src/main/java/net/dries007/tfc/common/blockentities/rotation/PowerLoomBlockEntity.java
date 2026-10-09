@@ -39,7 +39,7 @@ public class PowerLoomBlockEntity extends LoomBlockEntity implements RotationSin
                     loom.progress < loom.recipe.getStepCount() &&
                     !loom.needsProgressUpdate)
                 {
-                    level.playSound(null, pos, TFCSounds.LOOM_WEAVE.get(), SoundSource.BLOCKS, 1, 1 + ((level.random.nextFloat() - level.random.nextFloat()) / 16));
+                    level.playSound(null, pos, TFCSounds.LOOM_WEAVE.get(), SoundSource.BLOCKS, 1, 1 + ((level.getRandom().nextFloat() - level.getRandom().nextFloat()) / 16));
                     loom.lastPushed = level.getGameTime();
                     loom.needsProgressUpdate = true;
                     loom.markForSync();

@@ -333,12 +333,12 @@ public class DromedaryCamel extends AbstractCamel implements HorseProperties
     @Override
     public boolean isInWall()
     {
-        return !level().isClientSide && super.isInWall();
+        return !level().isClientSide() && super.isInWall();
     }
 
     @Override
     protected void pushEntities()
     {
-        if (!level().isClientSide) super.pushEntities();
+        if (!level().isClientSide()) super.pushEntities();
     }
 }

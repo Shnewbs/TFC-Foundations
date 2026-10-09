@@ -153,8 +153,8 @@ public class WildAnimal extends AgeableMob implements GenderedRenderAnimal
     public void readAdditionalSaveData(CompoundTag tag)
     {
         super.readAdditionalSaveData(tag);
-        setIsMale(tag.getBoolean("male"));
-        setBaby(tag.getBoolean("baby"));
+        setIsMale(tag.getBooleanOr("male", false));
+        setBaby(tag.getBooleanOr("baby", false));
     }
 
     @Nullable

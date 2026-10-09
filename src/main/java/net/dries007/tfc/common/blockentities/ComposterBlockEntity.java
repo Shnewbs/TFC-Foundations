@@ -117,9 +117,9 @@ public class ComposterBlockEntity extends InventoryBlockEntity<ItemStackHandler>
     @Override
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
-        green = nbt.getInt("green");
-        brown = nbt.getInt("brown");
-        lastUpdateTick = nbt.getLong("tick");
+        green = nbt.getIntOr("green", 0);
+        brown = nbt.getIntOr("brown", 0);
+        lastUpdateTick = nbt.getLongOr("tick", 0L);
         super.loadAdditional(nbt, provider);
     }
 

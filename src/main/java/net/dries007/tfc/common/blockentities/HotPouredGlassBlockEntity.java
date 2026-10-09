@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blockentities;
 
+import net.dries007.tfc.util.NbtHelpers;
+
 import java.util.ArrayDeque;
 import java.util.Comparator;
 import java.util.Queue;
@@ -44,7 +46,7 @@ public class HotPouredGlassBlockEntity extends TickableBlockEntity
         glass.checkForLastTickSync();
         if (!glass.initialized)
         {
-            if (!level.isClientSide && Calendars.SERVER.getTicks() - glass.created > TICKS_TO_DESTROY)
+            if (!level.isClientSide() && Calendars.SERVER.getTicks() - glass.created > TICKS_TO_DESTROY)
             {
                 level.destroyBlock(pos, false);
                 Helpers.playSound(level, pos, SoundEvents.GLASS_BREAK);
@@ -82,7 +84,7 @@ public class HotPouredGlassBlockEntity extends TickableBlockEntity
     {
         record Path(BlockPos pos, int cost) {}
 
-        if (level.isClientSide)
+        if (level.isClientSide())
         {
             return;
         }
@@ -184,12 +186,12 @@ public class HotPouredGlassBlockEntity extends TickableBlockEntity
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
         super.loadAdditional(nbt, provider);
-        capacity = nbt.getInt("capacity");
-        isInitialTransition = nbt.getBoolean("isInitialTransition");
-        animationTicks = nbt.getInt("animationTicks");
-        initialized = nbt.getBoolean("initialized");
-        created = nbt.contains("created", CompoundTag.TAG_LONG) ? nbt.getLong("created") : -1L;
-        internalState = NbtUtils.readBlockState(provider.lookupOrThrow(Registries.BLOCK), nbt.getCompound("internalState"));
+        capacity = nbt.getIntOr("capacity", 0);
+        isInitialTransition = nbt.getBooleanOr("isInitialTransition", false);
+        animationTicks = nbt.getIntOr("animationTicks", 0);
+        initialized = nbt.getBooleanOr("initialized", false);
+        created = NbtHelpers.hasTag(nbt, "created", CompoundTag.TAG_LONG) ? nbt.getLongOr("created", 0L) : -1L;
+        internalState = NbtUtils.readBlockState(provider.lookupOrThrow(Registries.BLOCK), nbt.getCompoundOrEmpty("internalState"));
     }
 
     @Override

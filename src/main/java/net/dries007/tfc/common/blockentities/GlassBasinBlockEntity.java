@@ -79,7 +79,7 @@ public class GlassBasinBlockEntity extends TFCBlockEntity
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
     {
         super.loadAdditional(tag, provider);
-        this.state = NbtUtils.readBlockState(provider.lookupOrThrow(Registries.BLOCK), tag.getCompound("glassState"));
+        this.state = NbtUtils.readBlockState(provider.lookupOrThrow(Registries.BLOCK), tag.getCompoundOrEmpty("glassState"));
     }
 
     @Override

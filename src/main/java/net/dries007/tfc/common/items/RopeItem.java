@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.items;
 
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,7 +22,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
@@ -56,7 +57,7 @@ public class RopeItem extends Item
         }
         if (state.getBlock() instanceof RockSpikeBlock spike && canPlaceRopeOn(level, blockpos, state))
         {
-            if (!level.isClientSide && player != null)
+            if (!level.isClientSide() && player != null)
             {
                 // Convert the spike tip into an anchor, then hand the player a knot to throw. The anchor's facing is
                 // re-aligned to the throw direction in placeRopes(), so the value here only matters until then.
@@ -69,7 +70,7 @@ public class RopeItem extends Item
         {
             if (state.getBlock() instanceof MetalRopeAnchorBlock&& !state.getValue(TFCBlockStateProperties.HAS_ROPE) && state.getFluidState().isEmpty())
             {
-                if (!level.isClientSide && player != null)
+                if (!level.isClientSide() && player != null)
                 {
                     bindToAnchor(player, level, blockpos);
                 }
@@ -88,7 +89,7 @@ public class RopeItem extends Item
         {
             return InteractionResult.PASS;
         }
-        if (!level.isClientSide)
+        if (!level.isClientSide())
         {
             final BlockPos anchorPos = knot.blockPosition();
             if (player.isShiftKeyDown())
@@ -145,7 +146,7 @@ public class RopeItem extends Item
         final BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos().set(origin);
         final int count = stack.getCount();
         final Direction dir = player.getDirection();
-        final DirectionProperty facing = AbstractRopeBlock.FACING;
+        final EnumProperty<Direction> facing = AbstractRopeBlock.FACING;
         final BlockState hangingRope = TFCBlocks.HANGING_ROPE.get().defaultBlockState().setValue(facing, dir.getOpposite());
         final BlockState horizontalRope = TFCBlocks.ROPE.get().defaultBlockState().setValue(facing, dir.getOpposite()).setValue(GroundedRopeBlock.ASCENDING, false);
         final BlockState slopeRope = horizontalRope.setValue(GroundedRopeBlock.ASCENDING, true);

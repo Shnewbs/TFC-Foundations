@@ -106,7 +106,7 @@ public class QuernBlockEntityRenderer implements BlockEntityRenderer<QuernBlockE
 
         if (!handstone.isEmpty())
         {
-            final float center = !isConnectedToNetwork ? 0.498f + (level.random.nextFloat() * 0.004f) : 0.5f;
+            final float center = !isConnectedToNetwork ? 0.498f + (level.getRandom().nextFloat() * 0.004f) : 0.5f;
 
             stack.pushPose();
             stack.translate(center, 0.705D, center);

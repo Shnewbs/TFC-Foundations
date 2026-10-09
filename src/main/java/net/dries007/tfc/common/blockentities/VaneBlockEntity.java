@@ -80,7 +80,7 @@ public class VaneBlockEntity extends TickableBlockEntity
         }
         else
         {
-            float rand = (level.random.nextFloat() - 0.5f);
+            float rand = (level.getRandom().nextFloat() - 0.5f);
             if (Math.abs(rand) < 0.3)
             {
                 rand = rand < 0 ? -0.3f : 0.3f;
@@ -118,8 +118,8 @@ public class VaneBlockEntity extends TickableBlockEntity
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
     {
         super.loadAdditional(tag, provider);
-        targetAngle = tag.getFloat("targetAngle");
-        angle = tag.getFloat("angle");
+        targetAngle = tag.getFloatOr("targetAngle", 0f);
+        angle = tag.getFloatOr("angle", 0f);
         needsUpdate = true;
     }
 }

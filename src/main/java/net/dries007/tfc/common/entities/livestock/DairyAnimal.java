@@ -105,7 +105,7 @@ public abstract class DairyAnimal extends ProducingMammal
         {
             component = Component.translatable(MOD_ID + ".tooltip.animal.no_milk", getTypeName().getString());
         }
-        if (component != null && level.isClientSide)
+        if (component != null && level.isClientSide())
         {
             player.displayClientMessage(component, true);
         }

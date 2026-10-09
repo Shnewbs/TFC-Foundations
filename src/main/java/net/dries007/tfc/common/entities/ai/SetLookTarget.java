@@ -50,7 +50,7 @@ public class SetLookTarget
                 {
                     return false;
                 }
-                else if (!setLookTargetTicker.tickDownAndCheck(server.random))
+                else if (!setLookTargetTicker.tickDownAndCheck(server.getRandom()))
                 {
                     return false;
                 }

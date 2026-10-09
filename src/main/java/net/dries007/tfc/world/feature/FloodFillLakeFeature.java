@@ -43,7 +43,7 @@ public class FloodFillLakeFeature extends Feature<FloodFillLakeConfig>
         BlockPos pos = context.origin();
         final FloodFillLakeConfig config = context.config();
 
-        final ChunkPos chunkPos = new ChunkPos(pos);
+        final ChunkPos chunkPos = ChunkPos.containing(pos);
         final BoundingBox box = new BoundingBox(chunkPos.getMinBlockX() - 14, Integer.MIN_VALUE, chunkPos.getMinBlockZ() - 14, chunkPos.getMaxBlockX() + 14, Integer.MAX_VALUE, chunkPos.getMaxBlockZ() + 14); // Leeway so we can check outside this box
 
         final Set<BlockPos> filled = new HashSet<>();

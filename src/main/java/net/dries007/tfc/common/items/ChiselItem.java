@@ -50,7 +50,7 @@ public class ChiselItem extends ToolItem
                 player.playSound(resultState.getSoundType(level, pos, player).getHitSound(), 1f, 1f);
 
                 ItemStack held = player.getMainHandItem();
-                if (!level.isClientSide)
+                if (!level.isClientSide())
                 {
                     if (TFCConfig.SERVER.enableChiselsStartCollapses.get())
                     {

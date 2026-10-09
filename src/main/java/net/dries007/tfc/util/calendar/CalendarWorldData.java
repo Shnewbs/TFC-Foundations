@@ -27,7 +27,7 @@ public class CalendarWorldData extends SavedData
     private static CalendarWorldData load(CompoundTag nbt, HolderLookup.Provider provider)
     {
         final CalendarWorldData data = new CalendarWorldData();
-        data.calendar.read(nbt.getCompound("calendar"));
+        data.calendar.read(nbt.getCompoundOrEmpty("calendar"));
         return data;
     }
 

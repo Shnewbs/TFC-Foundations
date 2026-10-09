@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blockentities;
 
+import net.dries007.tfc.util.NbtHelpers;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -74,8 +76,8 @@ public class PileBlockEntity extends TFCBlockEntity
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
     {
-        internalState = NbtUtils.readBlockState(provider.lookupOrThrow(Registries.BLOCK), tag.getCompound("internalState"));
-        aboveState = tag.contains("aboveState", Tag.TAG_COMPOUND) ? NbtUtils.readBlockState(provider.lookupOrThrow(Registries.BLOCK), tag.getCompound("aboveState")) : null;
+        internalState = NbtUtils.readBlockState(provider.lookupOrThrow(Registries.BLOCK), tag.getCompoundOrEmpty("internalState"));
+        aboveState = NbtHelpers.hasTag(tag, "aboveState", Tag.TAG_COMPOUND) ? NbtUtils.readBlockState(provider.lookupOrThrow(Registries.BLOCK), tag.getCompoundOrEmpty("aboveState")) : null;
         super.loadAdditional(tag, provider);
     }
 

@@ -23,7 +23,7 @@ import net.neoforged.neoforge.client.model.geometry.IUnbakedGeometry;
 
 /**
  * Interface for a block model which implements both unbaked and baked geometry. This means the model requires no individual baking and a single instance is sufficient.
- * Individual model data can be stored via the {@link net.neoforged.neoforge.client.model.data.ModelData} mechanism.
+ * Individual model data can be stored via the {@link net.neoforged.neoforge.model.data.ModelData} mechanism.
  */
 public interface IBakedGeometry<T extends IBakedGeometry<T>> extends IUnbakedGeometry<T>, IDynamicBakedModel, IGeometryLoader<T>
 {

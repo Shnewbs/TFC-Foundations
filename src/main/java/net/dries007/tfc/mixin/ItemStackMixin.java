@@ -73,7 +73,7 @@ public abstract class ItemStackMixin
     )
     private int applyForgingBonusToPreventItemDamage(ServerLevel level, ItemStack stack, int damage, Operation<Integer> original)
     {
-        return ForgingBonusComponent.applyLikeUnbreaking(stack, level.random, original.call(level, stack, damage));
+        return ForgingBonusComponent.applyLikeUnbreaking(stack, level.getRandom(), original.call(level, stack, damage));
     }
 
     @Inject(method = "isBarVisible", at = @At("HEAD"), cancellable = true)

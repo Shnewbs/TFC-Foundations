@@ -204,8 +204,8 @@ public class WindmillBlockEntity extends TickableInventoryBlockEntity<ItemStackH
     {
         super.loadAdditional(tag, provider);
         node.rotation().loadFromTag(tag);
-        invalid = tag.getBoolean("invalid");
-        obstructed = tag.getBoolean("obstructed");
+        invalid = tag.getBooleanOr("invalid", false);
+        obstructed = tag.getBooleanOr("obstructed", false);
     }
 
     @Override

@@ -44,7 +44,7 @@ public class RottenCompostItem extends Item
 
         if (state.getBlock() instanceof ICropBlock cropBlock)
         {
-            if (!level.isClientSide && level.getBlockEntity(pos) instanceof CropBlockEntity cropBlockEntity)
+            if (!level.isClientSide() && level.getBlockEntity(pos) instanceof CropBlockEntity cropBlockEntity)
             {
                 final boolean mature = cropBlockEntity.getGrowth() >= 1f;
                 cropBlock.die(level, pos, state, mature);

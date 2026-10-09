@@ -111,7 +111,7 @@ public class LampBlockEntity extends TickCounterBlockEntity implements FluidTank
     @Override
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
     {
-        tank.readFromNBT(provider, tag.getCompound("tank"));
+        tank.readFromNBT(provider, tag.getCompoundOrEmpty("tank"));
         cachedFuel = getFuel();
         super.loadAdditional(tag, provider);
     }

@@ -79,8 +79,8 @@ public class TFCMinecartChest extends MinecartChest
     protected void readAdditionalSaveData(CompoundTag tag)
     {
         super.readAdditionalSaveData(tag);
-        setPickResult(ItemStack.parseOptional(registryAccess(), tag.getCompound("cartItem")));
-        setChestItem(ItemStack.parseOptional(registryAccess(), tag.getCompound("chestItem")));
+        setPickResult(ItemStack.parseOptional(registryAccess(), tag.getCompoundOrEmpty("cartItem")));
+        setChestItem(ItemStack.parseOptional(registryAccess(), tag.getCompoundOrEmpty("chestItem")));
     }
 
     @Override

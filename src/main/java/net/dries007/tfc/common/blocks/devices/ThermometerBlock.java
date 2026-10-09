@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blocks.devices;
 
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+
 import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,7 +24,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -38,7 +39,7 @@ public class ThermometerBlock extends DeviceBlock
 {
     public static IntegerProperty POWER = BlockStateProperties.POWER;
     public static BooleanProperty ATTACHED = TFCBlockStateProperties.THERMOMETER_ATTACHED;
-    public static DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
     private static final VoxelShape SHAPE_NORTH = box(4D, 1D, 14D, 12D, 15D, 16D);
     private static final VoxelShape SHAPE_SOUTH = box(4D, 1D, 0D, 12D, 15D, 2D);
     private static final VoxelShape SHAPE_EAST = box(0D, 1D, 4D, 2D, 15D, 12D);

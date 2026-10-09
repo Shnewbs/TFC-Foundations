@@ -38,7 +38,7 @@ public class ToolRackBlockEntity extends InventoryBlockEntity<ItemStackHandler>
             if (shouldInsert)
             {
                 final ItemStack extracted = inventory.extractItem(slot, 1, false);
-                if (!level.isClientSide)
+                if (!level.isClientSide())
                 {
                     insertItem(slot, heldItem.split(1));
                     ItemHandlerHelper.giveItemToPlayer(player, extracted, player.getInventory().selected);
@@ -47,7 +47,7 @@ public class ToolRackBlockEntity extends InventoryBlockEntity<ItemStackHandler>
                 return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
             // Just extract
-            if (!level.isClientSide)
+            if (!level.isClientSide())
             {
                 ItemHandlerHelper.giveItemToPlayer(player, inventory.extractItem(slot, 1, false), player.getInventory().selected);
             }
@@ -56,7 +56,7 @@ public class ToolRackBlockEntity extends InventoryBlockEntity<ItemStackHandler>
         }
         else if (shouldInsert)
         {
-            if (!level.isClientSide)
+            if (!level.isClientSide())
             {
                 insertItem(slot, heldItem.split(1));
             }
@@ -83,7 +83,7 @@ public class ToolRackBlockEntity extends InventoryBlockEntity<ItemStackHandler>
     {
         assert level != null;
         inventory.insertItem(slot, stack, false);
-        level.playSound(null, worldPosition, TFCSounds.TOOL_RACK_PLACE.get(), SoundSource.BLOCKS, 1, 1 + ((level.random.nextFloat() - level.random.nextFloat()) / 16));
+        level.playSound(null, worldPosition, TFCSounds.TOOL_RACK_PLACE.get(), SoundSource.BLOCKS, 1, 1 + ((level.getRandom().nextFloat() - level.getRandom().nextFloat()) / 16));
     }
 
 }

@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blockentities;
 
+import net.dries007.tfc.util.NbtHelpers;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -327,9 +329,9 @@ public class BarrelBlockEntity extends TickableInventoryBlockEntity<BarrelBlockE
     @Override
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
-        lastUpdateTick = nbt.getLong("lastUpdateTick");
-        sealedTick = nbt.getLong("sealedTick");
-        recipeTick = nbt.getLong("recipeTick");
+        lastUpdateTick = nbt.getLongOr("lastUpdateTick", 0L);
+        sealedTick = nbt.getLongOr("sealedTick", 0L);
+        recipeTick = nbt.getLongOr("recipeTick", 0L);
         recipe.unload();
         super.loadAdditional(nbt, provider);
     }
@@ -722,9 +724,9 @@ public class BarrelBlockEntity extends TickableInventoryBlockEntity<BarrelBlockE
         @Override
         public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt)
         {
-            inventory.deserializeNBT(provider, nbt.getCompound("inventory"));
-            tank.readFromNBT(provider, nbt.getCompound("tank"));
-            Helpers.readItemStacksFromNbt(provider, excess, nbt.getList("excess", Tag.TAG_COMPOUND));
+            inventory.deserializeNBT(provider, nbt.getCompoundOrEmpty("inventory"));
+            tank.readFromNBT(provider, nbt.getCompoundOrEmpty("tank"));
+            Helpers.readItemStacksFromNbt(provider, excess, NbtHelpers.getHomogeneousListOrEmpty(nbt, "excess", Tag.TAG_COMPOUND));
         }
 
         @Override

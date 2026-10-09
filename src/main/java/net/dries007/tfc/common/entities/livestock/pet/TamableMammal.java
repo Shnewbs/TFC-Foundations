@@ -144,7 +144,7 @@ public abstract class TamableMammal extends Mammal implements OwnableEntity
     @Override
     public void tick()
     {
-        if (level().isClientSide)
+        if (level().isClientSide())
         {
             EntityHelpers.startOrStop(sittingAnimation, isSitting(), tickCount);
             EntityHelpers.startOrStop(sleepingAnimation, isSleeping(), tickCount);
@@ -324,7 +324,7 @@ public abstract class TamableMammal extends Mammal implements OwnableEntity
         }
         if (held.isEmpty() && player.isShiftKeyDown() && getOwner() != null && isOwnedBy(player) && !isOnFire())
         {
-            if (level().isClientSide)
+            if (level().isClientSide())
             {
                 ClientHelpers.openPetScreen(this);
             }
@@ -387,9 +387,9 @@ public abstract class TamableMammal extends Mammal implements OwnableEntity
         {
             setOwnerUUID(tag.getUUID("Owner"));
         }
-        command = Command.valueOf(tag.getInt("command"));
-        entityData.set(DATA_PET_FLAGS, tag.getByte("petFlags"));
-        setCollarColor(DyeColor.byId(tag.getInt("CollarColor")));
+        command = Command.valueOf(tag.getIntOr("command", 0));
+        entityData.set(DATA_PET_FLAGS, tag.getByteOr("petFlags", (byte) 0));
+        setCollarColor(DyeColor.byId(tag.getIntOr("CollarColor", 0)));
         refreshCommandOnNextTick();
     }
 

@@ -177,14 +177,14 @@ public abstract class AbstractFirepitBlockEntity<C extends IItemHandlerModifiabl
     @Override
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
-        temperature = nbt.getFloat("temperature");
-        burnTicks = nbt.getInt("burnTicks");
-        airTicks = nbt.getInt("airTicks");
-        burnTemperature = nbt.getFloat("burnTemperature");
-        lastPlayerTick = nbt.getLong("lastPlayerTick");
-        dirtiness = nbt.getFloat("dirtiness");
-        lastMaxBurnTicks = nbt.getInt("lastMaxBurnTicks");
-        ash = nbt.getInt("ash");
+        temperature = nbt.getFloatOr("temperature", 0f);
+        burnTicks = nbt.getIntOr("burnTicks", 0);
+        airTicks = nbt.getIntOr("airTicks", 0);
+        burnTemperature = nbt.getFloatOr("burnTemperature", 0f);
+        lastPlayerTick = nbt.getLongOr("lastPlayerTick", 0L);
+        dirtiness = nbt.getFloatOr("dirtiness", 0f);
+        lastMaxBurnTicks = nbt.getIntOr("lastMaxBurnTicks", 0);
+        ash = nbt.getIntOr("ash", 0);
 
         needsRecipeUpdate = true;
 
@@ -383,7 +383,7 @@ public abstract class AbstractFirepitBlockEntity<C extends IItemHandlerModifiabl
                 burnTemperature = fuel.temperature();
                 dirtiness += 1f - fuel.purity();
             }
-            if (level.random.nextFloat() < 0.5f)
+            if (level.getRandom().nextFloat() < 0.5f)
             {
                 addAsh(1);
             }

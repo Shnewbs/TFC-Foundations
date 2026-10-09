@@ -132,7 +132,7 @@ public abstract class TFCChestedHorse extends AbstractChestedHorse implements Ho
     {
         if (!getChestItem().isEmpty())
         {
-            if (!level().isClientSide)
+            if (!level().isClientSide())
             {
                 spawnAtLocation(getChestItem());
             }
@@ -390,10 +390,10 @@ public abstract class TFCChestedHorse extends AbstractChestedHorse implements Ho
     @Override
     public void readAdditionalSaveData(CompoundTag nbt)
     {
-        setChestItem(ItemStack.parseOptional(registryAccess(), nbt.getCompound("chestItem")));
+        setChestItem(ItemStack.parseOptional(registryAccess(), nbt.getCompoundOrEmpty("chestItem")));
         super.readAdditionalSaveData(nbt);
         readCommonAnimalData(nbt);
-        overburdened = nbt.getBoolean("overburdened");
+        overburdened = nbt.getBooleanOr("overburdened", false);
     }
 
     @Override
@@ -501,12 +501,12 @@ public abstract class TFCChestedHorse extends AbstractChestedHorse implements Ho
     @Override
     public boolean isInWall()
     {
-        return !level().isClientSide && super.isInWall();
+        return !level().isClientSide() && super.isInWall();
     }
 
     @Override
     protected void pushEntities()
     {
-        if (!level().isClientSide) super.pushEntities();
+        if (!level().isClientSide()) super.pushEntities();
     }
 }

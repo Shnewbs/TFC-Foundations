@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.entities.livestock.pet;
 
+import net.dries007.tfc.util.NbtHelpers;
+
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.core.Holder;
@@ -148,9 +150,9 @@ public class TFCCat extends TamableMammal
     public void readAdditionalSaveData(CompoundTag tag)
     {
         super.readAdditionalSaveData(tag);
-        if (tag.contains("variant", Tag.TAG_STRING))
+        if (NbtHelpers.hasTag(tag, "variant", Tag.TAG_STRING))
         {
-            Optional.ofNullable(Identifier.tryParse(tag.getString("variant")))
+            Optional.ofNullable(Identifier.tryParse(tag.getStringOr("variant", "")))
                 .flatMap(BuiltInRegistries.CAT_VARIANT::getHolder)
                 .ifPresent(this::setVariant);
         }

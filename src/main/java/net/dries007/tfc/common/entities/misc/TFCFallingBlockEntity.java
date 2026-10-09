@@ -156,7 +156,7 @@ public class TFCFallingBlockEntity extends FallingBlockEntity
                 {
                     level().removeBlock(pos, false);
                 }
-                else if (!level().isClientSide)
+                else if (!level().isClientSide())
                 {
                     remove(RemovalReason.DISCARDED);
                 }
@@ -169,7 +169,7 @@ public class TFCFallingBlockEntity extends FallingBlockEntity
             move(MoverType.SELF, getDeltaMovement());
             handlePortal();
 
-            if (!level().isClientSide && (this.isAlive() || this.forceTickAfterTeleportToDuplicate))
+            if (!level().isClientSide() && (this.isAlive() || this.forceTickAfterTeleportToDuplicate))
             {
                 final BlockPos posAt = blockPosition();
                 if (!onGround())
@@ -294,7 +294,7 @@ public class TFCFallingBlockEntity extends FallingBlockEntity
             if (blockEntity != null)
             {
                 final CompoundTag blockEntityData = blockEntity.saveWithoutMetadata(level().registryAccess());
-                for (String key : blockEntityData.getAllKeys())
+                for (String key : blockEntityData.keySet())
                 {
                     blockEntityData.put(key, blockData.get(key).copy());
                 }

@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blocks.plant;
 
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,7 +26,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -49,7 +50,7 @@ import net.dries007.tfc.util.Helpers;
 public abstract class KelpTreeFlowerBlock extends Block implements IFluidLoggable
 {
     public static final IntegerProperty AGE = BlockStateProperties.AGE_5;
-    public static final DirectionProperty FACING = BlockStateProperties.FACING;
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
     private static final VoxelShape SHAPE = Block.box(1.0D, 1.0D, 1.0D, 15.0D, 15.0D, 15.0D);
 
     public static KelpTreeFlowerBlock create(BlockBehaviour.Properties builder, Supplier<? extends Block> plant)

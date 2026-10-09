@@ -88,7 +88,7 @@ public class TickCounterBlockEntity extends TFCBlockEntity
     @Override
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
-        lastUpdateTick = nbt.getLong("tick");
+        lastUpdateTick = nbt.getLongOr("tick", 0L);
         super.loadAdditional(nbt, provider);
     }
 

@@ -12,7 +12,6 @@ import net.dries007.tfc.common.blocks.devices.CalendarClockBlock;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluids;
@@ -87,7 +86,7 @@ public class TFCBlockStateProperties
     public static final EnumProperty<TFCComposterBlock.CompostType> COMPOST_TYPE = EnumProperty.create("type", TFCComposterBlock.CompostType.class);
     public static final EnumProperty<BranchDirection> BRANCH_DIRECTION = EnumProperty.create("branch_direction", BranchDirection.class);
     public static final EnumProperty<CalendarClockBlock.Mode> CLOCK_MODE = EnumProperty.create("clock_mode", CalendarClockBlock.Mode.class);
-    public static final DirectionProperty FACING_NOT_DOWN = DirectionProperty.create("facing", s -> s != Direction.DOWN);
+    public static final EnumProperty<Direction> FACING_NOT_DOWN = EnumProperty.create("facing", Direction.class, s -> s != Direction.DOWN);
 
     public static final BooleanProperty TIP = BooleanProperty.create("tip");
     public static final BooleanProperty UPPER = BooleanProperty.create("upper");

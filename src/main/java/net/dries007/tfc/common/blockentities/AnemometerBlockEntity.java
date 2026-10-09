@@ -97,7 +97,7 @@ public class AnemometerBlockEntity extends TickableBlockEntity
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
     {
         super.loadAdditional(tag, provider);
-        actualSpeed = tag.getFloat("actualSpeed");
+        actualSpeed = tag.getFloatOr("actualSpeed", 0f);
         needsUpdate = true;
     }
 

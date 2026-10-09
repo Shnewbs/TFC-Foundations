@@ -80,7 +80,7 @@ public class HoldingMinecart extends AbstractMinecart
     {
         // Always check the main hand. If the player has items in their main hand but not in their
         // offhand, then the passed in hand will be the offhand.
-        if (player.isSecondaryUseActive() && player.isShiftKeyDown() && player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty() && !level().isClientSide)
+        if (player.isSecondaryUseActive() && player.isShiftKeyDown() && player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty() && !level().isClientSide())
         {
             ItemHandlerHelper.giveItemToPlayer(player, getPickResult());
             setHoldItem(ItemStack.EMPTY);
@@ -112,7 +112,7 @@ public class HoldingMinecart extends AbstractMinecart
     protected void readAdditionalSaveData(CompoundTag tag)
     {
         super.readAdditionalSaveData(tag);
-        setHoldItem(ItemStack.parseOptional(registryAccess(), tag.getCompound("holdItem")));
+        setHoldItem(ItemStack.parseOptional(registryAccess(), tag.getCompoundOrEmpty("holdItem")));
         fuse = EntityHelpers.getIntOrDefault(tag, "TNTFuse", -1);
     }
 
@@ -219,7 +219,7 @@ public class HoldingMinecart extends AbstractMinecart
     {
         ifPowderkeg(str -> {
             this.fuse = 80;
-            if (!this.level().isClientSide)
+            if (!this.level().isClientSide())
             {
                 this.level().broadcastEntityEvent(this, (byte) 10);
                 if (!this.isSilent())
@@ -274,7 +274,7 @@ public class HoldingMinecart extends AbstractMinecart
 
     protected void explode(int strength)
     {
-        if (!this.level().isClientSide)
+        if (!this.level().isClientSide())
         {
             final PowderKegExplosion explosion = new PowderKegExplosion(level(), null, getX(), getY(), getZ(), strength);
             explosion.explode();

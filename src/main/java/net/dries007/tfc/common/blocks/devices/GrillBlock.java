@@ -123,7 +123,7 @@ public class GrillBlock extends FirepitBlock implements IHighlightHandler
             }
             if (stack.isEmpty() && player.isShiftKeyDown())
             {
-                if (!level.isClientSide)
+                if (!level.isClientSide())
                 {
                     if (!state.getValue(LIT) && grill.getAsh() > 0)
                     {

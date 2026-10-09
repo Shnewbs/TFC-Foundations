@@ -59,7 +59,7 @@ public class ClutchBlockEntity extends AxleBlockEntity
         if (level != null)
         {
             performNetworkAction(NetworkAction.UPDATE);
-            if (!level.isClientSide)
+            if (!level.isClientSide())
             {
                 markForSync();
             }

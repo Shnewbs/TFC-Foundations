@@ -44,7 +44,7 @@ public class DecayingBlockEntity extends TFCBlockEntity
     public void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider)
     {
         super.loadAdditional(nbt, provider);
-        this.stack = ItemStack.parseOptional(provider, nbt.getCompound("item"));
+        this.stack = ItemStack.parseOptional(provider, nbt.getCompoundOrEmpty("item"));
     }
 
     @Override

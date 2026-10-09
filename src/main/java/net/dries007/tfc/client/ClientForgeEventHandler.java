@@ -334,7 +334,7 @@ public class ClientForgeEventHandler
                         first = false;
                     }
                     tooltip.add(Component.literal(DARK_GRAY
-                            + typeOfComponent(stack.getComponentsPatch().get(component.type()))
+                            + typeOfComponent(stack.getComponentsPatch().getPatch(component.type()))
                             + BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(component.type())
                             + " = "
                             + component.value()
@@ -475,9 +475,9 @@ public class ClientForgeEventHandler
                 final ParticleOptions particle = ClimateRenderCache.INSTANCE.getInstantTemperature() < 0f && level.getRainLevel(0) > 0 ? TFCParticles.SNOWFLAKE.get() : TFCParticles.WIND.get();
                 for (int i = 0; i < count; i++)
                 {
-                    final double x = pos.getX() + Mth.nextDouble(level.random, -12 - xBias, 12 - xBias);
-                    final double y = pos.getY() + Mth.nextDouble(level.random, -1, 6);
-                    final double z = pos.getZ() + Mth.nextDouble(level.random, -12 - zBias, 12 - zBias);
+                    final double x = pos.getX() + Mth.nextDouble(level.getRandom(), -12 - xBias, 12 - xBias);
+                    final double y = pos.getY() + Mth.nextDouble(level.getRandom(), -1, 6);
+                    final double z = pos.getZ() + Mth.nextDouble(level.getRandom(), -12 - zBias, 12 - zBias);
                     if (level.canSeeSky(BlockPos.containing(x, y, z)))
                     {
                         level.addParticle(particle, x, y, z, 0D, 0D, 0D);

@@ -116,7 +116,7 @@ public class RammingPrey extends WildAnimal
     public boolean hurt(DamageSource source, float amount)
     {
         boolean hurt = super.hurt(source, amount);
-        if (!level().isClientSide && isAlive())
+        if (!level().isClientSide() && isAlive())
         {
             brain.eraseMemory(MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE);
         }
@@ -126,7 +126,7 @@ public class RammingPrey extends WildAnimal
     @Override
     public void tick()
     {
-        if (level().isClientSide)
+        if (level().isClientSide())
         {
             EntityHelpers.startOrStop(walkingAnimation, EntityHelpers.isMovingOnLand(this), tickCount);
         }

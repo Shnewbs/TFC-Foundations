@@ -202,7 +202,7 @@ public class FirepitBlock extends BottomSupportedDeviceBlock implements IGhostBl
         {
             if (stack.getItem() == TFCItems.POT.get() || stack.getItem() == TFCItems.WROUGHT_IRON_GRILL.get())
             {
-                if (!level.isClientSide)
+                if (!level.isClientSide())
                 {
                     final Block newBlock = stack.getItem() == TFCItems.POT.get() ? TFCBlocks.POT.get() : TFCBlocks.GRILL.get();
                     AbstractFirepitBlockEntity.convertTo(level, pos, state, firepit, newBlock);

@@ -56,7 +56,7 @@ public class AquaticCritter extends WaterAnimal implements AquaticMob
     @Override
     public void tick()
     {
-        if (level().isClientSide)
+        if (level().isClientSide())
         {
             EntityHelpers.startOrStop(idleAnimation, getDeltaMovement().lengthSqr() < 1.0E-6D, tickCount);
             EntityHelpers.startOrStop(hurtAnimation, hurtTime > 0, tickCount);

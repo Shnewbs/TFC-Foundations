@@ -26,8 +26,8 @@ import java.util.stream.Stream;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterators;
-import com.machinezoo.noexception.throwing.ThrowingRunnable;
-import com.machinezoo.noexception.throwing.ThrowingSupplier;
+import net.dries007.tfc.util.Unchecked.ThrowingRunnable;
+import net.dries007.tfc.util.Unchecked.ThrowingSupplier;
 import com.mojang.logging.LogUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -395,7 +395,7 @@ public final class Helpers
         }
         final float rot = (entity.getYHeadRot() + speed) % 360f;
         entity.setYRot(rot);
-        if (level.isClientSide && entity instanceof Player)
+        if (level.isClientSide() && entity instanceof Player)
         {
             final Vec3 offset = entity.position().subtract(origin).normalize();
             final Vec3 movement = new Vec3(-offset.z, 0, offset.x).scale(speed / 48f);
@@ -565,10 +565,10 @@ public final class Helpers
         {
             return;
         }
-        if (level.random.nextInt(120 - (20 * infestation)) == 0)
+        if (level.getRandom().nextInt(120 - (20 * infestation)) == 0)
         {
             final float chanceBasedOnCurrentPests = 1f - Mth.clampedMap(level.getEntitiesOfClass(Pest.class, new AABB(pos).inflate(40d)).size(), 0, 8, 0f, 1f);
-            if (level.random.nextFloat() > chanceBasedOnCurrentPests)
+            if (level.getRandom().nextFloat() > chanceBasedOnCurrentPests)
             {
                 return;
             }
@@ -611,21 +611,21 @@ public final class Helpers
         }
         else if (temperature < -3) // Where too cold for generic pests, will always be cold biome pests
         {
-            return Helpers.randomEntity(TFCTags.Entities.COLD_PESTS, level.random);
+            return Helpers.randomEntity(TFCTags.Entities.COLD_PESTS, level.getRandom());
         }
-        else if (level.random.nextFloat() <= 0.7) // Otherwise, 30% chance to just skip checking for climate-specific pests and spawning a rat
+        else if (level.getRandom().nextFloat() <= 0.7) // Otherwise, 30% chance to just skip checking for climate-specific pests and spawning a rat
         {
             final float rainfall = data.getAverageRainfall(pos);
             if (rainfall < 160)
             {
-                return Helpers.randomEntity(TFCTags.Entities.DESERT_PESTS, level.random);
+                return Helpers.randomEntity(TFCTags.Entities.DESERT_PESTS, level.getRandom());
             }
             else if (temperature > 12)
             {
-                return Helpers.randomEntity(TFCTags.Entities.TROPICAL_PESTS, level.random);
+                return Helpers.randomEntity(TFCTags.Entities.TROPICAL_PESTS, level.getRandom());
             }
         }
-        return Helpers.randomEntity(TFCTags.Entities.UNIVERSAL_PESTS, level.random);
+        return Helpers.randomEntity(TFCTags.Entities.UNIVERSAL_PESTS, level.getRandom());
     }
 
     /**
@@ -756,7 +756,7 @@ public final class Helpers
         stacks.clear();
         for (int i = 0; i < list.size(); i++)
         {
-            stacks.add(ItemStack.parseOptional(provider, list.getCompound(i)));
+            stacks.add(ItemStack.parseOptional(provider, list.getCompoundOrEmpty(i)));
         }
     }
 
@@ -764,7 +764,7 @@ public final class Helpers
     {
         for (int i = 0; i < list.size(); i++)
         {
-            stacks.set(i, ItemStack.parseOptional(provider, list.getCompound(i)));
+            stacks.set(i, ItemStack.parseOptional(provider, list.getCompoundOrEmpty(i)));
         }
     }
 
@@ -1380,29 +1380,14 @@ public final class Helpers
     /**
      * For when you want to ignore every possible safety measure in front of you
      */
-    @SuppressWarnings("unchecked")
     public static <T> T uncheck(ThrowingSupplier<?> action)
     {
-        try
-        {
-            return (T) action.get();
-        }
-        catch (Throwable e)
-        {
-            return throwAsUnchecked(e);
-        }
+        return Unchecked.get(action);
     }
 
     public static void uncheck(ThrowingRunnable action)
     {
-        try
-        {
-            action.run();
-        }
-        catch (Throwable e)
-        {
-            throwAsUnchecked(e);
-        }
+        Unchecked.run(action);
     }
 
     // Math Functions

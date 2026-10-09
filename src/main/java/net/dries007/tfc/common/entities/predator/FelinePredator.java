@@ -74,7 +74,7 @@ public class FelinePredator extends Predator
     public void tick()
     {
         super.tick();
-        if (!level().isClientSide)
+        if (!level().isClientSide())
         {
             setClimbing(horizontalCollision);
         }

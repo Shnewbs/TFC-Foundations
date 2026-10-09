@@ -198,7 +198,7 @@ public interface Rotation
 
         default void loadFromTag(CompoundTag tag)
         {
-            set(tag.getFloat("rtAngle"), tag.getFloat("rtSpeed"));
+            set(tag.getFloatOr("rtAngle", 0f), tag.getFloatOr("rtSpeed", 0f));
         }
 
         default void saveToTag(CompoundTag tag)

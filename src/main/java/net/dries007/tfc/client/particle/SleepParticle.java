@@ -16,7 +16,7 @@ public class SleepParticle extends TextureSheetParticle
     {
         super(level, x, y, z);
         quadSize *= 0.75f;
-        lifetime = 60 + level.random.nextInt(12);
+        lifetime = 60 + level.getRandom().nextInt(12);
     }
 
     @Override

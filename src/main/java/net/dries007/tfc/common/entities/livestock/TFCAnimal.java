@@ -83,7 +83,7 @@ public abstract class TFCAnimal extends Animal implements TFCAnimalProperties, T
     public boolean hurt(DamageSource src, float amount)
     {
         final boolean hurt = super.hurt(src, amount);
-        if (this.level().isClientSide) return hurt;
+        if (this.level().isClientSide()) return hurt;
         if (hurt && src.getEntity() instanceof LivingEntity living)
         {
             PreyAi.wasHurtBy(this, living);
@@ -267,12 +267,12 @@ public abstract class TFCAnimal extends Animal implements TFCAnimalProperties, T
     @Override
     public boolean isInWall()
     {
-        return !level().isClientSide && super.isInWall();
+        return !level().isClientSide() && super.isInWall();
     }
 
     @Override
     protected void pushEntities()
     {
-        if (!level().isClientSide) super.pushEntities();
+        if (!level().isClientSide()) super.pushEntities();
     }
 }

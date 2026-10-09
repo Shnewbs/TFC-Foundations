@@ -110,7 +110,7 @@ public class TFCOcelot extends Ocelot
         final ItemStack held = player.getItemInHand(hand);
         if (isFood(held))
         {
-            if (!level().isClientSide)
+            if (!level().isClientSide())
             {
                 final long ticks = Calendars.SERVER.getTicks();
                 if (ticks > nextFeedTime)
