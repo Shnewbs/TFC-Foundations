@@ -35,6 +35,9 @@ public class TFCAnimalRenderState extends LivingEntityRenderState
     public boolean hurtByEntity;
     public boolean bearCrawlsOn;
     public boolean maleCharacteristics;
+    public boolean femaleCharacteristics;
+    public float geneticSizeScale = 1;
+    public float wingFlap;
     public boolean hasProduct;
     public boolean playingDead;
     public boolean sleeping;
@@ -78,6 +81,9 @@ public class TFCAnimalRenderState extends LivingEntityRenderState
         hurtByEntity = false;
         bearCrawlsOn = false;
         maleCharacteristics = false;
+        femaleCharacteristics = false;
+        geneticSizeScale = 1;
+        wingFlap = 0;
         hasProduct = false;
         playingDead = false;
         sleeping = false;

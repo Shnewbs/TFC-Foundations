@@ -6,8 +6,6 @@
 
 package net.dries007.tfc.client.model.entity;
 
-import com.google.common.collect.ImmutableList;
-import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
@@ -17,9 +15,9 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 
-import net.dries007.tfc.common.entities.livestock.WoolyAnimal;
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
 
-public class MuskOxModel extends AgeableListModel<WoolyAnimal>
+public class MuskOxModel extends LivestockModel
 {
 
     public static LayerDefinition createBodyLayer()
@@ -83,7 +81,7 @@ public class MuskOxModel extends AgeableListModel<WoolyAnimal>
 
     public MuskOxModel(ModelPart root)
     {
-        super(false, 0F, 0F, 1.8F, 1.8F, 19F);
+        super(root, 1.8F, 19F);
         body = root.getChild("body");
         neck = body.getChild("neck");
         head = neck.getChild("head");
@@ -101,10 +99,15 @@ public class MuskOxModel extends AgeableListModel<WoolyAnimal>
     }
 
     @Override
-    public void setupAnim(WoolyAnimal animal, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        hornL1.visible = hornR1.visible = animal.displayMaleCharacteristics();
-        quiviut.visible = animal.hasProduct();
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float headYaw = state.yRot;
+        final float headPitch = state.xRot;
+        hornL1.visible = hornR1.visible = state.maleCharacteristics;
+        quiviut.visible = state.hasProduct;
 
         head.xRot = headPitch * ((float) Math.PI / 480F) + 0.873F;
         neck.xRot = headPitch * ((float) Math.PI / 720F);
@@ -114,17 +117,5 @@ public class MuskOxModel extends AgeableListModel<WoolyAnimal>
         leftHindLeg.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
         rightFrontLeg.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
         leftFrontLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-    }
-
-    @Override
-    protected Iterable<ModelPart> headParts()
-    {
-        return ImmutableList.of();
-    }
-
-    @Override
-    protected Iterable<ModelPart> bodyParts()
-    {
-        return ImmutableList.of(this.body);
     }
 }

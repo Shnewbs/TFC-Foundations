@@ -11,8 +11,6 @@ package net.dries007.tfc.client.model.entity;
 // Paste this class into your mod and generate all required imports
 
 
-import com.google.common.collect.ImmutableList;
-import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
@@ -22,9 +20,9 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 
-import net.dries007.tfc.common.entities.livestock.OviparousAnimal;
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
 
-public class QuailModel extends AgeableListModel<OviparousAnimal>
+public class QuailModel extends LivestockModel
 {
 
     public static LayerDefinition createBodyLayer()
@@ -77,7 +75,7 @@ public class QuailModel extends AgeableListModel<OviparousAnimal>
 
     public QuailModel(ModelPart root)
     {
-        super(false, 0F, 0F, 1.8F, 1.8F, 18F);
+        super(root, 1.8F, 18F);
         body = root.getChild("body");
         neck = body.getChild("neck");
         head = neck.getChild("head");
@@ -89,8 +87,13 @@ public class QuailModel extends AgeableListModel<OviparousAnimal>
     }
 
     @Override
-    public void setupAnim(OviparousAnimal quail, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float headYaw = state.yRot;
+        final float headPitch = state.xRot;
         head.xRot = headPitch * ((float) Math.PI / 240F);
         neck.xRot = headPitch * ((float) Math.PI / 720F);
         head.yRot = headYaw * ((float) Math.PI / 360F);
@@ -99,7 +102,7 @@ public class QuailModel extends AgeableListModel<OviparousAnimal>
         legL.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
 
         //Body Sway
-        if (!quail.isInWater())
+        if (!state.isInWater)
         {
             body.zRot = Mth.cos(limbSwing * 0.6662F + ((float) Math.PI / 2F)) * 0.3F * limbSwingAmount;
             neck.zRot = Mth.cos(limbSwing * 0.6662F + ((float) Math.PI / 2F)) * -0.25F * limbSwingAmount;
@@ -109,22 +112,10 @@ public class QuailModel extends AgeableListModel<OviparousAnimal>
         wingL.zRot = 0F;
 
         //Flapping in air
-        if (!quail.onGround())
+        if (!state.onGround)
         {
-            wingR.zRot = ageInTicks;
-            wingL.zRot = -ageInTicks;
+            wingR.zRot = state.wingFlap;
+            wingL.zRot = -state.wingFlap;
         }
-    }
-
-    @Override
-    protected Iterable<ModelPart> headParts()
-    {
-        return ImmutableList.of();
-    }
-
-    @Override
-    protected Iterable<ModelPart> bodyParts()
-    {
-        return ImmutableList.of(this.body);
     }
 }

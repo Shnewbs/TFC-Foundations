@@ -8,33 +8,31 @@ package net.dries007.tfc.client.model.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.resources.Identifier;
 
 import net.dries007.tfc.client.RenderHelpers;
-import net.dries007.tfc.common.entities.livestock.pet.TFCCat;
-import net.dries007.tfc.util.Helpers;
+import net.dries007.tfc.client.render.entity.state.TFCCatRenderState;
 
-public class TFCCatCollarLayer extends RenderLayer<TFCCat, TFCCatModel>
+public class TFCCatCollarLayer extends RenderLayer<TFCCatRenderState, TFCCatModel>
 {
-    private static final Identifier CAT_COLLAR_LOCATION = Helpers.identifierMC("textures/entity/cat/cat_collar.png");
-    private final TFCCatModel catModel;
+    private static final Identifier TEXTURE = Identifier.withDefaultNamespace("textures/entity/cat/cat_collar.png");
+    private final TFCCatModel model;
 
-    public TFCCatCollarLayer(RenderLayerParent<TFCCat, TFCCatModel> renderer, EntityModelSet ctx)
+    public TFCCatCollarLayer(RenderLayerParent<TFCCatRenderState, TFCCatModel> renderer, EntityModelSet models)
     {
         super(renderer);
-        this.catModel = new TFCCatModel(ctx.bakeLayer(RenderHelpers.layerId("cat_collar")));
+        this.model = new TFCCatModel(models.bakeLayer(RenderHelpers.layerId("cat_collar")));
     }
 
     @Override
-    public void render(PoseStack poseStack, MultiBufferSource buffer, int packedLight, TFCCat entity, float limbSwing, float limbSwingAmount, float partialTick, float ageInTicks, float yaw, float pitch)
+    public void submit(PoseStack poseStack, SubmitNodeCollector collector, int packedLight, TFCCatRenderState state, float yaw, float pitch)
     {
-        if (entity.getOwnerUUID() != null && !entity.isInvisible())
+        if (state.hasOwner && !state.isInvisible)
         {
-            final int color = entity.getCollarColor().getTextureDiffuseColor();
-            coloredCutoutModelCopyLayerRender(this.getParentModel(), this.catModel, CAT_COLLAR_LOCATION, poseStack, buffer, packedLight, entity, limbSwing, limbSwingAmount, ageInTicks, yaw, pitch, partialTick, color);
+            renderColoredCutoutModel(model, TEXTURE, poseStack, collector, packedLight, state, state.collarColor, 1);
         }
     }
 }

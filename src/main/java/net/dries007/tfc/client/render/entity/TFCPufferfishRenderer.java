@@ -9,8 +9,10 @@ package net.dries007.tfc.client.render.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.PufferfishRenderer;
+import net.minecraft.client.renderer.entity.state.PufferfishRenderState;
 import net.minecraft.world.entity.animal.fish.Pufferfish;
-import net.minecraft.world.phys.Vec3;
+
+import net.dries007.tfc.client.render.entity.state.GuideRenderState;
 
 public class TFCPufferfishRenderer extends PufferfishRenderer
 {
@@ -20,12 +22,18 @@ public class TFCPufferfishRenderer extends PufferfishRenderer
     }
 
     @Override
-    protected void setupRotations(Pufferfish entity, PoseStack poseStack, float bob, float yBodyRot, float partialTick, float scale)
+    public void extractRenderState(Pufferfish entity, PufferfishRenderState state, float partialTick)
     {
-        // handle patchouli
-        final Vec3 pos = entity.position();
-        if (Math.abs(pos.x) < 0.01f && Math.abs(pos.y) < 0.01f && Math.abs(pos.z) < 0.01f)
-            return;
-        super.setupRotations(entity, poseStack, bob, yBodyRot, partialTick, scale);
+        super.extractRenderState(entity, state, partialTick);
+        GuideRenderState.captureOrigin(state, entity.position());
+    }
+
+    @Override
+    protected void setupRotations(PufferfishRenderState state, PoseStack poseStack, float bodyRot, float scale)
+    {
+        if (!GuideRenderState.isAtOrigin(state))
+        {
+            super.setupRotations(state, poseStack, bodyRot, scale);
+        }
     }
 }

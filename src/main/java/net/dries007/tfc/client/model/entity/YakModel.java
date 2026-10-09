@@ -6,8 +6,6 @@
 
 package net.dries007.tfc.client.model.entity;
 
-import com.google.common.collect.ImmutableList;
-import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
@@ -17,9 +15,9 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 
-import net.dries007.tfc.common.entities.livestock.DairyAnimal;
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
 
-public class YakModel extends AgeableListModel<DairyAnimal>
+public class YakModel extends LivestockModel
 {
     public static LayerDefinition createBodyLayer()
     {
@@ -81,7 +79,7 @@ public class YakModel extends AgeableListModel<DairyAnimal>
 
     public YakModel(ModelPart root)
     {
-        super(false, 0F, 0F, 1.8F, 1.8F, 19F);
+        super(root, 1.8F, 19F);
         body = root.getChild("body");
         udder = body.getChild("udder");
         neck = body.getChild("neck");
@@ -99,10 +97,15 @@ public class YakModel extends AgeableListModel<DairyAnimal>
     }
 
     @Override
-    public void setupAnim(DairyAnimal animal, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        hornL1.visible = hornR1.visible = !animal.isBaby();
-        udder.visible = animal.displayFemaleCharacteristics();
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float headYaw = state.yRot;
+        final float headPitch = state.xRot;
+        hornL1.visible = hornR1.visible = !state.isBaby;
+        udder.visible = state.femaleCharacteristics;
 
         head.xRot = headPitch * ((float) Math.PI / 480F) + 0.873F;
         neck.xRot = headPitch * ((float) Math.PI / 720F);
@@ -112,17 +115,5 @@ public class YakModel extends AgeableListModel<DairyAnimal>
         legBL.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
         legFR.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
         legFL.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-    }
-
-    @Override
-    protected Iterable<ModelPart> headParts()
-    {
-        return ImmutableList.of();
-    }
-
-    @Override
-    protected Iterable<ModelPart> bodyParts()
-    {
-        return ImmutableList.of(this.body);
     }
 }

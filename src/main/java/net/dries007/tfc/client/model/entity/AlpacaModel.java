@@ -6,8 +6,6 @@
 
 package net.dries007.tfc.client.model.entity;
 
-import com.google.common.collect.ImmutableList;
-import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
@@ -17,9 +15,9 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 
-import net.dries007.tfc.common.entities.livestock.WoolyAnimal;
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
 
-public class AlpacaModel extends AgeableListModel<WoolyAnimal>
+public class AlpacaModel extends LivestockModel
 {
     public static LayerDefinition createBodyLayer()
     {
@@ -65,7 +63,7 @@ public class AlpacaModel extends AgeableListModel<WoolyAnimal>
 
     public AlpacaModel(ModelPart root)
     {
-        super(false, 0F, 0F, 1.8F, 1.8F, 19F);
+        super(root, 1.8F, 19F);
         body = root.getChild("body");
         neck = body.getChild("neck");
         head = neck.getChild("head");
@@ -83,9 +81,14 @@ public class AlpacaModel extends AgeableListModel<WoolyAnimal>
     }
 
     @Override
-    public void setupAnim(WoolyAnimal animal, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        wool_body_f.visible = animal.hasProduct();
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float headYaw = state.yRot;
+        final float headPitch = state.xRot;
+        wool_body_f.visible = state.hasProduct;
         head.xRot = headPitch * ((float) Math.PI / 240F);
         neck.xRot = headPitch * ((float) Math.PI / 720F);
         head.yRot = headYaw * ((float) Math.PI / 360F);
@@ -94,17 +97,5 @@ public class AlpacaModel extends AgeableListModel<WoolyAnimal>
         leftHindLeg.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
         rightFrontLeg.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount;
         leftFrontLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-    }
-
-    @Override
-    protected Iterable<ModelPart> headParts()
-    {
-        return ImmutableList.of();
-    }
-
-    @Override
-    protected Iterable<ModelPart> bodyParts()
-    {
-        return ImmutableList.of(this.body);
     }
 }

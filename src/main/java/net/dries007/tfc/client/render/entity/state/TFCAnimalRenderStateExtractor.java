@@ -17,6 +17,9 @@ import net.dries007.tfc.common.entities.GenderedRenderAnimal;
 import net.dries007.tfc.common.entities.aquatic.AmphibiousAnimal;
 import net.dries007.tfc.common.entities.aquatic.AquaticCritter;
 import net.dries007.tfc.common.entities.livestock.Age;
+import net.dries007.tfc.common.entities.livestock.OviparousAnimal;
+import net.dries007.tfc.common.entities.livestock.TFCAnimal;
+import net.dries007.tfc.common.entities.livestock.WoolyAnimal;
 import net.dries007.tfc.common.entities.livestock.TFCAnimalProperties;
 import net.dries007.tfc.common.entities.livestock.camel.AbstractCamel;
 import net.dries007.tfc.common.entities.livestock.camel.BactrianCamel;
@@ -48,6 +51,7 @@ public final class TFCAnimalRenderStateExtractor
         if (entity instanceof GenderedRenderAnimal animal)
         {
             state.maleCharacteristics = animal.displayMaleCharacteristics();
+            state.femaleCharacteristics = animal.displayFemaleCharacteristics();
         }
         if (entity instanceof WildAnimal animal)
         {
@@ -57,6 +61,18 @@ public final class TFCAnimalRenderStateExtractor
         {
             state.isMale = animal.isMale();
             state.isOld = animal.getAgeType() == Age.OLD;
+        }
+        if (entity instanceof TFCAnimal animal)
+        {
+            state.geneticSizeScale = LivestockRenderStateMath.geneticScale(animal.getGeneticSize());
+        }
+        if (entity instanceof WoolyAnimal animal)
+        {
+            state.hasProduct = animal.hasProduct();
+        }
+        if (entity instanceof OviparousAnimal bird)
+        {
+            state.wingFlap = LivestockRenderStateMath.wingFlap(bird.oFlap, bird.flap, bird.oFlapSpeed, bird.flapSpeed, partialTick);
         }
         if (entity instanceof RammingPrey prey)
         {

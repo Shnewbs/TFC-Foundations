@@ -11,9 +11,9 @@ import net.minecraft.client.model.QuadrupedModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 
-import net.dries007.tfc.common.entities.livestock.DairyAnimal;
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
 
-public class TFCGoatModel extends QuadrupedModel<DairyAnimal>
+public class TFCGoatModel extends QuadrupedModel<TFCAnimalRenderState>
 {
     public static LayerDefinition createBodyLayer()
     {
@@ -22,24 +22,27 @@ public class TFCGoatModel extends QuadrupedModel<DairyAnimal>
 
     public TFCGoatModel(ModelPart root)
     {
-        super(root, true, 19.0F, 1.0F, 2.5F, 2.0F, 24);
+        super(root);
     }
 
-    public void setupAnim(DairyAnimal goat, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch)
+    @Override
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        this.head.getChild("left_horn").visible = !goat.isBaby();
-        this.head.getChild("right_horn").visible = !goat.isBaby();
-        if (goat.displayFemaleCharacteristics())
+        super.setupAnim(state);
+        head.yRot /= 3F;
+        head.getChild("left_horn").visible = !state.isBaby;
+        head.getChild("right_horn").visible = !state.isBaby;
+        head.getChild("left_horn").y = state.femaleCharacteristics ? 2 : 0;
+        head.getChild("right_horn").y = state.femaleCharacteristics ? 2 : 0;
+        if (state.isBaby)
         {
-            this.head.getChild("left_horn").y = 2;
-            this.head.getChild("right_horn").y = 2;
+            // Preserve the distinct head/body transforms of the old goat model.
+            AgeableModelTransforms.scalePart(head, 1.5F / 2.5F, 19, 1);
+            AgeableModelTransforms.scalePart(body, 0.5F, 24, 0);
+            AgeableModelTransforms.scalePart(rightHindLeg, 0.5F, 24, 0);
+            AgeableModelTransforms.scalePart(leftHindLeg, 0.5F, 24, 0);
+            AgeableModelTransforms.scalePart(rightFrontLeg, 0.5F, 24, 0);
+            AgeableModelTransforms.scalePart(leftFrontLeg, 0.5F, 24, 0);
         }
-        else
-        {
-            this.head.getChild("left_horn").y = 0;
-            this.head.getChild("right_horn").y = 0;
-        }
-        super.setupAnim(goat, limbSwing, limbSwingAmount, ageInTicks, headYaw / 3, headPitch);
     }
 }
-

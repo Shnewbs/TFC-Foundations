@@ -6,24 +6,27 @@
 
 package net.dries007.tfc.client.render.entity;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.animal.squid.SquidModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.SquidRenderer;
+import net.minecraft.client.renderer.entity.state.SquidRenderState;
+import net.minecraft.resources.Identifier;
 
 import net.dries007.tfc.common.entities.aquatic.TFCSquid;
 
 public class TFCSquidRenderer<T extends TFCSquid> extends SquidRenderer<T>
 {
-    public TFCSquidRenderer(EntityRendererProvider.Context context, SquidModel<T> model)
+    private static final Identifier TEXTURE = Identifier.withDefaultNamespace("textures/entity/squid/squid.png");
+
+    public TFCSquidRenderer(EntityRendererProvider.Context context, SquidModel model)
     {
-        super(context, model);
+        // TFC retains its adult-layout model for both ages, rather than mixing baby UVs with it.
+        super(context, model, model);
     }
 
     @Override
-    protected void setupRotations(T entity, PoseStack poseStack, float bob, float yBodyRot, float partialTick, float scale)
+    public Identifier getTextureLocation(SquidRenderState state)
     {
-        super.setupRotations(entity, poseStack, bob, yBodyRot, partialTick, scale);
-//        poseStack.scale(entity.getVisualScale(), entity.getVisualScale(), entity.getVisualScale());
+        return TEXTURE;
     }
 }

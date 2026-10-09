@@ -9,12 +9,13 @@ package net.dries007.tfc.client.render.entity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.dries007.tfc.client.RenderHelpers;
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
 import net.dries007.tfc.common.entities.livestock.TFCAnimal;
 
-public class GenderedRenderer<T extends TFCAnimal, M extends EntityModel<T>> extends AnimalRenderer<T, M>
+public class GenderedRenderer<T extends TFCAnimal, M extends EntityModel<? super TFCAnimalRenderState>> extends AnimalRenderer<T, M>
 {
     @Nullable
     private final Identifier maleYoung;
@@ -42,9 +43,9 @@ public class GenderedRenderer<T extends TFCAnimal, M extends EntityModel<T>> ext
     }
 
     @Override
-    public Identifier getTextureLocation(T entity)
+    public Identifier getTextureLocation(TFCAnimalRenderState state)
     {
-        if (baby != null && entity.isBaby()) return baby;
-        return maleYoung != null && maleOld != null && entity.isMale() ? RenderHelpers.getTextureForAge(entity, maleYoung, maleOld) : super.getTextureLocation(entity);
+        if (baby != null && state.isBaby) return baby;
+        return maleYoung != null && maleOld != null && state.isMale ? (state.isOld ? maleOld : maleYoung) : super.getTextureLocation(state);
     }
 }

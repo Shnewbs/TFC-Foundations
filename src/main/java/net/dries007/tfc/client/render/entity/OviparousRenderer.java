@@ -8,12 +8,12 @@ package net.dries007.tfc.client.render.entity;
 
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.util.Mth;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
 import net.dries007.tfc.common.entities.livestock.OviparousAnimal;
 
-public class OviparousRenderer<T extends OviparousAnimal, M extends EntityModel<T>> extends GenderedRenderer<T, M>
+public class OviparousRenderer<T extends OviparousAnimal, M extends EntityModel<? super TFCAnimalRenderState>> extends GenderedRenderer<T, M>
 {
     public OviparousRenderer(EntityRendererProvider.Context ctx, M model, String name)
     {
@@ -30,11 +30,6 @@ public class OviparousRenderer<T extends OviparousAnimal, M extends EntityModel<
         super(ctx, model, name, maleName, babyName);
     }
 
-    @Override
-    protected float getBob(OviparousAnimal animal, float amount)
-    {
-        float f = Mth.lerp(amount, animal.oFlap, animal.flap);
-        float f1 = Mth.lerp(amount, animal.oFlapSpeed, animal.flapSpeed);
-        return (Mth.sin(f) + 1.0F) * f1;
-    }
+    // Wing-flap interpolation is captured by TFCAnimalRenderStateExtractor.
+    // Keep the native ageInTicks value intact for all other animation consumers.
 }

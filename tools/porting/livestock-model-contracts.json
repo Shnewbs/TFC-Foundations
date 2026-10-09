@@ -1,0 +1,44 @@
+{
+  "models": {
+    "TFCCowModel": {
+      "geometry_sha256": "90fb71df3f760f65d5e3ed739a823ab86a4019d77510399b0839a2ff42914d5b",
+      "baby_body_scale": 1.8,
+      "baby_y_offset": 19.0
+    },
+    "YakModel": {
+      "geometry_sha256": "33c0ed80dc70dce25255817faecdfac6cd824ae93c9628def6b8167fedd66bf8",
+      "baby_body_scale": 1.8,
+      "baby_y_offset": 19.0
+    },
+    "TFCSheepModel": {
+      "geometry_sha256": "b1711342515ffb7dc8e3272d2a58cefdd5c0b57c6e94299ae5129b5a43960b0d",
+      "baby_body_scale": 1.8,
+      "baby_y_offset": 18.0
+    },
+    "AlpacaModel": {
+      "geometry_sha256": "17fb0f38a0aae7f59c89dce17ba802c44f8a01040d15875eab1a1a995e571322",
+      "baby_body_scale": 1.8,
+      "baby_y_offset": 19.0
+    },
+    "MuskOxModel": {
+      "geometry_sha256": "744fb6848e9f16bb1823fdb5dbb5b26a76c35ed078d369e1534b218d23fbd6dd",
+      "baby_body_scale": 1.8,
+      "baby_y_offset": 19.0
+    },
+    "DuckModel": {
+      "geometry_sha256": "89e20ef509512a468592af93a63ec5177f46016ffaa3b53c48a65a1ad5151812",
+      "baby_body_scale": 1.8,
+      "baby_y_offset": 18.0
+    },
+    "QuailModel": {
+      "geometry_sha256": "2b8d6de101b70dabef3bfa7997a1cec7f49c9c6d94ca52fb7f30794a93b6fbe9",
+      "baby_body_scale": 1.8,
+      "baby_y_offset": 18.0
+    },
+    "TFCChickenModel": {
+      "geometry_sha256": "77c595485e58c71d1928ba87d118304d5a2e46548f5fa2f2e30571bdf095fd3b",
+      "baby_body_scale": 1.8,
+      "baby_y_offset": 18.0
+    }
+  }
+}

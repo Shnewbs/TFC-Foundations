@@ -11,8 +11,6 @@ package net.dries007.tfc.client.model.entity;
 // Paste this class into your mod and generate all required imports
 
 
-import com.google.common.collect.ImmutableList;
-import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
@@ -22,9 +20,9 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 
-import net.dries007.tfc.common.entities.livestock.OviparousAnimal;
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
 
-public class TFCChickenModel extends AgeableListModel<OviparousAnimal>
+public class TFCChickenModel extends LivestockModel
 {
     public static LayerDefinition createBodyLayer()
     {
@@ -70,7 +68,7 @@ public class TFCChickenModel extends AgeableListModel<OviparousAnimal>
 
     public TFCChickenModel(ModelPart root)
     {
-        super(false, 0F, 0F, 1.8F, 1.8F, 18F);
+        super(root, 1.8F, 18F);
         body = root.getChild("body");
         neck = body.getChild("neck");
         head = neck.getChild("head");
@@ -82,11 +80,16 @@ public class TFCChickenModel extends AgeableListModel<OviparousAnimal>
     }
 
     @Override
-    public void setupAnim(OviparousAnimal chicken, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float headYaw = state.yRot;
+        final float headPitch = state.xRot;
         float xPose = 0F;
         //Rooster stands upright
-        if (chicken.displayMaleCharacteristics())
+        if (state.maleCharacteristics)
         {
             xPose = -0.71F;
         }
@@ -100,7 +103,7 @@ public class TFCChickenModel extends AgeableListModel<OviparousAnimal>
         wingL.zRot = 0F;
 
         //Body Sway
-        if (!chicken.isInWater())
+        if (!state.isInWater)
         {
             body.xRot = Mth.cos(limbSwing * 0.6662F + ((float) Math.PI / 2F)) * 0.25F * limbSwingAmount + xPose;
             neck.xRot = Mth.cos(limbSwing * 0.6662F + ((float) Math.PI / 2F)) * -0.23F * limbSwingAmount - xPose;
@@ -111,22 +114,10 @@ public class TFCChickenModel extends AgeableListModel<OviparousAnimal>
             neck.xRot = -xPose;
         }
         //Flapping in air
-        if (!chicken.onGround())
+        if (!state.onGround)
         {
-            wingR.zRot = ageInTicks;
-            wingL.zRot = -ageInTicks;
+            wingR.zRot = state.wingFlap;
+            wingL.zRot = -state.wingFlap;
         }
-    }
-
-    @Override
-    protected Iterable<ModelPart> headParts()
-    {
-        return ImmutableList.of();
-    }
-
-    @Override
-    protected Iterable<ModelPart> bodyParts()
-    {
-        return ImmutableList.of(this.body);
     }
 }

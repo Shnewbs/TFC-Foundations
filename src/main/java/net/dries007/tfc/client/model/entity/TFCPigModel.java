@@ -6,8 +6,6 @@
 
 package net.dries007.tfc.client.model.entity;
 
-import com.google.common.collect.ImmutableList;
-import net.minecraft.client.model.animal.pig.PigModel;
 import net.minecraft.client.model.QuadrupedModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -17,15 +15,14 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Mob;
 
-import net.dries007.tfc.common.entities.GenderedRenderAnimal;
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
 
-public class TFCPigModel<T extends Mob & GenderedRenderAnimal> extends PigModel<T>
+public class TFCPigModel extends QuadrupedModel<TFCAnimalRenderState>
 {
     public static LayerDefinition createTFCBodyLayer(CubeDeformation def)
     {
-        MeshDefinition meshdefinition = QuadrupedModel.createBodyMesh(6, def);
+        MeshDefinition meshdefinition = QuadrupedModel.createBodyMesh(6, false, false, def);
         PartDefinition root = meshdefinition.getRoot();
         PartDefinition head = root.addOrReplaceChild("head", CubeListBuilder.create()
                 .texOffs(0, 0).addBox(-4.0F, -4.0F, -8.0F, 8.0F, 8.0F, 8.0F, def)
@@ -54,21 +51,14 @@ public class TFCPigModel<T extends Mob & GenderedRenderAnimal> extends PigModel<
     }
 
     @Override
-    public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-        tusk1.visible = tusk2.visible = entity.displayMaleCharacteristics();
-    }
-
-    @Override
-    protected Iterable<ModelPart> headParts()
-    {
-        return ImmutableList.of();
-    }
-
-    @Override
-    protected Iterable<ModelPart> bodyParts()
-    {
-        return ImmutableList.of(this.head, this.body, this.rightHindLeg, this.leftHindLeg, this.rightFrontLeg, this.leftFrontLeg);
+        super.setupAnim(state);
+        tusk1.visible = tusk2.visible = state.maleCharacteristics;
+        if (state.isBaby)
+        {
+            // The former TFC model drew the head with the body, not as an enlarged head.
+            AgeableModelTransforms.scalePart(root, 0.5F, 24, 0);
+        }
     }
 }

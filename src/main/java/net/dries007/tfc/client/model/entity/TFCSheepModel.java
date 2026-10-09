@@ -6,9 +6,7 @@
 
 package net.dries007.tfc.client.model.entity;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.math.Constants;
-import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
@@ -18,9 +16,9 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 
-import net.dries007.tfc.common.entities.livestock.WoolyAnimal;
+import net.dries007.tfc.client.render.entity.state.TFCAnimalRenderState;
 
-public class TFCSheepModel extends AgeableListModel<WoolyAnimal>
+public class TFCSheepModel extends LivestockModel
 {
     public static LayerDefinition createBodyLayer()
     {
@@ -87,7 +85,7 @@ public class TFCSheepModel extends AgeableListModel<WoolyAnimal>
 
     public TFCSheepModel(ModelPart root)
     {
-        super(false, 0F, 0F, 1.8F, 1.8F, 18F);
+        super(root, 1.8F, 18F);
         body = root.getChild("body");
         head = body.getChild("head");
         woolBody = body.getChild("woolBody");
@@ -105,10 +103,15 @@ public class TFCSheepModel extends AgeableListModel<WoolyAnimal>
     }
 
     @Override
-    public void setupAnim(WoolyAnimal sheep, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch)
+    public void setupAnim(TFCAnimalRenderState state)
     {
-        rightHorn.visible = leftHorn.visible = sheep.displayMaleCharacteristics();
-        woolBody.visible = woolHead.visible = woolLeftFrontLeg.visible = woolLeftHindLeg.visible = woolRightFrontLeg.visible = woolRightHindLeg.visible = sheep.hasProduct();
+        super.setupAnim(state);
+        final float limbSwing = state.walkAnimationPos;
+        final float limbSwingAmount = state.walkAnimationSpeed;
+        final float headYaw = state.yRot;
+        final float headPitch = state.xRot;
+        rightHorn.visible = leftHorn.visible = state.maleCharacteristics;
+        woolBody.visible = woolHead.visible = woolLeftFrontLeg.visible = woolLeftHindLeg.visible = woolRightFrontLeg.visible = woolRightHindLeg.visible = state.hasProduct;
 
         head.xRot = headPitch * Constants.DEG_TO_RAD;
         head.yRot = headYaw * Constants.DEG_TO_RAD;
@@ -116,17 +119,5 @@ public class TFCSheepModel extends AgeableListModel<WoolyAnimal>
         leftHindLeg.xRot = Mth.cos(limbSwing * 0.9F + Mth.PI) * 0.4f * limbSwingAmount;
         rightFrontLeg.xRot = Mth.cos(limbSwing * 0.9F + Mth.PI) * 0.4f * limbSwingAmount;
         leftFrontLeg.xRot = Mth.cos(limbSwing * 0.9F) * 0.4f * limbSwingAmount;
-    }
-
-    @Override
-    protected Iterable<ModelPart> headParts()
-    {
-        return ImmutableList.of();
-    }
-
-    @Override
-    protected Iterable<ModelPart> bodyParts()
-    {
-        return ImmutableList.of(this.body);
     }
 }
