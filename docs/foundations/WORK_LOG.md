@@ -1,90 +1,57 @@
-# Work log
+# TFC Foundations — Work Log
 
-## 2026-10-08 — Baseline and preparation
+The complete earlier work log is retained byte-for-byte in [WORK_LOG_BEFORE_LOOT_MIGRATION](history/WORK_LOG_BEFORE_LOOT_MIGRATION.md). It records the initial source publication, toolchain/dependency work, dual-target decision, gameplay API migrations and Earth groundwork. This file continues that history; it does not replace the recorded validation limits.
 
-Completed: verified GitHub access, cloned repositories, inspected source/build/workflows and recent upstream activity. Confirmed 26.x equals upstream 1.21.x at e9d9a88a187d5a33064e2d86b2803f54238cadd6. Prepared audit, milestones, extension boundaries, performance plan, licensing notes and bug-triage sample. Enabled daily upstream/version watch. Prepared local release-workflow quarantine to remove upstream publishing destinations.
+## 2026-10-09 UTC — Loot migration and reproducible target evidence
 
-Validation: `./gradlew test --no-daemon` failed downloading Gradle before compilation (Network is unreachable). No Java tests/game tests ran. Official Mojang/NeoForge metadata requests succeeded. Source remains configured for 1.21.1; 26.3 dependency set is not validated.
+### Starting points and public commits
 
-Blockers: repository is a public fork; connector lacks administration actions and browser fallback needs approval. Leaving the fork network is permanent and can discard non-Git metadata. Need target toolchain/dependencies, runtime validation and Foundations CurseForge project ID. Conquest permissions/26.3 compatibility remain unverified.
+The continuation resumed `26.1.2` from `1811814ee1e2bd7bbe1d5b1fdf6067bf4fe0d3f9` and `26.x` from `2d45ee32ceed4d5c8341cc0ed33dcafad3e095a3`. The user's prior public-push authorization remains in effect. No force push, branch deletion, release or version increment was performed.
 
-Changes remain local and unpushed. Next: verify private destination, push preparation, establish baseline tests, then port the 26.3 toolchain and compilation in a separate change. Record actual outcomes and commits here.
+- `5f2800b86d44f7a4e694928b755c3065637f7a8f` on 26.1.2: bounded CI summaries with full logs and exact source archives.
+- `e8928686036cd13b137e129ec7b9dde25a3288b9` on 26.1.2: deduplicated compiler reports and exact resolved API inspection.
+- `6d3180c130b9a907be5f31511fb34e17039d5210` on 26.x: the same diagnostic infrastructure, independently resolved against 26.3.
+- `cc04e4f1f37fa62f59f30ca5f8d23d301dbc56d9` on 26.1.2: 14 production loot Java files ported to direct codecs/context keys, with a focused actual-source validation probe.
 
-## 2026-10-08 — First 26.x candidate configuration (0.0.0)
+### Source changes and preservation checks
 
-User selected version 0.0.0 and confirmed the public-fork privacy blocker remains unresolved. No remote writes.
+26.1.2's loot condition, number-provider and function registries now register MapCodec instances directly rather than the removed wrapper types. Each implementation returns the same static codec instance that is registered. Custom context keys preserve `tfc:isolated`, `tfc:burnt_out` and `tfc:sluice`. All 11 loot registry identifiers are preserved. The presence-based flag semantics are unchanged; a present Boolean false is not silently reinterpreted as an absent flag.
 
-Changes: configured Minecraft 26.3, NeoForge 26.3.0.58-beta, Java 25, ModDevGradle 2.0.148, Gradle 9.2.1, Foojay resolver 1.0.0 and JEI 31.9.0.61. Regenerated wrapper and pinned the verified Gradle distribution checksum. Set project/artifact identity to TFC Foundations; preserved `tfc` IDs and upstream credits. Removed the obsolete Parchment overlay and old runtime integration pins. Added a packaging prerequisite for verified integration versions. Changed inherited CI to 26.x/Java 25, read-only permissions and private repositories only; publication remains disabled. No gameplay source port or integrations claimed complete.
+Animal/crop yield formulas are unchanged apart from the required context accessor renames. Fluid-copy behavior still uses the original SIMULATE/EXECUTE flow. MinMaxProvider now validates each nested provider with a field-specific context. Loot package defaults and CopyFluidFunction's explicit nullable declarations use JSpecify. The repository-wide nullability migration is not complete.
 
-Validation:
+Local source audits passed for all 11 registered IDs, all three context IDs, both yield calculations and absence of removed loot wrapper/context accessor names in the migrated package. These were structural source checks, not game-runtime tests.
 
-- Host proxy arguments allowed Gradle dependency downloads without changing project networking settings.
-- `gradle help --no-daemon`: PASS (Gradle 9.2.1).
-- `gradle compileJava --no-daemon`: FAIL in `createMinecraftArtifacts`, before compilation. Temurin 25.0.4.1+1 installed automatically; NeoFormRuntime throws `NoSuchElementException` in `NeoFormEngine.java:120` when resolving the running executable. Independent Java probe: `ProcessHandle.current().info().command()` => `Optional.empty`, while `java.home` is valid. No environment access controls or build-tool binaries were modified to work around this.
-- `gradle wrapper generateModMetadata verifyPortDependencies --continue --no-daemon`: wrapper and metadata PASS; dependency check FAIL as expected for unset Patchouli, EMI, Jade and The One Probe target pins.
-- Generated TOML parsed successfully; candidate version and target ranges checked.
-- No Java tests, runtime tests, performance measurements, playable JAR, GitHub release or CurseForge upload.
+### Exact commands and observed results
 
-Next: run artifact generation on a compatible build host/private CI, port/isolate the legacy integrations, then compile and port gameplay APIs. Passing Gradle configuration is not a completed game port. Keep 0.0.0 unreleased until the roadmap gates pass.
+CI runs the full build without hiding its exit status:
 
-## Checkpoint format
+```sh
+./gradlew -I tools/porting/diagnostics.gradle writePortClasspath compileJava compileDataJava compileTestJava build --continue --no-daemon --no-configuration-cache --console=plain
+```
 
-Record date, starting/ending commits, scope, changed systems, exact test commands/results, unverified assumptions, blockers, release/artifact identifiers and next action. Update PROJECT_STATUS.md before ending each meaningful session. Planned work must never be marked complete.
+Build output is retained in `port-diagnostics/build.log`. The init script only records the resolved classpath; it does not remove production source sets or relax packaging/release gates. `inspect_api.py` scans actual resolved JARs and records public javap signatures, rather than assuming API compatibility from class names. Diagnostic artifacts contain signatures, reports and this project's source, not copies of Minecraft binaries.
 
-## 2026-10-08 — Public source publication authorized
+[26.1.2 run 37872611533](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37872611533), source commit `cc04e4f`:
 
-The user explicitly requested continued work and public pushes, superseding the earlier privacy requirement. Retain the existing public fork and its full history. Removed the private-only CI condition and enabled manual validation runs. Push preparation includes the local 0.0.0 checkpoint 36e9b1fbd. Runtime/playability gates still apply to releases.
+- Full build: FAIL, still reaches javac's configured 1,000-error display cap. Grouped/repeated diagnostics are not a reliable total-backlog or progress percentage.
+- `python3 tools/porting/inspect_api.py`: PASS, inspected 23 exact target API types and ran the focused source probe.
+- Focused Java 25 compilation: PASS for the actual production AlwaysTrueCondition, MinMaxProvider and their package metadata. The empty source path prevents an accidental whole-project compile; no fake game/TFC implementations are supplied.
+- Focused runtime probe: PASS, four checks on the actual AlwaysTrueCondition codec: stable identity, singleton builder, encoding and round trip. This is not mod loading or validation of all 11 registered codecs.
+- `python resources validate`: PASS. Reported zero errors for the checked language, model-parent, texture, blockstate and unused-model categories. This does not prove target rendering compatibility.
+- Artifact: `11590039374`, named `tfc-port-diagnostics-37872611533-1`, seven-day retention. Earlier exact-API artifacts: 26.1.2 `11590293535` from run `37871566668`; 26.3 `11589869160` from run `37871626426`.
 
-Publication result: pushed preparation and public CI configuration to `26.x` as `990bda3df4a2d09ca2dfbcf91d500439ab0ceef5` through the GitHub connector. Direct Git transport had no credential, so the connector created the equivalent tree/commit; original local commits remain on `local-pre-public-checkpoint`. Verified identical trees and aligned the local branch with the published commit. Both workflows report active, but the Actions runs endpoint reports zero runs. No CI compilation result is available. The connector has no manual-dispatch action. Updated README to identify this fork, disclose the incomplete port and preserve all upstream legal/acknowledgment notices.
+The local container only had Java 21 and no resolved target dependency cache, so these Java 25 results came from GitHub Actions, not an alleged local full build.
 
-## 2026-10-08 — Actions enabled; Gradle 9 license check repaired
+### Branch divergence discovered before sharing the patch
 
-With explicit browser approval, enabled Actions for this fork and dispatched Validate 26.x on 26.x. Run #1: https://github.com/Shnewbs/TFC-Foundations/actions/runs/37860026420, commit 995c2433a287e0d21a45fc41dcb1e45fee7900db. Checkout and Java 25 setup passed. Build failed before source compilation: Licenser 0.7.2 referenced removed Gradle class `org/gradle/util/ConfigureUtil`.
+The 14 original loot files were byte-identical on both branch checkpoints, but their resolved target APIs were not. 26.3 LootContext exposes `getOptional` instead of 26.1.2's getParameter/getOptionalParameter pair; conditional function builders have holder-based conditions; NumberProvider and NumberProviders no longer exist. The target class inventory contains separate ContextIntProvider and ContextFloatProvider families. Minecraft's official 26.3 notes independently document the integer/float registry split.
 
-Selected published NeoForge Licenser 0.7.5 and ran `gradle checkLicenses --no-daemon` on Gradle 9.2.1 locally. PASS: checkLicenseMain, checkLicenseTest, checkLicenseData and checkLicenses. No check disabled or license removed. Push this fix for a full CI retry. Playable 0.0.0 remains unavailable.
+Consequently, the 26.1.2 loot patch was NOT blindly copied to 26.x. The 26.3 source/data migration must select appropriate provider registries and preserve integer drop counts, codec references, optional context handling and conditional-function behavior. The 26.3 full build remains failed; its diagnostic infrastructure is usable.
 
-### CI dependency resolution follow-up — 2026-10-08
+### Outstanding work and release boundary
 
-Run [37860254645](https://github.com/Shnewbs/TFC-Foundations/actions/runs/37860254645) passed the original Licenser configuration error, then failed resolving JEI transitive MezzConfig 0.6.6 artifacts. Both 26.3 POMs were verified present on Maven BlameJared; the exclusive repository filter admitted only `mezz.jei`. Added `net.mezzdev.config` to that filter. Full compilation and runtime validation remain pending; this is a dependency resolution correction, not a completed gameplay port.
+Remaining displayed failures include obsolete rendering/model classes, JEI/Patchouli adapters, legacy package nullability defaults, gameplay type relocations, old tool/armor APIs and serialization/dependency changes. The next source pass should work through common API blockers and then rendering/integration adapters. After compilation, validate all inherited interaction, recipe reload/sync, calendar, worldgen, save/restart, multiplayer and survival-progression regressions recorded in the earlier log.
 
-### First Java migration — 2026-10-08
+Earth's existing coordinate/elevation groundwork remains preserved but untouched in this continuation. No Earth preset, dataset integration or complete world generator was added. No playable JAR, client/server startup result, gameplay regression result, performance claim, GitHub release or CurseForge upload is claimed.
 
-CI now runs explicit compilation targets with `--continue`, retaining the failing packaging gate. Run 37860739449 reached the compiler and displayed 100 errors. Migrated ResourceLocation to the verified 26.3 Identifier API across 179 Java files. A token-only diff check confirmed no other Java edits; no data/resource IDs changed. A standalone Java 25 probe against the official Minecraft 26.3 client JAR passed namespace preservation, round trip, and invalid identifier checks. All local license checks pass. Full compilation, tests, client/server startup and gameplay regression checks remain incomplete.
-
-### Entity package migration — 2026-10-08
-
-Migrated 36 entity class locations plus MobSpawnType → EntitySpawnReason across 63 Java files using the official 26.3 class inventory. Updated the skeleton mixin bytecode target and verified the target invocation still exists. Retained all spawn-reason values used by TFC; verified each against EntitySpawnReason. Next checks: clean compilation, mixin application, natural/chunk/breeding/conversion spawns, animal AI, projectiles, boats/minecarts and save/reload. None of those gameplay checks has passed yet.
-
-### Dual-target build setup — 2026-10-08
-
-Accepted user direction: prioritize a playable 26.1.2 branch and continue 26.3 on 26.x for eventual 26.4. CI now listens to both branches and runs compiler, test and packaging checks independently. Modern Patchouli Maven coordinates use patchouli-neoforge; 26.1.2 pins released 26.1-94, while 26.3 remains blocked pending a compatible guide dependency. No runtime compatibility or release claimed.
-
-
-## 2026-10-09 — Shared relocations and keyed reload registration
-
-- Compared official client JAR inventories for 26.1.2 and 26.3; applied 26 shared class package relocations, including JVM descriptor paths. Class existence does not prove method compatibility. Kept Bucketable in its target-specific package on 26.1.2.
-- Migrated server/client reload registration to AddServerReloadListenersEvent/AddClientReloadListenersEvent and unique namespaced listener keys, using both NeoForge source distributions. Preserved vanilla recipe-manager access after checking both target signatures.
-- Initial dual-track CI runs 37863900030 (26.1.2) and 37863876836 (26.3) reached Java compilation and failed with the first 100 displayed errors; this is not a total error count. Remaining failures include model/rendering, interaction, worldgen and optional integration APIs.
-- Local 26.1.2 metadata generation, dependency resolution and license checks passed. Full local compilation remains blocked by the documented host executable-discovery failure. No playable JAR or runtime verification is claimed.
-- Required regression checks after compilation: initial client resource load and F3+T (all color maps/stars), server start and repeated /reload (all data managers), recipes after reload, multiplayer data sync/reconnect, dedicated-server class loading, entity/model rendering, survival progression and save/restart.
-
-
-## 2026-10-09 — Spawn, potion and block-break API migration
-
-- Replaced PlayerRespawnLogic with PlayerSpawnFinder after verifying getSpawnPosInChunk on both target JARs.
-- Used AbstractThrownPotion for water dousing, preserving both splash and lingering potion handling. Verified the water-sensitive predicate and shared inheritance on both versions.
-- Migrated TriState to Minecraft's enum and replaced removed helper methods with explicit enum comparisons, preserving bamboo soil override/default behavior.
-- Migrated BreakBlockEvent while preserving server-only collapse/logging. The replacement fires on both sides; client callbacks and canceled events return without world changes. Server-side logging cancellation requests a client block update.
-- Relocated CriteriaTriggers only on 26.3; 26.1.2 retains its original package.
-- Gameplay checks still required: fresh-world spawn, protected/canceled mining, collapse, tree felling with client block synchronization, normal block breaking, water splash/lingering dousing and bamboo soil TRUE/FALSE/DEFAULT cases. These are source changes, not runtime-tested fixes.
-
-
-## 2026-10-09 — Playability migration and Earth groundwork
-
-- Migrated item/block/entity interaction results without dropping held-stack replacement or empty-hand fallback. Replaced old game-rule callback accessors with supported change events and kept calendar ownership server-side.
-- Ported GUI extraction/input APIs, with branch-specific screen navigation and keyboard handling. Corrected grass-density slider initialization so accepting existing world settings does not copy continentalness into grass density.
-- Ported JSON listener construction while keeping registry-aware parsing in apply. Recipe caches now consume RecipeMap; recipes are explicitly requested for client sync and cleared on logout.
-- Isolated optional EMI/Jade/TOP source sets; missing target adapters are not compiled or linked, while included adapter errors remain visible. Patchouli remains required and blocks 26.3 packaging. License and source-set model checks passed for optional adapters; no unverified pins persisted.
-- 26.1.2 preserves single-pass caves/aquifers and adds a maintained TFC random-patch feature. Generator output matches all 125 migrated biome carver lists and177 patch references;1907 generated resources completed without errors. New patch classes compile against the actual26.1.2 client JAR. 26.3's new terrain/density pipeline still requires a substantive port.
-- Earth groundwork: nominal-scale coordinate/elevation math and explicit distortion, eight isolated Java25/JUnit tests passing. No synthetic Earth preset, dataset download, or complete generator claimed.
-- Required gameplay regressions: interaction swings/offhand/container replacement, calendar/game-rule commands, protected mining/collapse/logging, recipes after reload/disconnect/reconnect, guide and GUI navigation, cave/aquifer continuity, vegetation/loose rocks, chunk persistence, and client/dedicated-server progression.
+Current decision/status is in [PROJECT_STATUS](../../PROJECT_STATUS.md). Continue appending exact commit/run outcomes here; never mark planned work as tested.
