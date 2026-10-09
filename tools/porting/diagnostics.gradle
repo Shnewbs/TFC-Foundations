@@ -1,0 +1,16 @@
+// Diagnostic-only init script. This does not change production source sets or release gates.
+allprojects {
+    afterEvaluate {
+        def classpath = sourceSets.main.compileClasspath
+        def output = layout.projectDirectory.file('port-diagnostics/classpath.txt').asFile
+        tasks.register('writePortClasspath') {
+            dependsOn tasks.named('createMinecraftArtifacts')
+            inputs.files(classpath)
+            outputs.file(output)
+            doLast {
+                output.parentFile.mkdirs()
+                output.text = classpath.asPath
+            }
+        }
+    }
+}
