@@ -67,3 +67,7 @@ Updated: 2026-10-08. Read this file first when resuming work.
 ## Version investigation
 
 [Version strategy investigation](docs/foundations/VERSION_STRATEGY.md) records Patchouli binary incompatibilities and published ecosystem plans as of 2026-10-08. Recommendation: first playable candidate on 26.1.2, preserve 26.3 work and keep 26.4 conditional. This is a recommendation only; the user has not selected a new target and the current build remains 26.3.
+
+## Accepted dual-target policy — 2026-10-08
+
+The user authorized both tracks: `26.1.2` is the priority for the first playable 0.0.0 candidate; `26.x` retains Minecraft 26.3 as the development base for 26.4. This supersedes the recommendation-only text above. Share only changes verified against each branch; keep exact target ranges and separate artifacts. Neither branch is playable yet.
