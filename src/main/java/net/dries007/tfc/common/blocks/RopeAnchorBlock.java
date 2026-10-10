@@ -152,14 +152,17 @@ public abstract class RopeAnchorBlock extends AbstractRopeBlock implements IFlui
     }
 
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston)
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston)
     {
-        final BlockPos possibleRopePos = pos.below().relative(state.getValue(FACING));
-        if (level.getBlockState(possibleRopePos).getBlock() instanceof AbstractRopeBlock)
+        if (!level.getBlockState(pos).is(this))
         {
-            level.destroyBlock(possibleRopePos, true);
+            final BlockPos possibleRopePos = pos.below().relative(state.getValue(FACING));
+            if (level.getBlockState(possibleRopePos).getBlock() instanceof AbstractRopeBlock)
+            {
+                level.destroyBlock(possibleRopePos, true);
+            }
         }
-        super.onRemove(state, level, pos, newState, movedByPiston);
+        super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
     }
 
     @Override
