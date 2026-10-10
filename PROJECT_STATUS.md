@@ -2,7 +2,7 @@
 
 **Continuation in another environment:** [CONTINUE_BUILDING.md](docs/foundations/CONTINUE_BUILDING.md) is the shared checkout/build/CI handoff. This page records the separate 26.3 migration track as of its stated date; the playable-first 26.1.2 branch has newer source checkpoints and must be checked independently.
 
-Updated 2026-10-09 UTC (October 8 in America/Los_Angeles).
+Updated 2026-10-10 UTC (October 9 in America/Los_Angeles).
 
 **Version 0.0.0 is an incomplete source port, not a playable release. Neither target has passed full compilation, client/server startup, or survival regression tests. No playable JAR or release was produced in this continuation.**
 
@@ -12,8 +12,8 @@ Continue public development in Shnewbs/TFC-Foundations, preserving upstream hist
 
 | Track | Pinned target | Latest source/validation checkpoint |
 | --- | --- | --- |
-| Priority playable track, `26.1.2` | Minecraft 26.1.2; NeoForge 26.1.2.114; JEI 29.43.0.107; Patchouli 26.1-94 | `cc04e4f1f37fa62f59f30ca5f8d23d301dbc56d9`: 14 loot source files migrated; isolated checks pass; full compilation fails. |
-| Forward-port track, `26.x` | Minecraft 26.3; NeoForge 26.3.0.58-beta; JEI 31.9.0.61 | `6d3180c130b9a907be5f31511fb34e17039d5210`: exact target API and compiler evidence captured; full compilation fails. Required Patchouli target remains unresolved. |
+| Priority playable track, `26.1.2` | Minecraft 26.1.2; NeoForge 26.1.2.114; JEI 29.43.0.107; Patchouli 26.1-94 | `d7691430d4c615b9df293d1e47f457f5dbe4926e`: FluidProperty adapted to the target Property contract with an index/round-trip regression test; exact-target isolated compile passes, full compilation remains blocked. |
+| Forward-port track, `26.x` | Minecraft 26.3; NeoForge 26.3.0.58-beta; JEI 31.9.0.61 | `81fa9467bdc04b85ecf3ee403217f531bac2981b`: FluidProperty adapted independently to 26.3's Property contract with an index/round-trip regression test; exact-target isolated compile passes, full compilation remains blocked. Required Patchouli target remains unresolved. |
 
 Both use Java 25 and Gradle 9.2.1. Optional EMI/Jade/TOP adapters remain isolated and incomplete. Required dependency and publication gates have not been bypassed.
 
@@ -29,6 +29,8 @@ On 26.1.2, loot registries now hold their direct MapCodec values, custom context
 - FAIL: the full Gradle compilation/build still reaches the 1,000-error display cap. The diagnostic report groups repeated messages; neither this cap nor its grouped count is the total migration backlog. No gameplay, performance or complete loot-package test has passed.
 
 Both branches now preserve build logs, structured compiler reports, resolved API signatures, and exact source snapshots as short-lived CI artifacts. Build failures remain failures; successful diagnostic or resource steps do not make the job green.
+
+The separate 26.1.2 and 26.3 FluidProperty ports now return the target `List` type and implement `getInternalIndex` using the same deterministic sorted order as their possible values. A block regression test checks every fluid-loggable block's state index and property-name round trip on each track. Java 25 isolated compilation against each branch's resolved target classpath passes. The full Gradle builds still fail on the unrelated broad migration backlog; the added block test has not run because main compilation fails first. The 26.1.2 CI run for `d7691430d4` is queued.
 
 ## Important 26.3 divergence
 

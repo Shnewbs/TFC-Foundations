@@ -2,6 +2,12 @@
 
 The complete earlier work log is retained byte-for-byte in [WORK_LOG_BEFORE_LOOT_MIGRATION](history/WORK_LOG_BEFORE_LOOT_MIGRATION.md). It records the initial source publication, toolchain/dependency work, dual-target decision, gameplay API migrations and Earth groundwork. This file continues that history; it does not replace the recorded validation limits.
 
+## 2026-10-10 — Fluid property API port on both targets
+
+Ported `FluidProperty` separately on the existing 26.1.2 and 26.x branches after inspecting each exact target `Property` API. Both targets require `List<T>` from `getPossibleValues()` and an implementation of `getInternalIndex(T)`. The index map is populated alongside the existing sorted value list, preserving deterministic state ordering. Added a `BlocksTest` regression that checks every fluid-loggable block's value index and property-name round trip on each target. The two commits are `d7691430d4c615b9df293d1e47f457f5dbe4926e` (26.1.2) and `81fa9467bdc04b85ecf3ee403217f531bac2981b` (26.3); no new branch was created.
+
+Exact-target Java 25 isolated compilation passed for the actual production `FluidProperty` source and its direct TFC dependencies on both resolved classpaths. `javap` confirmed each compiled class exposes `List<FluidKey> getPossibleValues()` and `int getInternalIndex(FluidKey)`. `git diff --check` passed. The regression test could not run locally because each full `compileJava` stops on the existing broad migration backlog before test compilation. The 26.1.2 full build attempt failed at `compileJava`; its CI run for the new commit was queued. The 26.3 full compile also failed at the javac diagnostic cap with widespread unrelated failures; its latest validation run for the prior documentation checkpoint failed. These targeted fixes do not make either branch buildable or playable.
+
 ## 2026-10-10 — 26.3 worldgen direction and API assessment
 
 Fast-forwarded the existing work branch to the documented 26.x handoff commit `25c3c1ebc40fc064fa97c725d030351dc215a10a`; no new branch was created. Recorded the requested hybrid worldgen quality direction and acceptance gates in `ROADMAP.md`, and added the exact 26.3 migration findings to `PROJECT_STATUS.md`.
