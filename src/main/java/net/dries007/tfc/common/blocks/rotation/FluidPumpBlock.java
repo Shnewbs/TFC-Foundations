@@ -54,17 +54,6 @@ public class FluidPumpBlock extends ExtendedBlock implements EntityBlockExtensio
     }
 
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving)
-    {
-        final BlockEntity entity = level.getBlockEntity(pos);
-        if (entity instanceof PumpBlockEntity pump && !(Helpers.isBlock(state, newState.getBlock())))
-        {
-            pump.onRemoved();
-        }
-        super.onRemove(state, level, pos, newState, isMoving);
-    }
-
-    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         builder.add(FACING);
