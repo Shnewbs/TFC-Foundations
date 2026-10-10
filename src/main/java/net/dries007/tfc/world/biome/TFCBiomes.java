@@ -275,7 +275,7 @@ public final class TFCBiomes
         return level.registryAccess()
             .lookupOrThrow(Registries.BIOME)
             .getResourceKey(biome)
-            .map(key -> REGISTRY.get(ResourceKey.create(KEY, key.location())))
+            .flatMap(key -> REGISTRY.getOptional(key.identifier()))
             .orElse(null);
     }
 

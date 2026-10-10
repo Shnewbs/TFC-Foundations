@@ -29,7 +29,7 @@ public class BlockWithFluidFeature extends Feature<SimpleBlockConfiguration>
         final WorldGenLevel level = context.level();
         final BlockPos pos = context.origin();
 
-        final BlockState state = FluidHelpers.fillWithFluid(context.config().toPlace().getState(context.random(), pos), level.getFluidState(pos).getType());
+        final BlockState state = FluidHelpers.fillWithFluid(context.config().toPlace().getState(level, context.random(), pos), level.getFluidState(pos).getType());
         if (state != null && state.canSurvive(level, pos))
         {
             level.setBlock(pos, state, 2);

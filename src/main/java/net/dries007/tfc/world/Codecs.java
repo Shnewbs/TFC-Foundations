@@ -72,7 +72,7 @@ public final class Codecs extends ExtraCodecs
     public static <R> Codec<R> nonDefaultedRegistryCodec(DefaultedRegistry<R> registry)
     {
         return Identifier.CODEC.flatXmap(
-            id -> registry.containsKey(id) ? DataResult.success(registry.get(id)) : DataResult.error(() -> "No such key: " + id),
+            id -> registry.containsKey(id) ? DataResult.success(registry.getValue(id)) : DataResult.error(() -> "No such key: " + id),
             value -> registry.containsValue(value) ? DataResult.success(registry.getKey(value)) : DataResult.error(() -> "No such value: " + value)
         );
     }

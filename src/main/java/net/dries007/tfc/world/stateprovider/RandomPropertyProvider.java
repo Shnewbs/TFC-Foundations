@@ -55,7 +55,7 @@ public class RandomPropertyProvider extends BlockStateProvider
     }
 
     @Override
-    public BlockState getState(RandomSource random, BlockPos pos)
+    public BlockState getState(net.minecraft.world.level.WorldGenLevel level, RandomSource random, BlockPos pos)
     {
         return propertySetter.apply(random);
     }

@@ -161,9 +161,10 @@ public class ErosionFeature extends Feature<NoneFeatureConfiguration>
         {
             chunk.removeBlockEntity(pos);
         }
-        if (state.hasPostProcess(level, pos))
+        final BlockPos postProcessPos = state.getPostProcessPos(level, pos);
+        if (postProcessPos != null)
         {
-            chunk.markPosForPostprocessing(pos);
+            chunk.markPosForPostprocessing(postProcessPos);
         }
     }
 }

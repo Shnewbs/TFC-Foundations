@@ -57,7 +57,7 @@ public final class NoiseSampler
         @Override
         public DensityFunction.NoiseHolder visitNoise(DensityFunction.NoiseHolder holder)
         {
-            final NormalNoise noise = NormalNoise.create(positionalRandomFactory.fromHashOf(holder.noiseData().unwrapKey().orElseThrow().location()), holder.noiseData().value());
+            final NormalNoise noise = NormalNoise.create(positionalRandomFactory.fromHashOf(holder.noiseData().unwrapKey().orElseThrow().identifier()), holder.noiseData().value());
             return new DensityFunction.NoiseHolder(holder.noiseData(), noise);
         }
     }

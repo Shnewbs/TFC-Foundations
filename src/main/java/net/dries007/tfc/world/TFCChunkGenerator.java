@@ -397,10 +397,10 @@ public class TFCChunkGenerator extends ChunkGenerator implements ChunkGeneratorE
     }
 
     @Override
-    public void createStructures(RegistryAccess dynamicRegistry, ChunkGeneratorStructureState structureState, StructureManager structureFeatureManager, ChunkAccess chunk, StructureTemplateManager templateManager)
+    public void createStructures(RegistryAccess dynamicRegistry, ChunkGeneratorStructureState structureState, StructureManager structureFeatureManager, ChunkAccess chunk, StructureTemplateManager templateManager, net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> dimension)
     {
         chunkDataGenerator.generate(chunk); // populate chunk data before references to enable placements
-        super.createStructures(dynamicRegistry, structureState, structureFeatureManager, chunk, templateManager);
+        super.createStructures(dynamicRegistry, structureState, structureFeatureManager, chunk, templateManager, dimension);
     }
 
     @Override

@@ -22,8 +22,9 @@ public record IfThenConfig(Holder<PlacedFeature> ifFeature, Holder<PlacedFeature
         PlacedFeature.CODEC.fieldOf("then").forGetter(IfThenConfig::thenFeature)
     ).apply(instance, IfThenConfig::new));
 
-    public Stream<ConfiguredFeature<?, ?>> getFeatures()
+    @Override
+    public Stream<Holder<ConfiguredFeature<?, ?>>> getSubFeatures()
     {
-        return Stream.concat(this.ifFeature.value().getFeatures(), this.ifFeature.value().getFeatures());
+        return Stream.concat(ifFeature.value().getFeatures(), thenFeature.value().getFeatures());
     }
 }
