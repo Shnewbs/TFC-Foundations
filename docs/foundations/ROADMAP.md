@@ -32,6 +32,14 @@ Candidate gates:
 
 Compilation alone does not authorize release publication: runtime and distribution gates must also pass.
 
+## World-generation quality direction
+
+The target is a polished, TFC-native terrain experience with unusually strong landscape variety. Retain TFC's regional geology, climate, rivers, shores, volcanoes, aquifers, and survival progression; selectively combine them with modern, target-verified Mojang/NeoForge world-generation APIs and proven terrain-design ideas such as distinctive macro landforms and coherent transitions. Terralith is inspiration only: do not copy its code, data, names, or assets.
+
+Treat terrain changes as a versioned generator profile or opt-in preset until seed and save compatibility are understood. Never silently alter terrain in existing worlds. First complete the target API migration, then prototype bounded changes against TFC's current generator; do not add per-block noise work without measured chunk-generation cost.
+
+Acceptance requires deterministic results across chunk generation order, continuous landforms and rivers at biome and chunk boundaries, preserved TFC rock/climate/resource access and survival starts, visual review across a documented seed-and-region matrix, and reproducible generation-time and memory budgets. "Best terrain" is an aspiration, not a release claim; comparative quality and performance must be demonstrated.
+
 ## Continue in another environment
 
 The cross-platform, cross-session [developer handoff](CONTINUE_BUILDING.md) includes exact branch pins, commands for PowerShell and Unix shells, current verified CI evidence, the safe source-publication procedure, known gameplay/resource blockers, and the playable-JAR acceptance checklist. **Read GitHub's live HEAD and current CI before relying on any dated checkpoint.** Update `PROJECT_STATUS.md` and `WORK_LOG.md` after each substantive source checkpoint so every environment has the same source of truth.

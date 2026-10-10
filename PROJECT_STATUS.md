@@ -34,12 +34,19 @@ Both branches now preserve build logs, structured compiler reports, resolved API
 
 Compared the exact resolved APIs from both branches. On 26.3, LootContext uses `getOptional`, conditional loot functions use holder-based conditions, and the old NumberProvider/NumberProviders pair has been replaced by separate context integer/float provider families. **The 26.1.2 loot patch has not been copied to 26.x.** It requires a dedicated source and data-format migration, including preserving integer drop-count behavior.
 
+## World-generation direction and 26.3 blocker
+
+The requested goal is a polished, distinctive TFC terrain experience that combines TFC's geology, climate, rivers, shores, volcanoes, aquifers, and survival progression with carefully selected modern Mojang/NeoForge APIs and high-level terrain-design inspiration from projects such as Terralith. Terralith is inspiration only; do not copy its code, data, names, or assets. Major terrain behavior should be versioned or opt-in until seed/save compatibility is understood. Track the measurable acceptance gates in [ROADMAP](docs/foundations/ROADMAP.md); do not claim comparative superiority without visual, determinism, and performance evidence.
+
+The local 26.3 target API inspection confirms worldgen needs a structural migration, not import substitutions: density functions moved to `levelgen.densityfunction` and replaced the prior compute/context/visitor API with compiled samplers and rewrite rules; `NormalNoise.Parameters` is private and noise creation now uses builders/registry-backed `Noise` values. Related migration reaches custom density functions, noise registry/data generation, aquifers, and carver integration. These changes were deliberately not applied incompletely. The local Gradle compilation on this machine reached javac's 1,000-error display cap; this is not a passing build or a trustworthy total backlog count. The installed runtime is Java 21 rather than the documented Java 25 target. No terrain output, seed compatibility, gameplay, or runtime improvement is claimed.
+
 ## Next playability gates
 
 1. Finish common API blockers: remaining legacy nullability package defaults, removed/relocated gameplay classes, serialization and registry APIs. Preserve behavior and validate each slice against the exact target.
 2. Complete rendering/model, JEI and Patchouli adapters; do not remove core visuals or the guide merely to achieve compilation.
-3. Pass main/data/test compilation, licenses, resource generation and packaging. Then test client and dedicated-server launch, new-world creation, save/reload, multiplayer and survival progression.
-4. Validate 26.3's separate loot, holder and world-generation migrations before sharing branch changes. Publish target-specific GitHub releases only after their stated gates pass.
+3. Port 26.3's density-function/noise/carver worldgen APIs as one behavior-preserving cluster with focused target-backed tests, then prototype terrain improvements against the documented determinism, seam, gameplay, visual, and performance gates.
+4. Pass main/data/test compilation, licenses, resource generation and packaging. Then test client and dedicated-server launch, new-world creation, save/reload, multiplayer and survival progression.
+5. Validate 26.3's separate loot, holder and world-generation migrations before sharing branch changes. Publish target-specific GitHub releases only after their stated gates pass.
 
 ## Earth option
 

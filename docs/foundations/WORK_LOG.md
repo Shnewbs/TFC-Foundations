@@ -2,6 +2,14 @@
 
 The complete earlier work log is retained byte-for-byte in [WORK_LOG_BEFORE_LOOT_MIGRATION](history/WORK_LOG_BEFORE_LOOT_MIGRATION.md). It records the initial source publication, toolchain/dependency work, dual-target decision, gameplay API migrations and Earth groundwork. This file continues that history; it does not replace the recorded validation limits.
 
+## 2026-10-10 — 26.3 worldgen direction and API assessment
+
+Fast-forwarded the existing work branch to the documented 26.x handoff commit `25c3c1ebc40fc064fa97c725d030351dc215a10a`; no new branch was created. Recorded the requested hybrid worldgen quality direction and acceptance gates in `ROADMAP.md`, and added the exact 26.3 migration findings to `PROJECT_STATUS.md`.
+
+Inspected the resolved Minecraft 26.3 patched JAR APIs and the latest public 26.x diagnostic artifact (run `37873172113`, source `88e0f3f`). Density functions are now under `net.minecraft.world.level.levelgen.densityfunction`; the prior `compute`/function-context/visitor model has been replaced by compiled samplers and rewrite rules. `NormalNoise.Parameters` is not accessible to mod source, and target noise APIs use `Noise` values, registry-backed keys, and builders. This means a safe port must coordinate custom density functions, datagen/registry lookups, noise samplers, aquifers, and carver integration. Simple package renames would leave an incomplete or behavior-changing generator, so no source migration was retained in this pass.
+
+Local command `.\gradlew.bat -I tools/porting/diagnostics.gradle writePortClasspath compileJava compileDataJava --continue --no-daemon --no-configuration-cache --console=plain` resolved/downloaded the 26.3 artifacts and failed at `compileJava` after javac's 1,000-error display cap. The diagnostics include target worldgen API errors and pre-existing broad migration errors; the cap is not a total count or progress measure. This machine has Java 21, below the Java 25 branch requirement. `git diff --check` and Python syntax checking passed, but the full build did not. No compile, datagen, runtime, seed-compatibility, visual-quality, or performance pass is claimed. This checkpoint changes roadmap/status documentation only; no source output, gameplay result, or release was produced.
+
 ## 2026-10-09 UTC — Loot migration and reproducible target evidence
 
 ### Starting points and public commits
