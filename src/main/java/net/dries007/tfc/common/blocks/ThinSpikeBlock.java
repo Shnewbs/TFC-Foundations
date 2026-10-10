@@ -8,6 +8,7 @@ package net.dries007.tfc.common.blocks;
 
 import net.minecraft.world.level.ScheduledTickAccess;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -89,9 +90,9 @@ public class ThinSpikeBlock extends Block implements IFluidLoggable
     }
 
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving)
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean isMoving)
     {
-        if (newState.getBlock() != state.getBlock())
+        if (!level.getBlockState(pos).is(this))
         {
             BlockPos posDown = pos.below();
             BlockState otherState = level.getBlockState(posDown);
@@ -100,7 +101,7 @@ public class ThinSpikeBlock extends Block implements IFluidLoggable
                 level.scheduleTick(posDown, this, 0);
             }
         }
-        super.onRemove(state, level, pos, newState, isMoving);
+        super.affectNeighborsAfterRemoval(state, level, pos, isMoving);
     }
 
     @Override
