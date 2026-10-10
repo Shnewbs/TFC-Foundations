@@ -101,13 +101,16 @@ public class ConnectedGrassBlock extends Block implements IGrassBlock
     }
 
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving)
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston)
     {
-        for (Direction direction : Direction.Plane.HORIZONTAL)
+        if (!level.getBlockState(pos).is(this))
         {
-            scheduleTick(level, pos.relative(direction).above());
+            for (Direction direction : Direction.Plane.HORIZONTAL)
+            {
+                scheduleTick(level, pos.relative(direction).above());
+            }
         }
-        super.onRemove(state, level, pos, newState, isMoving);
+        super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
     }
 
     private void scheduleTick(Level level, BlockPos pos)
