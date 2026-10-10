@@ -1,0 +1,30 @@
+name: Prepare offline API inspector
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [26.1.2]
+    paths: [.github/workflows/port-inspector.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Fetch pinned open-source inspector
+        shell: bash
+        run: |
+          mkdir -p inspector
+          curl --fail --location --retry 3 --output inspector/vineflower-1.12.0-slim.jar https://github.com/Vineflower/vineflower/releases/download/1.12.0/vineflower-1.12.0-slim.jar
+          echo '753fd20d0b33ebf20c327d076e437557da0d8b42f121e1983b9cbe2b5b3e0219  inspector/vineflower-1.12.0-slim.jar' | sha256sum --check
+          printf '%s\n' 'Vineflower 1.12.0, Apache-2.0; upstream release: https://github.com/Vineflower/vineflower/releases/tag/1.12.0' > inspector/ORIGIN.txt
+      - name: Upload development tool only
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfc-api-inspector-${{ github.run_id }}
+          path: inspector/
+          retention-days: 1
+          if-no-files-found: error
