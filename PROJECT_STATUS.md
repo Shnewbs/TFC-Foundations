@@ -12,8 +12,8 @@ Continue public development in Shnewbs/TFC-Foundations, preserving upstream hist
 
 | Track | Pinned target | Latest source/validation checkpoint |
 | --- | --- | --- |
-| Priority playable track, `26.1.2` | Minecraft 26.1.2; NeoForge 26.1.2.114; JEI 29.43.0.107; Patchouli 26.1-94 | `d7691430d4c615b9df293d1e47f457f5dbe4926e`: FluidProperty adapted to the target Property contract with an index/round-trip regression test; exact-target isolated compile passes, full compilation remains blocked. |
-| Forward-port track, `26.x` | Minecraft 26.3; NeoForge 26.3.0.58-beta; JEI 31.9.0.61 | `81fa9467bdc04b85ecf3ee403217f531bac2981b`: FluidProperty adapted independently to 26.3's Property contract with an index/round-trip regression test; exact-target isolated compile passes, full compilation remains blocked. Required Patchouli target remains unresolved. |
+| Priority playable track, `26.1.2` | Minecraft 26.1.2; NeoForge 26.1.2.114; JEI 29.43.0.107; Patchouli 26.1-94 | `d7691430d4c615b9df293d1e47f457f5dbe4926e`: FluidProperty adapted to the target Property contract with an index/round-trip regression test; exact-target isolated compile passes. Full build fails in [run 38077779284](https://github.com/Shnewbs/TFC-Foundations/actions/runs/38077779284). |
+| Forward-port track, `26.x` | Minecraft 26.3; NeoForge 26.3.0.58-beta; JEI 31.9.0.61 | `81fa9467bdc04b85ecf3ee403217f531bac2981b`: FluidProperty adapted independently to 26.3's Property contract with an index/round-trip regression test; exact-target isolated compile passes. Full build fails in [run 38077963541](https://github.com/Shnewbs/TFC-Foundations/actions/runs/38077963541). Required Patchouli target remains unresolved. |
 
 Both use Java 25 and Gradle 9.2.1. Optional EMI/Jade/TOP adapters remain isolated and incomplete. Required dependency and publication gates have not been bypassed.
 
@@ -30,7 +30,7 @@ On 26.1.2, loot registries now hold their direct MapCodec values, custom context
 
 Both branches now preserve build logs, structured compiler reports, resolved API signatures, and exact source snapshots as short-lived CI artifacts. Build failures remain failures; successful diagnostic or resource steps do not make the job green.
 
-The separate 26.1.2 and 26.3 FluidProperty ports now return the target `List` type and implement `getInternalIndex` using the same deterministic sorted order as their possible values. A block regression test checks every fluid-loggable block's state index and property-name round trip on each track. Java 25 isolated compilation against each branch's resolved target classpath passes. The full Gradle builds still fail on the unrelated broad migration backlog; the added block test has not run because main compilation fails first. The 26.1.2 CI run for `d7691430d4` is queued.
+The separate 26.1.2 and 26.3 FluidProperty ports now return the target `List` type and implement `getInternalIndex` using the same deterministic sorted order as their possible values. A block regression test checks every fluid-loggable block's state index and property-name round trip on each track. Java 25 isolated compilation against each branch's resolved target classpath passes. Validation runs [38077779284](https://github.com/Shnewbs/TFC-Foundations/actions/runs/38077779284) and [38077963541](https://github.com/Shnewbs/TFC-Foundations/actions/runs/38077963541) both fail at the full build step on the broad migration backlog; exact API inspection, diagnostic summarization, source archiving, and resource validation pass on both. The added block test has not run because main compilation fails first.
 
 ## Important 26.3 divergence
 
