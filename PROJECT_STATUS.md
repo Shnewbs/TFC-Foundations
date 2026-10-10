@@ -1,5 +1,7 @@
 # TFC Foundations — Current Project Status
 
+**Continuation in another environment:** [CONTINUE_BUILDING.md](docs/foundations/CONTINUE_BUILDING.md) is the shared checkout/build/CI handoff. This page records the separate 26.3 migration track as of its stated date; the playable-first 26.1.2 branch has newer source checkpoints and must be checked independently.
+
 Updated 2026-10-09 UTC (October 8 in America/Los_Angeles).
 
 **Version 0.0.0 is an incomplete source port, not a playable release. Neither target has passed full compilation, client/server startup, or survival regression tests. No playable JAR or release was produced in this continuation.**

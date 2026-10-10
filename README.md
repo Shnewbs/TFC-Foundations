@@ -29,12 +29,13 @@ On Windows, use `gradlew.bat build --no-daemon`. A fresh build downloads its req
 
 - [Current status and next actions](PROJECT_STATUS.md)
 - [Roadmap and release gates](docs/foundations/ROADMAP.md)
+- [Resume building on another computer or agent](docs/foundations/CONTINUE_BUILDING.md)
 - [Dependency checkpoint](docs/foundations/DEPENDENCIES.md)
 - [Source audit](docs/foundations/AUDIT.md)
 - [Upstream tracking](docs/foundations/UPSTREAM.md)
 - [Work log](docs/foundations/WORK_LOG.md)
 
-Source checkpoints are published on `26.x`. Playable releases require successful compilation, tests and client/dedicated-server survival validation. Publishing to upstream distribution destinations is disabled.
+Source checkpoints are published separately on `26.1.2` and `26.x`, with `26.1.2` prioritized for a playable alpha. Playable releases require successful compilation, tests and client/dedicated-server survival validation. Publishing to upstream distribution destinations is disabled.
 
 Upstream's [Field Guide](https://terrafirmacraft.github.io/Field-Guide/en_us/) and [API documentation](https://terrafirmacraft.github.io/Documentation/) describe the original project and are reference material, not guarantees of compatibility with this port.
 

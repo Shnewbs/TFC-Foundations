@@ -31,3 +31,7 @@ Candidate gates:
 - Explicit version/channel/MC/loader metadata. First incomplete playable builds are alpha. Document missing integrations and unsupported saves.
 
 Compilation alone does not authorize release publication: runtime and distribution gates must also pass.
+
+## Continue in another environment
+
+The cross-platform, cross-session [developer handoff](CONTINUE_BUILDING.md) includes exact branch pins, commands for PowerShell and Unix shells, current verified CI evidence, the safe source-publication procedure, known gameplay/resource blockers, and the playable-JAR acceptance checklist. **Read GitHub's live HEAD and current CI before relying on any dated checkpoint.** Update `PROJECT_STATUS.md` and `WORK_LOG.md` after each substantive source checkpoint so every environment has the same source of truth.
