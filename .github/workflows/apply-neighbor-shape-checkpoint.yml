@@ -1,0 +1,65 @@
+name: Apply reviewed neighbor-shape API checkpoint
+
+on:
+  push:
+    branches: [26.1.2]
+    paths: [.github/workflows/apply-neighbor-shape-checkpoint.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  apply:
+    if: github.repository == 'Shnewbs/TFC-Foundations' && github.ref == 'refs/heads/26.1.2'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - name: Checkout exact history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify and apply reviewed 26.1.2 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = 'f7994c3f02637720cd28b63a41b55d2c4c42887b'
+          base64 -d tools/porting/.neighbor-shape-checkpoint.b64 > /tmp/tfc-neighbor-shape.patch.xz
+          echo 'a55fcb9197a44e6b58ecf3140819faf9154a5dee32a42899b57be1ce5b89a20c  /tmp/tfc-neighbor-shape.patch.xz' | sha256sum --check
+          xz -dc /tmp/tfc-neighbor-shape.patch.xz > /tmp/tfc-neighbor-shape.patch
+          echo 'd9799a736d4ad3db6adf8b12bef1a6fe298dc5d28c78a34d45dbfa3434c286dd  /tmp/tfc-neighbor-shape.patch' | sha256sum --check
+          git apply --check --index --whitespace=error /tmp/tfc-neighbor-shape.patch
+          git apply --index --whitespace=error /tmp/tfc-neighbor-shape.patch
+          test "$(git diff --cached --name-only | wc -l)" -eq 84
+          git diff --cached --check
+          python3 -m py_compile tools/porting/run_neighbor_shape_smoke.py
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('tools/porting/inspect_api.py').read_text()
+          assert 'run_neighbor_shape_smoke.py' in s
+          m=Path('src/main/java/net/dries007/tfc/util/MultiBlock.java').read_text()
+          assert 'BiPredicate<LevelReader, BlockPos>' in m
+          assert 'LevelAccessor' not in m
+          f=Path('src/main/java/net/dries007/tfc/common/fluids/FluidHelpers.java').read_text()
+          assert 'tickFluid(LevelReader level, ScheduledTickAccess ticks' in f
+          assert 'tickFluid(LevelAccessor level, BlockPos pos' in f
+          print('PASS: target reader/scheduler separation and test invocation')
+          PY
+      - name: Commit source and remove one-time transport
+        shell: bash
+        run: |
+          git rm -f tools/porting/.neighbor-shape-checkpoint.b64 .github/workflows/apply-neighbor-shape-checkpoint.yml
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Port read-only 26.1.2 neighbor shape hooks and tick scheduler; preserve mutable hooks'
+          git push origin HEAD:refs/heads/26.1.2
+          echo "Applied verified source commit: $(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          echo 'This is not a playable release; mutable-world hooks and full compilation remain open.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Run full pinned target validation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run test.yml --repo "$GITHUB_REPOSITORY" --ref 26.1.2
