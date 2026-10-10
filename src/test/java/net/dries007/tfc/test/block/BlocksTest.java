@@ -74,6 +74,26 @@ public class BlocksTest implements TestSetup
         }
     }
 
+    @Test
+    public void testFluidPropertyIndices()
+    {
+        for (DeferredHolder<Block, ? extends Block> holder : TFCBlocks.BLOCKS.getEntries())
+        {
+            if (holder.value() instanceof IFluidLoggable fluidBlock)
+            {
+                final FluidProperty property = fluidBlock.getFluidProperty();
+                final List<FluidProperty.FluidKey> possibleValues = property.getPossibleValues();
+
+                for (int index = 0; index < possibleValues.size(); index++)
+                {
+                    final FluidProperty.FluidKey value = possibleValues.get(index);
+                    assertEquals(index, property.getInternalIndex(value), "Incorrect state index for " + holder.getId() + " / " + value);
+                    assertEquals(value, property.getValue(property.getName(value)).orElseThrow(), "Fluid property value did not round-trip for " + holder.getId());
+                }
+            }
+        }
+    }
+
     @Nullable
     private Method findMethodInAnyParent(Class<?> clazz)
     {

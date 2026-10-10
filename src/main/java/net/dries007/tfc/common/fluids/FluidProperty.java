@@ -7,7 +7,6 @@
 package net.dries007.tfc.common.fluids;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +45,7 @@ public class FluidProperty extends Property<FluidProperty.FluidKey>
     private final Map<String, FluidKey> keysById;
     private final Map<Fluid, FluidKey> keysByFluid;
     private final List<FluidKey> keysByIndex;
+    private final Map<FluidKey, Integer> indicesByKey;
     private final Supplier<Set<Fluid>> fluids;
 
     protected FluidProperty(String name, Stream<Identifier> fluids)
@@ -55,12 +55,14 @@ public class FluidProperty extends Property<FluidProperty.FluidKey>
         this.keysByFluid = new HashMap<>();
         this.keysById = new HashMap<>();
         this.keysByIndex = new ArrayList<>(); // Needs to be deterministically ordered
+        this.indicesByKey = new HashMap<>();
 
         fluids.sorted().forEach(id -> {
             assert !keysById.containsKey(id.getPath()) : "Duplicate fluid key: " + id.getPath();
             final FluidKey key = new FluidKey(id);
 
             keysById.put(id.getPath(), key);
+            indicesByKey.put(key, keysByIndex.size());
             keysByIndex.add(key);
         });
 
@@ -94,9 +96,15 @@ public class FluidProperty extends Property<FluidProperty.FluidKey>
     }
 
     @Override
-    public Collection<FluidKey> getPossibleValues()
+    public List<FluidKey> getPossibleValues()
     {
         return keysByIndex;
+    }
+
+    @Override
+    public int getInternalIndex(FluidKey value)
+    {
+        return indicesByKey.getOrDefault(value, -1);
     }
 
     @Override
