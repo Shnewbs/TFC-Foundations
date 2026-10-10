@@ -7,6 +7,7 @@
 package net.dries007.tfc.common.blocks;
 
 import net.minecraft.util.RandomSource;
+import net.minecraft.server.level.ServerLevel;
 
 import net.minecraft.world.level.ScheduledTickAccess;
 
@@ -78,14 +79,19 @@ public class GroundedRopeBlock extends AbstractRopeBlock
     }
 
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston)
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston)
     {
-        final BlockPos possibleRopePos = pos.below().relative(state.getValue(FACING).getOpposite());
-        if (level.getBlockState(possibleRopePos).getBlock() instanceof AbstractRopeBlock)
+        // Removal side effects now occur after the old block state has been replaced.
+        // Only detach the dependent rope when this anchor is no longer present.
+        if (!level.getBlockState(pos).is(this))
         {
-            level.destroyBlock(possibleRopePos, true);
+            final BlockPos possibleRopePos = pos.below().relative(state.getValue(FACING).getOpposite());
+            if (level.getBlockState(possibleRopePos).getBlock() instanceof AbstractRopeBlock)
+            {
+                level.destroyBlock(possibleRopePos, true);
+            }
         }
-        super.onRemove(state, level, pos, newState, movedByPiston);
+        super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
     }
 
     @Override
