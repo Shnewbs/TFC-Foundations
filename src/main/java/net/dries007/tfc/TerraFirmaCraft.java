@@ -149,7 +149,6 @@ public final class TerraFirmaCraft
         TFCEffects.EFFECTS.register(bus);
         TFCBrain.ACTIVITIES.register(bus);
         TFCBrain.MEMORY_TYPES.register(bus);
-        TFCBrain.SCHEDULES.register(bus);
         TFCBrain.SENSOR_TYPES.register(bus);
         TFCBrain.POI_TYPES.register(bus);
         TFCAdvancements.TRIGGERS.register(bus);
@@ -212,7 +211,6 @@ public final class TerraFirmaCraft
             TFCFluids.registerFluidInteractions();
             IBellowsConsumer.registerDefaultOffsets();
             Wood.registerBlockSetTypes();
-            TFCBrain.initializeScheduleContents();
             MetalItem.init();
 
             TFCBlocks.registerFlowerPotFlowers();

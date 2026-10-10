@@ -62,11 +62,10 @@ public class AmphibiousPredatorAi
 
     public static <E extends Predator> Brain<E> makeBrain(Brain<E> brain, Predator predator)
     {
-        brain.setSchedule(predator.diurnal ? TFCBrain.DIURNAL.get() : TFCBrain.NOCTURNAL.get());
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         brain.setDefaultActivity(TFCBrain.HUNT.get());
         brain.setActiveActivityIfPossible(TFCBrain.HUNT.get());
-        brain.updateActivityFromSchedule(predator.level().getDayTime(), predator.level().getGameTime());
+        TFCBrain.updatePredatorActivity(predator);
 
         return brain;
     }
@@ -80,11 +79,11 @@ public class AmphibiousPredatorAi
             Activity current = brain.getActiveNonCoreActivity().get();
             if (current == Activity.FIGHT && !brain.hasMemoryValue(MemoryModuleType.ATTACK_TARGET))
             {
-                brain.updateActivityFromSchedule(predator.level().getDayTime(), predator.level().getGameTime());
+                TFCBrain.updatePredatorActivity(predator);
             }
             else if (current == Activity.AVOID && !brain.hasMemoryValue(MemoryModuleType.PACIFIED))
             {
-                brain.updateActivityFromSchedule(predator.level().getDayTime(), predator.level().getGameTime());
+                TFCBrain.updatePredatorActivity(predator);
             }
         }
         predator.setAggressive(brain.hasMemoryValue(MemoryModuleType.ATTACK_TARGET));
@@ -136,7 +135,7 @@ public class AmphibiousPredatorAi
 
     private static float getSpeedModifier(LivingEntity entity)
     {
-        return entity.isInWaterOrBubble() ? 1.6F : 1.0F;
+        return entity.isInWater() ? 1.6F : 1.0F;
     }
 
     private static boolean canSetWalkTargetFromLookTarget(LivingEntity entity)
@@ -146,7 +145,7 @@ public class AmphibiousPredatorAi
         if (tracker.isPresent())
         {
             BlockPos pos = tracker.get().currentBlockPosition();
-            return EnvironmentHelpers.isWaterAt(level, pos) == entity.isInWaterOrBubble();
+            return EnvironmentHelpers.isWaterAt(level, pos) == entity.isInWater();
         }
         return false;
     }

@@ -12,6 +12,8 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.Brain;
@@ -95,7 +97,7 @@ public final class PredatorBehaviors
 
     public static OneShot<Predator> startSleeping()
     {
-        return BehaviorBuilder.triggerIf(entity -> PredatorAi.getDistanceFromHomeSqr(entity) < 25 && !entity.isSleeping() && !entity.isInWaterOrBubble(), BehaviorBuilder.create(instance -> instance.group(
+        return BehaviorBuilder.triggerIf(entity -> PredatorAi.getDistanceFromHomeSqr(entity) < 25 && !entity.isSleeping() && !entity.isInWater(), BehaviorBuilder.create(instance -> instance.group(
             instance.absent(MemoryModuleType.ATTACK_TARGET),
             instance.absent(TFCBrain.WAKEUP_TICKS.get()),
             instance.registered(MemoryModuleType.WALK_TARGET),
@@ -114,7 +116,7 @@ public final class PredatorBehaviors
             instance.absent(MemoryModuleType.ATTACK_TARGET)
         ).apply(instance, attack -> (level, predator, time) -> {
             Optional<Activity> before = predator.getBrain().getActiveNonCoreActivity();
-            predator.getBrain().updateActivityFromSchedule(level.getDayTime(), level.getGameTime());
+            TFCBrain.updatePredatorActivity(predator);
             Optional<Activity> after = predator.getBrain().getActiveNonCoreActivity();
             if (before.isPresent() && after.isPresent() && before.get() == Activity.REST && after.get() != Activity.REST)
             {
@@ -125,12 +127,23 @@ public final class PredatorBehaviors
         }));
     }
 
+    /** Native 26.x entity query, preserving TargetingConditions and excluding self. */
+    private static boolean hasNearbyDisturbance(Predator predator)
+    {
+        if (predator.level() instanceof ServerLevel server)
+        {
+            return !server.getEntities(EntityTypeTest.forClass(LivingEntity.class), predator.getBoundingBox(),
+                other -> other != predator && TargetingConditions.DEFAULT.test(server, predator, other)).isEmpty();
+        }
+        return false;
+    }
+
     //Wake if predator is in water, is touched by an entity, or is more than 5 blocks from its home
     public static OneShot<Predator> wakeFromDisturbance()
     {
         return BehaviorBuilder.triggerIf(entity -> (PredatorAi.getDistanceFromHomeSqr(entity) > 25
-            || entity.isInWaterOrBubble()
-            || !entity.level().getNearbyEntities(LivingEntity.class, TargetingConditions.DEFAULT, entity, entity.getBoundingBox()).isEmpty())
+            || entity.isInWater()
+            || hasNearbyDisturbance(entity))
             && entity.isSleeping(),
             BehaviorBuilder.create(instance -> instance.group(
                 instance.absent(MemoryModuleType.ATTACK_TARGET)
@@ -144,7 +157,7 @@ public final class PredatorBehaviors
     //Activates if predator wanders outside of territory or tries to sleep in water
     public static OneShot<Predator> findNewHome()
     {
-        return BehaviorBuilder.triggerIf(predator -> (PredatorAi.getDistanceFromHomeSqr(predator) > PredatorAi.MAX_WANDER_DISTANCE || (PredatorAi.getDistanceFromHomeSqr(predator) < 9 && predator.isInWaterOrBubble())), BehaviorBuilder.create(instance -> instance.group(
+        return BehaviorBuilder.triggerIf(predator -> (PredatorAi.getDistanceFromHomeSqr(predator) > PredatorAi.MAX_WANDER_DISTANCE || (PredatorAi.getDistanceFromHomeSqr(predator) < 9 && predator.isInWater())), BehaviorBuilder.create(instance -> instance.group(
             instance.present(MemoryModuleType.HOME),
             instance.registered(MemoryModuleType.WALK_TARGET)
         ).apply(instance, (homeMemory, walkMemory) -> (level, predator, time) -> {

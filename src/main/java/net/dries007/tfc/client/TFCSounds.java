@@ -10,6 +10,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.entity.animal.pig.PigSoundVariants;
+import net.minecraft.world.entity.animal.cow.CowSoundVariants;
+import net.minecraft.world.entity.animal.chicken.ChickenSoundVariants;
+import net.minecraft.world.entity.animal.feline.CatSoundVariants;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.SoundType;
@@ -77,15 +81,19 @@ public final class TFCSounds
     public static final SoundType THIN = registerBlock("thin");
 
     // Entities
-    public static final EntityId PIG = registerEntity(SoundEvents.PIG_AMBIENT, SoundEvents.PIG_DEATH, SoundEvents.PIG_HURT, SoundEvents.PIG_STEP);
-    public static final EntityId COW = registerEntity(SoundEvents.COW_AMBIENT, SoundEvents.COW_DEATH, SoundEvents.COW_HURT, SoundEvents.COW_STEP);
-    public static final EntityId CHICKEN = registerEntity(SoundEvents.CHICKEN_AMBIENT, SoundEvents.CHICKEN_DEATH, SoundEvents.CHICKEN_HURT, SoundEvents.CHICKEN_STEP);
+    // Vanilla 26.x moved adult pig/cow/chicken sounds into variant sets. Use the
+    // classic adult sets so TFC's existing animals keep their original sounds.
+    // Deferred holders are resolved only when a sound is requested, not while
+    // TFC's registries are being constructed.
+    public static final EntityId PIG = classicPigSounds();
+    public static final EntityId COW = classicCowSounds();
+    public static final EntityId CHICKEN = classicChickenSounds();
     public static final EntityId GOAT = registerEntity(SoundEvents.GOAT_AMBIENT, SoundEvents.GOAT_DEATH, SoundEvents.GOAT_HURT, SoundEvents.GOAT_STEP);
     public static final EntityId SHEEP = registerEntity(SoundEvents.SHEEP_AMBIENT, SoundEvents.SHEEP_DEATH, SoundEvents.SHEEP_HURT, SoundEvents.SHEEP_STEP);
     public static final EntityId DONKEY = registerEntity(SoundEvents.DONKEY_AMBIENT, SoundEvents.DONKEY_DEATH, SoundEvents.DONKEY_HURT, SoundEvents.HORSE_STEP);
     public static final EntityId MULE = registerEntity(SoundEvents.MULE_AMBIENT, SoundEvents.MULE_DEATH, SoundEvents.MULE_HURT, SoundEvents.HORSE_STEP);
     public static final EntityId HORSE = registerEntity(SoundEvents.HORSE_AMBIENT, SoundEvents.HORSE_DEATH, SoundEvents.HORSE_HURT, SoundEvents.HORSE_STEP);
-    public static final EntityId CAT = new EntityId(() -> SoundEvents.CAT_AMBIENT, () -> SoundEvents.CAT_DEATH, () -> SoundEvents.CAT_HURT, () -> SoundEvents.CHICKEN_STEP, Optional.of(() -> SoundEvents.CAT_HISS), Optional.of(() -> SoundEvents.CAT_PURR));
+    public static final EntityId CAT = classicCatSounds();
     public static final EntityId TURTLE = registerEntity(SoundEvents.TURTLE_AMBIENT_LAND, SoundEvents.TURTLE_DEATH, SoundEvents.TURTLE_HURT, SoundEvents.TURTLE_SHAMBLE);
 
     public static final EntityId DOG = registerEntity("dog", true, true);
@@ -149,6 +157,35 @@ public final class TFCSounds
             register("block.%s.hit".formatted(name)),
             register("block.%s.fall".formatted(name))
         );
+    }
+
+    private static EntityId classicPigSounds()
+    {
+        final var adult = SoundEvents.PIG_SOUNDS.get(PigSoundVariants.SoundSet.CLASSIC).adultSounds();
+        return new EntityId(() -> adult.ambientSound().value(), () -> adult.deathSound().value(),
+            () -> adult.hurtSound().value(), () -> adult.stepSound().value(), Optional.empty(), Optional.empty());
+    }
+
+    private static EntityId classicCowSounds()
+    {
+        final var adult = SoundEvents.COW_SOUNDS.get(CowSoundVariants.SoundSet.CLASSIC);
+        return new EntityId(() -> adult.ambientSound().value(), () -> adult.deathSound().value(),
+            () -> adult.hurtSound().value(), () -> adult.stepSound().value(), Optional.empty(), Optional.empty());
+    }
+
+    private static EntityId classicChickenSounds()
+    {
+        final var adult = SoundEvents.CHICKEN_SOUNDS.get(ChickenSoundVariants.SoundSet.CLASSIC).adultSounds();
+        return new EntityId(() -> adult.ambientSound().value(), () -> adult.deathSound().value(),
+            () -> adult.hurtSound().value(), () -> adult.stepSound().value(), Optional.empty(), Optional.empty());
+    }
+
+    private static EntityId classicCatSounds()
+    {
+        final var adult = SoundEvents.CAT_SOUNDS.get(CatSoundVariants.SoundSet.CLASSIC).adultSounds();
+        return new EntityId(() -> adult.ambientSound().value(), () -> adult.deathSound().value(),
+            () -> adult.hurtSound().value(), () -> SoundEvents.CHICKEN_STEP.value(),
+            Optional.of(() -> adult.hissSound().value()), Optional.of(() -> adult.purrSound().value()));
     }
 
     private static EntityId registerEntity(SoundEvent ambient, SoundEvent death, SoundEvent hurt, SoundEvent step)

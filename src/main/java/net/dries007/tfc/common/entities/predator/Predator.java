@@ -74,7 +74,7 @@ public class Predator extends WildAnimal
     {
         super(type, level, sounds);
         this.diurnal = diurnal;
-        getBrain().setSchedule(diurnal ? TFCBrain.DIURNAL.get() : TFCBrain.NOCTURNAL.get());
+        TFCBrain.updatePredatorActivity(this);
         this.attack = sounds.attack().orElseThrow();
         this.sleeping = sounds.sleep().orElseThrow();
     }

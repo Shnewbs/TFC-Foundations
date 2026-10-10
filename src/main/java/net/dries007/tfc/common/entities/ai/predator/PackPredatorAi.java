@@ -66,11 +66,10 @@ public class PackPredatorAi
 
     public static <E extends Predator> Brain<E> makeBrain(Brain<E> brain, Predator predator)
     {
-        brain.setSchedule(predator.diurnal ? TFCBrain.DIURNAL.get() : TFCBrain.NOCTURNAL.get());
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         brain.setDefaultActivity(TFCBrain.HUNT.get());
         brain.setActiveActivityIfPossible(TFCBrain.HUNT.get());
-        brain.updateActivityFromSchedule(predator.level().getDayTime(), predator.level().getGameTime());
+        TFCBrain.updatePredatorActivity(predator);
 
         return brain;
     }

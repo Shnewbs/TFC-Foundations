@@ -19,8 +19,7 @@ import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.schedule.Activity;
-import net.minecraft.world.entity.schedule.Schedule;
-import net.minecraft.world.entity.schedule.ScheduleBuilder;
+import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -32,13 +31,13 @@ import net.dries007.tfc.common.entities.ai.livestock.DelegatingTemptingSensor;
 import net.dries007.tfc.common.entities.ai.livestock.NearestNestBoxSensor;
 import net.dries007.tfc.common.entities.ai.predator.PackLeaderSensor;
 import net.dries007.tfc.common.entities.ai.predator.PackPredator;
+import net.dries007.tfc.common.entities.predator.Predator;
 import net.dries007.tfc.common.entities.ai.prey.ScareSensor;
 
 public class TFCBrain
 {
     public static final DeferredRegister<Activity> ACTIVITIES = DeferredRegister.create(Registries.ACTIVITY, TerraFirmaCraft.MOD_ID);
     public static final DeferredRegister<MemoryModuleType<?>> MEMORY_TYPES = DeferredRegister.create(Registries.MEMORY_MODULE_TYPE, TerraFirmaCraft.MOD_ID);
-    public static final DeferredRegister<Schedule> SCHEDULES = DeferredRegister.create(Registries.SCHEDULE, TerraFirmaCraft.MOD_ID);
     public static final DeferredRegister<SensorType<?>> SENSOR_TYPES = DeferredRegister.create(Registries.SENSOR_TYPE, TerraFirmaCraft.MOD_ID);
     public static final DeferredRegister<PoiType> POI_TYPES = DeferredRegister.create(Registries.POINT_OF_INTEREST_TYPE, TerraFirmaCraft.MOD_ID);
 
@@ -54,8 +53,6 @@ public class TFCBrain
     public static final DeferredHolder<MemoryModuleType<?>, MemoryModuleType<PackPredator>> ALPHA = registerMemory("alpha");
     public static final DeferredHolder<MemoryModuleType<?>, MemoryModuleType<Integer>> WAKEUP_TICKS = registerMemory("wakeup_ticks", Codec.INT);
 
-    public static final DeferredHolder<Schedule, Schedule> DIURNAL = registerSchedule("diurnal");
-    public static final DeferredHolder<Schedule, Schedule> NOCTURNAL = registerSchedule("nocturnal");
 
     public static final DeferredHolder<SensorType<?>, SensorType<DelegatingTemptingSensor>> TEMPTATION_SENSOR = registerSensorType("tempt", DelegatingTemptingSensor::new);
     public static final DeferredHolder<SensorType<?>, SensorType<NearestNestBoxSensor>> NEST_BOX_SENSOR = registerSensorType("nearest_nest_box", NearestNestBoxSensor::new);
@@ -95,14 +92,20 @@ public class TFCBrain
         return MEMORY_TYPES.register(name, () -> new MemoryModuleType<>(Optional.of(codec)));
     }
 
-    public static DeferredHolder<Schedule, Schedule> registerSchedule(String name)
+    /**
+     * The 26.x Brain no longer owns a Schedule; vanilla villager schedules are
+     * environment attributes. Preserve TFC predator schedules independently
+     * of villager activity, using the overworld clock (the former day-time
+     * clock) rather than elapsed game time. Both schedules switch at 11000.
+     */
+    public static Activity scheduledPredatorActivity(boolean diurnal, long overworldClockTime)
     {
-        return SCHEDULES.register(name, Schedule::new);
+        return PredatorScheduleMath.shouldHunt(diurnal, overworldClockTime) ? HUNT.get() : Activity.REST;
     }
 
-    public static void initializeScheduleContents()
+    public static void updatePredatorActivity(Predator predator)
     {
-        new ScheduleBuilder(DIURNAL.get()).changeActivityAt(0, HUNT.get()).changeActivityAt(11000, Activity.REST).build();
-        new ScheduleBuilder(NOCTURNAL.get()).changeActivityAt(0, Activity.REST).changeActivityAt(11000, HUNT.get()).build();
+        final Brain<?> brain = predator.getBrain();
+        brain.setActiveActivityIfPossible(scheduledPredatorActivity(predator.diurnal, predator.level().getOverworldClockTime()));
     }
 }
