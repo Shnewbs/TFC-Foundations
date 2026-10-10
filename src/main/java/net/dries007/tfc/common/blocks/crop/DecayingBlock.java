@@ -62,17 +62,6 @@ public class DecayingBlock extends ExtendedBlock implements EntityBlockExtension
         return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
     }
 
-    @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving)
-    {
-        final BlockEntity entity = level.getBlockEntity(pos);
-        if (entity instanceof DecayingBlockEntity decaying && !(Helpers.isBlock(state, newState.getBlock())))
-        {
-            Helpers.spawnItem(level, pos, decaying.getStack());
-        }
-        super.onRemove(state, level, pos, newState, isMoving);
-    }
-
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context)
