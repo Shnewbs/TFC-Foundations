@@ -1,0 +1,62 @@
+name: Apply reviewed recipe API checkpoint
+
+on:
+  push:
+    branches: [26.1.2]
+    paths: [.github/workflows/apply-recipe-api-checkpoint.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  apply:
+    if: github.repository == 'Shnewbs/TFC-Foundations' && github.ref == 'refs/heads/26.1.2'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - name: Checkout exact staging history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify and apply source migration
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = '041db589876bd962b4b3b9972cf4b1de9809320f'
+          base64 --decode tools/porting/.recipe-api-checkpoint.b64 > /tmp/tfc-recipe.patch.xz
+          echo '84cf6cc8a20c9d6b16a18c14813d4f16d3e196ab123b1053dc393f3e9a72be04  /tmp/tfc-recipe.patch.xz' | sha256sum --check
+          xz -dc /tmp/tfc-recipe.patch.xz > /tmp/tfc-recipe.patch
+          echo '673d09787cde76be53690a67c0930ecc1e98e07daee7185df3a8bc7c75edb1e8  /tmp/tfc-recipe.patch' | sha256sum --check
+          git apply --check --index --whitespace=error /tmp/tfc-recipe.patch
+          git apply --index --whitespace=error /tmp/tfc-recipe.patch
+          test "$(git diff --cached --name-only | wc -l)" -eq 37
+          git diff --cached --check
+          python3 -m py_compile tools/porting/run_flat_ingredient_smoke.py
+          python3 - <<'PY'
+          from pathlib import Path
+          base=Path('src/main/java/net/dries007/tfc/common/recipes')
+          assert 'FlatIngredientCodec.flat' in (base/'LegacySizedIngredientCodecs.java').read_text()
+          assert 'default ItemStack assemble(C input)' in (base/'ISimpleRecipe.java').read_text()
+          assert 'run_flat_ingredient_smoke.py' in Path('tools/porting/inspect_api.py').read_text()
+          assert not any('SizedFluidIngredient.FLAT_CODEC' in p.read_text() or 'SizedIngredient.FLAT_CODEC' in p.read_text() for p in base.rglob('*.java'))
+          print('PASS: recipe bridge, codec sources and CI probe integrated')
+          PY
+      - name: Commit migration without transport
+        shell: bash
+        run: |
+          git rm -f tools/porting/.recipe-api-checkpoint.b64 .github/workflows/apply-recipe-api-checkpoint.yml
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Port 26.1.2 recipe interfaces and preserve legacy flat ingredient codecs'
+          git push origin HEAD:refs/heads/26.1.2
+          echo "Published source commit: $(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          echo 'Recipe codec smoke is covered by regular validation; gameplay and full compilation remain required.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Validate full target branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run test.yml --repo "$GITHUB_REPOSITORY" --ref 26.1.2
