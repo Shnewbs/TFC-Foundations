@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.recipes;
 
+import net.minecraft.world.item.crafting.Recipe;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -120,7 +122,7 @@ public class SoupPotRecipe extends PotRecipe
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer()
+    public RecipeSerializer<? extends Recipe<IPotInventory>> getSerializer()
     {
         return TFCRecipeSerializers.POT_SOUP.get();
     }

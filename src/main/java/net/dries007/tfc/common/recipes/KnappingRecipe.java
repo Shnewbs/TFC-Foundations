@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.recipes;
 
+import net.dries007.tfc.common.recipes.input.NoopInput;
+
+import net.minecraft.world.item.crafting.Recipe;
+
 import java.util.Optional;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -95,20 +99,19 @@ public class KnappingRecipe implements INoopInputRecipe, IRecipePredicate<Knappi
         return ingredient.orElse(null);
     }
 
-    @Override
-    public ItemStack getResultItem(@Nullable HolderLookup.Provider registries)
+        public ItemStack getResultItem(@Nullable HolderLookup.Provider registries)
     {
         return result;
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer()
+    public RecipeSerializer<? extends Recipe<NoopInput>> getSerializer()
     {
         return TFCRecipeSerializers.KNAPPING.get();
     }
 
     @Override
-    public RecipeType<?> getType()
+    public RecipeType<? extends Recipe<NoopInput>> getType()
     {
         return TFCRecipeTypes.KNAPPING.get();
     }

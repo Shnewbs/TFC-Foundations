@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.recipes;
 
+import net.dries007.tfc.common.recipes.input.NoopInput;
+
+import net.minecraft.world.item.crafting.Recipe;
+
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -148,8 +152,7 @@ public class HeatingRecipe implements INoopInputRecipe, IRecipePredicate<ItemSta
         return ingredient;
     }
 
-    @Override
-    public ItemStack getResultItem(@Nullable HolderLookup.Provider registries)
+        public ItemStack getResultItem(@Nullable HolderLookup.Provider registries)
     {
         return outputItem.getEmptyStack();
     }
@@ -160,13 +163,13 @@ public class HeatingRecipe implements INoopInputRecipe, IRecipePredicate<ItemSta
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer()
+    public RecipeSerializer<? extends Recipe<NoopInput>> getSerializer()
     {
         return TFCRecipeSerializers.HEATING.get();
     }
 
     @Override
-    public RecipeType<?> getType()
+    public RecipeType<? extends Recipe<NoopInput>> getType()
     {
         return TFCRecipeTypes.HEATING.get();
     }

@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.recipes;
 
+import net.dries007.tfc.common.recipes.input.NoopInput;
+
+import net.minecraft.world.item.crafting.Recipe;
+
 import java.util.List;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -59,20 +63,19 @@ public record GlassworkingRecipe(
         return operations.equals(data.steps()) && batchItem.test(data.batch());
     }
 
-    @Override
-    public ItemStack getResultItem(@Nullable HolderLookup.Provider registries)
+        public ItemStack getResultItem(@Nullable HolderLookup.Provider registries)
     {
         return resultItem.copy();
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer()
+    public RecipeSerializer<? extends Recipe<NoopInput>> getSerializer()
     {
         return TFCRecipeSerializers.GLASSWORKING.get();
     }
 
     @Override
-    public RecipeType<?> getType()
+    public RecipeType<? extends Recipe<NoopInput>> getType()
     {
         return TFCRecipeTypes.GLASSWORKING.get();
     }

@@ -25,7 +25,7 @@ public class FoodCombiningCraftingRecipe extends CustomRecipe
 
     private FoodCombiningCraftingRecipe()
     {
-        super(CraftingBookCategory.MISC);
+        super();
     }
 
     @Override
@@ -66,7 +66,7 @@ public class FoodCombiningCraftingRecipe extends CustomRecipe
     }
 
     @Override
-    public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries)
+    public ItemStack assemble(CraftingInput input)
     {
         ItemStack resultStack = ItemStack.EMPTY;
         int outputAmount = 0;
@@ -112,14 +112,13 @@ public class FoodCombiningCraftingRecipe extends CustomRecipe
         return NonNullList.withSize(input.size(), ItemStack.EMPTY);
     }
 
-    @Override
-    public boolean canCraftInDimensions(int width, int height)
+        public boolean canCraftInDimensions(int width, int height)
     {
         return true;
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer()
+    public RecipeSerializer<FoodCombiningCraftingRecipe> getSerializer()
     {
         return TFCRecipeSerializers.FOOD_COMBINING_CRAFTING.get();
     }

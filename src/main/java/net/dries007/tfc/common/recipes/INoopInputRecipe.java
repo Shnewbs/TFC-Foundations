@@ -34,7 +34,6 @@ public interface INoopInputRecipe extends ISimpleRecipe<NoopInput>
         throw new UnsupportedOperationException();
     }
 
-    @Override
     @Contract("_ -> fail")
     default NonNullList<ItemStack> getRemainingItems(NoopInput input)
     {

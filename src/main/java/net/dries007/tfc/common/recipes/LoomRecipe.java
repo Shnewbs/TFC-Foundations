@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.recipes;
 
+import net.dries007.tfc.common.recipes.input.NoopInput;
+
+import net.minecraft.world.item.crafting.Recipe;
+
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -29,7 +33,7 @@ public class LoomRecipe implements INoopInputRecipe, IRecipePredicate<ItemStack>
     public static final IndirectHashCollection<Item, LoomRecipe> CACHE = IndirectHashCollection.createForRecipe(r -> RecipeHelpers.itemKeys(r.ingredient.ingredient()), TFCRecipeTypes.LOOM);
 
     public static final MapCodec<LoomRecipe> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-        SizedIngredient.FLAT_CODEC.fieldOf("ingredient").forGetter(c -> c.ingredient),
+        LegacySizedIngredientCodecs.FLAT_ITEM.fieldOf("ingredient").forGetter(c -> c.ingredient),
         ItemStackProvider.CODEC.fieldOf("result").forGetter(c -> c.result),
         Codec.INT.fieldOf("steps").forGetter(c -> c.steps),
         Identifier.CODEC.fieldOf("texture").forGetter(c -> c.inProgressTexture)
@@ -99,20 +103,19 @@ public class LoomRecipe implements INoopInputRecipe, IRecipePredicate<ItemStack>
         return steps;
     }
 
-    @Override
-    public ItemStack getResultItem(@Nullable HolderLookup.Provider registries)
+        public ItemStack getResultItem(@Nullable HolderLookup.Provider registries)
     {
         return result.getEmptyStack();
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer()
+    public RecipeSerializer<? extends Recipe<NoopInput>> getSerializer()
     {
         return TFCRecipeSerializers.LOOM.get();
     }
 
     @Override
-    public RecipeType<?> getType()
+    public RecipeType<? extends Recipe<NoopInput>> getType()
     {
         return TFCRecipeTypes.LOOM.get();
     }

@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.recipes;
 
+import net.dries007.tfc.common.recipes.input.NoopInput;
+
+import net.minecraft.world.item.crafting.Recipe;
+
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -123,20 +127,19 @@ public class ChiselRecipe implements INoopInputRecipe
         this.itemOutput = itemOutput;
     }
 
-    @Override
-    public ItemStack getResultItem(@Nullable HolderLookup.Provider registries)
+        public ItemStack getResultItem(@Nullable HolderLookup.Provider registries)
     {
         return new ItemStack(output.getBlock());
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer()
+    public RecipeSerializer<? extends Recipe<NoopInput>> getSerializer()
     {
         return TFCRecipeSerializers.CHISEL.get();
     }
 
     @Override
-    public RecipeType<?> getType()
+    public RecipeType<? extends Recipe<NoopInput>> getType()
     {
         return TFCRecipeTypes.CHISEL.get();
     }

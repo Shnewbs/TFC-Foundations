@@ -10,16 +10,49 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
+import net.minecraft.world.item.crafting.RecipeBookCategories;
+import net.minecraft.world.item.crafting.PlacementInfo;
 
 /**
  * A simple set of implementations for {@link Recipe}, that skips some of the more unused methods for non-crafting uses.
  */
 public interface ISimpleRecipe<C extends RecipeInput> extends Recipe<C>
 {
+    // TFC machine recipes are processed by their owning machines, not vanilla's recipe book.
     @Override
-    default boolean canCraftInDimensions(int width, int height)
+    default PlacementInfo placementInfo()
     {
-        return true;
+        return PlacementInfo.NOT_PLACEABLE;
+    }
+
+    @Override
+    default RecipeBookCategory recipeBookCategory()
+    {
+        return RecipeBookCategories.CRAFTING_MISC;
+    }
+
+    @Override
+    default String group()
+    {
+        return "";
+    }
+
+    @Override
+    default boolean showNotification()
+    {
+        return false;
+    }
+
+    // Keep the old registry-aware entry point for machines that still call it directly.
+    ItemStack assemble(C input, HolderLookup.Provider registries);
+
+    @Override
+    default ItemStack assemble(C input)
+    {
+        // Every supported TFC machine implementation is registry-independent;
+        // the registry-dependent data is already decoded when the recipe is loaded.
+        return assemble(input, null);
     }
 
     /**
@@ -33,7 +66,6 @@ public interface ISimpleRecipe<C extends RecipeInput> extends Recipe<C>
         return true;
     }
 
-    @Override
     default ItemStack getResultItem(HolderLookup.Provider registries)
     {
         return ItemStack.EMPTY;

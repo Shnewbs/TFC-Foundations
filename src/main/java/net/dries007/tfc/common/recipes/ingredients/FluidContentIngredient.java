@@ -29,7 +29,7 @@ import net.dries007.tfc.util.Helpers;
 
 public record FluidContentIngredient(SizedFluidIngredient fluid) implements ICustomIngredient
 {
-    public static final MapCodec<FluidContentIngredient> CODEC = SizedFluidIngredient.FLAT_CODEC.fieldOf("fluid").xmap(FluidContentIngredient::new, FluidContentIngredient::fluid);
+    public static final MapCodec<FluidContentIngredient> CODEC = net.dries007.tfc.common.recipes.LegacySizedIngredientCodecs.FLAT_FLUID.fieldOf("fluid").xmap(FluidContentIngredient::new, FluidContentIngredient::fluid);
     public static final StreamCodec<RegistryFriendlyByteBuf, FluidContentIngredient> STREAM_CODEC = SizedFluidIngredient.STREAM_CODEC.map(FluidContentIngredient::new, FluidContentIngredient::fluid);
 
     public static Ingredient of(Fluid fluid, int amount)

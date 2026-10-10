@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.recipes;
 
+import net.minecraft.world.item.crafting.Recipe;
+
 import java.util.ArrayList;
 import java.util.List;
 import com.mojang.serialization.Codec;
@@ -105,7 +107,7 @@ public class SimplePotRecipe extends PotRecipe
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer()
+    public RecipeSerializer<? extends Recipe<IPotInventory>> getSerializer()
     {
         return TFCRecipeSerializers.POT_SIMPLE.get();
     }

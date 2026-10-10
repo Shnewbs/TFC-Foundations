@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.recipes;
 
+import net.dries007.tfc.common.recipes.input.NoopInput;
+
+import net.minecraft.world.item.crafting.Recipe;
+
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -35,6 +39,7 @@ import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.common.blockentities.BarrelBlockEntity;
@@ -48,8 +53,8 @@ import net.dries007.tfc.util.Helpers;
 public class BarrelRecipe implements INoopInputRecipe, IRecipePredicate<BarrelInventory>
 {
     public static final MapCodec<BarrelRecipe> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-        SizedIngredient.FLAT_CODEC.optionalFieldOf("input_item").forGetter(c -> c.inputItem),
-        SizedFluidIngredient.FLAT_CODEC.fieldOf("input_fluid").forGetter(c -> c.inputFluid),
+        LegacySizedIngredientCodecs.FLAT_ITEM.optionalFieldOf("input_item").forGetter(c -> c.inputItem),
+        LegacySizedIngredientCodecs.FLAT_FLUID.fieldOf("input_fluid").forGetter(c -> c.inputFluid),
         ItemStackProvider.CODEC.optionalFieldOf("output_item", ItemStackProvider.empty()).forGetter(c -> c.outputItem),
         FluidStack.CODEC.optionalFieldOf("output_fluid", FluidStack.EMPTY).forGetter(c -> c.outputFluid),
         SoundEvent.CODEC.optionalFieldOf("sound", Holder.direct(SoundEvents.BREWING_STAND_BREW)).forGetter(c -> c.sound)
@@ -175,20 +180,19 @@ public class BarrelRecipe implements INoopInputRecipe, IRecipePredicate<BarrelIn
         return outputItem.getEmptyStack();
     }
 
-    @Override
-    public ItemStack getResultItem(@Nullable HolderLookup.Provider provider)
+        public ItemStack getResultItem(@Nullable HolderLookup.Provider provider)
     {
         return outputItem.getEmptyStack();
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer()
+    public RecipeSerializer<? extends Recipe<NoopInput>> getSerializer()
     {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public RecipeType<?> getType()
+    public RecipeType<? extends Recipe<NoopInput>> getType()
     {
         throw new UnsupportedOperationException();
     }
@@ -237,7 +241,7 @@ public class BarrelRecipe implements INoopInputRecipe, IRecipePredicate<BarrelIn
 
         public Builder input(ItemLike item) {return input(SizedIngredient.of(item, 1));}
 
-        public Builder input(TagKey<Item> item) {return input(SizedIngredient.of(item, 1));}
+        public Builder input(TagKey<Item> item) {return input(new SizedIngredient(Ingredient.of(BuiltInRegistries.ITEM.getOrThrow(item)), 1));}
 
         public Builder input(Ingredient item) {return input(new SizedIngredient(item, 1));}
 
@@ -247,7 +251,7 @@ public class BarrelRecipe implements INoopInputRecipe, IRecipePredicate<BarrelIn
             return this;
         }
 
-        public Builder input(TagKey<Fluid> fluid, int amount) {return input(SizedFluidIngredient.of(fluid, amount));}
+        public Builder input(TagKey<Fluid> fluid, int amount) {return input(new SizedFluidIngredient(FluidIngredient.of(BuiltInRegistries.FLUID.getOrThrow(fluid)), amount));}
 
         public Builder input(Fluid fluid, int amount) {return input(SizedFluidIngredient.of(fluid, amount));}
 

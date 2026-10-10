@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.recipes;
 
+import net.minecraft.world.item.crafting.Recipe;
+
 import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
@@ -138,20 +140,19 @@ public class SewingRecipe implements ISimpleRecipe<SewingTableContainer.Input>
         return result.copy();
     }
 
-    @Override
-    public ItemStack getResultItem(HolderLookup.Provider registries)
+        public ItemStack getResultItem(HolderLookup.Provider registries)
     {
         return result.copy();
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer()
+    public RecipeSerializer<SewingRecipe> getSerializer()
     {
         return TFCRecipeSerializers.SEWING.get();
     }
 
     @Override
-    public RecipeType<?> getType()
+    public RecipeType<SewingRecipe> getType()
     {
         return TFCRecipeTypes.SEWING.get();
     }

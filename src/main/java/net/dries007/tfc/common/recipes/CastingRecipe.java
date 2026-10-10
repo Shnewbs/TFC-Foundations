@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.recipes;
 
+import net.dries007.tfc.common.recipes.input.NoopInput;
+
+import net.minecraft.world.item.crafting.Recipe;
+
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -31,7 +35,7 @@ public class CastingRecipe implements INoopInputRecipe, IRecipePredicate<IMold>
 {
     public static final MapCodec<CastingRecipe> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
         Ingredient.CODEC.fieldOf("mold").forGetter(c -> c.ingredient),
-        SizedFluidIngredient.FLAT_CODEC.fieldOf("fluid").forGetter(c -> c.fluidIngredient),
+        LegacySizedIngredientCodecs.FLAT_FLUID.fieldOf("fluid").forGetter(c -> c.fluidIngredient),
         ItemStackProvider.CODEC.fieldOf("result").forGetter(c -> c.result),
         Codec.FLOAT.optionalFieldOf("break_chance", 1f).forGetter(c -> c.breakChance)
     ).apply(i, CastingRecipe::new));
@@ -109,20 +113,19 @@ public class CastingRecipe implements INoopInputRecipe, IRecipePredicate<IMold>
         return result.getEmptyStack();
     }
 
-    @Override
-    public ItemStack getResultItem(HolderLookup.Provider registries)
+        public ItemStack getResultItem(HolderLookup.Provider registries)
     {
         return result.getEmptyStack();
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer()
+    public RecipeSerializer<? extends Recipe<NoopInput>> getSerializer()
     {
         return TFCRecipeSerializers.CASTING.get();
     }
 
     @Override
-    public RecipeType<?> getType()
+    public RecipeType<? extends Recipe<NoopInput>> getType()
     {
         return TFCRecipeTypes.CASTING.get();
     }

@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.recipes;
 
+import net.minecraft.world.item.crafting.Recipe;
+
 import java.util.List;
 import com.google.common.collect.BiMap;
 import com.mojang.serialization.Codec;
@@ -148,20 +150,19 @@ public class AnvilRecipe implements ISimpleRecipe<AnvilRecipe.Inventory>
         return output.getStack(input.getItem());
     }
 
-    @Override
-    public ItemStack getResultItem(@Nullable HolderLookup.Provider registries)
+        public ItemStack getResultItem(@Nullable HolderLookup.Provider registries)
     {
         return output.getEmptyStack();
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer()
+    public RecipeSerializer<AnvilRecipe> getSerializer()
     {
         return TFCRecipeSerializers.ANVIL.get();
     }
 
     @Override
-    public RecipeType<?> getType()
+    public RecipeType<AnvilRecipe> getType()
     {
         return TFCRecipeTypes.ANVIL.get();
     }

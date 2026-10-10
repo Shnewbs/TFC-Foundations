@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.recipes;
 
+import net.dries007.tfc.common.recipes.input.NoopInput;
+
+import net.minecraft.world.item.crafting.Recipe;
+
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -26,8 +30,8 @@ import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
 public class BloomeryRecipe implements INoopInputRecipe
 {
     public static final MapCodec<BloomeryRecipe> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-        SizedFluidIngredient.FLAT_CODEC.fieldOf("fluid").forGetter(c -> c.inputFluid),
-        SizedIngredient.FLAT_CODEC.fieldOf("catalyst").forGetter(c -> c.catalyst),
+        LegacySizedIngredientCodecs.FLAT_FLUID.fieldOf("fluid").forGetter(c -> c.inputFluid),
+        LegacySizedIngredientCodecs.FLAT_ITEM.fieldOf("catalyst").forGetter(c -> c.catalyst),
         ItemStackProvider.CODEC.fieldOf("result").forGetter(c -> c.result),
         Codec.INT.fieldOf("duration").forGetter(c -> c.duration)
     ).apply(i, BloomeryRecipe::new));
@@ -115,20 +119,19 @@ public class BloomeryRecipe implements INoopInputRecipe
         return result.getEmptyStack();
     }
 
-    @Override
-    public ItemStack getResultItem(HolderLookup.Provider registries)
+        public ItemStack getResultItem(HolderLookup.Provider registries)
     {
         return result.getEmptyStack();
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer()
+    public RecipeSerializer<? extends Recipe<NoopInput>> getSerializer()
     {
         return TFCRecipeSerializers.BLOOMERY.get();
     }
 
     @Override
-    public RecipeType<?> getType()
+    public RecipeType<? extends Recipe<NoopInput>> getType()
     {
         return TFCRecipeTypes.BLOOMERY.get();
     }

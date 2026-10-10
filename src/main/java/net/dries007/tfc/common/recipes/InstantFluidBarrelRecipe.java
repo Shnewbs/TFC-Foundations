@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.recipes;
 
+import net.dries007.tfc.common.recipes.input.NoopInput;
+
+import net.minecraft.world.item.crafting.Recipe;
+
 import java.util.Optional;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -35,8 +39,8 @@ import net.dries007.tfc.util.Helpers;
 public class InstantFluidBarrelRecipe extends BarrelRecipe
 {
     public static final MapCodec<InstantFluidBarrelRecipe> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-        SizedFluidIngredient.FLAT_CODEC.fieldOf("primary_fluid").forGetter(c -> c.inputFluid),
-        SizedFluidIngredient.FLAT_CODEC.fieldOf("added_fluid").forGetter(c -> c.addedFluid),
+        LegacySizedIngredientCodecs.FLAT_FLUID.fieldOf("primary_fluid").forGetter(c -> c.inputFluid),
+        LegacySizedIngredientCodecs.FLAT_FLUID.fieldOf("added_fluid").forGetter(c -> c.addedFluid),
         FluidStack.CODEC.optionalFieldOf("output_fluid", FluidStack.EMPTY).forGetter(c -> c.outputFluid),
         SoundEvent.CODEC.optionalFieldOf("sound", Holder.direct(SoundEvents.BREWING_STAND_BREW)).forGetter(c -> c.sound)
     ).apply(i, InstantFluidBarrelRecipe::new));
@@ -141,13 +145,13 @@ public class InstantFluidBarrelRecipe extends BarrelRecipe
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer()
+    public RecipeSerializer<? extends Recipe<NoopInput>> getSerializer()
     {
         return TFCRecipeSerializers.INSTANT_FLUID_BARREL.get();
     }
 
     @Override
-    public RecipeType<?> getType()
+    public RecipeType<? extends Recipe<NoopInput>> getType()
     {
         return TFCRecipeTypes.BARREL_INSTANT_FLUID.get();
     }

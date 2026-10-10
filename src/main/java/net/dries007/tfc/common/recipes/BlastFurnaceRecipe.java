@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.recipes;
 
+import net.dries007.tfc.common.recipes.input.NoopInput;
+
+import net.minecraft.world.item.crafting.Recipe;
+
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -28,7 +32,7 @@ public record BlastFurnaceRecipe(
 ) implements INoopInputRecipe, IRecipePredicate<FluidStack>
 {
     public static final MapCodec<BlastFurnaceRecipe> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-        SizedFluidIngredient.FLAT_CODEC.fieldOf("fluid").forGetter(c -> c.inputFluid),
+        LegacySizedIngredientCodecs.FLAT_FLUID.fieldOf("fluid").forGetter(c -> c.inputFluid),
         Ingredient.CODEC.fieldOf("catalyst").forGetter(c -> c.catalyst),
         FluidStack.CODEC.fieldOf("result").forGetter(c -> c.outputFluid)
     ).apply(i, BlastFurnaceRecipe::new));
@@ -109,13 +113,13 @@ public record BlastFurnaceRecipe(
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer()
+    public RecipeSerializer<? extends Recipe<NoopInput>> getSerializer()
     {
         return TFCRecipeSerializers.BLAST_FURNACE.get();
     }
 
     @Override
-    public RecipeType<?> getType()
+    public RecipeType<? extends Recipe<NoopInput>> getType()
     {
         return TFCRecipeTypes.BLAST_FURNACE.get();
     }

@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.recipes;
 
+import net.minecraft.world.item.crafting.Recipe;
+
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
@@ -65,8 +67,7 @@ public class JamPotRecipe extends PotRecipe
         this.texture = texture;
     }
 
-    @Override
-    public ItemStack getResultItem(HolderLookup.Provider registries)
+        public ItemStack getResultItem(HolderLookup.Provider registries)
     {
         return jarredStackWithLid;
     }
@@ -84,7 +85,7 @@ public class JamPotRecipe extends PotRecipe
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer()
+    public RecipeSerializer<? extends Recipe<IPotInventory>> getSerializer()
     {
         return TFCRecipeSerializers.POT_JAM.get();
     }

@@ -19,6 +19,10 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -59,7 +63,10 @@ public class AdvancedShapedRecipe extends ShapedRecipe
 
     public AdvancedShapedRecipe(ShapedRecipePattern pattern, boolean showNotification, ItemStackProvider result, Optional<ItemStackProvider> remainder, int inputRow, int inputColumn)
     {
-        super("", CraftingBookCategory.MISC, pattern, ItemStack.EMPTY, showNotification);
+        // Vanilla 26.1.2 uses metadata records and an immutable output template.
+        // The actual dynamic TFC output is computed in assemble(), not from that template.
+        super(new Recipe.CommonInfo(showNotification), new CraftingRecipe.CraftingBookInfo(CraftingBookCategory.MISC, ""),
+            pattern, new ItemStackTemplate(Items.AIR));
 
         this.result = result;
         this.remainder = remainder;
@@ -69,7 +76,7 @@ public class AdvancedShapedRecipe extends ShapedRecipe
     }
 
     @Override
-    public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries)
+    public ItemStack assemble(CraftingInput input)
     {
         RecipeHelpers.setCraftingInput(input);
         final int matchSlot = RecipeHelpers.translateMatch(this, inputSlot, input);
@@ -79,8 +86,7 @@ public class AdvancedShapedRecipe extends ShapedRecipe
         return output;
     }
 
-    @Override
-    public ItemStack getResultItem(HolderLookup.Provider registries)
+        public ItemStack getResultItem(HolderLookup.Provider registries)
     {
         return result.getEmptyStack();
     }
@@ -106,9 +112,12 @@ public class AdvancedShapedRecipe extends ShapedRecipe
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer()
+    @SuppressWarnings("unchecked")
+    public RecipeSerializer<ShapedRecipe> getSerializer()
     {
-        return TFCRecipeSerializers.ADVANCED_SHAPED_CRAFTING.get();
+        // Vanilla's concrete ShapedRecipe return is invariant even for recipe subclasses.
+        // The registered serializer still encodes only AdvancedShapedRecipe instances.
+        return (RecipeSerializer<ShapedRecipe>) (RecipeSerializer<?>) TFCRecipeSerializers.ADVANCED_SHAPED_CRAFTING.get();
     }
 
     @VisibleForTesting

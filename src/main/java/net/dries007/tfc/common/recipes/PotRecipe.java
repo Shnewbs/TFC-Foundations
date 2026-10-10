@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.recipes;
 
+import net.minecraft.world.item.crafting.Recipe;
+
 import java.util.ArrayList;
 import java.util.List;
 import com.mojang.serialization.Codec;
@@ -33,7 +35,7 @@ public class PotRecipe implements ISimpleRecipe<IPotInventory>
 {
     public static final MapCodec<PotRecipe> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
         Ingredient.CODEC.listOf(0, 5).fieldOf("ingredients").forGetter(c -> c.itemIngredients),
-        SizedFluidIngredient.FLAT_CODEC.fieldOf("fluid_ingredient").forGetter(c -> c.fluidIngredient),
+        LegacySizedIngredientCodecs.FLAT_FLUID.fieldOf("fluid_ingredient").forGetter(c -> c.fluidIngredient),
         Codec.INT.fieldOf("duration").forGetter(c -> c.duration),
         Codec.FLOAT.fieldOf("temperature").forGetter(c -> c.temperature)
     ).apply(i, PotRecipe::new));
@@ -90,13 +92,13 @@ public class PotRecipe implements ISimpleRecipe<IPotInventory>
     }
 
     @Override
-    public RecipeType<?> getType()
+    public RecipeType<? extends Recipe<IPotInventory>> getType()
     {
         return TFCRecipeTypes.POT.get();
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer()
+    public RecipeSerializer<? extends Recipe<IPotInventory>> getSerializer()
     {
         throw new UnsupportedOperationException();
     }

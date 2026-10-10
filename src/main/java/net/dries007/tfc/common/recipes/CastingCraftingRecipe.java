@@ -26,7 +26,7 @@ public class CastingCraftingRecipe extends CustomRecipe
 
     private CastingCraftingRecipe()
     {
-        super(CraftingBookCategory.MISC);
+        super();
     }
 
     @Override
@@ -37,7 +37,7 @@ public class CastingCraftingRecipe extends CustomRecipe
     }
 
     @Override
-    public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries)
+    public ItemStack assemble(CraftingInput input)
     {
         final IMold mold = getMold(input);
         if (mold != null)
@@ -51,8 +51,7 @@ public class CastingCraftingRecipe extends CustomRecipe
         return ItemStack.EMPTY;
     }
 
-    @Override
-    public boolean canCraftInDimensions(int width, int height)
+        public boolean canCraftInDimensions(int width, int height)
     {
         return true;
     }
@@ -85,7 +84,7 @@ public class CastingCraftingRecipe extends CustomRecipe
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer()
+    public RecipeSerializer<CastingCraftingRecipe> getSerializer()
     {
         return TFCRecipeSerializers.CASTING_CRAFTING.get();
     }

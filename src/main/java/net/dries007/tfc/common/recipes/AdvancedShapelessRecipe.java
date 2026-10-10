@@ -20,6 +20,10 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -40,7 +44,7 @@ public class AdvancedShapelessRecipe extends ShapelessRecipe
 {
     public static final MapCodec<AdvancedShapelessRecipe> CODEC = RecordCodecBuilder.<AdvancedShapelessRecipe>mapCodec(i -> i.group(
         // This part of the codec is identical to the shapeless recipe codec
-        Ingredient.CODEC_NONEMPTY
+        Ingredient.CODEC
             .listOf()
             .fieldOf("ingredients")
             .flatXmap(list -> {
@@ -50,9 +54,9 @@ public class AdvancedShapelessRecipe extends ShapelessRecipe
                     ? DataResult.error(() -> "No ingredients for shapeless recipe")
                     : values.length > length
                         ? DataResult.error(() -> "Too many ingredients for shapeless recipe. The maximum is: %s".formatted(length))
-                        : DataResult.success(NonNullList.of(Ingredient.EMPTY, values));
+                        : DataResult.success(NonNullList.copyOf(list));
             }, DataResult::success)
-            .forGetter(ShapelessRecipe::getIngredients),
+            .forGetter(AdvancedShapelessRecipe::getIngredients),
         ItemStackProvider.CODEC.fieldOf("result").forGetter(c -> c.result),
         ItemStackProvider.CODEC.optionalFieldOf("remainder").forGetter(c -> c.remainder),
         Ingredient.CODEC.optionalFieldOf("primary_ingredient").forGetter(c -> c.primaryIngredient)
@@ -61,20 +65,24 @@ public class AdvancedShapelessRecipe extends ShapelessRecipe
     public static final StreamCodec<RegistryFriendlyByteBuf, AdvancedShapelessRecipe> STREAM_CODEC = StreamCodec.composite(
         Ingredient.CONTENTS_STREAM_CODEC
             .apply(ByteBufCodecs.list())
-            .map(NonNullList::copyOf, Function.identity()), ShapelessRecipe::getIngredients,
+            .map(NonNullList::copyOf, Function.identity()), AdvancedShapelessRecipe::getIngredients,
         ItemStackProvider.STREAM_CODEC, c -> c.result,
         ByteBufCodecs.optional(ItemStackProvider.STREAM_CODEC), c -> c.remainder,
         ByteBufCodecs.optional(Ingredient.CONTENTS_STREAM_CODEC), c -> c.primaryIngredient,
         AdvancedShapelessRecipe::new
     );
 
+    private final NonNullList<Ingredient> originalIngredients;
     private final ItemStackProvider result;
     private final Optional<ItemStackProvider> remainder;
     private final Optional<Ingredient> primaryIngredient;
 
     public AdvancedShapelessRecipe(NonNullList<Ingredient> ingredients, ItemStackProvider result, Optional<ItemStackProvider> remainder, Optional<Ingredient> primaryIngredient)
     {
-        super("", CraftingBookCategory.MISC, ItemStack.EMPTY, ingredients);
+        super(new Recipe.CommonInfo(true), new CraftingRecipe.CraftingBookInfo(CraftingBookCategory.MISC, ""),
+            new ItemStackTemplate(Items.AIR), ingredients);
+
+        this.originalIngredients = NonNullList.copyOf(ingredients);
 
         this.result = result;
         this.remainder = remainder;
@@ -82,7 +90,7 @@ public class AdvancedShapelessRecipe extends ShapelessRecipe
     }
 
     @Override
-    public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries)
+    public ItemStack assemble(CraftingInput input)
     {
         RecipeHelpers.setCraftingInput(input);
         final ItemStack output = result.getSingleStack(getPrimaryInput(input).copy());
@@ -90,8 +98,7 @@ public class AdvancedShapelessRecipe extends ShapelessRecipe
         return output;
     }
 
-    @Override
-    public ItemStack getResultItem(HolderLookup.Provider registries)
+        public ItemStack getResultItem(HolderLookup.Provider registries)
     {
         return result.getEmptyStack();
     }
@@ -106,6 +113,13 @@ public class AdvancedShapelessRecipe extends ShapelessRecipe
                 return remain;
             })
             .orElseGet(() -> super.getRemainingItems(input));
+    }
+
+    // The native ShapelessRecipe no longer exposes the original ingredient list.
+    // Preserve it for TFC transfer UIs and our custom codec.
+    public NonNullList<Ingredient> getIngredients()
+    {
+        return NonNullList.copyOf(originalIngredients);
     }
 
     private ItemStack getPrimaryInput(CraftingInput input)
@@ -129,9 +143,11 @@ public class AdvancedShapelessRecipe extends ShapelessRecipe
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer()
+    @SuppressWarnings("unchecked")
+    public RecipeSerializer<ShapelessRecipe> getSerializer()
     {
-        return TFCRecipeSerializers.ADVANCED_SHAPELESS_CRAFTING.get();
+        // The inherited vanilla serializer signature is invariant.
+        return (RecipeSerializer<ShapelessRecipe>) (RecipeSerializer<?>) TFCRecipeSerializers.ADVANCED_SHAPELESS_CRAFTING.get();
     }
 
     public ItemStackProvider getResult()

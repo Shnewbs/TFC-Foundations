@@ -46,7 +46,6 @@ public abstract class ItemRecipe implements INoopInputRecipe, IRecipePredicate<I
         return result.getSingleStack(input);
     }
 
-    @Override
     public ItemStack getResultItem(@Nullable HolderLookup.Provider registries)
     {
         return result.getEmptyStack();
