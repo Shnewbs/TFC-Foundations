@@ -27,6 +27,27 @@ val modJavaVersion: String = "25"
 val modIsInCI: Boolean = providers.environmentVariable("CI").map { it == "true" }.getOrElse(false)
 val modDataOutput: String = "src/generated/resources"
 
+// MC 26.x requires assets/tfc/items/<id>.json selectors in addition to
+// models/item/<id>.json. Generate only static model selectors: custom loaders,
+// legacy override predicates and tinted geometry need target-specific adapters.
+val generatedItemSelectorsRoot = layout.buildDirectory.dir("generated/tfcItemSelectors")
+val generateTfcItemSelectors = tasks.register<Exec>("generateTfcItemSelectors") {
+    inputs.dir("src/main/resources/assets/tfc/models/item")
+    inputs.file("tools/porting/generate_item_selectors.py")
+    outputs.dir(generatedItemSelectorsRoot)
+    outputs.file(layout.buildDirectory.file("reports/tfcItemSelectors.json"))
+    commandLine(
+        "python3", "tools/porting/generate_item_selectors.py",
+        "--output", generatedItemSelectorsRoot.get().asFile.absolutePath,
+        "--report", layout.buildDirectory.file("reports/tfcItemSelectors.json").get().asFile.absolutePath
+    )
+}
+
+tasks.named<ProcessResources>("processResources") {
+    dependsOn(generateTfcItemSelectors)
+    from(generatedItemSelectorsRoot)
+}
+
 
 val generateModMetadata = tasks.register<ProcessResources>("generateModMetadata") {
     val modReplacementProperties = mapOf(
