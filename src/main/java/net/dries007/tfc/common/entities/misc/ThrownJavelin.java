@@ -84,7 +84,7 @@ public class ThrownJavelin extends AbstractArrow
         }
 
         this.dealtDamage = true;
-        if (entity.hurt(src, dmg))
+        if (level instanceof ServerLevel server && entity.hurtServer(server, src, dmg))
         {
             if (entity.getType() == EntityType.ENDERMAN)
             {
