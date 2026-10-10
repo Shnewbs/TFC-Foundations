@@ -189,7 +189,7 @@ public class GlassBlowpipeItem extends BlowpipeItem
                 {
                     final boolean broken = consumeBlowpipe(player, player.getUsedItemHand(), stack);
                     ItemHandlerHelper.giveItemToPlayer(player, recipe.getResultItem(level.registryAccess()).copy());
-                    level.playSound(null, player.blockPosition(), broken ? SoundEvents.ITEM_BREAK : SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.PLAYERS);
+                    level.playSound(null, player.blockPosition(), broken ? SoundEvents.ITEM_BREAK.value() : SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.PLAYERS);
                 }
             }
             player.awardStat(Stats.ITEM_USED.get(stack.getItem()));

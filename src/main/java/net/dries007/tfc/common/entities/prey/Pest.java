@@ -114,7 +114,7 @@ public class Pest extends Prey
                         level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, held), getX(), getEyeY(), getZ(), Helpers.triangle(random), -random.nextFloat(), Helpers.triangle(random));
                     if (random.nextInt(20) == 0)
                     {
-                        playSound(SoundEvents.GENERIC_EAT, getSoundVolume(), getVoicePitch());
+                        playSound(SoundEvents.GENERIC_EAT.value(), getSoundVolume(), getVoicePitch());
                     }
                 }
                 if (dragTicks > (DRAG_TIME + EAT_TIME))

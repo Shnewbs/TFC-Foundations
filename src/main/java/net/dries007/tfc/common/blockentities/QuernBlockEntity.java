@@ -84,7 +84,7 @@ public class QuernBlockEntity extends TickableInventoryBlockEntity<ItemStackHand
             if (!quern.hasHandstone())
             {
                 Helpers.playSound(level, pos, SoundEvents.STONE_BREAK);
-                Helpers.playSound(level, pos, SoundEvents.ITEM_BREAK);
+                Helpers.playSound(level, pos, SoundEvents.ITEM_BREAK.value());
                 sendParticle(serverLevel, pos, undamagedHandstoneStack, 15);
             }
             quern.setAndUpdateSlots(SLOT_HANDSTONE);

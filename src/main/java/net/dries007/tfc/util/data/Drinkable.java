@@ -137,7 +137,7 @@ public record Drinkable(
         assert !level.isClientSide();
 
         info.onDrink();
-        level.playSound(null, pos, SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 1.0f, 1.0f);
+        level.playSound(null, pos, SoundEvents.GENERIC_DRINK.value(), SoundSource.PLAYERS, 1.0f, 1.0f);
 
         drinkable.onDrink(player, JUG_DRINK_MB);
 

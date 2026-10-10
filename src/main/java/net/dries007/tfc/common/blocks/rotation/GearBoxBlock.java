@@ -69,7 +69,7 @@ public class GearBoxBlock extends DeviceBlock implements DirectionPropertyBlock,
             }
             else
             {
-                Helpers.playSound(level, pos, SoundEvents.ITEM_BREAK);
+                Helpers.playSound(level, pos, SoundEvents.ITEM_BREAK.value());
                 return InteractionResult.FAIL;
             }
         }

@@ -129,7 +129,7 @@ public class TFCFishingHook extends FishingHook implements IEntityWithComplexSpa
                     player.sendOverlayMessage(Component.translatable("tfc.fishing.pulled_too_hard"));
                 }
                 eatBait();
-                playSound(SoundEvents.ITEM_BREAK, 1f, 0.5f + random.nextFloat());
+                playSound(SoundEvents.ITEM_BREAK.value(), 1f, 0.5f + random.nextFloat());
                 discard();
                 return 1;
             }
@@ -239,7 +239,7 @@ public class TFCFishingHook extends FishingHook implements IEntityWithComplexSpa
             {
                 use.remove(TFCComponents.BAIT);
             }
-            playSound(SoundEvents.GENERIC_EAT, 1f, 1f);
+            playSound(SoundEvents.GENERIC_EAT.value(), 1f, 1f);
         }
     }
 }

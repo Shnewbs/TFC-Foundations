@@ -75,7 +75,7 @@ public class TripHammerBlockEntity extends TickableInventoryBlockEntity<ItemStac
                     }
                     if (item.isEmpty())
                     {
-                        level.playSound(null, pos, SoundEvents.ITEM_BREAK, SoundSource.BLOCKS);
+                        level.playSound(null, pos, SoundEvents.ITEM_BREAK.value(), SoundSource.BLOCKS);
                     }
                     hammer.cooldownTicks = Mth.ceil(0.8f * Mth.TWO_PI / rotation.positiveSpeed());
                     // Update client if the hammer broke
