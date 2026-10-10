@@ -9,6 +9,7 @@ package net.dries007.tfc.common.blockentities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.dries007.tfc.util.Helpers;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
@@ -56,6 +57,19 @@ public class DecayingBlockEntity extends TFCBlockEntity
         {
             nbt.store("item", ItemStack.OPTIONAL_CODEC, stack);
         }
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state)
+    {
+        // Invoked while the block entity is still present, before the chunk removes it.
+        // Preserve the old decaying-block drop behavior without duplicating the stack.
+        if (level != null && !stack.isEmpty())
+        {
+            Helpers.spawnItem(level, pos, stack);
+            stack = ItemStack.EMPTY;
+        }
+        super.preRemoveSideEffects(pos, state);
     }
 
     public boolean isRotten()
