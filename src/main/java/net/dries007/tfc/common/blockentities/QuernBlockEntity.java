@@ -16,6 +16,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -119,7 +120,8 @@ public class QuernBlockEntity extends TickableInventoryBlockEntity<ItemStackHand
 
     private static void sendParticle(ServerLevel level, BlockPos pos, ItemStack item, int count)
     {
-        level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, item), pos.getX() + 0.5D, pos.getY() + 0.875D, pos.getZ() + 0.5D, count, Helpers.triangle(level.getRandom()) / 2.0D, level.getRandom().nextDouble() / 4.0D, Helpers.triangle(level.getRandom()) / 2.0D, 0.15f);
+        if (item.isEmpty()) return;
+        level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, ItemStackTemplate.fromNonEmptyStack(item)), pos.getX() + 0.5D, pos.getY() + 0.875D, pos.getZ() + 0.5D, count, Helpers.triangle(level.getRandom()) / 2.0D, level.getRandom().nextDouble() / 4.0D, Helpers.triangle(level.getRandom()) / 2.0D, 0.15f);
     }
 
     private final SinkNode node;

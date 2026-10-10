@@ -33,6 +33,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -161,9 +162,13 @@ public interface TFCAnimalProperties extends GenderedRenderAnimal, BrainAnimalBe
         final Level level = entity.level();
         final RandomSource random = entity.getRandom();
 
-        for (int i = 0; i < 5; i++)
+        if (!stack.isEmpty())
         {
-            level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), entity.getX() + 0.5, entity.getEyeY(), entity.getZ(), Helpers.triangle(random, 0.1f), Helpers.triangle(random, 0.1f), Helpers.triangle(random, 0.1f));
+            final ItemParticleOption particles = new ItemParticleOption(ParticleTypes.ITEM, ItemStackTemplate.fromNonEmptyStack(stack));
+            for (int i = 0; i < 5; i++)
+            {
+                level.addParticle(particles, entity.getX() + 0.5, entity.getEyeY(), entity.getZ(), Helpers.triangle(random, 0.1f), Helpers.triangle(random, 0.1f), Helpers.triangle(random, 0.1f));
+            }
         }
 
         entity.heal(1f);

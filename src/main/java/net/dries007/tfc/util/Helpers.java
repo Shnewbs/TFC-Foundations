@@ -23,6 +23,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -506,7 +507,7 @@ public final class Helpers
      */
     public static void damageItem(ItemStack stack, int amount, LivingEntity entity, InteractionHand hand)
     {
-        stack.hurtAndBreak(amount, entity, LivingEntity.getSlotForHand(hand));
+        stack.hurtAndBreak(amount, entity, (hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND));
     }
 
     /**
@@ -514,7 +515,7 @@ public final class Helpers
      */
     public static void damageItem(ItemStack stack, LivingEntity entity, InteractionHand hand)
     {
-        stack.hurtAndBreak(1, entity, LivingEntity.getSlotForHand(hand));
+        stack.hurtAndBreak(1, entity, (hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND));
     }
 
     /**
@@ -574,14 +575,14 @@ public final class Helpers
                 return;
             }
             Helpers.choosePest(level, pos).ifPresent(type -> {
-                final Entity entity = type.create(level);
+                final Entity entity = type.create(level, EntitySpawnReason.EVENT);
                 if (entity instanceof PathfinderMob mob && level instanceof ServerLevel serverLevel)
                 {
-                    mob.moveTo(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
+                    mob.snapTo(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
                     final Vec3 checkPos = LandRandomPos.getPos(mob, 15, 5);
                     if (checkPos != null)
                     {
-                        mob.moveTo(checkPos);
+                        mob.snapTo(checkPos);
                         EventHooks.finalizeMobSpawn(mob, serverLevel, serverLevel.getCurrentDifficultyAt(BlockPos.containing(checkPos)), EntitySpawnReason.EVENT, null);
                         serverLevel.addFreshEntity(mob);
                         if (mob instanceof Pest pest)
@@ -1740,7 +1741,7 @@ public final class Helpers
 
     public static Stream<Item> allItems(TagKey<Item> tag)
     {
-        return BuiltInRegistries.ITEM.getOrCreateTag(tag).stream().map(Holder::value);
+        return StreamSupport.stream(BuiltInRegistries.ITEM.getTagOrEmpty(tag).spliterator(), false).map(Holder::value);
     }
 
     public static boolean isBlock(BlockState block, Block other)
@@ -1766,7 +1767,7 @@ public final class Helpers
 
     public static Stream<Block> allBlocks(TagKey<Block> tag)
     {
-        return BuiltInRegistries.BLOCK.getOrCreateTag(tag).stream().map(Holder::value);
+        return StreamSupport.stream(BuiltInRegistries.BLOCK.getTagOrEmpty(tag).spliterator(), false).map(Holder::value);
     }
 
     public static boolean isFluid(FluidState state, TagKey<Fluid> tag)
@@ -1787,7 +1788,7 @@ public final class Helpers
 
     public static Stream<Fluid> allFluids(TagKey<Fluid> tag)
     {
-        return BuiltInRegistries.FLUID.getOrCreateTag(tag).stream().map(Holder::value);
+        return StreamSupport.stream(BuiltInRegistries.FLUID.getTagOrEmpty(tag).spliterator(), false).map(Holder::value);
     }
 
     public static boolean isEntity(Entity entity, TagKey<EntityType<?>> tag)
@@ -1797,7 +1798,7 @@ public final class Helpers
 
     public static boolean isEntity(EntityType<?> entity, TagKey<EntityType<?>> tag)
     {
-        return entity.is(tag);
+        return entity.builtInRegistryHolder().is(tag);
     }
 
     public static Optional<EntityType<?>> randomEntity(TagKey<EntityType<?>> tag, RandomSource random)
@@ -1812,7 +1813,8 @@ public final class Helpers
 
     private static <T> Optional<T> getRandomElement(Registry<T> registry, TagKey<T> tag, RandomSource random)
     {
-        return registry.getTag(tag).flatMap(set -> set.getRandomElement(random)).map(Holder::value);
+        final List<Holder<T>> values = StreamSupport.stream(registry.getTagOrEmpty(tag).spliterator(), false).toList();
+        return values.isEmpty() ? Optional.empty() : Optional.of(values.get(random.nextInt(values.size())).value());
     }
 
     /**

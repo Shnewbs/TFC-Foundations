@@ -9,6 +9,8 @@ package net.dries007.tfc.common.player;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
@@ -19,6 +21,7 @@ import net.minecraft.world.food.FoodProperties;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+import net.dries007.tfc.mixin.accessor.FoodDataAccessor;
 import net.dries007.tfc.common.TFCDamageTypes;
 import net.dries007.tfc.common.component.food.FoodData;
 import net.dries007.tfc.common.component.food.IFood;
@@ -70,6 +73,7 @@ public final class PlayerInfo extends net.minecraft.world.food.FoodData implemen
 
     private final Player player; // The player associated with this object
     private final net.minecraft.world.food.FoodData food; // The original player's food data
+    private int lastFoodLevel = MAX_HUNGER; // Retained for callers after vanilla removed the previous-tick getter
 
     private float thirst = MAX_THIRST; // The current thirst of the player
     private long lastDrinkTick = Long.MIN_VALUE;
@@ -249,7 +253,7 @@ public final class PlayerInfo extends net.minecraft.world.food.FoodData implemen
      * @param player The server player
      */
     @Override
-    public void tick(Player player)
+    public void tick(ServerPlayer player)
     {
         final Difficulty difficulty = player.level().getDifficulty();
         if (difficulty == Difficulty.PEACEFUL && TFCConfig.SERVER.enablePeacefulDifficultyPassiveRegeneration.get())
@@ -278,7 +282,7 @@ public final class PlayerInfo extends net.minecraft.world.food.FoodData implemen
             player.causeFoodExhaustion(PASSIVE_EXHAUSTION_PER_TICK * TFCConfig.SERVER.passiveExhaustionModifier.get().floatValue());
 
             // Same check as the original food stats, so hunger and thirst loss are synced
-            if (food.getExhaustionLevel() >= 4.0F)
+            if (((FoodDataAccessor) food).tfc$getExhaustionLevel() >= 4.0F)
             {
                 addThirst(-(TFCConfig.SERVER.thirstModifier.get().floatValue() * (1 + getThirstContributionFromTemperature())));
 
@@ -293,7 +297,7 @@ public final class PlayerInfo extends net.minecraft.world.food.FoodData implemen
             if (difficulty == Difficulty.PEACEFUL)
             {
                 // Copied from vanilla's food stats, so we consume food in peaceful mode (would normally be part of the super.tick call)
-                if (food.getExhaustionLevel() > 4.0F && getSaturationLevel() <= 0)
+                if (((FoodDataAccessor) food).tfc$getExhaustionLevel() > 4.0F && getSaturationLevel() <= 0)
                 {
                     setFoodLevel(Math.max(getFoodLevel() - 1, 0));
                 }
@@ -301,6 +305,7 @@ public final class PlayerInfo extends net.minecraft.world.food.FoodData implemen
         }
 
         // Next, tick the original food stats and update the hunger value in NutritionData
+        lastFoodLevel = getFoodLevel();
         food.tick(player);
         nutrition.setHungerAndUpdate(getFoodLevel());
 
@@ -322,8 +327,8 @@ public final class PlayerInfo extends net.minecraft.world.food.FoodData implemen
         {
             if (thirst < 10f)
             {
-                player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 160, 1, false, false));
-                player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 160, 1, false, false));
+                player.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 160, 1, false, false));
+                player.addEffect(new MobEffectInstance(MobEffects.MINING_FATIGUE, 160, 1, false, false));
                 if (thirst <= 0f)
                 {
                     // Hurt the player, same as starvation
@@ -332,8 +337,8 @@ public final class PlayerInfo extends net.minecraft.world.food.FoodData implemen
             }
             else if (thirst < 20f)
             {
-                player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 160, 0, false, false));
-                player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 160, 0, false, false));
+                player.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 160, 0, false, false));
+                player.addEffect(new MobEffectInstance(MobEffects.MINING_FATIGUE, 160, 0, false, false));
             }
         }
 
@@ -354,31 +359,33 @@ public final class PlayerInfo extends net.minecraft.world.food.FoodData implemen
     // ===== Serialization via FoodData ===== //
 
     @Override
-    public void readAdditionalSaveData(CompoundTag root)
+    public void readAdditionalSaveData(ValueInput input)
     {
-        final CompoundTag tag = root.getCompoundOrEmpty("tfc:food");
+        final CompoundTag tag = input.read("tfc:food", CompoundTag.CODEC).orElseGet(CompoundTag::new);
 
-        food.readAdditionalSaveData(root);
+        food.readAdditionalSaveData(input);
+        lastFoodLevel = getFoodLevel();
         lastDrinkTick = tag.getLongOr("lastDrinkTick", 0L);
         thirst = tag.getFloatOr("thirst", 0f);
-        chiselMode = ChiselMode.REGISTRY.get(Identifier.tryParse(tag.getStringOr("chiselMode", "")));
+        final Identifier chiselId = Identifier.tryParse(tag.getStringOr("chiselMode", "tfc:smooth"));
+        chiselMode = chiselId != null ? ChiselMode.REGISTRY.getValue(chiselId) : ChiselMode.SMOOTH.value();
         nutrition.setHunger(getFoodLevel());
         nutrition.readFromNbt(tag.get("nutrition"));
         intoxicationTick = tag.getLongOr("intoxication", 0L);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag root)
+    public void addAdditionalSaveData(ValueOutput output)
     {
         final CompoundTag tag = new CompoundTag();
 
-        root.put("tfc:food", tag);
-        food.addAdditionalSaveData(root);
+        food.addAdditionalSaveData(output);
         tag.putLong("lastDrinkTick", lastDrinkTick);
         tag.putFloat("thirst", thirst);
         tag.putString("chiselMode", ChiselMode.REGISTRY.getKey(chiselMode).toString());
         tag.put("nutrition", nutrition.writeToNbt());
         tag.putLong("intoxication", intoxicationTick);
+        output.store("tfc:food", CompoundTag.CODEC, tag);
     }
 
     @Override
@@ -402,10 +409,10 @@ public final class PlayerInfo extends net.minecraft.world.food.FoodData implemen
         return food.getFoodLevel();
     }
 
-    @Override
+    /** Previous-tick hunger snapshot retained for TFC integrations after vanilla removed the getter. */
     public int getLastFoodLevel()
     {
-        return food.getLastFoodLevel();
+        return lastFoodLevel;
     }
 
     @Override
@@ -421,10 +428,9 @@ public final class PlayerInfo extends net.minecraft.world.food.FoodData implemen
         food.addExhaustion(EXHAUSTION_MULTIPLIER * exhaustion);
     }
 
-    @Override
     public float getExhaustionLevel()
     {
-        return food.getExhaustionLevel();
+        return ((FoodDataAccessor) food).tfc$getExhaustionLevel();
     }
 
     @Override
@@ -455,10 +461,9 @@ public final class PlayerInfo extends net.minecraft.world.food.FoodData implemen
         food.setSaturation(saturationLevel);
     }
 
-    @Override
     public void setExhaustion(float exhaustionLevel)
     {
-        food.setExhaustion(exhaustionLevel);
+        ((FoodDataAccessor) food).tfc$setExhaustionLevel(exhaustionLevel);
     }
 
     // ===== Private Implementation Details ===== //

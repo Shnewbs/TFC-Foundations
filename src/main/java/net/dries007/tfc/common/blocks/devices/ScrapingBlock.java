@@ -22,6 +22,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -105,7 +106,9 @@ public class ScrapingBlock extends DeviceBlock
     {
         if (level instanceof ServerLevel server)
         {
-            server.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, scraping.getInventory().getStackInSlot(0)), pos.getX() + point.x, pos.getY() + 0.0625, pos.getZ() + point.z, 2, Helpers.triangle(level.getRandom()) / 2.0D, level.getRandom().nextDouble() / 4.0D, Helpers.triangle(level.getRandom()) / 2.0D, 0.15f);
+            final ItemStack scraped = scraping.getInventory().getStackInSlot(0);
+            if (scraped.isEmpty()) return;
+            server.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, ItemStackTemplate.fromNonEmptyStack(scraped)), pos.getX() + point.x, pos.getY() + 0.0625, pos.getZ() + point.z, 2, Helpers.triangle(level.getRandom()) / 2.0D, level.getRandom().nextDouble() / 4.0D, Helpers.triangle(level.getRandom()) / 2.0D, 0.15f);
         }
     }
 

@@ -45,6 +45,7 @@
     "accessor.ChunkMapAccessor",
     "accessor.FallingBlockEntityAccessor",
     "accessor.FlowingFluidAccessor",
+    "accessor.FoodDataAccessor",
     "accessor.HorseAccessor",
     "accessor.OcelotAccessor",
     "accessor.PatchedDataComponentMapAccessor",

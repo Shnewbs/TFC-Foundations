@@ -20,6 +20,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -146,7 +147,7 @@ public class StainedWattleBlock extends ExtendedBlock implements IGhostBlockHand
                     for (int i = 0; i < 5; i++)
                     {
                         Vec3 loc = hitResult.getLocation();
-                        level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, item), loc.x, loc.y, loc.z, Helpers.triangle(level.getRandom()) / 3, Helpers.triangle(level.getRandom()) / 3, Helpers.triangle(level.getRandom()) / 3);
+                        level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, ItemStackTemplate.fromNonEmptyStack(item)), loc.x, loc.y, loc.z, Helpers.triangle(level.getRandom()) / 3, Helpers.triangle(level.getRandom()) / 3, Helpers.triangle(level.getRandom()) / 3);
                     }
                 }
                 Helpers.playSound(level, pos, TFCSounds.WATTLE_DYED.get());

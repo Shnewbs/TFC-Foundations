@@ -7,8 +7,8 @@
 package net.dries007.tfc.common;
 
 import java.util.function.Supplier;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.ChunkAccess;
@@ -21,6 +21,7 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.mixin.accessor.ChunkAccessAccessor;
+import net.dries007.tfc.util.AttachmentValueIO;
 import net.dries007.tfc.util.registry.RegistryHolder;
 import net.dries007.tfc.util.tracker.WorldTracker;
 import net.dries007.tfc.world.ChunkGeneratorExtension;
@@ -39,39 +40,39 @@ public final class TFCAttachments
                 : null;
             return new ChunkData(generator, chunk.getPos());
         })
-        .serialize(new IAttachmentSerializer<CompoundTag, ChunkData>() {
+        .serialize(new IAttachmentSerializer<ChunkData>() {
             @Override
-            public ChunkData read(IAttachmentHolder holder, CompoundTag tag, HolderLookup.Provider provider)
+            public ChunkData read(IAttachmentHolder holder, ValueInput input)
             {
                 final ChunkData data = holder.getData(CHUNK_DATA);
-                data.deserializeNBT(tag);
+                data.deserializeNBT(AttachmentValueIO.read(input));
                 return data;
             }
 
             @Override
-            public CompoundTag write(ChunkData data, HolderLookup.Provider provider)
+            public boolean write(ChunkData data, ValueOutput output)
             {
-                return data.serializeNBT();
+                return AttachmentValueIO.write(output, data.serializeNBT());
             }
         })
         .build());
 
     public static final Id<WorldTracker> WORLD_TRACKER = register("world", () -> AttachmentType.builder(
         holder -> new WorldTracker((Level) holder))
-        .serialize(new IAttachmentSerializer<CompoundTag, WorldTracker>() {
+        .serialize(new IAttachmentSerializer<WorldTracker>() {
 
             @Override
-            public WorldTracker read(IAttachmentHolder holder, CompoundTag tag, HolderLookup.Provider provider)
+            public WorldTracker read(IAttachmentHolder holder, ValueInput input)
             {
                 final WorldTracker tracker = holder.getData(WORLD_TRACKER);
-                tracker.deserializeNBT(tag);
+                tracker.deserializeNBT(AttachmentValueIO.read(input));
                 return tracker;
             }
 
             @Override
-            public CompoundTag write(WorldTracker tracker, HolderLookup.Provider provider)
+            public boolean write(WorldTracker tracker, ValueOutput output)
             {
-                return tracker.serializeNBT();
+                return AttachmentValueIO.write(output, tracker.serializeNBT());
             }
         })
         .build());
