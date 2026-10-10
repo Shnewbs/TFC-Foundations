@@ -56,7 +56,7 @@ public class LeopardSeal extends AmphibiousAnimal
 
     public void playAmbientSound()
     {
-        if (!this.isInWaterOrBubble())
+        if (!this.isInWater())
         {
             super.playAmbientSound();
         }
