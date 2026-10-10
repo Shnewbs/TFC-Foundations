@@ -154,7 +154,6 @@ public final class TerraFirmaCraft
         TFCBrain.POI_TYPES.register(bus);
         TFCAdvancements.TRIGGERS.register(bus);
         TFCComponents.COMPONENTS.register(bus);
-        TFCArmorMaterials.ARMOR_MATERIALS.register(bus);
         TFCPoiTypes.TYPES.register(bus);
 
         // World Generation (vanilla)

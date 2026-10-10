@@ -13,8 +13,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import net.minecraft.core.Holder;
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.item.AnimalArmorItem;
-import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.item.equipment.ArmorMaterial;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.BlockItem;
@@ -183,7 +182,7 @@ public enum Metal implements StringRepresentable, RegistryMetal
     }
 
     @Override
-    public int armorDurability(ArmorItem.Type type)
+    public int armorDurability(ArmorType type)
     {
         Objects.requireNonNull(armorMaterial);
         return switch (type)
@@ -371,14 +370,14 @@ public enum Metal implements StringRepresentable, RegistryMetal
 
         // Armor
         UNFINISHED_HELMET(PartType.ALL, false),
-        HELMET(PartType.ALL, armor(ArmorItem.Type.HELMET)),
+        HELMET(PartType.ALL, armor(ArmorType.HELMET)),
         UNFINISHED_CHESTPLATE(PartType.ALL, false),
-        CHESTPLATE(PartType.ALL, armor(ArmorItem.Type.CHESTPLATE)),
+        CHESTPLATE(PartType.ALL, armor(ArmorType.CHESTPLATE)),
         UNFINISHED_GREAVES(PartType.ALL, false),
-        GREAVES(PartType.ALL, armor(ArmorItem.Type.LEGGINGS)),
+        GREAVES(PartType.ALL, armor(ArmorType.LEGGINGS)),
         UNFINISHED_BOOTS(PartType.ALL, false),
-        BOOTS(PartType.ALL, armor(ArmorItem.Type.BOOTS)),
-        HORSE_ARMOR(PartType.ALL, metal -> new AnimalArmorItem(metal.armorMaterial(), AnimalArmorItem.BodyType.EQUESTRIAN, false, base(metal).durability(metal.armorDurability(ArmorItem.Type.BODY)))),
+        BOOTS(PartType.ALL, armor(ArmorType.BOOTS)),
+        HORSE_ARMOR(PartType.ALL, metal -> new Item(base(metal).durability(metal.armorDurability(ArmorType.BODY)).horseArmor(metal.armorMaterial().value()))),
 
         SHIELD(PartType.ALL, metal -> new TFCShieldItem(metal.toolTier(), base(metal)));
 
@@ -392,9 +391,9 @@ public enum Metal implements StringRepresentable, RegistryMetal
             return base(metal).attributes(ToolItem.productAttributes(metal.toolTier(), attackDamageFactor, attackSpeed));
         }
 
-        private static Function<RegistryMetal, Item> armor(ArmorItem.Type type)
+        private static Function<RegistryMetal, Item> armor(ArmorType type)
         {
-            return metal -> new ArmorItem(metal.armorMaterial(), type, base(metal).durability(metal.armorDurability(type)));
+            return metal -> new Item(base(metal).durability(metal.armorDurability(type)).humanoidArmor(metal.armorMaterial().value(), type));
         }
 
         private final Function<RegistryMetal, Item> itemFactory;

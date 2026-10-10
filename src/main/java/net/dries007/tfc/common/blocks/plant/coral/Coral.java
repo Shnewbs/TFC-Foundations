@@ -39,12 +39,12 @@ public enum Coral
 
     public enum BlockType
     {
-        DEAD_CORAL((color, type) -> new TFCCoralPlantBlock(TFCCoralPlantBlock.BIG_SHAPE, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).requiresCorrectToolForDrops().noCollission().instabreak())),
-        CORAL((color, type) -> new LivingCoralPlantBlock(TFCCoralPlantBlock.BIG_SHAPE, TFCBlocks.CORAL.get(color).get(DEAD_CORAL), BlockBehaviour.Properties.of().mapColor(color.color).noCollission().instabreak().sound(SoundType.WET_GRASS))),
-        DEAD_CORAL_FAN((color, type) -> new TFCCoralPlantBlock(TFCCoralPlantBlock.SMALL_SHAPE, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).requiresCorrectToolForDrops().noCollission().instabreak())),
-        CORAL_FAN((color, type) -> new LivingCoralPlantBlock(TFCCoralPlantBlock.SMALL_SHAPE, TFCBlocks.CORAL.get(color).get(DEAD_CORAL_FAN), BlockBehaviour.Properties.of().mapColor(color.color).noCollission().instabreak().sound(SoundType.WET_GRASS))),
-        DEAD_CORAL_WALL_FAN((color, type) -> new CoralWallFanBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).requiresCorrectToolForDrops().noCollission().instabreak().lootFrom(TFCBlocks.CORAL.get(color).get(DEAD_CORAL_FAN)))),
-        CORAL_WALL_FAN((color, type) -> new LivingCoralWallFanBlock(TFCBlocks.CORAL.get(color).get(DEAD_CORAL_WALL_FAN), BlockBehaviour.Properties.of().mapColor(color.color).noCollission().instabreak().sound(SoundType.WET_GRASS).lootFrom(TFCBlocks.CORAL.get(color).get(CORAL_FAN))));
+        DEAD_CORAL((color, type) -> new TFCCoralPlantBlock(TFCCoralPlantBlock.BIG_SHAPE, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).requiresCorrectToolForDrops().noCollision().instabreak())),
+        CORAL((color, type) -> new LivingCoralPlantBlock(TFCCoralPlantBlock.BIG_SHAPE, TFCBlocks.CORAL.get(color).get(DEAD_CORAL), BlockBehaviour.Properties.of().mapColor(color.color).noCollision().instabreak().sound(SoundType.WET_GRASS))),
+        DEAD_CORAL_FAN((color, type) -> new TFCCoralPlantBlock(TFCCoralPlantBlock.SMALL_SHAPE, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).requiresCorrectToolForDrops().noCollision().instabreak())),
+        CORAL_FAN((color, type) -> new LivingCoralPlantBlock(TFCCoralPlantBlock.SMALL_SHAPE, TFCBlocks.CORAL.get(color).get(DEAD_CORAL_FAN), BlockBehaviour.Properties.of().mapColor(color.color).noCollision().instabreak().sound(SoundType.WET_GRASS))),
+        DEAD_CORAL_WALL_FAN((color, type) -> new CoralWallFanBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).requiresCorrectToolForDrops().noCollision().instabreak().lootFrom(TFCBlocks.CORAL.get(color).get(DEAD_CORAL_FAN)))),
+        CORAL_WALL_FAN((color, type) -> new LivingCoralWallFanBlock(TFCBlocks.CORAL.get(color).get(DEAD_CORAL_WALL_FAN), BlockBehaviour.Properties.of().mapColor(color.color).noCollision().instabreak().sound(SoundType.WET_GRASS).lootFrom(TFCBlocks.CORAL.get(color).get(CORAL_FAN))));
 
         private final BiFunction<Coral, Coral.BlockType, ? extends Block> factory;
         private final BiFunction<Block, Item.Properties, ? extends BlockItem> blockItemFactory;

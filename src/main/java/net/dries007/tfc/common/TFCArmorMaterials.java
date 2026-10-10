@@ -7,15 +7,17 @@
 package net.dries007.tfc.common;
 
 import java.util.EnumMap;
-import java.util.List;
 import net.minecraft.util.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.item.ArmorItem;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.equipment.ArmorMaterial;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraft.world.item.equipment.ArmorType;
+import net.minecraft.world.item.equipment.EquipmentAsset;
+import net.minecraft.world.item.equipment.EquipmentAssets;
 
 import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.client.TFCSounds;
@@ -24,8 +26,6 @@ import net.dries007.tfc.util.registry.HolderHolder;
 
 public final class TFCArmorMaterials
 {
-    public static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister.create(Registries.ARMOR_MATERIAL, TerraFirmaCraft.MOD_ID);
-
     public static final Id COPPER = register("copper", TFCSounds.COPPER_EQUIP, 160, 200, 215, 150, 1, 3, 4, 1, 9, 0f, 0f);
     public static final Id BISMUTH_BRONZE = register("bismuth_bronze", TFCSounds.BISMUTH_BRONZE_EQUIP,  250, 288, 311, 240, 1, 4, 4, 1, 9, 0f, 0f);
     public static final Id BLACK_BRONZE = register("black_bronze", TFCSounds.BLACK_BRONZE_EQUIP, 285, 340, 336, 262, 1, 4, 4, 1, 9, 0f, 0f);
@@ -43,20 +43,23 @@ public final class TFCArmorMaterials
         int feetReduction, int legReduction, int chestReduction, int headReduction,
         int enchantability, float toughness, float knockbackResistance
     ) {
-        return new Id(ARMOR_MATERIALS.register(name, () -> new ArmorMaterial(
-            Util.make(new EnumMap<>(ArmorItem.Type.class), map -> {
-                map.put(ArmorItem.Type.BOOTS, feetReduction);
-                map.put(ArmorItem.Type.LEGGINGS, legReduction);
-                map.put(ArmorItem.Type.CHESTPLATE, chestReduction);
-                map.put(ArmorItem.Type.HELMET, headReduction);
-                map.put(ArmorItem.Type.BODY, chestReduction);
+        final TagKey<Item> repairTag = TagKey.create(Registries.ITEM, Helpers.identifier("repairs/" + name + "_armor"));
+        final ResourceKey<EquipmentAsset> asset = ResourceKey.create(EquipmentAssets.ROOT_ID, Helpers.identifier(name));
+        return new Id(Holder.direct(new ArmorMaterial(
+            1, // Per-slot durability is preserved on the registered item properties below.
+            Util.make(new EnumMap<>(ArmorType.class), map -> {
+                map.put(ArmorType.BOOTS, feetReduction);
+                map.put(ArmorType.LEGGINGS, legReduction);
+                map.put(ArmorType.CHESTPLATE, chestReduction);
+                map.put(ArmorType.HELMET, headReduction);
+                map.put(ArmorType.BODY, chestReduction);
             }),
             enchantability,
             equipSound.holder(),
-            () -> Ingredient.EMPTY,
-            List.of(new ArmorMaterial.Layer(Helpers.identifier(name))),
             toughness,
-            knockbackResistance
+            knockbackResistance,
+            repairTag,
+            asset
         )), feetDamage, legDamage, chestDamage, headDamage);
     }
 

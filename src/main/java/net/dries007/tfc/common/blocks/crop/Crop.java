@@ -87,7 +87,7 @@ public enum Crop implements StringRepresentable
 
     private static ExtendedProperties dead()
     {
-        return ExtendedProperties.of(MapColor.PLANT).noCollission().randomTicks().strength(0.4F).sound(SoundType.CROP).flammable(60, 30).pushReaction(PushReaction.DESTROY);
+        return ExtendedProperties.of(MapColor.PLANT).noCollision().randomTicks().strength(0.4F).sound(SoundType.CROP).flammable(60, 30).pushReaction(PushReaction.DESTROY);
     }
 
     private final String serializedName;

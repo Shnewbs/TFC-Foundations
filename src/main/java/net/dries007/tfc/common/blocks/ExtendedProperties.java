@@ -193,7 +193,7 @@ public class ExtendedProperties
 
     // Bouncer methods for vanilla properties
 
-    public ExtendedProperties noCollission() { properties.noCollission(); return this; }
+    public ExtendedProperties noCollision() { properties.noCollision(); return this; }
     public ExtendedProperties noOcclusion() { properties.noOcclusion(); return this; }
     public ExtendedProperties friction(float friction) { properties.friction(friction); return this; }
     public ExtendedProperties speedFactor(float speedFactor) { properties.speedFactor(speedFactor); return this; }

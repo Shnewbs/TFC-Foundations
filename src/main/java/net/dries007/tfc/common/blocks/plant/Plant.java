@@ -532,7 +532,7 @@ public enum Plant implements RegistryPlant
 
         private static BlockBehaviour.Properties nonSolid(Plant plant)
         {
-            return solid().replaceable().instabreak().noCollission();
+            return solid().replaceable().instabreak().noCollision();
         }
 
         private static BlockBehaviour.Properties solidTallPlant()
@@ -542,12 +542,12 @@ public enum Plant implements RegistryPlant
 
         private static BlockBehaviour.Properties nonSolidTallPlant(Plant plant)
         {
-            return solidTallPlant().instabreak().noCollission().pushReaction(PushReaction.DESTROY);
+            return solidTallPlant().instabreak().noCollision().pushReaction(PushReaction.DESTROY);
         }
 
         private static BlockBehaviour.Properties kelp(Plant plant)
         {
-            return BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollission().randomTicks().strength(1.0f).sound(SoundType.WET_GRASS).pushReaction(PushReaction.DESTROY);
+            return BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().strength(1.0f).sound(SoundType.WET_GRASS).pushReaction(PushReaction.DESTROY);
         }
 
         private static ExtendedProperties fire(BlockBehaviour.Properties properties)

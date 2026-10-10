@@ -55,7 +55,7 @@ public final class FruitBlocks
     {
         return new BananaSaplingBlock(
             ExtendedProperties.of(MapColor.PLANT)
-                .noCollission()
+                .noCollision()
                 .randomTicks()
                 .strength(0)
                 .sound(SoundType.GRASS)
@@ -174,7 +174,7 @@ public final class FruitBlocks
         {
             return new FruitTreeSaplingBlock(
                 ExtendedProperties.of(MapColor.PLANT)
-                    .noCollission()
+                    .noCollision()
                     .randomTicks()
                     .strength(0)
                     .sound(SoundType.GRASS)
