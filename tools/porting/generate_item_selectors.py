@@ -14,6 +14,28 @@ from pathlib import Path
 
 
 MODEL_KEYS_REQUIRING_MIGRATION = frozenset({'loader', 'overrides'})
+FIXED_FLUID_MODEL_FIELDS = frozenset({'__comment__', 'loader', 'parent', 'fluid'})
+
+
+def native_fixed_fluid_container(model: dict) -> dict | None:
+    """Migrate only the fixed-fluid NeoForge bucket model supported by 26.1.2.
+
+    The old parent neoforge:item/bucket carries vanilla bucket base and NeoForge
+    fluid mask textures. Exact target DynamicFluidContainerModel$Unbaked has the
+    same explicit fluid property and matching texture slots in its MapCodec.
+    """
+    if (model.get('loader') != 'neoforge:fluid_container' or
+            model.get('parent') != 'neoforge:item/bucket' or
+            not set(model).issubset(FIXED_FLUID_MODEL_FIELDS)):
+        return None
+    fluid = model.get('fluid')
+    if not isinstance(fluid, str) or ':' not in fluid or not fluid.startswith('tfc:'):
+        return None
+    return {'model': {
+        'type': 'neoforge:fluid_container',
+        'textures': {'base': 'minecraft:item/bucket', 'fluid': 'neoforge:item/mask/bucket_fluid'},
+        'fluid': fluid,
+    }}
 
 
 def has_legacy_tint(model: object) -> bool:
@@ -30,6 +52,7 @@ def scan_models(source: Path, authored_roots: tuple[Path, ...]):
         raise ValueError(f'Missing legacy item-model directory: {source}')
     desired: dict[Path, str] = {}
     skipped: dict[str, list[str]] = {}
+    generated_fluid_count = 0
     for original in sorted(source.rglob('*.json')):
         if original.is_symlink():
             raise ValueError(f'Unexpected symlink in legacy item models: {original}')
@@ -38,21 +61,28 @@ def scan_models(source: Path, authored_roots: tuple[Path, ...]):
         if not isinstance(model, dict):
             raise ValueError(f'Expected JSON object: {original}')
         item_id = relative.with_suffix('').as_posix()
-        reasons = sorted(MODEL_KEYS_REQUIRING_MIGRATION.intersection(model))
-        if has_legacy_tint(model):
-            reasons.append('tintindex')
+        reasons = []
         if any((root / relative).is_file() for root in authored_roots):
             reasons.append('existing_selector')
+        fluid_definition = native_fixed_fluid_container(model)
+        if fluid_definition is None:
+            reasons.extend(sorted(MODEL_KEYS_REQUIRING_MIGRATION.intersection(model)))
+        if has_legacy_tint(model):
+            reasons.append('tintindex')
         if reasons:
             skipped[item_id] = reasons
             continue
-        definition = {'model': {'type': 'minecraft:model', 'model': f'tfc:item/{item_id}'}}
+        if fluid_definition is not None:
+            definition = fluid_definition
+            generated_fluid_count += 1
+        else:
+            definition = {'model': {'type': 'minecraft:model', 'model': f'tfc:item/{item_id}'}}
         desired[relative] = json.dumps(definition, indent=2) + '\n'
-    return desired, skipped
+    return desired, skipped, generated_fluid_count
 
 
 def generate(source: Path, output: Path, authored_roots: tuple[Path, ...], report: Path | None):
-    desired, skipped = scan_models(source, authored_roots)
+    desired, skipped, generated_fluid_count = scan_models(source, authored_roots)
     items_root = output / 'assets' / 'tfc' / 'items'
     if output.resolve() == source.resolve() or source.resolve().is_relative_to(output.resolve()):
         raise ValueError('Output must not overwrite the source model directory')
@@ -74,14 +104,17 @@ def generate(source: Path, output: Path, authored_roots: tuple[Path, ...], repor
     summary = {
         'source_count': len(desired) + len(skipped),
         'generated_count': len(desired),
+        'generated_static_count': len(desired) - generated_fluid_count,
+        'generated_fixed_fluid_count': generated_fluid_count,
         'manual_migration_count': len(skipped),
         'manual_migrations': dict(sorted(skipped.items())),
     }
     if report is not None:
         report.parent.mkdir(parents=True, exist_ok=True)
         report.write_text(json.dumps(summary, indent=2, sort_keys=True) + '\n', encoding='utf-8')
-    print(f"Generated {len(desired)} static TFC item definitions; "
-          f"{len(skipped)} special models still require manual 26.x adapters.")
+    print(f"Generated {len(desired) - generated_fluid_count} static and "
+          f"{generated_fluid_count} native fixed-fluid TFC item definitions; "
+          f"{len(skipped)} models still need 26.x adapters.")
     return summary
 
 

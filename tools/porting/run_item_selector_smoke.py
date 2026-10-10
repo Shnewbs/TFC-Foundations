@@ -22,8 +22,10 @@ class ItemSelectorGenerationTests(unittest.TestCase):
             report = Path(tmp) / 'report.json'
             s = generate(LEGACY, out, (), report)
             self.assertEqual(s['source_count'], 5597)
-            self.assertEqual(s['generated_count'], 5369)
-            self.assertEqual(s['manual_migration_count'], 228)
+            self.assertEqual(s['generated_count'], 5435)
+            self.assertEqual(s['generated_static_count'], 5369)
+            self.assertEqual(s['generated_fixed_fluid_count'], 66)
+            self.assertEqual(s['manual_migration_count'], 162)
             self.assertTrue(report.is_file())
             self.assertEqual(s, json.loads(report.read_text()))
             generated = list((out / 'assets/tfc/items').rglob('*.json'))
@@ -32,14 +34,28 @@ class ItemSelectorGenerationTests(unittest.TestCase):
             # nested metal and food item identifiers.
             for selector in generated:
                 rel = selector.relative_to(out / 'assets/tfc/items').with_suffix('').as_posix()
-                self.assertEqual(json.loads(selector.read_text()), {
-                    'model': {'type': 'minecraft:model', 'model': 'tfc:item/' + rel}
-                })
-                self.assertTrue((LEGACY / (rel + '.json')).is_file())
+                legacy = LEGACY / (rel + '.json')
+                self.assertTrue(legacy.is_file())
+                model = json.loads(legacy.read_text())
+                generated_model = json.loads(selector.read_text())['model']
+                if model.get('loader') == 'neoforge:fluid_container':
+                    self.assertEqual(generated_model, {
+                        'type': 'neoforge:fluid_container',
+                        'textures': {
+                            'base': 'minecraft:item/bucket',
+                            'fluid': 'neoforge:item/mask/bucket_fluid',
+                        },
+                        'fluid': model['fluid'],
+                    })
+                else:
+                    self.assertEqual(generated_model, {
+                        'type': 'minecraft:model', 'model': 'tfc:item/' + rel,
+                    })
             for special, reasons in s['manual_migrations'].items():
                 self.assertTrue(reasons)
                 self.assertFalse((out / 'assets/tfc/items' / (special + '.json')).exists())
             self.assertIn('loader', s['manual_migrations']['wooden_bucket'])
+            self.assertNotIn('bucket/beer', s['manual_migrations'])
             self.assertIn('overrides', s['manual_migrations']['powderkeg'])
             self.assertIn('tintindex', s['manual_migrations']['grass_inv'])
 
@@ -90,6 +106,23 @@ class ItemSelectorGenerationTests(unittest.TestCase):
             self.assertEqual(s['manual_migration_count'], 3)
             self.assertTrue(has_legacy_tint({'elements':[{'faces':{'north':{'tintindex':0}}}]}))
             self.assertFalse(has_legacy_tint({'layers':[{'tint':'#ff00ff'}]}))
+
+    def test_native_fixed_fluid_codec_is_available_on_pinned_neoforge(self):
+        import os
+        import subprocess
+        cp = PROJECT / 'port-diagnostics/classpath.txt'
+        self.assertTrue(cp.is_file(), 'Exact-target NeoForge classpath missing')
+        java_home = os.environ.get('JAVA_HOME')
+        javap = str(Path(java_home)/'bin/javap') if java_home else 'javap'
+        result = subprocess.run([
+            javap, '-classpath', cp.read_text().strip(), '-p', '-c',
+            'net.neoforged.neoforge.client.model.item.DynamicFluidContainerModel$Unbaked'
+        ], capture_output=True, text=True, timeout=40)
+        self.assertEqual(result.returncode, 0, result.stderr[:400])
+        self.assertIn('MapCodec<', result.stdout)
+        for field in ('String textures', 'String fluid', 'String flip_gas',
+                      'String cover_is_mask', 'String apply_fluid_luminosity'):
+            self.assertIn(field, result.stdout)
 
     def test_gradle_resource_wiring_and_ci_validation(self):
         script = (PROJECT / 'build.gradle.kts').read_text()
