@@ -1,0 +1,54 @@
+name: Apply predator sound and activity API checkpoint
+
+on:
+  push:
+    branches: [26.1.2]
+    paths: [.github/workflows/apply-predator-sound-checkpoint.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  apply:
+    if: github.repository == 'Shnewbs/TFC-Foundations' && github.ref == 'refs/heads/26.1.2'
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - name: Check out exact staging history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify and apply reviewed source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = '3b68a42cbd224d806b27f9089475adc8e83a6e54'
+          test "$(git rev-parse HEAD~3)" = '6e52a14fc804e46df5188deb16a625800649a8c0'
+          head -c 5580 tools/porting/.predator-sounds-26.1.2.b64 > /tmp/predator-sounds-transport.b64
+          cat tools/porting/.predator-sounds-tail-26.1.2.b64 >> /tmp/predator-sounds-transport.b64
+          base64 -d /tmp/predator-sounds-transport.b64 > /tmp/predator-sounds.patch.xz
+          echo 'e6a1e1f4df78db82554149df797f90c8c5cd0a4ba4336da8aa6e676fc84bc638  /tmp/predator-sounds.patch.xz' | sha256sum -c -
+          xz -dc /tmp/predator-sounds.patch.xz > /tmp/predator-sounds.patch
+          echo '4897cb9819863722d79377a350f967b0759ef61401517067e219ee031b892aa2  /tmp/predator-sounds.patch' | sha256sum -c -
+          git apply --check --index --whitespace=error /tmp/predator-sounds.patch
+          git apply --index --whitespace=error /tmp/predator-sounds.patch
+          test "$(git diff --cached --name-only | wc -l)" -eq 12
+          git diff --cached --check
+      - name: Commit only reviewed sources and remove transport
+        shell: bash
+        run: |
+          git rm -f tools/porting/.predator-sounds-26.1.2.b64 tools/porting/.predator-sounds-tail-26.1.2.b64 .github/workflows/apply-predator-sound-checkpoint.yml
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Port classic animal sound variants and predator schedules for 26.1.2'
+          git push origin HEAD:refs/heads/26.1.2
+          echo "Applied source commit: $(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          echo "Full gameplay and build verification remain required." >> "$GITHUB_STEP_SUMMARY"
+      - name: Run independent exact-target validation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run test.yml --repo "$GITHUB_REPOSITORY" --ref 26.1.2
