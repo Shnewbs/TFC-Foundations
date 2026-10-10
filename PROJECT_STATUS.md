@@ -1,6 +1,6 @@
 # TFC Foundations — Current Project Status
 
-Updated 2026-10-09 UTC and America/Los_Angeles.
+Updated 2026-10-10 UTC. Latest verified build summary is first; later sections preserve a historical checkpoint.
 
 **Version 0.0.0 remains an incomplete source port. Full compilation, client/server startup and survival testing have not passed. No playable JAR or release was produced by this checkpoint.**
 
@@ -8,7 +8,17 @@ Updated 2026-10-09 UTC and America/Los_Angeles.
 
 Continue public development in `Shnewbs/TFC-Foundations`, preserving history, EUPL notices, credits and `tfc` identifiers. First-playable priority remains Minecraft 26.1.2, NeoForge 26.1.2.114, JEI 29.43.0.107 and Patchouli 26.1-94. Java 25 and Gradle 9.2.1 are unchanged. The separate `26.x` branch remains the Minecraft 26.3 forward track toward a separately verified 26.4 port. No 26.3 or Earth code changed here. Core gameplay, visuals, the required guide and publication gates remain enabled.
 
-## Pile, scraping and mold-table snapshot checkpoint
+## Live branch handoff — 2026-10-10
+
+**Branch `26.1.2`** at source [`659b70ed82b0e7fd2ab54914fd37ad20839b53e0`](https://github.com/Shnewbs/TFC-Foundations/commit/659b70ed82b0e7fd2ab54914fd37ad20839b53e0). [CI run `38070987803`](https://github.com/Shnewbs/TFC-Foundations/actions/runs/38070987803) **failed full Java/Gradle compilation**: **1,384 diagnostic occurrences** and **1,326 unique displayed file/line/message entries**. API/standalone inspection and resource validation **passed**, but those checks do not make a runnable mod. No playable JAR or successful client/server or world save/reload test has been produced.
+
+The 26.1.2 branch has since added tool-material, recipe and ingredient API migrations, worldgen and registration fixes, and new-format item selector generation to the October 9 model checkpoint below. The item-selector generator covers **5,369 static and 66 fixed-fluid** models; **162 special models** remain unported. The separate `26.x`/26.3 track remains an independent, unverified foundation toward 26.4.
+
+**The latest cross-platform instructions live in [CONTINUE_BUILDING.md](docs/foundations/CONTINUE_BUILDING.md).** Always inspect the live branch and CI before a continuation, and update this status after each substantive source push.
+
+## Historical pile/scraping checkpoint (2026-10-09)
+
+### Original checkpoint narrative
 
 Source **`5024736b274f1ad3d764c5bb5572ead6f71a6032`** applies a **28-file checkpoint**, following staging `04691f1d8b5e9742885b9a30bfd0739c3b692e69`. Apply run `37998280708` verified every source preimage/postimage, removed the temporary transport and used a normal push. Two obsolete baked-model interfaces were replaced by the native pipeline and deleted; no gameplay feature was removed.
 
