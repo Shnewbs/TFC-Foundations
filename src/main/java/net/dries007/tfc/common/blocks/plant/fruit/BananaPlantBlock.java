@@ -300,13 +300,13 @@ public class BananaPlantBlock extends SeasonalPlantBlock implements HoeOverlayBl
     }
 
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving)
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean isMoving)
     {
-        if (state.getValue(STAGE) == 2 && newState.isAir())
+        if (state.getValue(STAGE) == 2 && level.getBlockState(pos).isAir())
         {
             kill(level, pos);
         }
-        super.onRemove(state, level, pos, newState, isMoving);
+        super.affectNeighborsAfterRemoval(state, level, pos, isMoving);
     }
 
     @Override
