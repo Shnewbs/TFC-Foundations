@@ -10,7 +10,6 @@ import java.util.List;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -23,6 +22,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.attribute.EnvironmentAttributes;
+import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -90,7 +91,7 @@ public class ThatchBedBlock extends BedBlock implements EntityBlockExtension, IF
                 }
             }
         }
-        if (!canSetSpawn(level))
+        if (!level.environmentAttributes().getValue(EnvironmentAttributes.BED_RULE, pos).canSetSpawn(level))
         {
             level.removeBlock(pos, false);
             BlockPos blockpos = pos.relative(state.getValue(FACING).getOpposite());
@@ -125,7 +126,7 @@ public class ThatchBedBlock extends BedBlock implements EntityBlockExtension, IF
                 if (spawnPoint)
                 {
                     player.sendOverlayMessage(Component.translatable("tfc.thatch_bed.use_no_sleep_spawn"));
-                    serverPlayer.setRespawnPosition(level.dimension(), pos, 0, false, false);
+                    serverPlayer.setRespawnPosition(new ServerPlayer.RespawnConfig(LevelData.RespawnData.of(level.dimension(), pos, 0F, 0F), false), false);
                     return InteractionResult.SUCCESS;
                 }
                 // no spawn, no sleep, do nothing
@@ -133,13 +134,11 @@ public class ThatchBedBlock extends BedBlock implements EntityBlockExtension, IF
                 return InteractionResult.SUCCESS;
             }
 
-            final BlockPos lastRespawnPos = serverPlayer.getRespawnPosition();
-            final ResourceKey<Level> lastRespawnDimension = serverPlayer.getRespawnDimension();
-            final float lastRespawnAngle = serverPlayer.getRespawnAngle();
+            final ServerPlayer.RespawnConfig lastRespawnConfig = serverPlayer.getRespawnConfig();
             player.startSleepInBed(pos).ifLeft(problem -> {
-                if (problem.getMessage() != null)
+                if (problem.message() != null)
                 {
-                    player.sendOverlayMessage(problem.getMessage());
+                    player.sendOverlayMessage(problem.message());
                 }
             }).ifRight(unit -> {
                 // in this case vanilla sets the spawn point in startSleepInBed
@@ -150,7 +149,7 @@ public class ThatchBedBlock extends BedBlock implements EntityBlockExtension, IF
                 else
                 {
                     // sleeping automagically resets your spawn position, so we have to copy over the old spawn position and then set it to that.
-                    serverPlayer.setRespawnPosition(lastRespawnDimension, lastRespawnPos, lastRespawnAngle, false, false);
+                    serverPlayer.setRespawnPosition(lastRespawnConfig, false);
                     player.sendOverlayMessage(Component.translatable("tfc.thatch_bed.use_sleep_no_spawn"));
                 }
             });
@@ -213,13 +212,4 @@ public class ThatchBedBlock extends BedBlock implements EntityBlockExtension, IF
         });
     }
 
-    @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving)
-    {
-        if (state.getValue(PART) == BedPart.HEAD && !Helpers.isBlock(state, newState.getBlock()))
-        {
-            level.getBlockEntity(pos, TFCBlockEntities.THATCH_BED.get()).ifPresent(ThatchBedBlockEntity::destroyBed);
-        }
-        super.onRemove(state, level, pos, newState, isMoving);
-    }
 }

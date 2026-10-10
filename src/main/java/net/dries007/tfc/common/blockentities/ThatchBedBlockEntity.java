@@ -13,6 +13,8 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -49,6 +51,21 @@ public class ThatchBedBlockEntity extends InventoryBlockEntity<ItemStackHandler>
             Helpers.dropWithContext(serverLevel, headState, worldPosition, ctx -> {}, true);
             Helpers.dropWithContext(serverLevel, footState, worldPosition, ctx -> {}, true);
         }
+    }
+
+    /**
+     * Called before the chunk removes its old bed block entity. This is also
+     * triggered when the other bed half is broken and vanilla removes the head.
+     * The old five-argument block onRemove hook no longer exists in 26.1.2.
+     */
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState previousState)
+    {
+        if (previousState.hasProperty(BedBlock.PART) && previousState.getValue(BedBlock.PART) == BedPart.HEAD)
+        {
+            destroyBed();
+        }
+        super.preRemoveSideEffects(pos, previousState);
     }
 
     @Override
