@@ -1,0 +1,61 @@
+name: Apply deferred shape-world mutation checkpoint
+
+on:
+  push:
+    branches: [26.1.2]
+    paths: [.github/workflows/apply-deferred-shape-checkpoint.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  apply:
+    if: github.repository == 'Shnewbs/TFC-Foundations' && github.ref == 'refs/heads/26.1.2'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - name: Checkout exact source history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify and apply reviewed source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = '1e6b86c00e3a3788664a277e60d933c833fe8b4b'
+          base64 --decode tools/porting/.deferred-shape-checkpoint.b64 > /tmp/tfc-deferred.patch.xz
+          echo '5962f989e7159845002e4ce4bd17cf301b6dd7b388001dccd852342182fdad9e  /tmp/tfc-deferred.patch.xz' | sha256sum --check
+          xz -dc /tmp/tfc-deferred.patch.xz > /tmp/tfc-deferred.patch
+          echo 'ec73ff946377e3c27d41a8be521c1ebe49871e9126ccb929c33a142fcbe67fcc  /tmp/tfc-deferred.patch' | sha256sum --check
+          git apply --check --index --whitespace=error /tmp/tfc-deferred.patch
+          git apply --index --whitespace=error /tmp/tfc-deferred.patch
+          test "$(git diff --cached --name-only | wc -l)" -eq 9
+          git diff --cached --check
+          python3 -m py_compile tools/porting/run_neighbor_shape_smoke.py tools/porting/run_deferred_shape_smoke.py
+          python3 tools/porting/run_deferred_shape_smoke.py
+          python3 - <<'PY'
+          from pathlib import Path
+          inspector=Path('tools/porting/inspect_api.py').read_text()
+          assert 'run_deferred_shape_smoke.py' in inspector
+          assert 'run_neighbor_shape_smoke.py' in inspector
+          print('PASS: verified deferred tick test wiring')
+          PY
+      - name: Commit reviewed source and remove one-time transport
+        shell: bash
+        run: |
+          git rm -f tools/porting/.deferred-shape-checkpoint.b64 .github/workflows/apply-deferred-shape-checkpoint.yml
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Defer pile, kiln, bamboo and leaf mutations to target shape or server tick APIs'
+          git push origin HEAD:refs/heads/26.1.2
+          echo "Verified source commit: $(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          echo 'Full mod compilation and world-survival testing remain required.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Validate against exact pinned toolchain
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run test.yml --repo "$GITHUB_REPOSITORY" --ref 26.1.2
