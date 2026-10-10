@@ -9,6 +9,8 @@ package net.dries007.tfc.common.recipes;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -16,6 +18,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
+import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -97,22 +100,16 @@ public final class RecipeHelpers
      */
     public static NonNullList<ItemStack> getRemainderItemsWithProvider(CraftingInput input, ItemStackProvider provider, ItemStack primaryInput)
     {
-        final NonNullList<ItemStack> results = NonNullList.withSize(input.size(), ItemStack.EMPTY);
+        // The target recipe API owns default container remainders. Preserve those for
+        // other ingredients; the primary input still uses TFC's custom provider.
+        final NonNullList<ItemStack> results = CraftingRecipe.defaultCraftingReminder(input);
         for (int i = 0; i < results.size(); i++)
         {
             final ItemStack stack = input.getItem(i);
             if (ItemStack.isSameItem(primaryInput, stack))
             {
-                final ItemStack outputStack = provider.getStack(stack.copyWithCount(1));
-                if (!outputStack.isEmpty())
-                {
-                    results.set(i, outputStack);
-                }
-            }
-            else if (stack.hasCraftingRemainingItem())
-            {
-                final ItemStack outputStack = stack.getCraftingRemainingItem();
-                results.set(i, outputStack);
+                // An empty custom result deliberately suppresses the default remainder.
+                results.set(i, provider.getStack(stack.copyWithCount(1)));
             }
         }
         return results;
@@ -125,7 +122,10 @@ public final class RecipeHelpers
     @SuppressWarnings("ConstantConditions")
     public static ItemStack getResultUnsafe(CraftingRecipe recipe)
     {
-        return recipe.getResultItem(null);
+        // Crafting results are represented by slot displays in 26.1.2. This
+        // helper is best-effort for source compatibility; it has no call sites in TFC.
+        return recipe.display().isEmpty() ? ItemStack.EMPTY
+            : recipe.display().getFirst().result().resolveForFirstStack(ContextMap.EMPTY);
     }
 
     public static Collection<Item> itemKeys(Ingredient ingredient)
@@ -166,7 +166,7 @@ public final class RecipeHelpers
 
     public static Stream<Fluid> stream(FluidIngredient ingredient)
     {
-        return Arrays.stream(ingredient.getStacks()).map(FluidStack::getFluid);
+        return ingredient.fluids().stream().map(Holder::value);
     }
 
     @Nullable
@@ -255,10 +255,16 @@ public final class RecipeHelpers
 
     public static int translateMatch(ShapedRecipe recipe, int targetIndex, CraftingInput inventory)
     {
-        return translateMatch(recipe.getIngredients(), inventory, recipe.getWidth(), recipe.getHeight(), targetIndex);
+        return translateOptionalMatch(recipe.getIngredients(), inventory, recipe.getWidth(), recipe.getHeight(), targetIndex);
     }
 
     public static int translateMatch(NonNullList<Ingredient> recipeItems, CraftingInput input, int width, int height, int targetIndex)
+    {
+        // Preserve the old overload for integrations still supplying concrete ingredients.
+        return translateOptionalMatch(recipeItems.stream().map(Optional::ofNullable).toList(), input, width, height, targetIndex);
+    }
+
+    private static int translateOptionalMatch(List<Optional<Ingredient>> recipeItems, CraftingInput input, int width, int height, int targetIndex)
     {
         for (int startCol = 0; startCol <= input.width() - width; ++startCol)
         {
@@ -295,14 +301,14 @@ public final class RecipeHelpers
         return -1;
     }
 
-    private static boolean matches(NonNullList<Ingredient> recipeItems, CraftingInput input, int startCol, int startRow, boolean mirrored, int width, int height)
+    private static boolean matches(List<Optional<Ingredient>> recipeItems, CraftingInput input, int startCol, int startRow, boolean mirrored, int width, int height)
     {
         for (int invCol = 0; invCol < input.width(); ++invCol)
         {
             for (int invRow = 0; invRow < input.height(); ++invRow)
             {
                 final int col = invCol - startCol, row = invRow - startRow;
-                Ingredient ingredient = Ingredient.EMPTY;
+                Optional<Ingredient> ingredient = Optional.empty();
                 if (col >= 0 && row >= 0 && col < width && row < height)
                 {
                     if (mirrored)
@@ -314,7 +320,8 @@ public final class RecipeHelpers
                         ingredient = recipeItems.get(col + row * width);
                     }
                 }
-                if (!ingredient.test(input.getItem(invCol + invRow * input.width())))
+                final ItemStack stack = input.getItem(invCol + invRow * input.width());
+                if (ingredient.isPresent() ? !ingredient.get().test(stack) : !stack.isEmpty())
                 {
                     return false;
                 }
