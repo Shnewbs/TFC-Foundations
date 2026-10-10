@@ -15,7 +15,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -120,7 +119,7 @@ public final class InteractionManager
 
     public static void registerDefaultInteractions()
     {
-        registerBlock(Ingredient.of(TFCTags.Items.THATCH_BED_HIDES), (stack, context) -> {
+        registerBlock(RecipeHelpers.ingredient(TFCTags.Items.THATCH_BED_HIDES), (stack, context) -> {
             final Level level = context.getLevel();
             final Player player = context.getPlayer();
             if (!level.isClientSide() && player != null)
@@ -236,7 +235,7 @@ public final class InteractionManager
         // - holding log, targeting log pile, shift click = insert one
         // - holding log, targeting log pile, shift double click = insert all
         final BlockItemPlacement logPilePlacement = new BlockItemPlacement(Items.AIR, TFCBlocks.LOG_PILE);
-        registerBlock(Ingredient.of(TFCTags.Items.LOG_PILE_LOGS), (stack, context) -> {
+        registerBlock(RecipeHelpers.ingredient(TFCTags.Items.LOG_PILE_LOGS), (stack, context) -> {
             final Player player = context.getPlayer();
             if (player != null && player.mayBuild() && player.isShiftKeyDown())
             {
@@ -250,7 +249,7 @@ public final class InteractionManager
                 if (Helpers.isBlock(stateClicked, TFCBlocks.LOG_PILE.get()))
                 {
                     return level.getBlockEntity(posClicked, TFCBlockEntities.LOG_PILE.get())
-                        .map(logPileBlockEntity -> {
+                        .<InteractionResult>map(logPileBlockEntity -> {
                             if (!level.isClientSide())
                             {
                                 long currentTick = Calendars.get().getTicks();
@@ -295,7 +294,7 @@ public final class InteractionManager
                     final BlockState state = TFCBlocks.SCRAPING.get().defaultBlockState();
                     level.setBlockAndUpdate(abovePos, state);
                     return level.getBlockEntity(abovePos, TFCBlockEntities.SCRAPING.get())
-                        .map(entity -> {
+                        .<InteractionResult>map(entity -> {
                             final ItemStack insertStack = stack.split(1);
                             stack.setCount(stack.getCount() + entity.getInventory().insertItem(0, insertStack, false).getCount());
                             entity.updateDisplayCache();
@@ -334,7 +333,7 @@ public final class InteractionManager
                     if (player instanceof ServerPlayer serverPlayer)
                     {
                         final ItemStackContainerProvider provider = new ItemStackContainerProvider((stack1, hand, slot, playerInventory, windowId) -> KnappingContainer.create(stack1, type, hand, slot, playerInventory, windowId), Component.translatable("tfc.screen.knapping"));
-                        provider.openScreen(serverPlayer, context.getHand(), buffer -> buffer.writeResourceLocation(KnappingType.MANAGER.getIdOrThrow(type)));
+                        provider.openScreen(serverPlayer, context.getHand(), buffer -> buffer.writeIdentifier(KnappingType.MANAGER.getIdOrThrow(type)));
                     }
                 }
                 return (context.getLevel().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
@@ -348,10 +347,10 @@ public final class InteractionManager
         final BlockItemPlacement ingotPilePlacement = new BlockItemPlacement(Items.AIR, TFCBlocks.INGOT_PILE);
         final BlockItemPlacement doubleIngotPilePlacement = new BlockItemPlacement(Items.AIR, TFCBlocks.DOUBLE_INGOT_PILE);
 
-        registerBlock(Ingredient.of(Tags.Items.INGOTS), (stack, context) -> doIngotPiling(ingotPilePlacement, stack, context, (IngotPileBlock) TFCBlocks.INGOT_PILE.get(), IngotPileBlock.COUNT, 64));
-        registerBlock(Ingredient.of(TFCTags.Items.DOUBLE_INGOTS), (stack, context) -> doIngotPiling(doubleIngotPilePlacement, stack, context, (IngotPileBlock) TFCBlocks.DOUBLE_INGOT_PILE.get(), DoubleIngotPileBlock.DOUBLE_COUNT, 36));
+        registerBlock(RecipeHelpers.ingredient(Tags.Items.INGOTS), (stack, context) -> doIngotPiling(ingotPilePlacement, stack, context, (IngotPileBlock) TFCBlocks.INGOT_PILE.get(), IngotPileBlock.COUNT, 64));
+        registerBlock(RecipeHelpers.ingredient(TFCTags.Items.DOUBLE_INGOTS), (stack, context) -> doIngotPiling(doubleIngotPilePlacement, stack, context, (IngotPileBlock) TFCBlocks.DOUBLE_INGOT_PILE.get(), DoubleIngotPileBlock.DOUBLE_COUNT, 36));
 
-        registerBlock(Ingredient.of(TFCTags.Items.USABLE_IN_MOLD_TABLE), (stack, context) -> {
+        registerBlock(RecipeHelpers.ingredient(TFCTags.Items.USABLE_IN_MOLD_TABLE), (stack, context) -> {
 
             final Player player = context.getPlayer();
             if (player != null && player.mayBuild())
@@ -368,7 +367,7 @@ public final class InteractionManager
             return InteractionResult.PASS;
         });
 
-        register(Ingredient.of(TFCTags.Items.SALAD_BOWLS), Target.BOTH, (stack, context) -> {
+        register(RecipeHelpers.ingredient(TFCTags.Items.SALAD_BOWLS), Target.BOTH, (stack, context) -> {
             // Only open salads when shift key is down
             // Normally when consuming bowl food (like salads), you'll be holding right click down causing the salad gui to immediately open
             // That feels bad to use, so we require shift to open salads - better in the common case
@@ -408,7 +407,7 @@ public final class InteractionManager
             if (StartFireEvent.startFireWithSound(context.getLevel(), context.getClickedPos(), context.getLevel().getBlockState(context.getClickedPos()), context.getClickedFace(), player, stack))
             {
                 if (player != null && !player.isCreative())
-                    stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(context.getHand()));
+                    stack.hurtAndBreak(1, player, context.getHand().asEquipmentSlot());
                 return (context.getLevel().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
 
@@ -419,7 +418,7 @@ public final class InteractionManager
             if (DouseFireEvent.douse(context.getLevel(), context.getClickedPos(), player))
             {
                 if (player != null && !player.isCreative())
-                    stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(context.getHand()));
+                    stack.hurtAndBreak(1, player, context.getHand().asEquipmentSlot());
                 return (context.getLevel().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
             return InteractionResult.PASS;
