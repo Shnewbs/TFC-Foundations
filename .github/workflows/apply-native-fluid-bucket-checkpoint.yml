@@ -1,0 +1,63 @@
+name: Apply native fluid bucket selectors
+
+on:
+  push:
+    branches: [26.1.2]
+    paths: [.github/workflows/apply-native-fluid-bucket-checkpoint.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  apply:
+    if: github.repository == 'Shnewbs/TFC-Foundations' && github.ref == 'refs/heads/26.1.2'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - name: Check out exact source history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify and exercise the native bucket migration
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = 'd574e3b7f4a17b10cb25748d3747b2aa688691a2'
+          test "$(git rev-parse HEAD~2)" = 'cf33622098a29bae060245782625e0e9959db7bd'
+          base64 -d tools/porting/.native-fluid-bucket-checkpoint.b64 > /tmp/tfc-native-buckets.patch.xz
+          echo '47fdb892bbd3163f583c64cd9ab0da7753d6370a12e9c13a1943468df3f24fa1  /tmp/tfc-native-buckets.patch.xz' | sha256sum --check
+          xz -dc /tmp/tfc-native-buckets.patch.xz > /tmp/tfc-native-buckets.patch
+          echo '56b09234d2f2e69c97756b071473e1e795bd8f6e7a36208d5f378344cbba1034  /tmp/tfc-native-buckets.patch' | sha256sum --check
+          git apply --check --index --whitespace=error /tmp/tfc-native-buckets.patch
+          git apply --index --whitespace=error /tmp/tfc-native-buckets.patch
+          test "$(git diff --cached --name-only | wc -l)" -eq 2
+          git diff --cached --check
+          python3 tools/porting/generate_item_selectors.py --output build/generated/tfcItemSelectors --report build/reports/tfcItemSelectors.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          summary=json.loads(Path('build/reports/tfcItemSelectors.json').read_text())
+          assert summary['source_count'] == 5597
+          assert summary['generated_count'] == 5435
+          assert summary['generated_fixed_fluid_count'] == 66
+          assert summary['manual_migration_count'] == 162
+          assert len(list(Path('build/generated/tfcItemSelectors/assets/tfc/items').rglob('*.json'))) == 5435
+          PY
+      - name: Commit source and remove transport
+        shell: bash
+        run: |
+          git rm -f tools/porting/.native-fluid-bucket-checkpoint.b64 .github/workflows/apply-native-fluid-bucket-checkpoint.yml
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Use native 26.1.2 fluid item models for fixed-fluid buckets'
+          git push origin HEAD:refs/heads/26.1.2
+          echo "Applied source commit: $(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          echo '162 special item models and the full mod compilation remain open.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Execute full pinned API and resource CI
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run test.yml --repo "$GITHUB_REPOSITORY" --ref 26.1.2
