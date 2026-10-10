@@ -9,14 +9,14 @@ package net.dries007.tfc.common.items;
 import java.util.Map;
 import java.util.function.Supplier;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemNameBlockItem;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.common.blocks.crop.Crop;
 import net.dries007.tfc.util.climate.ClimateRange;
 
-public class SeedItem extends ItemNameBlockItem implements PlantableInfo
+public class SeedItem extends BlockItem implements PlantableInfo
 {
     protected final Block deadBlock;
     private final PlantNutrients nutrients;
@@ -24,7 +24,7 @@ public class SeedItem extends ItemNameBlockItem implements PlantableInfo
 
     public SeedItem(Crop crop, Block block, Block deadBlock, Properties properties)
     {
-        super(block, properties);
+        super(block, properties.useBlockDescriptionPrefix());
         this.deadBlock = deadBlock;
         nutrients = new PlantNutrients(crop.getNitrogen(), crop.getPhosphorous(), crop.getPotassium());
         climateRange = crop.getClimateRange();

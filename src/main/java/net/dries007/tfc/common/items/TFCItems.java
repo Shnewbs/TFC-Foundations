@@ -30,7 +30,7 @@ import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.common.DeferredSpawnEggItem;
+import net.minecraft.world.item.SpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -112,14 +112,14 @@ public final class TFCItems
     public static final Map<Wood, ItemId> LUMBER = Helpers.mapOf(Wood.class, wood -> register("wood/lumber/" + wood.name()));
 
     public static final Map<Wood, ItemId> SUPPORTS = Helpers.mapOf(Wood.class, wood ->
-        register("wood/support/" + wood.name(), () -> new StandingAndWallBlockItem(TFCBlocks.WOODS.get(wood).get(Wood.BlockType.VERTICAL_SUPPORT).get(), TFCBlocks.WOODS.get(wood).get(Wood.BlockType.HORIZONTAL_SUPPORT).get(), new Properties(), Direction.DOWN))
+        register("wood/support/" + wood.name(), () -> new StandingAndWallBlockItem(TFCBlocks.WOODS.get(wood).get(Wood.BlockType.VERTICAL_SUPPORT).get(), TFCBlocks.WOODS.get(wood).get(Wood.BlockType.HORIZONTAL_SUPPORT).get(), Direction.DOWN, new Properties()))
     );
 
     public static final Map<Wood, ItemId> BOATS = Helpers.mapOf(Wood.class, wood -> register("wood/boat/" + wood.name(), () -> new TFCBoatItem(TFCEntities.BOATS.get(wood), new Properties())));
 
     public static final Map<Wood, ItemId> CHEST_MINECARTS = Helpers.mapOf(Wood.class, wood -> register("wood/chest_minecart/" + wood.name(), () -> new TFCMinecartItem(new Properties(), TFCEntities.CHEST_MINECART, () -> TFCBlocks.WOODS.get(wood).get(Wood.BlockType.CHEST).get().asItem())));
 
-    public static final Map<Wood, ItemId> SIGNS = Helpers.mapOf(Wood.class, wood -> register("wood/sign/" + wood.name(), () -> new SignItem(new Properties(), TFCBlocks.WOODS.get(wood).get(Wood.BlockType.SIGN).get(), TFCBlocks.WOODS.get(wood).get(Wood.BlockType.WALL_SIGN).get())));
+    public static final Map<Wood, ItemId> SIGNS = Helpers.mapOf(Wood.class, wood -> register("wood/sign/" + wood.name(), () -> new SignItem(TFCBlocks.WOODS.get(wood).get(Wood.BlockType.SIGN).get(), TFCBlocks.WOODS.get(wood).get(Wood.BlockType.WALL_SIGN).get(), new Properties())));
 
     public static final Map<Wood, Map<Metal, ItemId>> HANGING_SIGNS = Helpers.mapOf(Wood.class, wood ->
         Helpers.mapOf(Metal.class, Metal::allParts, metal ->
@@ -159,11 +159,11 @@ public final class TFCItems
     public static final ItemId FLOWER_CUTTING = register("flower_cutting", () -> new FlowerCuttingItem(new Properties()));
 
     public static final Map<Coral, ItemId> CORAL_FANS = Helpers.mapOf(Coral.class, color ->
-        register("coral/" + color.toString() + "_coral_fan", () -> new StandingAndWallBlockItem(TFCBlocks.CORAL.get(color).get(Coral.BlockType.CORAL_FAN).get(), TFCBlocks.CORAL.get(color).get(Coral.BlockType.CORAL_WALL_FAN).get(), new Properties(), Direction.DOWN))
+        register("coral/" + color.toString() + "_coral_fan", () -> new StandingAndWallBlockItem(TFCBlocks.CORAL.get(color).get(Coral.BlockType.CORAL_FAN).get(), TFCBlocks.CORAL.get(color).get(Coral.BlockType.CORAL_WALL_FAN).get(), Direction.DOWN, new Properties()))
     );
 
     public static final Map<Coral, ItemId> DEAD_CORAL_FANS = Helpers.mapOf(Coral.class, color ->
-        register("coral/" + color.toString() + "_dead_coral_fan", () -> new StandingAndWallBlockItem(TFCBlocks.CORAL.get(color).get(Coral.BlockType.DEAD_CORAL_FAN).get(), TFCBlocks.CORAL.get(color).get(Coral.BlockType.DEAD_CORAL_WALL_FAN).get(), new Properties(), Direction.DOWN))
+        register("coral/" + color.toString() + "_dead_coral_fan", () -> new StandingAndWallBlockItem(TFCBlocks.CORAL.get(color).get(Coral.BlockType.DEAD_CORAL_FAN).get(), TFCBlocks.CORAL.get(color).get(Coral.BlockType.DEAD_CORAL_WALL_FAN).get(), Direction.DOWN, new Properties()))
     );
 
     // Decorations
@@ -179,7 +179,7 @@ public final class TFCItems
 
     public static final ItemId ALABASTER_BRICK = register("alabaster_brick");
     public static final ItemId TORCH = register("torch", () -> new TorchItem(TFCBlocks.TORCH.get(), TFCBlocks.WALL_TORCH.get(), new Properties()));
-    public static final ItemId DEAD_TORCH = register("dead_torch", () -> new StandingAndWallBlockItem(TFCBlocks.DEAD_TORCH.get(), TFCBlocks.DEAD_WALL_TORCH.get(), new Properties(), Direction.DOWN));
+    public static final ItemId DEAD_TORCH = register("dead_torch", () -> new StandingAndWallBlockItem(TFCBlocks.DEAD_TORCH.get(), TFCBlocks.DEAD_WALL_TORCH.get(), Direction.DOWN, new Properties()));
 
     // Misc
 
@@ -431,7 +431,7 @@ public final class TFCItems
 
     private static <T extends Mob> ItemId registerSpawnEgg(IdHolder<EntityType<T>> entity)
     {
-        return register("spawn_egg/" + entity.getId().getPath(), () -> new DeferredSpawnEggItem(entity.holder(), 0xffffff, 0xffffff, new Properties()));
+        return register("spawn_egg/" + entity.getId().getPath(), () -> new SpawnEggItem(new Properties().spawnEgg(entity.get())));
     }
 
     private static ItemId register(String name)
