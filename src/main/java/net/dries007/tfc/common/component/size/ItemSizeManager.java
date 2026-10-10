@@ -8,14 +8,13 @@ package net.dries007.tfc.common.component.size;
 
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.AnimalArmorItem;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TieredItem;
 
 import net.dries007.tfc.common.recipes.RecipeHelpers;
 import net.dries007.tfc.util.Helpers;
@@ -75,11 +74,16 @@ public final class ItemSizeManager
         }
 
         // Default rules
-        if (item instanceof TieredItem || item instanceof BucketItem)
+        if (stack.has(DataComponents.TOOL) || item instanceof BucketItem)
         {
             return TOOL_SIZE;
         }
-        else if (item instanceof ArmorItem || item instanceof AnimalArmorItem)
+        final var equippable = stack.get(DataComponents.EQUIPPABLE);
+        if (equippable != null && switch (equippable.slot())
+            {
+                case HEAD, CHEST, LEGS, FEET, BODY -> true;
+                default -> false;
+            })
         {
             return ARMOR_SIZE;
         }

@@ -10,17 +10,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.DiggerItem;
 import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemInstance;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
 
+import net.dries007.tfc.common.LevelTier;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.util.Helpers;
 
@@ -29,11 +29,11 @@ import net.dries007.tfc.util.Helpers;
  * of mod compatibility, we repurpose {@link net.minecraft.tags.BlockTags#MINEABLE_WITH_HOE} as "mineable with sharp tool", and exclude
  * our hoes from it.
  */
-public class TFCHoeItem extends DiggerItem
+public class TFCHoeItem extends ToolItem
 {
-    public TFCHoeItem(Tier tier, Properties properties)
+    public TFCHoeItem(LevelTier tier, float attackSpeed, Properties properties)
     {
-        super(tier, TFCTags.Blocks.MINEABLE_WITH_HOE, properties);
+        super(tier, TFCTags.Blocks.MINEABLE_WITH_HOE, 0.5f, attackSpeed, properties);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class TFCHoeItem extends DiggerItem
     }
 
     @Override
-    public boolean canPerformAction(ItemStack stack, ItemAbility itemAbility)
+    public boolean canPerformAction(ItemInstance stack, ItemAbility itemAbility)
     {
         return ItemAbilities.DEFAULT_HOE_ACTIONS.contains(itemAbility);
     }

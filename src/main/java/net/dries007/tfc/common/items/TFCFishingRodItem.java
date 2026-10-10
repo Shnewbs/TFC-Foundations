@@ -6,7 +6,7 @@
 
 package net.dries007.tfc.common.items;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -20,11 +20,11 @@ import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.FishingRodItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 
+import net.dries007.tfc.common.LevelTier;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.component.Bait;
 import net.dries007.tfc.common.component.BaitType;
@@ -44,9 +44,9 @@ public class TFCFishingRodItem extends FishingRodItem
         return main || off;
     }
 
-    private final Tier tier;
+    private final LevelTier tier;
 
-    public TFCFishingRodItem(Properties properties, Tier tier)
+    public TFCFishingRodItem(Properties properties, LevelTier tier)
     {
         super(properties);
         this.tier = tier;
@@ -91,12 +91,12 @@ public class TFCFishingRodItem extends FishingRodItem
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag tooltipFlag)
+    public void appendHoverText(ItemStack stack, TooltipContext context, net.minecraft.world.item.component.TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag tooltipFlag)
     {
         final ItemStack bait = Bait.getBait(stack);
         if (!bait.isEmpty())
         {
-            tooltip.add(Component.translatable("tfc.tooltip.fishing.bait").append(bait.getHoverName()));
+            tooltip.accept(Component.translatable("tfc.tooltip.fishing.bait").append(bait.getHoverName()));
         }
     }
 

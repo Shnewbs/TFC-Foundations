@@ -12,6 +12,9 @@ import java.util.Collections;
 import java.util.function.BiPredicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
+import net.minecraft.tags.TagKey;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -132,7 +135,23 @@ public final class RecipeHelpers
 
     public static Stream<Item> stream(Ingredient ingredient)
     {
-        return Arrays.stream(ingredient.getItems()).map(ItemStack::getItem);
+        return ingredient.items().map(Holder::value);
+    }
+
+    public static Ingredient ingredient(TagKey<Item> tag)
+    {
+        return Ingredient.of(BuiltInRegistries.ITEM.getOrThrow(tag));
+    }
+
+    public static ItemStack[] stacks(Ingredient ingredient)
+    {
+        return ingredient.items().map(Holder::value).map(ItemStack::new).toArray(ItemStack[]::new);
+    }
+
+    public static ItemStack[] stacks(net.neoforged.neoforge.common.crafting.SizedIngredient ingredient)
+    {
+        final int count = ingredient.count();
+        return ingredient.ingredient().items().map(Holder::value).map(item -> new ItemStack(item, count)).toArray(ItemStack[]::new);
     }
 
     public static Collection<Fluid> fluidKeys(FluidIngredient ingredient)

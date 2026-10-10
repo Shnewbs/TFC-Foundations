@@ -14,13 +14,13 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
+import net.dries007.tfc.common.LevelTier;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.player.IPlayerInfo;
 import net.dries007.tfc.common.recipes.ChiselRecipe;
@@ -31,9 +31,9 @@ import net.dries007.tfc.util.advancements.TFCAdvancements;
 
 public class ChiselItem extends ToolItem
 {
-    public ChiselItem(Tier tier, Properties properties)
+    public ChiselItem(LevelTier tier, Properties properties)
     {
-        super(tier, TFCTags.Blocks.MINEABLE_WITH_CHISEL, properties);
+        super(tier, TFCTags.Blocks.MINEABLE_WITH_CHISEL, .27f, 1.5f, properties);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class ChiselItem extends ToolItem
                 }
 
                 Helpers.damageItem(held, player, InteractionHand.MAIN_HAND);
-                player.getCooldowns().addCooldown(this, 10);
+                player.getCooldowns().addCooldown(context.getItemInHand(), 10);
                 return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }, Function.identity()); // returns the interaction result if we are given one
         }

@@ -11,18 +11,18 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
+import net.dries007.tfc.common.LevelTier;
 import net.dries007.tfc.common.TFCTags;
 
 public class ScytheItem extends ToolItem implements CreativeMiningTool
 {
-    public ScytheItem(Tier tier, Properties properties)
+    public ScytheItem(LevelTier tier, Properties properties)
     {
-        super(tier, TFCTags.Blocks.MINEABLE_WITH_SCYTHE, properties);
+        super(tier, TFCTags.Blocks.MINEABLE_WITH_SCYTHE, .7f, -3.2f, properties);
     }
 
     @Override

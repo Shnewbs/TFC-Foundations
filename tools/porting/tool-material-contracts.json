@@ -1,0 +1,196 @@
+{
+  "baseline_code_commit": "8af359f43f38eac497b7b17205db529a09887b2f",
+  "purpose": "Frozen TFC metal/rock tier balance constants copied from old source, not runtime tests",
+  "tiers": [
+    {
+      "field": "IGNEOUS_INTRUSIVE",
+      "name": "igneous_intrusive",
+      "block_tag": "INCORRECT_FOR_WOODEN_TOOL",
+      "level": 0,
+      "durability": 60,
+      "speed": 4.7,
+      "attack_bonus": 2.0,
+      "enchantment": 5
+    },
+    {
+      "field": "IGNEOUS_EXTRUSIVE",
+      "name": "igneous_extrusive",
+      "block_tag": "INCORRECT_FOR_WOODEN_TOOL",
+      "level": 0,
+      "durability": 70,
+      "speed": 4.7,
+      "attack_bonus": 2.0,
+      "enchantment": 5
+    },
+    {
+      "field": "SEDIMENTARY",
+      "name": "sedimentary",
+      "block_tag": "INCORRECT_FOR_WOODEN_TOOL",
+      "level": 0,
+      "durability": 50,
+      "speed": 4.0,
+      "attack_bonus": 2.0,
+      "enchantment": 5
+    },
+    {
+      "field": "METAMORPHIC",
+      "name": "metamorphic",
+      "block_tag": "INCORRECT_FOR_WOODEN_TOOL",
+      "level": 0,
+      "durability": 55,
+      "speed": 4.35,
+      "attack_bonus": 2.0,
+      "enchantment": 5
+    },
+    {
+      "field": "OBSIDIAN",
+      "name": "obsidian",
+      "block_tag": "INCORRECT_FOR_WOODEN_TOOL",
+      "level": 0,
+      "durability": 60,
+      "speed": 5.0,
+      "attack_bonus": 2.5,
+      "enchantment": 8
+    },
+    {
+      "field": "COPPER",
+      "name": "copper",
+      "block_tag": "INCORRECT_FOR_STONE_TOOL",
+      "level": 1,
+      "durability": 600,
+      "speed": 5.25,
+      "attack_bonus": 3.25,
+      "enchantment": 8
+    },
+    {
+      "field": "BRONZE",
+      "name": "bronze",
+      "block_tag": "INCORRECT_FOR_IRON_TOOL",
+      "level": 2,
+      "durability": 1300,
+      "speed": 7.3,
+      "attack_bonus": 4.0,
+      "enchantment": 13
+    },
+    {
+      "field": "BISMUTH_BRONZE",
+      "name": "bismuth_bronze",
+      "block_tag": "INCORRECT_FOR_IRON_TOOL",
+      "level": 2,
+      "durability": 1200,
+      "speed": 6.65,
+      "attack_bonus": 4.0,
+      "enchantment": 10
+    },
+    {
+      "field": "BLACK_BRONZE",
+      "name": "black_bronze",
+      "block_tag": "INCORRECT_FOR_IRON_TOOL",
+      "level": 2,
+      "durability": 1460,
+      "speed": 6.0,
+      "attack_bonus": 4.25,
+      "enchantment": 10
+    },
+    {
+      "field": "WROUGHT_IRON",
+      "name": "wrought_iron",
+      "block_tag": "INCORRECT_FOR_IRON_TOOL",
+      "level": 3,
+      "durability": 2200,
+      "speed": 8.0,
+      "attack_bonus": 4.75,
+      "enchantment": 12
+    },
+    {
+      "field": "STEEL",
+      "name": "steel",
+      "block_tag": "INCORRECT_FOR_DIAMOND_TOOL",
+      "level": 4,
+      "durability": 3300,
+      "speed": 9.5,
+      "attack_bonus": 5.75,
+      "enchantment": 12
+    },
+    {
+      "field": "BLACK_STEEL",
+      "name": "black_steel",
+      "block_tag": "INCORRECT_FOR_NETHERITE_TOOL",
+      "level": 5,
+      "durability": 4200,
+      "speed": 11.0,
+      "attack_bonus": 7.0,
+      "enchantment": 17
+    },
+    {
+      "field": "BLUE_STEEL",
+      "name": "blue_steel",
+      "block_tag": "INCORRECT_FOR_NETHERITE_TOOL",
+      "level": 6,
+      "durability": 6500,
+      "speed": 12.0,
+      "attack_bonus": 9.0,
+      "enchantment": 22
+    },
+    {
+      "field": "RED_STEEL",
+      "name": "red_steel",
+      "block_tag": "INCORRECT_FOR_NETHERITE_TOOL",
+      "level": 6,
+      "durability": 6500,
+      "speed": 12.0,
+      "attack_bonus": 9.0,
+      "enchantment": 22
+    }
+  ],
+  "metal_attack_factors": {
+    "PICKAXE": [
+      0.75,
+      -2.8
+    ],
+    "AXE": [
+      1.5,
+      -3.1
+    ],
+    "SHOVEL": [
+      0.875,
+      -3.0
+    ],
+    "HOE": [
+      0.5,
+      -2.0
+    ],
+    "CHISEL": [
+      0.27,
+      1.5
+    ],
+    "HAMMER": [
+      1,
+      -3
+    ],
+    "SAW": [
+      0.5,
+      -3
+    ],
+    "JAVELIN": [
+      0.7,
+      -2.6
+    ],
+    "SWORD": [
+      1,
+      -2.4
+    ],
+    "MACE": [
+      1.3,
+      -3.4
+    ],
+    "KNIFE": [
+      0.6,
+      -2.0
+    ],
+    "SCYTHE": [
+      0.7,
+      -3.2
+    ]
+  }
+}

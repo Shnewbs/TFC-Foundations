@@ -9,6 +9,7 @@ package net.dries007.tfc.common.items;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.Map;
 import java.util.Random;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -24,6 +25,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -96,7 +98,7 @@ public class PropickItem extends ToolItem
 
     public PropickItem(LevelTier tier, Properties properties)
     {
-        super(tier, TFCTags.Blocks.MINEABLE_WITH_PROPICK, properties);
+        super(tier, TFCTags.Blocks.MINEABLE_WITH_PROPICK, .5f, -2.8f, properties);
 
         this.falseNegativeChance = 0.3f - Mth.clamp(tier.level(), 0, 5) * (0.3f / 5f);
     }
@@ -117,7 +119,7 @@ public class PropickItem extends ToolItem
             level.playSound(player, pos, sound.getHitSound(), SoundSource.PLAYERS, sound.getVolume(), sound.getPitch());
 
             Helpers.damageItem(context.getItemInHand(), player, context.getHand());
-            player.getCooldowns().addCooldown(this, COOLDOWN);
+            player.getCooldowns().addCooldown(context.getItemInHand(), COOLDOWN);
 
             ProspectResult result;
             Block found = state.getBlock();
@@ -162,11 +164,11 @@ public class PropickItem extends ToolItem
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag)
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag)
     {
         if (flag.isAdvanced())
         {
-            tooltip.add(Component.translatable("tfc.tooltip.propick.accuracy", (int) (100 * (1 - falseNegativeChance))).withStyle(ChatFormatting.GRAY));
+            tooltip.accept(Component.translatable("tfc.tooltip.propick.accuracy", (int) (100 * (1 - falseNegativeChance))).withStyle(ChatFormatting.GRAY));
         }
     }
 }

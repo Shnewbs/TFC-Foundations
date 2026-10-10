@@ -6,19 +6,19 @@
 
 package net.dries007.tfc.common.items;
 
+import net.dries007.tfc.common.LevelTier;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.rotation.GearBoxBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.LevelReader;
 
 public class HammerItem extends ToolItem
 {
-    public HammerItem(Tier tier, Properties properties)
+    public HammerItem(LevelTier tier, Properties properties)
     {
-        super(tier, TFCTags.Blocks.MINEABLE_WITH_HAMMER, properties);
+        super(tier, TFCTags.Blocks.MINEABLE_WITH_HAMMER, 1f, -3f, properties);
     }
 
     @Override

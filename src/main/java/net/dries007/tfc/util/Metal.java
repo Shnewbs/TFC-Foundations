@@ -18,12 +18,9 @@ import net.minecraft.world.item.equipment.ArmorMaterial;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.item.ShovelItem;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.SlabBlock;
@@ -334,37 +331,37 @@ public enum Metal implements StringRepresentable, RegistryMetal
         SHEET(PartType.DEFAULT, false),
         DOUBLE_SHEET(PartType.DEFAULT, false),
         ROD(PartType.DEFAULT, false),
-        TUYERE(PartType.ALL, metal -> new TieredItem(metal.toolTier(), base(metal))),
+        TUYERE(PartType.ALL, metal -> new Item(base(metal).durability(metal.toolTier().getUses()).enchantable(metal.toolTier().getEnchantmentValue()))),
         FISH_HOOK(PartType.ALL, false),
         FISHING_ROD(PartType.ALL, metal -> new TFCFishingRodItem(base(metal).durability(metal.toolTier().getUses()), metal.toolTier())),
         UNFINISHED_LAMP(PartType.ALL, metal -> new Item(base(metal))),
 
         // Tools and Tool Heads
-        PICKAXE(PartType.ALL, metal -> new PickaxeItem(metal.toolTier(), tool(metal, 0.75f, -2.8f))),
+        PICKAXE(PartType.ALL, metal -> new Item(base(metal).pickaxe(metal.toolTier().material(), ToolItem.baseAttackDamage(metal.toolTier(), 0.75f), -2.8f).attributes(ToolItem.productAttributes(metal.toolTier(), 0.75f, -2.8f)))),
         PICKAXE_HEAD(PartType.ALL, true),
-        PROPICK(PartType.ALL, metal -> new PropickItem(metal.toolTier(), tool(metal, 0.5f, -2.8f))),
+        PROPICK(PartType.ALL, metal -> new PropickItem(metal.toolTier(), base(metal))),
         PROPICK_HEAD(PartType.ALL, true),
-        AXE(PartType.ALL, metal -> new AxeItem(metal.toolTier(), tool(metal, 1.5f, -3.1f))),
+        AXE(PartType.ALL, metal -> new AxeItem(metal.toolTier().material(), ToolItem.baseAttackDamage(metal.toolTier(), 1.5f), -3.1f, base(metal))),
         AXE_HEAD(PartType.ALL, true),
-        SHOVEL(PartType.ALL, metal -> new ShovelItem(metal.toolTier(), tool(metal, 0.875f, -3.0f))),
+        SHOVEL(PartType.ALL, metal -> new ShovelItem(metal.toolTier().material(), ToolItem.baseAttackDamage(metal.toolTier(), 0.875f), -3.0f, base(metal))),
         SHOVEL_HEAD(PartType.ALL, true),
-        HOE(PartType.ALL, metal -> new TFCHoeItem(metal.toolTier(), tool(metal, 0.5f, -2.0f))),
+        HOE(PartType.ALL, metal -> new TFCHoeItem(metal.toolTier(), -2.0f, base(metal))),
         HOE_HEAD(PartType.ALL, true),
-        CHISEL(PartType.ALL, metal -> new ChiselItem(metal.toolTier(), tool(metal, 0.27f, 1.5f))),
+        CHISEL(PartType.ALL, metal -> new ChiselItem(metal.toolTier(), base(metal))),
         CHISEL_HEAD(PartType.ALL, true),
-        HAMMER(PartType.ALL, metal -> new HammerItem(metal.toolTier(), tool(metal, 1f, -3f))),
+        HAMMER(PartType.ALL, metal -> new HammerItem(metal.toolTier(), base(metal))),
         HAMMER_HEAD(PartType.ALL, true),
-        SAW(PartType.ALL, metal -> new AxeItem(metal.toolTier(), tool(metal, 0.5f, -3f))),
+        SAW(PartType.ALL, metal -> new AxeItem(metal.toolTier().material(), ToolItem.baseAttackDamage(metal.toolTier(), 0.5f), -3f, base(metal))),
         SAW_BLADE(PartType.ALL, true),
-        JAVELIN(PartType.ALL, metal -> new JavelinItem(metal.toolTier(), tool(metal, 0.7f, -2.6f))),
+        JAVELIN(PartType.ALL, metal -> new JavelinItem(metal.toolTier(), -2.6f, base(metal))),
         JAVELIN_HEAD(PartType.ALL, true),
-        SWORD(PartType.ALL, metal -> new SwordItem(metal.toolTier(), tool(metal, 1f, -2.4f))),
+        SWORD(PartType.ALL, metal -> new Item(ToolItem.swordProperties(metal.toolTier(), 1f, -2.4f, base(metal)))),
         SWORD_BLADE(PartType.ALL, true),
-        MACE(PartType.ALL, metal -> new TFCMaceItem(tool(metal, 1.3f, -3.4f).durability(metal.toolTier().getUses()))),
+        MACE(PartType.ALL, metal -> new TFCMaceItem(base(metal).attributes(ToolItem.productAttributes(metal.toolTier(), 1.3f, -3.4f)).durability(metal.toolTier().getUses()))),
         MACE_HEAD(PartType.ALL, true),
-        KNIFE(PartType.ALL, metal -> new ToolItem(metal.toolTier(), TFCTags.Blocks.MINEABLE_WITH_KNIFE, tool(metal, 0.6f, -2.0f))),
+        KNIFE(PartType.ALL, metal -> new ToolItem(metal.toolTier(), TFCTags.Blocks.MINEABLE_WITH_KNIFE, 0.6f, -2.0f, base(metal))),
         KNIFE_BLADE(PartType.ALL, true),
-        SCYTHE(PartType.ALL, metal -> new ScytheItem(metal.toolTier(), tool(metal, 0.7f, -3.2f))),
+        SCYTHE(PartType.ALL, metal -> new ScytheItem(metal.toolTier(), base(metal))),
         SCYTHE_BLADE(PartType.ALL, true),
         SHEARS(PartType.ALL, metal -> new ShearsItem(base(metal).durability(metal.toolTier().getUses()))),
 
@@ -386,10 +383,6 @@ public enum Metal implements StringRepresentable, RegistryMetal
             return new Item.Properties().rarity(metal.rarity());
         }
 
-        private static Item.Properties tool(RegistryMetal metal, float attackDamageFactor, float attackSpeed)
-        {
-            return base(metal).attributes(ToolItem.productAttributes(metal.toolTier(), attackDamageFactor, attackSpeed));
-        }
 
         private static Function<RegistryMetal, Item> armor(ArmorType type)
         {

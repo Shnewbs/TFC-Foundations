@@ -6,9 +6,21 @@
 
 package net.dries007.tfc.common;
 
-import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.ToolMaterial;
+import net.minecraft.world.item.crafting.Ingredient;
 
-public interface LevelTier extends Tier
+import net.dries007.tfc.common.recipes.RecipeHelpers;
+
+/** TFC's progression level paired with Minecraft 26.x's data-component tool material. */
+public interface LevelTier
 {
+    ToolMaterial material();
+
     int level();
+
+    default int getUses() { return material().durability(); }
+    default float getSpeed() { return material().speed(); }
+    default float getAttackDamageBonus() { return material().attackDamageBonus(); }
+    default int getEnchantmentValue() { return material().enchantmentValue(); }
+    default Ingredient getRepairIngredient() { return RecipeHelpers.ingredient(material().repairItems()); }
 }
