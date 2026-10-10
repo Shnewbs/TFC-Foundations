@@ -6,6 +6,12 @@
 
 package net.dries007.tfc.common.blocks.devices;
 
+import net.minecraft.util.RandomSource;
+
+import net.minecraft.world.level.ScheduledTickAccess;
+
+import net.minecraft.world.level.LevelReader;
+
 import java.util.Map;
 import java.util.Optional;
 import net.minecraft.util.Util;
@@ -141,7 +147,7 @@ public class ChannelBlock extends ExtendedBlock implements EntityBlockExtension
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState adjacentState, LevelAccessor level, BlockPos pos, BlockPos adjacentPos)
+    public BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos pos, Direction direction, BlockPos adjacentPos, BlockState adjacentState, RandomSource random)
     {
         for (Direction dir : Helpers.DIRECTIONS)
         {

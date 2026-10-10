@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.blocks.plant.fruit;
 
+import net.minecraft.world.level.ScheduledTickAccess;
+
+import net.minecraft.world.level.LevelReader;
+
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -48,7 +52,7 @@ public class DeadBerryBushBlock extends SeasonalPlantBlock implements IFluidLogg
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    public BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
         if (!state.canSurvive(level, currentPos))
         {
@@ -56,8 +60,8 @@ public class DeadBerryBushBlock extends SeasonalPlantBlock implements IFluidLogg
         }
         else
         {
-            FluidHelpers.tickFluid(level, currentPos, state);
-            return super.updateShape(state, facing, facingState, level, currentPos, facingPos);
+            FluidHelpers.tickFluid(level, tickAccess, currentPos, state);
+            return super.updateShape(state, level, tickAccess, currentPos, facing, facingPos, facingState, random);
         }
     }
 

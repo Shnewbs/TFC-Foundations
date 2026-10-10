@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blocks;
 
+import net.minecraft.world.level.ScheduledTickAccess;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -103,14 +105,14 @@ public abstract class RopeAnchorBlock extends AbstractRopeBlock implements IFlui
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random)
     {
-        FluidHelpers.tickFluid(level, pos, state);
+        FluidHelpers.tickFluid(level, tickAccess, pos, state);
         if (direction == Direction.DOWN && !neighborState.isFaceSturdy(level, pos, Direction.UP, SupportType.CENTER))
         {
             return Blocks.AIR.defaultBlockState();
         }
-        return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
+        return super.updateShape(state, level, tickAccess, pos, direction, neighborPos, neighborState, random);
     }
 
     @Override

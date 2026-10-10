@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.blocks;
 
+import net.minecraft.util.RandomSource;
+
+import net.minecraft.world.level.ScheduledTickAccess;
+
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 import java.util.Optional;
@@ -97,9 +101,9 @@ public class LargeVesselBlock extends SealableDeviceBlock
 
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
-        return canSurvive(state, level, currentPos) ? super.updateShape(state, facing, facingState, level, currentPos, facingPos) : Blocks.AIR.defaultBlockState();
+        return canSurvive(state, level, currentPos) ? super.updateShape(state, level, tickAccess, currentPos, facing, facingPos, facingState, random) : Blocks.AIR.defaultBlockState();
     }
 
     @Override

@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.blocks.wood;
 
+import net.minecraft.world.level.ScheduledTickAccess;
+
+import net.minecraft.world.level.LevelReader;
+
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -126,13 +130,13 @@ public class TFCLeavesBlock extends Block implements ILeavesBlock, IForgeBlockEx
      * Note that this method should ideally consider only the specific face passed in.
      */
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
-        FluidHelpers.tickFluid(level, currentPos, state);
+        FluidHelpers.tickFluid(level, tickAccess, currentPos, state);
         final int distance = getDistance(facingState) + 1;
         if (distance != 1 || state.getValue(DISTANCE) != distance)
         {
-            level.scheduleTick(currentPos, this, 1);
+            tickAccess.scheduleTick(currentPos, this, 1);
         }
         return state;
     }

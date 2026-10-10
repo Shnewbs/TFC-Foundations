@@ -6,6 +6,12 @@
 
 package net.dries007.tfc.common.blocks.crop;
 
+import net.minecraft.util.RandomSource;
+
+import net.minecraft.world.level.ScheduledTickAccess;
+
+import net.minecraft.world.level.LevelReader;
+
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -53,9 +59,9 @@ public class WildSpreadingCropBlock extends WildCropBlock implements HorizontalP
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos pos, BlockPos facingPos)
+    public BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos pos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
-        state = super.updateShape(state, facing, facingState, level, pos, facingPos);
+        state = super.updateShape(state, level, tickAccess, pos, facing, facingPos, facingState, random);
         return Helpers.setProperty(state, PROPERTY_BY_DIRECTION.get(facing), facingState.getBlock() == fruit.get().get());
     }
 

@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.blocks;
 
+import net.minecraft.util.RandomSource;
+
+import net.minecraft.world.level.ScheduledTickAccess;
+
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 import net.minecraft.core.BlockPos;
@@ -48,13 +52,13 @@ public class ShelfBlock extends PlacedItemBlock
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
         if (facing == state.getValue(FACING) && !state.canSurvive(level, currentPos))
         {
             return Blocks.AIR.defaultBlockState();
         }
-        return super.updateShape(state, facing, facingState, level, currentPos, facingPos);
+        return super.updateShape(state, level, tickAccess, currentPos, facing, facingPos, facingState, random);
     }
 
     @Override

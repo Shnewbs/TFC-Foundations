@@ -6,6 +6,12 @@
 
 package net.dries007.tfc.common.blocks.devices;
 
+import net.minecraft.util.RandomSource;
+
+import net.minecraft.world.level.ScheduledTickAccess;
+
+import net.minecraft.world.level.LevelReader;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -74,7 +80,7 @@ public class MoldTableBlock extends ExtendedBlock implements EntityBlockExtensio
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState adjacentState, LevelAccessor level, BlockPos pos, BlockPos adjacentPos)
+    public BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos pos, Direction direction, BlockPos adjacentPos, BlockState adjacentState, RandomSource random)
     {
         // Iterate through neighbors and check if they are connected channels
         for (final Direction neighborDirection : Direction.Plane.HORIZONTAL)

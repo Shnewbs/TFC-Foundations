@@ -6,6 +6,12 @@
 
 package net.dries007.tfc.common.blocks.plant.fruit;
 
+import net.minecraft.util.RandomSource;
+
+import net.minecraft.world.level.ScheduledTickAccess;
+
+import net.minecraft.world.level.LevelReader;
+
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
@@ -62,10 +68,10 @@ public class WaterloggedBerryBushBlock extends StationaryBerryBushBlock implemen
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    public BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
-        FluidHelpers.tickFluid(level, currentPos, state);
-        return state.canSurvive(level, currentPos) ? super.updateShape(state, facing, facingState, level, currentPos, facingPos) : state.getFluidState().createLegacyBlock();
+        FluidHelpers.tickFluid(level, tickAccess, currentPos, state);
+        return state.canSurvive(level, currentPos) ? super.updateShape(state, level, tickAccess, currentPos, facing, facingPos, facingState, random) : state.getFluidState().createLegacyBlock();
     }
 
     @Override

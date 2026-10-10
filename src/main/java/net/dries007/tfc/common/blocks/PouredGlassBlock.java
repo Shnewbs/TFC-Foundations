@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.blocks;
 
+import net.minecraft.util.RandomSource;
+
+import net.minecraft.world.level.ScheduledTickAccess;
+
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -85,8 +89,8 @@ public class PouredGlassBlock extends ExtendedBlock
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
-        return facing == Direction.DOWN && (!facingState.isFaceSturdy(level, facingPos, Direction.UP) && !Helpers.isBlock(facingState, TFCTags.Blocks.SOLID_TOP_FACE)) ? Blocks.AIR.defaultBlockState() : super.updateShape(state, facing, facingState, level, currentPos, facingPos);
+        return facing == Direction.DOWN && (!facingState.isFaceSturdy(level, facingPos, Direction.UP) && !Helpers.isBlock(facingState, TFCTags.Blocks.SOLID_TOP_FACE)) ? Blocks.AIR.defaultBlockState() : super.updateShape(state, level, tickAccess, currentPos, facing, facingPos, facingState, random);
     }
 }

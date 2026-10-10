@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blocks.plant;
 
+import net.minecraft.world.level.ScheduledTickAccess;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -118,9 +120,9 @@ public abstract class CreepingWaterPlantBlock extends CreepingPlantBlock impleme
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    public BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction direction, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
-        FluidHelpers.tickFluid(level, currentPos, state);
+        FluidHelpers.tickFluid(level, tickAccess, currentPos, state);
         state = state.setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(direction), canCreepOn(level, facingPos, facingState, direction));
         return isEmptyContents(state) ? Blocks.AIR.defaultBlockState() : state;
     }

@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blocks.plant;
 
+import net.minecraft.world.level.ScheduledTickAccess;
+
 import java.util.Map;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.BlockPos;
@@ -121,7 +123,7 @@ public abstract class CreepingPlantBlock extends PlantBlock implements Direction
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    public BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction direction, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
         state = state.setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(direction), canCreepOn(level, facingPos, facingState, direction));
         return isEmptyContents(state) ? Blocks.AIR.defaultBlockState() : state;

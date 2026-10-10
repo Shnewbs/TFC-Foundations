@@ -6,6 +6,9 @@
 
 package net.dries007.tfc.common.fluids;
 
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
+
 import java.util.function.Consumer;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -730,6 +733,28 @@ public final class FluidHelpers
      *
      * @param tickWhenEmpty If when the fluid state is empty, this should still schedule a block tick. This is for blocks that want to be removed, generally, when fluid is removed.
      */
+    /**
+     * The 26.1.2 neighbor-update callback provides an immutable world reader and
+     * a separate scheduler. Never cast the reader back to a mutable level.
+     */
+    public static void tickFluid(LevelReader level, ScheduledTickAccess ticks, BlockPos pos, BlockState state, boolean tickWhenEmpty)
+    {
+        if (!state.getFluidState().isEmpty())
+        {
+            final Fluid fluid = state.getFluidState().getType();
+            ticks.scheduleTick(pos, fluid, fluid.getTickDelay(level));
+        }
+        else if (tickWhenEmpty)
+        {
+            ticks.scheduleTick(pos, state.getBlock(), 1);
+        }
+    }
+
+    public static void tickFluid(LevelReader level, ScheduledTickAccess ticks, BlockPos pos, BlockState state)
+    {
+        tickFluid(level, ticks, pos, state, false);
+    }
+
     public static void tickFluid(LevelAccessor level, BlockPos pos, BlockState state, boolean tickWhenEmpty)
     {
         if (!state.getFluidState().isEmpty())

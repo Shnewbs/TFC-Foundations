@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.blocks;
 
+import net.minecraft.world.level.ScheduledTickAccess;
+
+import net.minecraft.world.level.LevelReader;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -25,11 +29,11 @@ public class TFCMagmaBlock extends MagmaBlock implements IForgeBlockExtension
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState faceState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState faceState, RandomSource random)
     {
         if (facing == Direction.UP && TFCBubbleColumnBlock.canExistIn(faceState))
         {
-            level.scheduleTick(currentPos, this, 20);
+            tickAccess.scheduleTick(currentPos, this, 20);
         }
         return state;
     }

@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blocks.plant;
 
+import net.minecraft.world.level.ScheduledTickAccess;
+
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -49,11 +51,11 @@ public abstract class PipePlantBlock extends PipeBlock implements IForgeBlockExt
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
         if (!state.canSurvive(level, currentPos))
         {
-            level.scheduleTick(currentPos, this, 1);
+            tickAccess.scheduleTick(currentPos, this, 1);
             return state;
         }
         else

@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.blocks.devices;
 
+import net.minecraft.util.RandomSource;
+
+import net.minecraft.world.level.ScheduledTickAccess;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -48,7 +52,7 @@ public class VaneBlock extends DeviceBlock
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos blockpos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos blockpos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
         if (facing == Direction.DOWN)
         {
@@ -60,7 +64,7 @@ public class VaneBlock extends DeviceBlock
                 ? this.defaultBlockState().setValue(ATTACHED_WIND_DEVICES, true)
                 : this.defaultBlockState();
         }
-        return super.updateShape(state, facing, facingState, level, blockpos, facingPos);
+        return super.updateShape(state, level, tickAccess, blockpos, facing, facingPos, facingState, random);
     }
 
     @Override

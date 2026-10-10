@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blocks.soil;
 
+import net.minecraft.world.level.ScheduledTickAccess;
+
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -268,13 +270,13 @@ public class FarmlandBlock extends Block implements ISoilBlock, HoeOverlayBlock,
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
         if (facing == Direction.UP && !state.canSurvive(level, currentPos))
         {
-            level.scheduleTick(currentPos, this, 1);
+            tickAccess.scheduleTick(currentPos, this, 1);
         }
-        return super.updateShape(state, facing, facingState, level, currentPos, facingPos);
+        return super.updateShape(state, level, tickAccess, currentPos, facing, facingPos, facingState, random);
     }
 
     @Override

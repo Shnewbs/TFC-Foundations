@@ -6,6 +6,12 @@
 
 package net.dries007.tfc.common.blocks;
 
+import net.minecraft.util.RandomSource;
+
+import net.minecraft.world.level.ScheduledTickAccess;
+
+import net.minecraft.world.level.LevelReader;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -68,10 +74,10 @@ public class ThatchBlock extends Block implements IForgeBlockExtension, IFluidLo
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos currentPos, BlockPos neighborPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random)
     {
-        FluidHelpers.tickFluid(level, currentPos, state);
-        return super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
+        FluidHelpers.tickFluid(level, tickAccess, currentPos, state);
+        return super.updateShape(state, level, tickAccess, currentPos, direction, neighborPos, neighborState, random);
     }
 
     @Override

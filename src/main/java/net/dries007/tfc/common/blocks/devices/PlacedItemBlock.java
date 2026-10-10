@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.blocks.devices;
 
+import net.minecraft.util.RandomSource;
+
+import net.minecraft.world.level.ScheduledTickAccess;
+
 import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
@@ -85,7 +89,7 @@ public class PlacedItemBlock extends DeviceBlock implements IForgeBlockExtension
      * @param state The current state
      * @return The new placed item state, after updating for change in the shape of the below block
      */
-    public static BlockState updateStateValues(LevelAccessor level, BlockPos pos, BlockState state)
+    public static BlockState updateStateValues(LevelReader level, BlockPos pos, BlockState state)
     {
         final VoxelShape shapeBelow = level.getBlockState(pos).getBlockSupportShape(level, pos).getFaceShape(Direction.UP);
         for (int slot = 0; slot < 4; slot++)
@@ -150,7 +154,7 @@ public class PlacedItemBlock extends DeviceBlock implements IForgeBlockExtension
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos pos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos pos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
         final BlockState updateState = updateStateValues(level, pos.below(), state);
         if (!persistentWhenEmpty && isEmptyContents(updateState))

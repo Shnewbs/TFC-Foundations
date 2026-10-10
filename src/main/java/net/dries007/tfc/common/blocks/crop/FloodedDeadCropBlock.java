@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.blocks.crop;
 
+import net.minecraft.util.RandomSource;
+
+import net.minecraft.world.level.ScheduledTickAccess;
+
 
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
@@ -59,10 +63,10 @@ public class FloodedDeadCropBlock extends DeadCropBlock implements IFluidLoggabl
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    public BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
-        FluidHelpers.tickFluid(level, currentPos, state);
-        return super.updateShape(state, facing, facingState, level, currentPos, facingPos);
+        FluidHelpers.tickFluid(level, tickAccess, currentPos, state);
+        return super.updateShape(state, level, tickAccess, currentPos, facing, facingPos, facingState, random);
     }
 
     @Override

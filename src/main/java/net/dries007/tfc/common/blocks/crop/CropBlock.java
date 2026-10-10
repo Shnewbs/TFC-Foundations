@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blocks.crop;
 
+import net.minecraft.world.level.ScheduledTickAccess;
+
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
@@ -109,7 +111,7 @@ public abstract class CropBlock extends net.minecraft.world.level.block.CropBloc
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    public BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
         return !state.canSurvive(level, currentPos) ? Blocks.AIR.defaultBlockState() : state;
     }

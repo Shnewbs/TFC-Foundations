@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blocks.plant;
 
+import net.minecraft.world.level.ScheduledTickAccess;
+
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 import java.util.function.Supplier;
@@ -87,12 +89,12 @@ public abstract class KelpTreeFlowerBlock extends Block implements IFluidLoggabl
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
-        FluidHelpers.tickFluid(level, currentPos, state, true);
+        FluidHelpers.tickFluid(level, tickAccess, currentPos, state, true);
         if (!state.canSurvive(level, currentPos))
         {
-            level.scheduleTick(currentPos, this, 1);
+            tickAccess.scheduleTick(currentPos, this, 1);
             return Blocks.AIR.defaultBlockState();
         }
         return state;
@@ -164,7 +166,7 @@ public abstract class KelpTreeFlowerBlock extends Block implements IFluidLoggabl
         Fluid fluid = state.getValue(getFluidProperty()).getFluid();
 
         BlockPos abovePos = pos.above();
-        if (isEmptyWaterBlock(level, abovePos) && abovePos.getY() < level.getMaxBuildHeight() && TFCConfig.SERVER.plantLongGrowthChance.get() > random.nextDouble())
+        if (isEmptyWaterBlock(level, abovePos) && abovePos.getY() <= level.getMaxY() && TFCConfig.SERVER.plantLongGrowthChance.get() > random.nextDouble())
         {
             int i = state.getValue(AGE);
             if (i < 5 && CommonHooks.canCropGrow(level, abovePos, state, true))

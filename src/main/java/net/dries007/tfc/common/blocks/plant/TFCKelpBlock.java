@@ -6,6 +6,12 @@
 
 package net.dries007.tfc.common.blocks.plant;
 
+import net.minecraft.util.RandomSource;
+
+import net.minecraft.world.level.ScheduledTickAccess;
+
+import net.minecraft.world.level.LevelReader;
+
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -52,11 +58,11 @@ public abstract class TFCKelpBlock extends BodyPlantBlock implements IFluidLogga
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
         if (facing == this.growthDirection.getOpposite() && !state.canSurvive(level, currentPos))
         {
-            level.scheduleTick(currentPos, this, 1);
+            tickAccess.scheduleTick(currentPos, this, 1);
         }
         //This is where vanilla assumes (wrongly) that the abstract block has correct waterlogged handling
         GrowingPlantHeadBlock topBlock = this.getHeadBlock();
@@ -70,9 +76,9 @@ public abstract class TFCKelpBlock extends BodyPlantBlock implements IFluidLogga
         }
         if (scheduleFluidTicks)
         {
-            FluidHelpers.tickFluid(level, currentPos, state);
+            FluidHelpers.tickFluid(level, tickAccess, currentPos, state);
         }
-        return super.updateShape(state, facing, facingState, level, currentPos, facingPos);
+        return super.updateShape(state, level, tickAccess, currentPos, facing, facingPos, facingState, random);
     }
 
     @Override

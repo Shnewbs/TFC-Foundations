@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blocks.devices;
 
+import net.minecraft.world.level.ScheduledTickAccess;
+
 import java.util.function.BiPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -55,8 +57,8 @@ public class CharcoalForgeBlock extends DeviceBlock implements IBellowsConsumer
 
     static
     {
-        BiPredicate<LevelAccessor, BlockPos> skyMatcher = LevelAccessor::canSeeSky;
-        BiPredicate<LevelAccessor, BlockPos> isValidSide = (level, pos) -> isForgeInsulationBlock(level.getBlockState(pos));
+        BiPredicate<LevelReader, BlockPos> skyMatcher = LevelReader::canSeeSky;
+        BiPredicate<LevelReader, BlockPos> isValidSide = (level, pos) -> isForgeInsulationBlock(level.getBlockState(pos));
         BlockPos origin = BlockPos.ZERO;
         FORGE_MULTIBLOCK = new MultiBlock()
             // Top block
@@ -71,7 +73,7 @@ public class CharcoalForgeBlock extends DeviceBlock implements IBellowsConsumer
             .matchEachDirection(origin, isValidSide, new Direction[] {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.DOWN}, 1);
     }
 
-    public static boolean isValid(LevelAccessor level, BlockPos pos)
+    public static boolean isValid(LevelReader level, BlockPos pos)
     {
         return FORGE_MULTIBLOCK.test(level, pos);
     }
@@ -136,7 +138,7 @@ public class CharcoalForgeBlock extends DeviceBlock implements IBellowsConsumer
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader world, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
         return state.getValue(HEAT) > 0 && !isValid(world, currentPos) ? state.setValue(HEAT, 0) : state;
     }

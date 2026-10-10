@@ -6,6 +6,12 @@
 
 package net.dries007.tfc.common.blocks.rotation;
 
+import net.minecraft.util.RandomSource;
+
+import net.minecraft.world.level.ScheduledTickAccess;
+
+import net.minecraft.world.level.LevelReader;
+
 import java.util.Locale;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
@@ -89,7 +95,7 @@ public class CrankshaftBlock extends HorizontalDirectionalBlock implements IForg
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
         if (state.getValue(PART) == Part.SHAFT && facingPos.equals(getPartnerPos(currentPos, state)))
         {

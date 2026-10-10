@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blocks;
 
+import net.minecraft.world.level.ScheduledTickAccess;
+
 import java.util.Map;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
@@ -160,11 +162,11 @@ public class TFCBubbleColumnBlock extends BubbleColumnBlock
 
     // Modified from the vanilla one in order to support TFC fluids
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos pos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos pos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
         final Fluid fluid = getFluid();
 
-        level.scheduleTick(pos, fluid, fluid.getTickDelay(level));
+        tickAccess.scheduleTick(pos, fluid, fluid.getTickDelay(level));
         if (!state.canSurvive(level, pos))
         {
             return fluid.defaultFluidState().createLegacyBlock();
@@ -172,7 +174,7 @@ public class TFCBubbleColumnBlock extends BubbleColumnBlock
 
         if (facing == Direction.DOWN || (facing == Direction.UP && !(facingState.getBlock() instanceof TFCBubbleColumnBlock) && canExistIn(facingState)))
         {
-            level.scheduleTick(pos, this, 5);
+            tickAccess.scheduleTick(pos, this, 5);
         }
 
         return state;

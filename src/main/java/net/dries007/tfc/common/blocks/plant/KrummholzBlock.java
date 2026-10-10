@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blocks.plant;
 
+import net.minecraft.world.level.ScheduledTickAccess;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -87,11 +89,11 @@ public class KrummholzBlock extends ExtendedBlock
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos pos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos pos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
         if (facing == Direction.DOWN && !state.canSurvive(level, pos))
         {
-            level.scheduleTick(pos, this, 1);
+            tickAccess.scheduleTick(pos, this, 1);
         }
         else if (facing == Direction.DOWN)
         {

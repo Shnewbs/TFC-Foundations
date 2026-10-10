@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.blocks.plant;
 
+import net.minecraft.util.RandomSource;
+
+import net.minecraft.world.level.ScheduledTickAccess;
+
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 import java.util.Map;
@@ -74,7 +78,7 @@ public abstract class EpiphytePlantBlock extends PlantBlock
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction direction, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction direction, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
         // Must be attached to a log
         if (direction.getOpposite() == state.getValue(FACING) && !Helpers.isBlock(facingState, BlockTags.LOGS))

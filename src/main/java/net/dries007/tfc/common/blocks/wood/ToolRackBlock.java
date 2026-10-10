@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.blocks.wood;
 
+import net.minecraft.util.RandomSource;
+
+import net.minecraft.world.level.ScheduledTickAccess;
+
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 import net.minecraft.core.BlockPos;
@@ -56,7 +60,7 @@ public class ToolRackBlock extends DeviceBlock implements SimpleWaterloggedBlock
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
         if (facing.getOpposite() == state.getValue(FACING) && !state.canSurvive(level, currentPos))
         {
@@ -64,9 +68,9 @@ public class ToolRackBlock extends DeviceBlock implements SimpleWaterloggedBlock
         }
         else if (state.getValue(WATERLOGGED))
         {
-            level.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+            tickAccess.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
-        return super.updateShape(state, facing, facingState, level, currentPos, facingPos);
+        return super.updateShape(state, level, tickAccess, currentPos, facing, facingPos, facingState, random);
     }
 
     @Override

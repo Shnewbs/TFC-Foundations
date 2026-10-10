@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.blocks.rock;
 
+import net.minecraft.world.level.ScheduledTickAccess;
+
+import net.minecraft.world.level.LevelReader;
+
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -96,7 +100,7 @@ public class AqueductBlock extends HorizontalDirectionalBlock implements IFluidL
         return !state.isAir() && (state.getFluidState().isSource() || (state.getFluidState().hasProperty(FlowingFluid.LEVEL) && state.getFluidState().getValue(FlowingFluid.LEVEL) == 8));
     }
 
-    private static BlockState updateOpenSides(LevelAccessor level, BlockPos pos, BlockState state)
+    private static BlockState updateOpenSides(LevelReader level, BlockPos pos, BlockState state)
     {
         int openSides = 0;
         @Nullable Direction openDirection = null;
@@ -189,13 +193,13 @@ public class AqueductBlock extends HorizontalDirectionalBlock implements IFluidL
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction direction, BlockState adjacentState, LevelAccessor level, BlockPos pos, BlockPos adjacentPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos pos, Direction direction, BlockPos adjacentPos, BlockState adjacentState, RandomSource random)
     {
-        FluidHelpers.tickFluid(level, pos, state);
+        FluidHelpers.tickFluid(level, tickAccess, pos, state);
         final BlockState newState = updateOpenSides(level, pos, state);
         if (state != newState || (state.getValue(getFluidProperty()).getFluid() == Fluids.EMPTY ? direction.getAxis().getPlane() == Direction.Plane.HORIZONTAL && state.getValue(DirectionPropertyBlock.getProperty(direction)) : direction == state.getValue(FACING)))
         {
-            level.scheduleTick(pos, this, LONG_TICK_DELAY);
+            tickAccess.scheduleTick(pos, this, LONG_TICK_DELAY);
         }
         return newState;
     }

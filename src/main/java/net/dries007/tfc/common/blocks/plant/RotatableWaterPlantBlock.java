@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blocks.plant;
 
+import net.minecraft.world.level.ScheduledTickAccess;
+
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 import com.google.common.collect.ImmutableMap;
@@ -90,7 +92,7 @@ public abstract class RotatableWaterPlantBlock extends WaterPlantBlock
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction direction, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction direction, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
         if (direction.getOpposite() == state.getValue(FACING) && !Helpers.isBlock(facingState, TFCTags.Blocks.ANEMONE_PLANTABLE_ON))
         {

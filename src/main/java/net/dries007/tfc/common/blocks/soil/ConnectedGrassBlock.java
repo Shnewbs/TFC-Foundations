@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.blocks.soil;
 
+import net.minecraft.world.level.ScheduledTickAccess;
+
+import net.minecraft.world.level.LevelReader;
+
 import java.util.Map;
 import java.util.function.Supplier;
 import com.google.common.collect.ImmutableMap;
@@ -74,7 +78,7 @@ public class ConnectedGrassBlock extends Block implements IGrassBlock
     }
 
     @Override
-    protected BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState stateIn, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
         if (facing == Direction.UP)
         {

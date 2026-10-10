@@ -6,6 +6,12 @@
 
 package net.dries007.tfc.common.blocks.rotation;
 
+import net.minecraft.util.RandomSource;
+
+import net.minecraft.world.level.ScheduledTickAccess;
+
+import net.minecraft.world.level.LevelReader;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -74,9 +80,9 @@ public class FluidPipeBlock extends ExtendedBlock implements DirectionPropertyBl
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos currentPos, BlockPos neighborPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random)
     {
-        FluidHelpers.tickFluid(level, currentPos, state);
+        FluidHelpers.tickFluid(level, tickAccess, currentPos, state);
         return updateConnectedSides(level, currentPos, state, null);
     }
 
@@ -137,7 +143,7 @@ public class FluidPipeBlock extends ExtendedBlock implements DirectionPropertyBl
         return DirectionPropertyBlock.mirror(state, mirror);
     }
 
-    private BlockState updateConnectedSides(LevelAccessor level, BlockPos pos, BlockState state, @Nullable Direction defaultDirection)
+    private BlockState updateConnectedSides(LevelReader level, BlockPos pos, BlockState state, @Nullable Direction defaultDirection)
     {
         int openSides = 0;
         @Nullable Direction openDirection = null;

@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.blocks;
 
+import net.minecraft.world.level.ScheduledTickAccess;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -102,10 +104,10 @@ public class TFCLightBlock extends Block implements IFluidLoggable
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState faceState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState faceState, RandomSource random)
     {
-        FluidHelpers.tickFluid(level, currentPos, state);
-        return super.updateShape(state, facing, faceState, level, currentPos, facingPos);
+        FluidHelpers.tickFluid(level, tickAccess, currentPos, state);
+        return super.updateShape(state, level, tickAccess, currentPos, facing, facingPos, faceState, random);
     }
 
     @Override

@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.blocks.devices;
 
+import net.minecraft.util.RandomSource;
+
+import net.minecraft.world.level.ScheduledTickAccess;
+
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 import javax.annotation.Nullable;
@@ -109,13 +113,13 @@ public class ThermometerBlock extends DeviceBlock
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos blockpos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos blockpos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
         if (facing == state.getValue(FACING).getOpposite() && !this.canSurvive(state, level, blockpos))
         {
             return Blocks.AIR.defaultBlockState();
         }
-        return super.updateShape(state, facing, facingState, level, blockpos, facingPos);
+        return super.updateShape(state, level, tickAccess, blockpos, facing, facingPos, facingState, random);
     }
 
     @Override

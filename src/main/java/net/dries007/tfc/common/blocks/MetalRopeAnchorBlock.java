@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.blocks;
 
+import net.minecraft.world.level.ScheduledTickAccess;
+
+import net.minecraft.world.level.LevelReader;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -51,9 +55,9 @@ public class MetalRopeAnchorBlock extends RopeAnchorBlock
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random)
     {
-        return super.updateShape(state.setValue(HAS_ROPE, isRopeAttached(level, pos, state)), direction, neighborState, level, pos, neighborPos);
+        return super.updateShape(state.setValue(HAS_ROPE, isRopeAttached(level, pos, state)), level, tickAccess, pos, direction, neighborPos, neighborState, random);
     }
 
     @Override

@@ -6,6 +6,12 @@
 
 package net.dries007.tfc.common.blocks.wood;
 
+import net.minecraft.util.RandomSource;
+
+import net.minecraft.world.level.ScheduledTickAccess;
+
+import net.minecraft.world.level.LevelReader;
+
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -67,7 +73,7 @@ public class FallenLeavesBlock extends GroundcoverBlock implements ISlowEntities
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    public BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
         if (state.getValue(LAYERS) == MAX_LAYERS)
         {
@@ -79,7 +85,7 @@ public class FallenLeavesBlock extends GroundcoverBlock implements ISlowEntities
                 return newState;
             }
         }
-        return super.updateShape(state, facing, facingState, level, currentPos, facingPos);
+        return super.updateShape(state, level, tickAccess, currentPos, facing, facingPos, facingState, random);
     }
 
     @Override

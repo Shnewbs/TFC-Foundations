@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.blocks.plant.coral;
 
+import net.minecraft.util.RandomSource;
+
+import net.minecraft.world.level.ScheduledTickAccess;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -70,10 +74,10 @@ public class TFCCoralPlantBlock extends Block implements IFluidLoggable
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
-        FluidHelpers.tickFluid(level, currentPos, state);
-        return facing == Direction.DOWN && !this.canSurvive(state, level, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(state, facing, facingState, level, currentPos, facingPos);
+        FluidHelpers.tickFluid(level, tickAccess, currentPos, state);
+        return facing == Direction.DOWN && !this.canSurvive(state, level, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(state, level, tickAccess, currentPos, facing, facingPos, facingState, random);
     }
 
     @Override
@@ -106,9 +110,18 @@ public class TFCCoralPlantBlock extends Block implements IFluidLoggable
      */
     protected void tryScheduleDieTick(BlockState state, LevelAccessor level, BlockPos pos)
     {
+        tryScheduleDieTick(state, level, level, pos, level.getRandom());
+    }
+
+    /**
+     * Shape updates receive a read-only level and an independent tick scheduler.
+     * Keep scheduling (and its original random delay) without a mutable-world cast.
+     */
+    protected void tryScheduleDieTick(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos, RandomSource random)
+    {
         if (!scanForWater(state, level, pos))
         {
-            level.scheduleTick(pos, this, 60 + level.getRandom().nextInt(40));
+            ticks.scheduleTick(pos, this, 60 + random.nextInt(40));
         }
     }
 

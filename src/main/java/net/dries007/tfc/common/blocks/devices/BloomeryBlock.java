@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.blocks.devices;
 
+import net.minecraft.world.level.ScheduledTickAccess;
+
+import net.minecraft.world.level.LevelReader;
+
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 import java.util.EnumMap;
@@ -101,7 +105,7 @@ public class BloomeryBlock extends DeviceBlock implements EntityBlockExtension
 
     static
     {
-        BiPredicate<LevelAccessor, BlockPos> stoneMatcher = (level, pos) -> isBloomeryInsulationBlock(level.getBlockState(pos));
+        BiPredicate<LevelReader, BlockPos> stoneMatcher = (level, pos) -> isBloomeryInsulationBlock(level.getBlockState(pos));
         Predicate<BlockState> insideChimney = state -> state.getBlock() == TFCBlocks.MOLTEN.get() || state.isAir();
         Predicate<BlockState> center = state -> Helpers.isBlock(state, TFCBlocks.MOLTEN.get()) || Helpers.isBlock(state, TFCBlocks.BLOOM.get()) || state.isAir();
         BlockPos origin = BlockPos.ZERO;
@@ -156,7 +160,7 @@ public class BloomeryBlock extends DeviceBlock implements EntityBlockExtension
         return TFCConfig.SERVER.bloomeryMaxChimneyHeight.get();
     }
 
-    public static boolean canGateStayInPlace(LevelAccessor level, BlockPos pos, Direction.Axis axis)
+    public static boolean canGateStayInPlace(LevelReader level, BlockPos pos, Direction.Axis axis)
     {
         if (axis == Direction.Axis.X)
         {
@@ -207,7 +211,7 @@ public class BloomeryBlock extends DeviceBlock implements EntityBlockExtension
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos pos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos pos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
         return canGateStayInPlace(level, pos, state.getValue(FACING).getAxis()) ? state : Blocks.AIR.defaultBlockState();
     }

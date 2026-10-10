@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.blocks.plant.coral;
 
+import net.minecraft.world.level.ScheduledTickAccess;
+
+import net.minecraft.world.level.LevelReader;
+
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -51,7 +55,7 @@ public class LivingCoralPlantBlock extends TFCCoralPlantBlock
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
         if (facing == Direction.DOWN && !state.canSurvive(level, currentPos))
         {
@@ -59,13 +63,13 @@ public class LivingCoralPlantBlock extends TFCCoralPlantBlock
         }
         else
         {
-            tryScheduleDieTick(state, level, currentPos);
+            tryScheduleDieTick(state, level, tickAccess, currentPos, random);
             if (state.getValue(getFluidProperty()).getFluid() == TFCFluids.SALT_WATER.getSource())
             {
-                level.scheduleTick(currentPos, TFCFluids.SALT_WATER.getSource(), TFCFluids.SALT_WATER.getSource().getTickDelay(level));
+                tickAccess.scheduleTick(currentPos, TFCFluids.SALT_WATER.getSource(), TFCFluids.SALT_WATER.getSource().getTickDelay(level));
             }
 
-            return super.updateShape(state, facing, facingState, level, currentPos, facingPos);
+            return super.updateShape(state, level, tickAccess, currentPos, facing, facingPos, facingState, random);
         }
     }
 }

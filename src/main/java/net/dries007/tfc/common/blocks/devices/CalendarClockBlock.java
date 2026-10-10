@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.common.blocks.devices;
 
+import net.minecraft.util.RandomSource;
+
+import net.minecraft.world.level.ScheduledTickAccess;
+
 import java.util.Locale;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -171,13 +175,13 @@ public class CalendarClockBlock extends DeviceBlock
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos blockPos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos blockPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
         if (facing == state.getValue(FACING).getOpposite() && !this.canSurvive(state, level, blockPos))
         {
             return Blocks.AIR.defaultBlockState();
         }
-        return super.updateShape(state, facing, facingState, level, blockPos, facingPos);
+        return super.updateShape(state, level, tickAccess, blockPos, facing, facingPos, facingState, random);
     }
 
     @Override
