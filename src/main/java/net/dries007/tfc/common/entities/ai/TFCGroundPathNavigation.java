@@ -111,7 +111,7 @@ public class TFCGroundPathNavigation extends GroundPathNavigation
                 {
                     cursor.set(mob.getX(), mob.getY() + 1.0, mob.getZ());
 
-                    while (cursor.getY() > currentContext.level().getMinBuildHeight())
+                    while (cursor.getY() > currentContext.level().getMinY())
                     {
                         yPos = cursor.getY();
                         cursor.setY(cursor.getY() - 1);
