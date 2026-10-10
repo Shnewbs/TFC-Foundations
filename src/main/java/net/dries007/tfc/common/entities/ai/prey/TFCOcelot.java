@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.entities.ai.prey;
 
+import net.dries007.tfc.common.recipes.RecipeHelpers;
+
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -57,7 +59,7 @@ public class TFCOcelot extends Ocelot
         EntityHelpers.removeGoalOfPriority(goalSelector, 9); // breed goal
         EntityHelpers.removeGoalOfPriority(targetSelector, 1); // avoid / attack goals
 
-        goalSelector.addGoal(3, new OcelotTemptGoal(this, 0.6, Ingredient.of(TFCTags.Items.CAT_FOOD), true));
+        goalSelector.addGoal(3, new OcelotTemptGoal(this, 0.6, RecipeHelpers.ingredient(TFCTags.Items.CAT_FOOD), true));
         targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, true, (e, serverLevel) -> !(e instanceof Player) && Helpers.isEntity(e, TFCTags.Entities.HUNTED_BY_CATS)));
     }
 

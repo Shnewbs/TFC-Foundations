@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.compat.jei.category;
 
+import net.dries007.tfc.common.recipes.RecipeHelpers;
+
 import java.util.Map;
 import java.util.stream.Collectors;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -43,7 +45,7 @@ public class ChiselRecipeCategory extends BaseRecipeCategory<ChiselRecipe>
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ChiselRecipe recipe, IFocusGroup focuses)
     {
-        Ingredient chiselIngredient = Ingredient.of(TFCTags.Items.TOOLS_CHISEL);
+        Ingredient chiselIngredient = RecipeHelpers.ingredient(TFCTags.Items.TOOLS_CHISEL);
 
         builder.addSlot(RecipeIngredientRole.INPUT, 6, 5)
             .addIngredients(collapse(recipe.getIngredient()))

@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.entities.prey;
 
+import net.dries007.tfc.common.recipes.RecipeHelpers;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -104,7 +106,7 @@ public class TFCRabbit extends Rabbit implements MammalProperties
         EntityHelpers.removeGoalOfPriority(goalSelector, 3); // tempt
         EntityHelpers.removeGoalOfPriority(goalSelector, 4); // avoid goals
         EntityHelpers.removeGoalOfPriority(goalSelector, 5); // vanilla raid garden
-        goalSelector.addGoal(3, new TemptGoal(this, 1.25f, Ingredient.of(getFoodTag()), false));
+        goalSelector.addGoal(3, new TemptGoal(this, 1.25f, RecipeHelpers.ingredient(getFoodTag()), false));
         goalSelector.addGoal(4, new TFCAvoidEntityGoal<>(this, PathfinderMob.class, 8.0F, 2.2D, 2.2D, TFCTags.Entities.LAND_PREDATORS));
         goalSelector.addGoal(5, new RaidGardenGoal(this));
     }

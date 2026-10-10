@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.entities.livestock.horse;
 
+import net.dries007.tfc.common.recipes.RecipeHelpers;
+
 import java.util.function.Supplier;
 
 import net.minecraft.core.BlockPos;
@@ -126,7 +128,7 @@ public abstract class TFCChestedHorse extends AbstractChestedHorse implements Ho
     {
         super.registerGoals();
         EntityHelpers.removeGoalOfPriority(goalSelector, 3);
-        goalSelector.addGoal(3, new TemptGoal(this, 1.25f, Ingredient.of(getFoodTag()), false));
+        goalSelector.addGoal(3, new TemptGoal(this, 1.25f, RecipeHelpers.ingredient(getFoodTag()), false));
         goalSelector.addGoal(5, new TFCAvoidEntityGoal<>(this, PathfinderMob.class, 8f, 1.6f, 1.4f, TFCTags.Entities.LAND_PREDATORS));
     }
 

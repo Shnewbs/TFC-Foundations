@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.compat.jei.category;
 
+import net.dries007.tfc.common.recipes.RecipeHelpers;
+
 import java.util.List;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
@@ -50,7 +52,7 @@ public abstract class SimpleItemRecipeCategory<T extends ItemRecipe> extends Bas
 
         if (toolSlot != null)
         {
-            toolSlot.addIngredients(Ingredient.of(getToolTag()));
+            toolSlot.addIngredients(RecipeHelpers.ingredient(getToolTag()));
             toolSlot.setBackground(slot, -1, -1);
         }
 

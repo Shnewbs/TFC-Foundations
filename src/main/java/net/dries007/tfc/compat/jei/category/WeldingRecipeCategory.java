@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.compat.jei.category;
 
+import net.dries007.tfc.common.recipes.RecipeHelpers;
+
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -43,7 +45,7 @@ public class WeldingRecipeCategory extends BaseRecipeCategory<WeldingRecipe>
             .setBackground(slot, -1, -1);
 
         builder.addSlot(RecipeIngredientRole.INPUT, 46, 5)
-            .addIngredients(Ingredient.of(TFCTags.Items.WELDING_FLUX))
+            .addIngredients(RecipeHelpers.ingredient(TFCTags.Items.WELDING_FLUX))
             .setBackground(slot, -1, -1);
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, 96, 5)

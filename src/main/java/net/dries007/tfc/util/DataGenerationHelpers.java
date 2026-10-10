@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.util;
 
+import net.dries007.tfc.common.recipes.RecipeHelpers;
+
 import com.google.common.collect.ImmutableMap;
 import java.util.ArrayList;
 import java.util.List;
@@ -162,7 +164,7 @@ public interface DataGenerationHelpers
 
         public Builder input(TagKey<Item> item) {return input(item, 1);}
 
-        public Builder input(TagKey<Item> item, int count) {return input(Ingredient.of(item), count);}
+        public Builder input(TagKey<Item> item, int count) {return input(RecipeHelpers.ingredient(item), count);}
 
         public Builder input(Ingredient item) {return input(item, 1);}
 
@@ -174,7 +176,7 @@ public interface DataGenerationHelpers
 
         public Builder inputIsPrimary(ItemLike item) {return inputIsPrimary(Ingredient.of(item));}
 
-        public Builder inputIsPrimary(TagKey<Item> item) {return inputIsPrimary(Ingredient.of(item));}
+        public Builder inputIsPrimary(TagKey<Item> item) {return inputIsPrimary(RecipeHelpers.ingredient(item));}
 
         public Builder inputIsPrimary(Ingredient item)
         {
@@ -183,7 +185,7 @@ public interface DataGenerationHelpers
             return input(item);
         }
 
-        public Builder input(char key, TagKey<Item> input) {return input(key, Ingredient.of(input));}
+        public Builder input(char key, TagKey<Item> input) {return input(key, RecipeHelpers.ingredient(input));}
 
         public Builder input(char key, ItemLike input) {return input(key, Ingredient.of(input));}
 
