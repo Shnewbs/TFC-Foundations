@@ -9,6 +9,8 @@ package net.dries007.tfc.common.blocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -53,10 +55,10 @@ public class IcePileBlock extends IceBlock implements IForgeBlockExtension, Enti
                 }
 
                 // Block updates after we have removed both blocks
-                level.blockUpdated(groundPos, TFCBlocks.ICE_PILE.get());
+                level.updateNeighborsAt(groundPos, TFCBlocks.ICE_PILE.get());
                 if (icePileAtSurface)
                 {
-                    level.blockUpdated(surfacePos, Blocks.AIR);
+                    level.updateNeighborsAt(surfacePos, Blocks.AIR);
                 }
             }
             else
@@ -70,7 +72,7 @@ public class IcePileBlock extends IceBlock implements IForgeBlockExtension, Enti
     @SuppressWarnings("deprecation")
     public static void removeIcePileOrIce(LevelAccessor level, BlockPos pos, BlockState state)
     {
-        final boolean ultrawarm = level.dimensionType().ultraWarm();
+        final boolean ultrawarm = level.environmentAttributes().getValue(EnvironmentAttributes.WATER_EVAPORATES, pos);
         final BlockState belowState = level.getBlockState(pos.below());
         if (!ultrawarm && (belowState.blocksMotion() || belowState.liquid()))
         {
@@ -93,11 +95,11 @@ public class IcePileBlock extends IceBlock implements IForgeBlockExtension, Enti
                         }
 
                         // Block ticks after both blocks are placed
-                        level.blockUpdated(pos, pile.getInternalState().getBlock());
+                        level.updateNeighborsAt(pos, pile.getInternalState().getBlock());
                         level.scheduleTick(pos, Fluids.WATER, 1);
                         if (pile.getAboveState() != null)
                         {
-                            level.blockUpdated(above, pile.getAboveState().getBlock());
+                            level.updateNeighborsAt(above, pile.getAboveState().getBlock());
                         }
                     }
                 });
@@ -127,7 +129,7 @@ public class IcePileBlock extends IceBlock implements IForgeBlockExtension, Enti
      * When destroyed, replace with the hidden blocks, and schedule ticks for them
      */
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid)
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, ItemStack heldItem, boolean willHarvest, FluidState fluid)
     {
         playerWillDestroy(level, pos, state, player);
         removeIcePileOrIce(level, pos, state);

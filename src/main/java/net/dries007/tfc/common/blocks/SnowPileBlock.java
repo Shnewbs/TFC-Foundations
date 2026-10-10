@@ -9,13 +9,14 @@ package net.dries007.tfc.common.blocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SnowLayerBlock;
-import net.minecraft.world.level.block.SnowyDirtBlock;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import org.jetbrains.annotations.Nullable;
@@ -60,15 +61,15 @@ public class SnowPileBlock extends SnowLayerBlock implements IForgeBlockExtensio
         }
 
         // Then cause block updates
-        level.blockUpdated(pos, TFCBlocks.SNOW_PILE.get());
+        level.updateNeighborsAt(pos, TFCBlocks.SNOW_PILE.get());
         if (savedAboveState != null)
         {
-            level.blockUpdated(posAbove, Blocks.AIR);
+            level.updateNeighborsAt(posAbove, Blocks.AIR);
         }
 
         // And update grass with the snowy property
         final BlockPos posBelow = pos.below();
-        level.setBlock(posBelow, Helpers.setProperty(level.getBlockState(posBelow), SnowyDirtBlock.SNOWY, true), 2);
+        level.setBlock(posBelow, Helpers.setProperty(level.getBlockState(posBelow), BlockStateProperties.SNOWY, true), 2);
     }
 
     public static void removePileOrSnow(LevelAccessor level, BlockPos pos, BlockState state)
@@ -108,10 +109,10 @@ public class SnowPileBlock extends SnowLayerBlock implements IForgeBlockExtensio
             level.getBlockState(above).updateNeighbourShapes(level, above, Block.UPDATE_CLIENTS);
 
             // Block ticks after both blocks are placed
-            level.blockUpdated(pos, snowPile.getInternalState().getBlock());
+            level.updateNeighborsAt(pos, snowPile.getInternalState().getBlock());
             if (snowPile.getAboveState() != null)
             {
-                level.blockUpdated(above, snowPile.getAboveState().getBlock());
+                level.updateNeighborsAt(above, snowPile.getAboveState().getBlock());
             }
         }
     }
@@ -137,11 +138,11 @@ public class SnowPileBlock extends SnowLayerBlock implements IForgeBlockExtensio
      * - Once removed enough, they convert to the underlying block state.
      */
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid)
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, ItemStack heldItem, boolean willHarvest, FluidState fluid)
     {
         @Nullable final PileBlockEntity snowPile =
             level.getBlockEntity(pos, TFCBlockEntities.PILE.get()).orElse(null); // Store the blockentity before it is removed
-        super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+        super.onDestroyedByPlayer(state, level, pos, player, heldItem, willHarvest, fluid);
         removePileOrSnow(level, pos, state, snowPile);
         return true; // Cause drops and other stuff to occur
     }
