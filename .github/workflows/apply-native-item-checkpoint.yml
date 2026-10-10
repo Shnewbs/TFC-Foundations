@@ -1,0 +1,50 @@
+name: Apply verified native item checkpoint
+
+on:
+  push:
+    branches: [26.1.2]
+    paths: [.github/workflows/apply-native-item-checkpoint.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  apply:
+    if: github.repository == 'Shnewbs/TFC-Foundations' && github.ref == 'refs/heads/26.1.2'
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - name: Checkout source history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply checksum-verified item changes
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD^)" = '1daa9bb6aef62ad0ce19085455bd9d6189ea5f79'
+          base64 -d tools/porting/.native-item-checkpoint-26.1.2.b64 > /tmp/native-items.patch.xz
+          echo '94a25d936be56d261af1bb7ff8056c4ccf7ade2642c1c74b7564bc603ea521a4  /tmp/native-items.patch.xz' | sha256sum -c -
+          xz -dc /tmp/native-items.patch.xz > /tmp/native-items.patch
+          echo '61d761740b57366e1061cc672c2b609cde1226c033963c058c024e820797d1eb  /tmp/native-items.patch' | sha256sum -c -
+          git apply --check --index --whitespace=error /tmp/native-items.patch
+          git apply --index --whitespace=error /tmp/native-items.patch
+          test "$(git diff --cached --name-only | wc -l)" -eq 4
+          git diff --cached --check
+      - name: Commit reviewed changes and remove transport
+        shell: bash
+        run: |
+          git rm -f tools/porting/.native-item-checkpoint-26.1.2.b64 .github/workflows/apply-native-item-checkpoint.yml
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Update 26.1.2 native spawn eggs, signs and seed item registration'
+          git push origin HEAD:refs/heads/26.1.2
+          echo "Applied commit $(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          echo "This is a source port; full mod playability is not yet proven." >> "$GITHUB_STEP_SUMMARY"
+      - name: Run exact-target validation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run test.yml --repo "$GITHUB_REPOSITORY" --ref 26.1.2
