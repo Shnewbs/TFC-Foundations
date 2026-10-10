@@ -38,7 +38,7 @@ def main():
         raise SystemExit(result.returncode)
     # A separate process checks actual production classes; no Minecraft or TFC stubs.
     failed = False
-    for probe in ('run_loot_smoke.py', 'run_common_smoke.py', 'run_visual_save_smoke.py', 'run_entity_smoke.py', 'run_model_render_smoke.py', 'run_livestock_render_smoke.py', 'run_mechanical_boat_smoke.py', 'run_seasonal_block_smoke.py', 'run_snapshot_block_smoke.py', 'run_worldgen_api_smoke.py', 'run_item_registration_smoke.py', 'run_predator_sound_smoke.py', 'run_item_selector_smoke.py'):
+    for probe in ('run_loot_smoke.py', 'run_common_smoke.py', 'run_visual_save_smoke.py', 'run_entity_smoke.py', 'run_model_render_smoke.py', 'run_livestock_render_smoke.py', 'run_mechanical_boat_smoke.py', 'run_seasonal_block_smoke.py', 'run_snapshot_block_smoke.py', 'run_worldgen_api_smoke.py', 'run_item_registration_smoke.py', 'run_predator_sound_smoke.py', 'run_item_selector_smoke.py', 'run_recipe_serializer_smoke.py'):
         smoke = subprocess.run(['python3', 'tools/porting/' + probe], timeout=360)
         failed |= smoke.returncode != 0
     raise SystemExit(1 if failed else 0)

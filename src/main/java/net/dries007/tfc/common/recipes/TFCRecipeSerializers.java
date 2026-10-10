@@ -52,15 +52,15 @@ public class TFCRecipeSerializers
 
     // Crafting
 
-    public static final Id<FoodCombiningCraftingRecipe> FOOD_COMBINING_CRAFTING = register("food_combining", new RecipeSerializerImpl<>(FoodCombiningCraftingRecipe.INSTANCE));
-    public static final Id<CastingCraftingRecipe> CASTING_CRAFTING = register("casting_crafting", new RecipeSerializerImpl<>(CastingCraftingRecipe.INSTANCE));
+    public static final Id<FoodCombiningCraftingRecipe> FOOD_COMBINING_CRAFTING = register("food_combining", new RecipeSerializer<>(MapCodec.unit(FoodCombiningCraftingRecipe.INSTANCE), StreamCodec.unit(FoodCombiningCraftingRecipe.INSTANCE)));
+    public static final Id<CastingCraftingRecipe> CASTING_CRAFTING = register("casting_crafting", new RecipeSerializer<>(MapCodec.unit(CastingCraftingRecipe.INSTANCE), StreamCodec.unit(CastingCraftingRecipe.INSTANCE)));
 
     public static final Id<AdvancedShapedRecipe> ADVANCED_SHAPED_CRAFTING = register("advanced_shaped_crafting", AdvancedShapedRecipe.CODEC, AdvancedShapedRecipe.STREAM_CODEC);
     public static final Id<AdvancedShapelessRecipe> ADVANCED_SHAPELESS_CRAFTING = register("advanced_shapeless_crafting", AdvancedShapelessRecipe.CODEC, AdvancedShapelessRecipe.STREAM_CODEC);
 
     private static <R extends Recipe<?>> Id<R> register(String name, MapCodec<R> codec, StreamCodec<RegistryFriendlyByteBuf, R> stream)
     {
-        return register(name, new RecipeSerializerImpl<>(codec, stream));
+        return register(name, new RecipeSerializer<>(codec, stream));
     }
 
     private static <R extends Recipe<?>> Id<R> register(String name, RecipeSerializer<R> serializer)

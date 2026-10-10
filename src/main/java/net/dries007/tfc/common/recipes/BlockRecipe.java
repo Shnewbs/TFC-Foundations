@@ -29,7 +29,7 @@ public abstract class BlockRecipe implements INoopInputRecipe, IRecipePredicate<
 {
     public static <R extends BlockRecipe> RecipeSerializer<R> serializer(BiFunction<BlockIngredient, Optional<BlockState>, R> factory)
     {
-        return new RecipeSerializerImpl<>(codec(factory), streamCodec(factory));
+        return new RecipeSerializer<>(codec(factory), streamCodec(factory));
     }
 
     public static <R extends BlockRecipe> MapCodec<R> codec(BiFunction<BlockIngredient, Optional<BlockState>, R> factory)
