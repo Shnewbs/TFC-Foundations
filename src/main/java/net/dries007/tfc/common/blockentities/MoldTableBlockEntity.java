@@ -53,6 +53,27 @@ import net.dries007.tfc.util.Helpers;
 
 public class MoldTableBlockEntity extends TickableInventoryBlockEntity<MoldTableBlockEntity.MoldBlockInventory>
 {
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state)
+    {
+        // 26.1.2 removes the old Block.onRemove callback. Drop stored molds
+        // while the entity still has a valid level, then clear the slots so
+        // neither a second removal nor a later inventory scan duplicates them.
+        if (level != null)
+        {
+            for (int slot : new int[] {MOLD_SLOT, OUTPUT_SLOT})
+            {
+                final ItemStack stack = inventory.getStackInSlot(slot);
+                if (!stack.isEmpty())
+                {
+                    Helpers.spawnItem(level, pos, stack.copy());
+                    inventory.setStackInSlot(slot, ItemStack.EMPTY);
+                }
+            }
+        }
+        super.preRemoveSideEffects(pos, state);
+    }
+
     public static void serverTick(Level level, BlockPos pos, BlockState state, MoldTableBlockEntity mold)
     {
         mold.checkForLastTickSync();
