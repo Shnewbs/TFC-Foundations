@@ -265,6 +265,15 @@ public class PumpBlockEntity extends TFCBlockEntity
         super(type, pos, state);
     }
 
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state)
+    {
+        // The new lifecycle calls this before removing the block entity.
+        // Keep the pre-existing pump fluid-cleanup behavior.
+        onRemoved();
+        super.preRemoveSideEffects(pos, state);
+    }
+
     public void onRemoved()
     {
         assert level != null;
