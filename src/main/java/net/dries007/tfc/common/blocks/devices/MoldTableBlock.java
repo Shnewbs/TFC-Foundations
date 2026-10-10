@@ -153,17 +153,4 @@ public class MoldTableBlock extends ExtendedBlock implements EntityBlockExtensio
         level.getBlockEntity(pos, TFCBlockEntities.MOLD_TABLE.get()).ifPresent(mold -> mold.intakeAir(amount));
     }
 
-    @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving)
-    {
-        if (newState.getBlock() != state.getBlock() && !isMoving)
-        {
-            level.getBlockEntity(pos, TFCBlockEntities.MOLD_TABLE.get()).ifPresent(
-                mold -> {
-                    Helpers.spawnItem(level, pos, mold.getInventory().getStackInSlot(MoldTableBlockEntity.MOLD_SLOT));
-                    Helpers.spawnItem(level, pos, mold.getInventory().getStackInSlot(MoldTableBlockEntity.OUTPUT_SLOT));
-                });
-        }
-        super.onRemove(state, level, pos, newState, isMoving);
-    }
 }
