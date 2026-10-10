@@ -41,7 +41,7 @@ public class ToolRackBlockEntity extends InventoryBlockEntity<ItemStackHandler>
                 if (!level.isClientSide())
                 {
                     insertItem(slot, heldItem.split(1));
-                    ItemHandlerHelper.giveItemToPlayer(player, extracted, player.getInventory().selected);
+                    ItemHandlerHelper.giveItemToPlayer(player, extracted, player.getInventory().getSelectedSlot());
                 }
                 markForSync();
                 return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
@@ -49,7 +49,7 @@ public class ToolRackBlockEntity extends InventoryBlockEntity<ItemStackHandler>
             // Just extract
             if (!level.isClientSide())
             {
-                ItemHandlerHelper.giveItemToPlayer(player, inventory.extractItem(slot, 1, false), player.getInventory().selected);
+                ItemHandlerHelper.giveItemToPlayer(player, inventory.extractItem(slot, 1, false), player.getInventory().getSelectedSlot());
             }
             markForSync();
             return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);

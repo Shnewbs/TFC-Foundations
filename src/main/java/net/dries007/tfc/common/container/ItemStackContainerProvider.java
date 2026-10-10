@@ -41,10 +41,10 @@ public class ItemStackContainerProvider
         }
         else
         {
-            final int prevSelected = playerInventory.selected;
-            playerInventory.selected = slot;
-            stack = playerInventory.getSelected();
-            playerInventory.selected = prevSelected;
+            // The wire format carries a hotbar slot, not a request to change
+            // the player's currently selected slot.  Read it directly so the
+            // lookup cannot leave the player's selection changed on failure.
+            stack = playerInventory.getItem(slot);
         }
         return new Info(stack, hand, slot);
     }
@@ -71,7 +71,7 @@ public class ItemStackContainerProvider
     public void openScreen(ServerPlayer player, InteractionHand hand, Consumer<FriendlyByteBuf> additionalData)
     {
         final ItemStack stack = player.getItemInHand(hand);
-        final int encodedSlot = hand == InteractionHand.OFF_HAND ? -1 : player.getInventory().selected;
+        final int encodedSlot = hand == InteractionHand.OFF_HAND ? -1 : player.getInventory().getSelectedSlot();
         final MenuProvider provider = new SimpleMenuProvider((windowId, playerInventory, playerIn) -> factory.create(stack, hand, encodedSlot, playerInventory, windowId), name == null ? stack.getHoverName() : name);
 
         player.openMenu(provider, buffer -> {

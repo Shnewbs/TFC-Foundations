@@ -319,18 +319,18 @@ public class MoldTableBlockEntity extends TickableInventoryBlockEntity<MoldTable
                 {
                     final ItemStack extracted = inventory.extractItem(MOLD_SLOT, 1, false);
                     inventory.insertItem(MOLD_SLOT, heldItem.split(1), false);
-                    ItemHandlerHelper.giveItemToPlayer(player, extracted, player.getInventory().selected);
+                    ItemHandlerHelper.giveItemToPlayer(player, extracted, player.getInventory().getSelectedSlot());
                 }
                 else
                 {
                     // Just extract
                     ItemHandlerHelper.giveItemToPlayer(player, inventory.extractItem(MOLD_SLOT, 1, false),
-                        player.getInventory().selected);
+                        player.getInventory().getSelectedSlot());
 
                 }
 
                 final ItemStack extracted = inventory.extractItem(OUTPUT_SLOT, 99, false);
-                ItemHandlerHelper.giveItemToPlayer(player, extracted, player.getInventory().selected);
+                ItemHandlerHelper.giveItemToPlayer(player, extracted, player.getInventory().getSelectedSlot());
 
                 markForSync();
                 return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
@@ -348,7 +348,7 @@ public class MoldTableBlockEntity extends TickableInventoryBlockEntity<MoldTable
             if (shouldExtract)
             {
                 ItemHandlerHelper.giveItemToPlayer(player, inventory.extractItem(OUTPUT_SLOT, 1, false),
-                    player.getInventory().selected);
+                    player.getInventory().getSelectedSlot());
 
                 markForSync();
                 return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
