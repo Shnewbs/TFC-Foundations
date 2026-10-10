@@ -8,6 +8,8 @@ package net.dries007.tfc.common.blocks.plant.fruit;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -170,18 +172,16 @@ public class FruitTreeLeavesBlock extends SeasonalPlantBlock implements IForgeBl
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
-        FluidHelpers.tickFluid(level, currentPos, state);
-        if (isValid(level, currentPos, state))
+        FluidHelpers.tickFluid(level, tickAccess, currentPos, state);
+        if (!isValid(level, currentPos, state))
         {
-            return state;
+            // Use the existing server tick to remove invalid leaves and emit particles.
+            // Returning AIR here would destroy the block before the tick executes.
+            tickAccess.scheduleTick(currentPos, this, 1);
         }
-        if (level instanceof ServerLevel server)
-        {
-            TFCLeavesBlock.doParticles(server, currentPos.getX() + level.getRandom().nextFloat(), currentPos.getY() + level.getRandom().nextFloat(), currentPos.getZ() + level.getRandom().nextFloat(), 1);
-        }
-        return Blocks.AIR.defaultBlockState();
+        return state;
     }
 
     @Override
@@ -218,7 +218,7 @@ public class FruitTreeLeavesBlock extends SeasonalPlantBlock implements IForgeBl
         return IFluidLoggable.super.getFluidState(state);
     }
 
-    private boolean isValid(LevelAccessor level, BlockPos pos, BlockState state)
+    private boolean isValid(LevelReader level, BlockPos pos, BlockState state)
     {
         if (state.getValue(PERSISTENT))
         {

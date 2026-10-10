@@ -26,12 +26,16 @@ class NeighborShapeContracts(unittest.TestCase):
                                 text=True, check=True).stdout
         self.assertIn('updateShape(net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.LevelReader, net.minecraft.world.level.ScheduledTickAccess, net.minecraft.core.BlockPos, net.minecraft.core.Direction, net.minecraft.core.BlockPos, net.minecraft.world.level.block.state.BlockState, net.minecraft.util.RandomSource)', output)
 
-    def test_old_mutating_hooks_are_isolated(self):
-        excluded = {'CharcoalPileBlock', 'LogPileBlock', 'PitKilnBlock',
-                    'TFCBambooSaplingBlock', 'TFCBambooStalkBlock', 'FruitTreeLeavesBlock'}
+    def test_all_old_mutating_hooks_have_server_tick_or_returned_state(self):
         files = list((JAVA / 'common/blocks').rglob('*.java'))
         old = {p.stem for p in files if re.search(r'updateShape\(BlockState \w+, Direction \w+, BlockState \w+, LevelAccessor \w+, BlockPos \w+, BlockPos \w+\)', p.read_text())}
-        self.assertEqual(old, excluded, 'Unexpected old world-mutating hooks must not be silently converted')
+        self.assertFalse(old, f'Stale pre-26.x shape hooks: {sorted(old)}')
+        expected = {'CharcoalPileBlock', 'LogPileBlock', 'PitKilnBlock',
+                    'TFCBambooSaplingBlock', 'TFCBambooStalkBlock', 'FruitTreeLeavesBlock'}
+        for name in expected:
+            found = [p for p in files if p.stem == name]
+            self.assertEqual(len(found), 1)
+            self.assertIn('ScheduledTickAccess tickAccess', found[0].read_text())
 
     def test_new_shape_hooks_keep_separate_scheduler(self):
         files = list((JAVA / 'common/blocks').rglob('*.java'))

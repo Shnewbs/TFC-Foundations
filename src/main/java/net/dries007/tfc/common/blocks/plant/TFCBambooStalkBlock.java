@@ -8,6 +8,8 @@ package net.dries007.tfc.common.blocks.plant;
 
 import java.util.function.Supplier;
 import javax.annotation.Nullable;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
@@ -50,7 +52,7 @@ public class TFCBambooStalkBlock extends BambooStalkBlock
             final TriState soilDecision = state.canSustainPlant(context.getLevel(), context.getClickedPos().below(), Direction.UP, this.defaultBlockState());
             if (soilDecision == TriState.DEFAULT)
             {
-                if (!Helpers.isBlock(state, BlockTags.BAMBOO_PLANTABLE_ON))
+                if (!Helpers.isBlock(state, BlockTags.SUPPORTS_BAMBOO))
                 {
                     return null;
                 }
@@ -78,18 +80,17 @@ public class TFCBambooStalkBlock extends BambooStalkBlock
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random)
     {
         if (!state.canSurvive(level, pos))
         {
-            level.scheduleTick(pos, this, 1);
+            tickAccess.scheduleTick(pos, this, 1);
         }
         if (direction == Direction.UP && Helpers.isBlock(neighborState, TFCTags.Blocks.BAMBOO) && neighborState.getValue(AGE) > state.getValue(AGE))
         {
-            level.setBlock(pos, state.cycle(AGE), 2);
+            state = state.cycle(AGE); // Returned state now applies the age change.
         }
-
-        return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
+        return super.updateShape(state, level, tickAccess, pos, direction, neighborPos, neighborState, random);
     }
 
     @Override

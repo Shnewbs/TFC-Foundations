@@ -38,7 +38,7 @@ def main():
         raise SystemExit(result.returncode)
     # A separate process checks actual production classes; no Minecraft or TFC stubs.
     failed = False
-    for probe in ('run_loot_smoke.py', 'run_common_smoke.py', 'run_visual_save_smoke.py', 'run_entity_smoke.py', 'run_model_render_smoke.py', 'run_livestock_render_smoke.py', 'run_mechanical_boat_smoke.py', 'run_seasonal_block_smoke.py', 'run_snapshot_block_smoke.py', 'run_worldgen_api_smoke.py', 'run_item_registration_smoke.py', 'run_predator_sound_smoke.py', 'run_item_selector_smoke.py', 'run_recipe_serializer_smoke.py', 'run_selected_slot_smoke.py', 'run_sound_event_holder_smoke.py', 'run_tool_material_smoke.py', 'run_recipe_helper_smoke.py', 'run_flat_ingredient_smoke.py', 'run_interaction_api_smoke.py', 'run_neighbor_shape_smoke.py'):
+    for probe in ('run_loot_smoke.py', 'run_common_smoke.py', 'run_visual_save_smoke.py', 'run_entity_smoke.py', 'run_model_render_smoke.py', 'run_livestock_render_smoke.py', 'run_mechanical_boat_smoke.py', 'run_seasonal_block_smoke.py', 'run_snapshot_block_smoke.py', 'run_worldgen_api_smoke.py', 'run_item_registration_smoke.py', 'run_predator_sound_smoke.py', 'run_item_selector_smoke.py', 'run_recipe_serializer_smoke.py', 'run_selected_slot_smoke.py', 'run_sound_event_holder_smoke.py', 'run_tool_material_smoke.py', 'run_recipe_helper_smoke.py', 'run_flat_ingredient_smoke.py', 'run_interaction_api_smoke.py', 'run_neighbor_shape_smoke.py', 'run_deferred_shape_smoke.py'):
         smoke = subprocess.run(['python3', 'tools/porting/' + probe], timeout=360)
         failed |= smoke.returncode != 0
     raise SystemExit(1 if failed else 0)

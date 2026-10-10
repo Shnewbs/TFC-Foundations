@@ -7,6 +7,8 @@
 package net.dries007.tfc.common.blocks.devices;
 
 import net.minecraft.util.Util;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -91,21 +93,29 @@ public class PitKilnBlock extends DeviceBlock
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
         if (facing == Direction.DOWN && !facingState.isFaceSturdy(level, facingPos, Direction.UP))
         {
             return Blocks.AIR.defaultBlockState();
         }
-        if (facing == Direction.UP && facingState.getBlock() == Blocks.FIRE && level.getBlockEntity(currentPos) instanceof PitKilnBlockEntity kiln && !kiln.isLit())
+        if (facing == Direction.UP && facingState.is(Blocks.FIRE))
         {
-            level.setBlock(facingPos, Blocks.AIR.defaultBlockState(), 3);
-            if (kiln.tryLight())
-            {
-                return state.setValue(STAGE, LIT);
-            }
+            // Ignition removes the fire block and mutates kiln inventory/state.
+            // Both mutations must happen in a server tick, never in updateShape.
+            tickAccess.scheduleTick(currentPos, this, 1);
         }
-        return super.updateShape(state, facing, facingState, level, currentPos, facingPos);
+        return super.updateShape(state, level, tickAccess, currentPos, facing, facingPos, facingState, random);
+    }
+
+    @Override
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random)
+    {
+        if (level.getBlockState(pos.above()).is(Blocks.FIRE) && level.getBlockEntity(pos) instanceof PitKilnBlockEntity kiln && !kiln.isLit())
+        {
+            level.setBlock(pos.above(), Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+            kiln.tryLight(); // Handles stage update and adjacent kilns itself.
+        }
     }
 
     @Override

@@ -7,6 +7,7 @@
 package net.dries007.tfc.common.blocks.devices;
 
 import net.minecraft.util.Util;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -119,20 +120,21 @@ public class LogPileBlock extends DeviceBlock implements IForgeBlockExtension, E
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor levelAccess, BlockPos currentPos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
-        if (!levelAccess.isClientSide() && levelAccess instanceof Level level)
+        if (!level.isClientSide())
         {
-            if ((facing == Direction.DOWN && !facingState.isFaceSturdy(levelAccess, facingPos, Direction.UP)) && !(facingState.getBlock() instanceof LogPileBlock))
+            if (facing == Direction.DOWN && !facingState.isFaceSturdy(level, facingPos, Direction.UP) && !(facingState.getBlock() instanceof LogPileBlock))
             {
                 return Blocks.AIR.defaultBlockState();
             }
             if (Helpers.isBlock(facingState, BlockTags.FIRE))
             {
-                BurningLogPileBlock.lightLogPile(level, currentPos);
+                // The existing scheduled tick below performs the ignition on the server.
+                tickAccess.scheduleTick(currentPos, this, 1);
             }
         }
-        return super.updateShape(state, facing, facingState, levelAccess, currentPos, facingPos);
+        return super.updateShape(state, level, tickAccess, currentPos, facing, facingPos, facingState, random);
     }
 
     @Override

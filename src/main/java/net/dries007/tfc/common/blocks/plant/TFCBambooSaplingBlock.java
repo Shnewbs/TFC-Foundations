@@ -7,10 +7,12 @@
 package net.dries007.tfc.common.blocks.plant;
 
 import java.util.function.Supplier;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
@@ -40,25 +42,23 @@ public class TFCBambooSaplingBlock extends BambooSaplingBlock
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
         if (!state.canSurvive(level, currentPos))
         {
             return Blocks.AIR.defaultBlockState();
         }
-        else
+        // Return the new sapling replacement directly. The target shape API
+        // applies returned states; it does not permit a write into LevelReader.
+        if (facing == Direction.UP && Helpers.isBlock(facingState, stalk.get()))
         {
-            if (facing == Direction.UP && Helpers.isBlock(facingState, stalk.get()))
-            {
-                level.setBlock(currentPos, stalk.get().defaultBlockState(), 2);
-            }
-
-            return super.updateShape(state, facing, facingState, level, currentPos, facingPos);
+            return stalk.get().defaultBlockState();
         }
+        return super.updateShape(state, level, tickAccess, currentPos, facing, facingPos, facingState, random);
     }
 
     @Override
-    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state)
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player)
     {
         return new ItemStack(stalk.get());
     }

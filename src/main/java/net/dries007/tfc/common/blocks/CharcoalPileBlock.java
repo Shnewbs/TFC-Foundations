@@ -6,6 +6,9 @@
 
 package net.dries007.tfc.common.blocks;
 
+import net.minecraft.util.RandomSource;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
@@ -51,18 +54,18 @@ public class CharcoalPileBlock extends Block
     }
 
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid)
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, ItemStack tool, boolean willHarvest, FluidState fluid)
     {
         final int prevLayers = state.getValue(LAYERS);
         if (prevLayers > 1 && !player.isCreative())
         {
             return level.setBlock(pos, state.setValue(LAYERS, prevLayers - 1), level.isClientSide() ? 11 : 3);
         }
-        return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+        return super.onDestroyedByPlayer(state, level, pos, player, tool, willHarvest, fluid);
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player)
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player)
     {
         return new ItemStack(Items.CHARCOAL);
     }
@@ -74,31 +77,43 @@ public class CharcoalPileBlock extends Block
     }
 
     @Override
-    protected BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
+    protected BlockState updateShape(BlockState stateIn, LevelReader level, ScheduledTickAccess tickAccess, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random)
     {
-        if (!level.isClientSide() && facing == Direction.DOWN)
+        // Merging two piles mutates both positions. The new read-only shape callback
+        // must defer this to the server tick instead of writing through LevelReader.
+        if (facing == Direction.DOWN && Helpers.isBlock(facingState, this) && facingState.getValue(LAYERS) < 8)
         {
-            if (Helpers.isBlock(facingState, this))
-            {
-                int layersAt = stateIn.getValue(LAYERS);
-                int layersUnder = facingState.getValue(LAYERS);
-                if (layersUnder < 8)
-                {
-                    if (layersUnder + layersAt <= 8)
-                    {
-                        level.setBlock(facingPos, facingState.setValue(LAYERS, layersAt + layersUnder), 3);
-                        level.destroyBlock(currentPos, false); // Have to destroy the block to prevent it from dropping an additional charcoal
-                        return Blocks.AIR.defaultBlockState();
-                    }
-                    else
-                    {
-                        level.setBlock(facingPos, facingState.setValue(LAYERS, 8), 3);
-                        return stateIn.setValue(LAYERS, layersAt + layersUnder - 8);
-                    }
-                }
-            }
+            tickAccess.scheduleTick(currentPos, this, 1);
+            return stateIn;
         }
         return canSurvive(stateIn, level, currentPos) ? stateIn : Blocks.AIR.defaultBlockState();
+    }
+
+    @Override
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random)
+    {
+        final BlockPos below = pos.below();
+        final BlockState belowState = level.getBlockState(below);
+        if (belowState.is(this) && belowState.getValue(LAYERS) < 8)
+        {
+            final int original = state.getValue(LAYERS);
+            final int space = 8 - belowState.getValue(LAYERS);
+            final int amount = Math.min(space, original);
+            level.setBlock(below, belowState.setValue(LAYERS, belowState.getValue(LAYERS) + amount), Block.UPDATE_ALL);
+            if (amount == original)
+            {
+                // Prevent a second charcoal drop, as in the original shape callback.
+                level.destroyBlock(pos, false);
+            }
+            else
+            {
+                level.setBlock(pos, state.setValue(LAYERS, original - amount), Block.UPDATE_ALL);
+            }
+        }
+        else if (!state.canSurvive(level, pos))
+        {
+            level.destroyBlock(pos, true);
+        }
     }
 
     @Override
