@@ -79,6 +79,6 @@ public class HotPouredGlassBlock extends BottomSupportedDeviceBlock
     @SuppressWarnings("deprecation")
     public RenderShape getRenderShape(BlockState state)
     {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
+        return RenderShape.INVISIBLE; // Geometry is supplied by the block entity renderer.
     }
 }
