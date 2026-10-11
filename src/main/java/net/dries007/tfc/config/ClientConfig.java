@@ -61,7 +61,7 @@ public class ClientConfig extends BaseConfig
             "Note: this also speeds up loading a world by about 2x."
         ).define("ignoreExperimentalWorldGenWarning", true);
 
-        enableDebug = builder.comment("Enables a series of additional debugging tooltips, displayed information, and logging.").define("enableDebug", !FMLEnvironment.production);
+        enableDebug = builder.comment("Enables a series of additional debugging tooltips, displayed information, and logging.").define("enableDebug", !FMLEnvironment.isProduction());
 
         builder.swap("display");
 
