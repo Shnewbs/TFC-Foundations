@@ -80,7 +80,7 @@ public final class ForgingComponent
     {
         return recipe == null
             ? new ForgingComponent(steps, work, -1, null, null)
-            : new ForgingComponent(steps, work, target, recipe.id(), recipe.value());
+            : new ForgingComponent(steps, work, target, recipe.id().location(), recipe.value());
     }
 
     ForgingComponent withStep(ForgeStep step, int amount)

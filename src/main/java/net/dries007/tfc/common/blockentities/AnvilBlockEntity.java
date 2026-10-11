@@ -10,9 +10,11 @@ import java.util.Collection;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -236,7 +238,7 @@ public class AnvilBlockEntity extends InventoryBlockEntity<AnvilBlockEntity.Anvi
         final ItemStack stack = inventory.getStackInSlot(SLOT_INPUT_MAIN);
         if (!stack.isEmpty() && recipe != null)
         {
-            ForgingCapability.get(stack).setRecipe(new RecipeHolder<>(recipeId, recipe), inventory);
+            ForgingCapability.get(stack).setRecipe(new RecipeHolder<>(ResourceKey.create(Registries.RECIPE, recipeId), recipe), inventory);
             lastRecipe = recipeId;
         }
     }

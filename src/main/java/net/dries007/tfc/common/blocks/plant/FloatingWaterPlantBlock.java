@@ -66,7 +66,7 @@ public abstract class FloatingWaterPlantBlock extends PlantBlock
     @Override
     protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos)
     {
-        return level.getFluidState(pos.below()).getTags().anyMatch(fluidTagKey -> (fluidTagKey == fluidTag.get()));
+        return level.getFluidState(pos.below()).is(fluidTag.get());
     }
 
     @Override

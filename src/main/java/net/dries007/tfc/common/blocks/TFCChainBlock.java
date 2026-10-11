@@ -43,7 +43,7 @@ public class TFCChainBlock extends RotatedPillarBlock implements IFluidLoggable
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context)
     {
-        return Blocks.CHAIN.withPropertiesOf(state).getShape(level, pos, context);
+        return Blocks.IRON_CHAIN.withPropertiesOf(state).getShape(level, pos, context);
     }
 
     @Nullable
