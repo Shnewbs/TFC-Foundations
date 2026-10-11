@@ -6,6 +6,8 @@ import re
 import shutil
 import subprocess
 
+from compiler_error_report import analyze
+
 
 def main():
     out = Path('port-diagnostics')
@@ -39,7 +41,9 @@ def main():
             code = 124
             stream.write('\nDiagnostic javac timed out; output is incomplete.\n')
     text = log.read_text(errors='replace')
-    count = len(re.findall(r'^.*?\.java:\d+: error: ', text, flags=re.MULTILINE))
+    diagnostics = analyze(text)
+    count = diagnostics['total']
+    (out / 'main-javac-errors.json').write_text(json.dumps(diagnostics, indent=2) + '\n')
     report = {'source_count': len(sources), 'exit_code': code, 'displayed_errors': count,
               'timed_out': timed_out, 'annotation_processing': False,
               'note': 'Diagnostic main compilation only. Error counts can hide cascading or later failures; no gameplay or full Gradle success is implied.'}
