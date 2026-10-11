@@ -4,7 +4,7 @@
 **Baseline:** 190 reported Java errors across 96 files. This is a Gradle Problems Report subset, **not** a complete count of compiler diagnostic occurrences or the entire migration backlog.
 
 Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current branch, **not** yet confirmed by a successful fresh Gradle build. `- [ ]` = outstanding. Diagnostics refer to line numbers in the user's older source checkout and may move after patches.
-**Checklist:** 24 source-addressed, 166 still open from these 190 entries. No successful post-fix compilation has been claimed.
+**Checklist:** 28 source-addressed, 162 still open from these 190 entries. No successful post-fix compilation has been claimed.
 
 
 ## Status and release gates
@@ -65,7 +65,7 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [ ] Line 811 — reported Java compilation error
 
 **`src/main/java/net/dries007/tfc/client/ClientForgeEventHandler.java`**
-- [ ] Line 504 — reported Java compilation error
+- [x] ~~Line 504~~ — source-addressed (`314460b`); pending clean-build verification
 - [ ] Line 563 — reported Java compilation error
 - [ ] Line 566 — reported Java compilation error
 
@@ -88,9 +88,9 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [ ] Line 530 — reported Java compilation error
 
 **`src/main/java/net/dries007/tfc/client/TFCKeyBindings.java`**
-- [ ] Line 18 — reported Java compilation error
-- [ ] Line 19 — reported Java compilation error
-- [ ] Line 20 — reported Java compilation error
+- [x] ~~Line 18~~ — source-addressed (`efc0830`); pending clean-build verification
+- [x] ~~Line 19~~ — source-addressed (`efc0830`); pending clean-build verification
+- [x] ~~Line 20~~ — source-addressed (`efc0830`); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/client/extensions/FluidRendererExtension.java`**
 - [ ] Line 32 — reported Java compilation error
@@ -407,6 +407,17 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [x] ~~Line 324~~ — source-addressed (`abfbe44`, section-height accessor); pending clean-build verification
 - [x] ~~Line 345~~ — source-addressed (`abfbe44`, section-height accessor); pending clean-build verification
 - [x] ~~Line 345~~ — source-addressed (`abfbe44`, section-height accessor); pending clean-build verification
+
+## Additional compiler fixes from the full Gradle report (outside the 190-entry subset)
+
+The uploaded HTML contains many more diagnostics than the original 190-row summary; the following have source patches but do **not** change the 190-entry checklist counts.
+
+- [x] ~~Patchouli tooltip component height requires `Font`~~ — `PatchouliClientEventHandler.java`, commit `e98adfa`; pending build verification.
+- [x] ~~Creative spawn-egg item wraps an `Optional<Holder<Item>>`~~ — `TFCCreativeTabs.java`, commit `03c7c8a`; pending build verification.
+- [x] ~~Amphibian resistance effect constant~~ — `AmphibianPlayDeadBehavior.java`, commit `ed21ff7`; pending build verification.
+- [x] ~~Ramming AI speed and slowness effect constants~~ — `RamTargetTFC.java`, commit `e0c8db7`; pending build verification.
+- [x] ~~Undefined generic `E` in pinniped attacking behavior~~ — `PinnipedAI.java`, commit `fc84d18`; pending build verification.
+- [x] ~~TFC key mapping category registration and translation~~ — `ClientEventHandler.java` and `en_us.json`, commits `d4bf8ce` and `d1918e7`; pending build verification.
 
 ## Other changes not represented by one of these 190 report entries
 
