@@ -93,7 +93,7 @@ public final class PatchouliClientEventHandler
             for (ClientTooltipComponent component : event.getComponents())
             {
                 itemTooltipLength = Integer.max(itemTooltipLength, component.getWidth(event.getFont()));
-                itemTooltipHeight += component.getHeight();
+                itemTooltipHeight += component.getHeight(event.getFont());
             }
             Vector2ic itemTooltipPos = event.getTooltipPositioner().positionTooltip(event.getScreenWidth(), event.getScreenHeight(), tooltipX, tooltipY, itemTooltipLength, itemTooltipHeight);
             int itemTooltipX = itemTooltipPos.x();
