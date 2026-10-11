@@ -4,7 +4,7 @@
 **Baseline:** 190 reported Java errors across 96 files. This is a Gradle Problems Report subset, **not** a complete count of compiler diagnostic occurrences or the entire migration backlog.
 
 Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current branch, **not** yet confirmed by a successful fresh Gradle build. `- [ ]` = outstanding. Diagnostics refer to line numbers in the user's older source checkout and may move after patches.
-**Checklist:** 9 source-addressed, 181 still open from these 190 entries. No successful post-fix compilation has been claimed.
+**Checklist:** 11 source-addressed, 179 still open from these 190 entries. No successful post-fix compilation has been claimed.
 
 
 ## Status and release gates
@@ -224,7 +224,7 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [ ] Line 216 — reported Java compilation error
 
 **`src/main/java/net/dries007/tfc/common/blocks/TFCBubbleColumnBlock.java`**
-- [ ] Line 126 — reported Java compilation error
+- [x] ~~Line 126~~ — source-addressed (`9372f0d`, corrected by `ceca573`); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/blocks/TFCLightBlock.java`**
 - [ ] Line 129 — reported Java compilation error
@@ -252,7 +252,7 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [x] ~~Line 66~~ — source-addressed (3f03e50); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/blocks/devices/SluiceBlock.java`**
-- [ ] Line 138 — reported Java compilation error
+- [x] ~~Line 138~~ — source-addressed (`5bbd70a`, corrected by `a2cb3b2`); pending clean-build verification
 - [ ] Line 160 — reported Java compilation error
 
 **`src/main/java/net/dries007/tfc/common/blocks/devices/ThermometerBlock.java`**
