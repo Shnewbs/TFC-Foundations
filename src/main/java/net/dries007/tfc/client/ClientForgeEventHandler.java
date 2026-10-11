@@ -501,7 +501,7 @@ public class ClientForgeEventHandler
 
     public static void onScreenKey(ScreenEvent.KeyPressed.Pre event)
     {
-        if (TFCKeyBindings.STACK_FOOD.isActiveAndMatches(InputConstants.getKey(event.getKeyCode(), event.getScanCode())) && event.getScreen() instanceof InventoryScreen inv)
+        if (TFCKeyBindings.STACK_FOOD.isActiveAndMatches(InputConstants.getKey(event.getKeyEvent())) && event.getScreen() instanceof InventoryScreen inv)
         {
             Slot slot = inv.getSlotUnderMouse();
             if (slot != null)
