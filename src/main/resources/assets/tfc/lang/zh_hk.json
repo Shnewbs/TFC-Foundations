@@ -30,6 +30,7 @@
   "effect.tfc.overburdened": "負擔過重",
   "effect.tfc.thirst": "乾渴",
   "effect.tfc.exhausted": "疲憊",
+  "key.category.tfc.controls": "TerraFirmaCraft",
   "tfc.key.place_block": "在方塊上放置物品",
   "tfc.key.cycle_chisel_mode": "切換鑿子模式",
   "tfc.key.stack_food": "堆疊同種食物",

@@ -16,6 +16,7 @@
   "effect.tfc.overburdened": "過重",
   "effect.tfc.thirst": "渇き",
   "effect.tfc.exhausted": "過労",
+  "key.category.tfc.controls": "TerraFirmaCraft",
   "tfc.key.place_block": "ブロックを設置",
   "tfc.key.cycle_chisel_mode": "ノミのモード切替",
   "tfc.key.stack_food": "食料をまとめる",

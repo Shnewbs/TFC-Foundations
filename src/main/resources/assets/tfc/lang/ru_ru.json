@@ -21,6 +21,7 @@
   "effect.tfc.overburdened": "Перегружен",
   "effect.tfc.thirst": "Жажда",
   "effect.tfc.exhausted": "Истощение",
+  "key.category.tfc.controls": "TerraFirmaCraft",
   "tfc.key.place_block": "Разместить блок",
   "tfc.key.cycle_chisel_mode": "Изменить режим обработки долотом",
   "tfc.key.stack_food": "Объединить еду",

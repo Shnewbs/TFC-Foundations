@@ -18,6 +18,7 @@
   "effect.tfc.overburdened": "Перевантаження",
   "effect.tfc.thirst": "Спрага",
   "effect.tfc.exhausted": "Виснаження",
+  "key.category.tfc.controls": "TerraFirmaCraft",
   "tfc.key.place_block": "Розмістити предмет на землі",
   "tfc.key.cycle_chisel_mode": "Змінити режим обробки долотом",
   "tfc.key.stack_food": "Об'єднати їжу",
