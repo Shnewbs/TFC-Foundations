@@ -4,7 +4,7 @@
 **Baseline:** 190 reported Java errors across 96 files. This is a Gradle Problems Report subset, **not** a complete count of compiler diagnostic occurrences or the entire migration backlog.
 
 Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current branch, **not** yet confirmed by a successful fresh Gradle build. `- [ ]` = outstanding. Diagnostics refer to line numbers in the user's older source checkout and may move after patches.
-**Checklist:** 13 source-addressed, 177 still open from these 190 entries. No successful post-fix compilation has been claimed.
+**Checklist:** 24 source-addressed, 166 still open from these 190 entries. No successful post-fix compilation has been claimed.
 
 
 ## Status and release gates
@@ -314,25 +314,25 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [ ] Line 79 — reported Java compilation error
 
 **`src/main/java/net/dries007/tfc/common/recipes/ingredients/AndIngredient.java`**
-- [ ] Line 29 — reported Java compilation error
+- [x] ~~Line 29~~ — source-addressed (`b380c07`, holder-based `items()`); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/recipes/ingredients/FluidContentIngredient.java`**
-- [ ] Line 30 — reported Java compilation error
+- [x] ~~Line 30~~ — source-addressed (`0230532`, holder-based `items()`); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/recipes/ingredients/HasTraitIngredient.java`**
-- [ ] Line 19 — reported Java compilation error
+- [x] ~~Line 19~~ — source-addressed (`953efbf`, holder-based `items()`); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/recipes/ingredients/HeatIngredient.java`**
-- [ ] Line 26 — reported Java compilation error
+- [x] ~~Line 26~~ — source-addressed (`953efbf`, holder-based `items()`); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/recipes/ingredients/LacksTraitIngredient.java`**
-- [ ] Line 19 — reported Java compilation error
+- [x] ~~Line 19~~ — source-addressed (`953efbf`, holder-based `items()`); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/recipes/ingredients/NotRottenIngredient.java`**
-- [ ] Line 17 — reported Java compilation error
+- [x] ~~Line 17~~ — source-addressed (`953efbf`, holder-based `items()`); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/recipes/ingredients/RottenIngredient.java`**
-- [ ] Line 17 — reported Java compilation error
+- [x] ~~Line 17~~ — source-addressed (`953efbf`, holder-based `items()`); pending clean-build verification
 
 ### JEI / Patchouli
 
@@ -403,10 +403,10 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 
 **`src/main/java/net/dries007/tfc/util/tracker/WeatherHelpers.java`**
 - [ ] Line 60 — reported Java compilation error
-- [ ] Line 324 — reported Java compilation error
-- [ ] Line 324 — reported Java compilation error
-- [ ] Line 345 — reported Java compilation error
-- [ ] Line 345 — reported Java compilation error
+- [x] ~~Line 324~~ — source-addressed (`abfbe44`, section-height accessor); pending clean-build verification
+- [x] ~~Line 324~~ — source-addressed (`abfbe44`, section-height accessor); pending clean-build verification
+- [x] ~~Line 345~~ — source-addressed (`abfbe44`, section-height accessor); pending clean-build verification
+- [x] ~~Line 345~~ — source-addressed (`abfbe44`, section-height accessor); pending clean-build verification
 
 ## Other changes not represented by one of these 190 report entries
 
