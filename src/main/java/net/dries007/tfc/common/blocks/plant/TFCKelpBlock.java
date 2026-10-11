@@ -71,7 +71,7 @@ public abstract class TFCKelpBlock extends BodyPlantBlock implements IFluidLogga
             Block block = facingState.getBlock();
             if (block != this && block != topBlock)
             {
-                return topBlock.getStateForPlacement(level).setValue(getFluidProperty(), state.getValue(getFluidProperty()));
+                return topBlock.getStateForPlacement(random).setValue(getFluidProperty(), state.getValue(getFluidProperty()));
             }
         }
         if (scheduleFluidTicks)
