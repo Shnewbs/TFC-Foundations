@@ -131,7 +131,7 @@ public final class ClientHelpers
     {
         final Level level = Minecraft.getInstance().level;
         assert level != null;
-        final BlockPos pos = camera.getBlockPosition();
+        final BlockPos pos = camera.blockPosition();
         final FluidState state = level.getFluidState(pos);
         if (Helpers.isFluid(state, TFCTags.Fluids.ANY_INFINITE_WATER) && camera.getPosition().y < (float) pos.getY() + state.getHeight(level, pos))
         {
