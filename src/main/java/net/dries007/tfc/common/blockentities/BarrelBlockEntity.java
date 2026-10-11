@@ -575,7 +575,7 @@ public class BarrelBlockEntity extends TickableInventoryBlockEntity<BarrelBlockE
         getRecipe(); // Load recipe if present
         final RecipeHolder<SealedBarrelRecipe> holder = recipe.value();
         return holder != null
-            ? Component.translatable("tfc.recipe.barrel." + holder.id().getNamespace() + "." + holder.id().getPath().replace('/', '.'))
+            ? Component.translatable("tfc.recipe.barrel." + holder.id().identifier().getNamespace() + "." + holder.id().identifier().getPath().replace('/', '.'))
             : null;
     }
 
