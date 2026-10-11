@@ -10,8 +10,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
+import org.joml.Matrix4fc;
+import org.joml.Vector3fc;
 
 /**
  * Using two different methods to obtain a {@link VertexConsumer} require two different forms to manage the {@code end()}
@@ -35,13 +35,13 @@ public interface DocumentedVertexConsumer extends VertexConsumer
      * Overload for {@link #addVertex(float, float, float)} that provides a {@code pos} position
      */
     @Override
-    VertexConsumer addVertex(Vector3f pos);
+    VertexConsumer addVertex(Vector3fc pos);
 
     /**
      * Overload for {@link #addVertex(float, float, float)} that provides a {@code pose} and a {@code pos} position
      */
     @Override
-    VertexConsumer addVertex(PoseStack.Pose pose, Vector3f pos);
+    VertexConsumer addVertex(PoseStack.Pose pose, Vector3fc pos);
 
     /**
      * Overload for {@link #addVertex(float, float, float)} that provides a {@code pose} and a {@code (x, y, z)} position
@@ -53,7 +53,7 @@ public interface DocumentedVertexConsumer extends VertexConsumer
      * Overload for {@link #addVertex(float, float, float)} that provides a {@code pose} and a {@code (x, y, z)} position
      */
     @Override
-    VertexConsumer addVertex(Matrix4f pose, float x, float y, float z);
+    VertexConsumer addVertex(Matrix4fc pose, float x, float y, float z);
 
     /**
      * This is an overload for {@link #addVertex(float, float, float)} that also configures the following additional elements
