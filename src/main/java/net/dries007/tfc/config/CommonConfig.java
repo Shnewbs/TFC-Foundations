@@ -58,6 +58,6 @@ public class CommonConfig extends BaseConfig
 
         builder.swap("debug");
 
-        enableDatapackTests = builder.comment("If enabled, TFC will validate that certain pieces of reloadable data fit the conditions we expect, for example heating recipes having heatable items. It will error or warn in the log if these conditions are not met.").define("enableDatapackTests", !FMLEnvironment.production);
+        enableDatapackTests = builder.comment("If enabled, TFC will validate that certain pieces of reloadable data fit the conditions we expect, for example heating recipes having heatable items. It will error or warn in the log if these conditions are not met.").define("enableDatapackTests", !FMLEnvironment.isProduction());
     }
 }
