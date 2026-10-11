@@ -4,7 +4,7 @@
 **Baseline:** 190 reported Java errors across 96 files. This is a Gradle Problems Report subset, **not** a complete count of compiler diagnostic occurrences or the entire migration backlog.
 
 Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current branch, **not** yet confirmed by a successful fresh Gradle build. `- [ ]` = outstanding. Diagnostics refer to line numbers in the user's older source checkout and may move after patches.
-**Checklist:** 35 source-addressed, 155 still open from these 190 entries. No successful post-fix compilation has been claimed.
+**Checklist:** 41 source-addressed, 149 still open from these 190 entries. No successful post-fix compilation has been claimed.
 
 
 ## Status and release gates
@@ -233,7 +233,7 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [x] ~~Line 134~~ — source-addressed (a06d734); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/blocks/devices/AnemometerBlock.java`**
-- [ ] Line 76 — reported Java compilation error
+- [x] ~~Line 76~~ — source-addressed (`23feb1a`); **requires Gradle recheck**
 
 **`src/main/java/net/dries007/tfc/common/blocks/devices/BarrelBlock.java`**
 - [ ] Line 276 — reported Java compilation error
@@ -245,7 +245,7 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [ ] Line 64 — reported Java compilation error
 
 **`src/main/java/net/dries007/tfc/common/blocks/devices/NestBoxBlock.java`**
-- [ ] Line 51 — reported Java compilation error
+- [x] ~~Line 51~~ — source-addressed (`0eb14e0`); **requires Gradle recheck**
 
 **`src/main/java/net/dries007/tfc/common/blocks/devices/PotBlock.java`**
 - [x] ~~Line 64~~ — source-addressed (3f03e50); pending clean-build verification
@@ -253,13 +253,13 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 
 **`src/main/java/net/dries007/tfc/common/blocks/devices/SluiceBlock.java`**
 - [x] ~~Line 138~~ — source-addressed (`5bbd70a`, corrected by `a2cb3b2`); pending clean-build verification
-- [ ] Line 160 — reported Java compilation error
+- [x] ~~Line 160~~ — source-addressed (`d04bf18`); **requires Gradle recheck**
 
 **`src/main/java/net/dries007/tfc/common/blocks/devices/ThermometerBlock.java`**
-- [ ] Line 62 — reported Java compilation error
+- [x] ~~Line 62~~ — source-addressed (`b6f4799`); **requires Gradle recheck**
 
 **`src/main/java/net/dries007/tfc/common/blocks/devices/VaneBlock.java`**
-- [ ] Line 78 — reported Java compilation error
+- [x] ~~Line 78~~ — source-addressed (`3d3ce22`); **requires Gradle recheck**
 
 **`src/main/java/net/dries007/tfc/common/blocks/plant/TFCBushBlock.java`**
 - [x] ~~Line 51~~ — source-addressed (verified source already public); pending clean-build verification
@@ -286,7 +286,7 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [x] ~~Line 166~~ — source-addressed (`fc29c56`); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/entities/ai/predator/AggressiveSwim.java`**
-- [ ] Line 34 — reported Java compilation error
+- [x] ~~Line 34~~ — source-addressed (`846324c`); **requires Gradle recheck**
 
 **`src/main/java/net/dries007/tfc/common/entities/ai/predator/PackPredator.java`**
 - [ ] Line 224 — reported Java compilation error
@@ -436,6 +436,23 @@ The uploaded HTML contains many more diagnostics than the original 190-row summa
 - [x] ~~Ramming AI speed and slowness effect constants~~ — `RamTargetTFC.java`, commit `e0c8db7`; pending build verification.
 - [x] ~~Undefined generic `E` in pinniped attacking behavior~~ — `PinnipedAI.java`, commit `fc84d18`; pending build verification.
 - [x] ~~TFC key mapping category registration and translation~~ — `ClientEventHandler.java` and `en_us.json`, commits `d4bf8ce` and `d1918e7`; pending build verification.
+
+## 2026-10-11 — Next 10 API repairs
+
+These ten fixes are committed directly to `26.1.2`. Six appear in the original 190-row checklist and are struck through above; four additional compiler errors in the full Gradle output are listed here. **All remain pending fresh compilation and gameplay verification.**
+
+- [x] ~~Anemometer removed-block neighbor update~~ — `23feb1a`; `affectNeighborsAfterRemoval`
+- [x] ~~Thermometer removed-block neighbor update~~ — `b6f4799`; `affectNeighborsAfterRemoval`
+- [x] ~~Vane removed-block neighbor update~~ — `3d3ce22`; `affectNeighborsAfterRemoval`
+- [x] ~~Nest-box mounted-entity unseat on removal~~ — `0eb14e0`; `affectNeighborsAfterRemoval`
+- [x] ~~Sluice removal cleans up its fluid output~~ — `d04bf18`; `affectNeighborsAfterRemoval`
+- [x] ~~Glass basin obsolete `ENTITYBLOCK_ANIMATED` render shape~~ — `d388f52`; now `INVISIBLE` mesh, its BER must still render
+- [x] ~~Hot-poured glass obsolete `ENTITYBLOCK_ANIMATED` render shape~~ — `71c89af`; now `INVISIBLE` mesh, its BER must still render
+- [x] ~~Water wheel obsolete `ENTITYBLOCK_ANIMATED` render shape~~ — `94fc866`; now `INVISIBLE` mesh, its BER must still render
+- [x] ~~Kelp tree fluid tick references nonexistent `tickAccess`~~ — `d4bd54a`; use `Level` as the tick scheduler
+- [x] ~~Predator swimming predicate missing the entity parameter~~ — `846324c`; new 3-argument predicate retains fluid type and height checks
+
+**Runtime caution:** The three `INVISIBLE` blocks require functioning block-entity renderers before they can be considered visually playable. The server-only removal hooks require world/save/reload and drop/power/seat testing; no successful runtime test has happened.
 
 ## Other changes not represented by one of these 190 report entries
 
