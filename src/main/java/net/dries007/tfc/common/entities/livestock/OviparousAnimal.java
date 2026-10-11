@@ -131,7 +131,7 @@ public abstract class OviparousAnimal extends ProducingAnimal implements Pluckab
     public void tick()
     {
         super.tick();
-        final long time = level().getDayTime() % 24000;
+        final long time = level().getOverworldClockTime() % 24000;
         if (isCrowingBird && !crowed && time > 0 && time < 1000 && random.nextInt(10) == 0)
         {
             if (isMale())
