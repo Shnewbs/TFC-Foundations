@@ -118,12 +118,12 @@ public class TFCBubbleColumnBlock extends BubbleColumnBlock
     }
 
     @Override
-    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity)
+    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, net.minecraft.world.level.block.entity.InsideBlockEffectApplier effectApplier, boolean moving)
     {
         // Override to add the entity immune check for all our aquatic animals, who want to ignore these
         if (!Helpers.isEntity(entity, TFCTags.Entities.BUBBLE_COLUMN_IMMUNE))
         {
-            super.entityInside(state, level, pos, entity);
+            super.entityInside(state, level, pos, entity, effectApplier, moving);
         }
     }
 
