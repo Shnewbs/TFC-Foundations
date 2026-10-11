@@ -30,6 +30,12 @@ import net.dries007.tfc.util.Helpers;
 
 public class ScribingTableContainer extends ItemCombinerMenu
 {
+    private static final ItemCombinerMenuSlotDefinition SLOT_DEFINITION = ItemCombinerMenuSlotDefinition.create()
+        .withSlot(0, 27, 47, stack -> true)
+        .withSlot(1, 76, 47, stack -> true)
+        .withResultSlot(2, 134, 47)
+        .build();
+
     // Fluid ink gets a 4:1 ratio for those who bother to use it
     private static final int FLUID_INK_COST = FluidHelpers.BUCKET_VOLUME / 4;
 
@@ -75,7 +81,7 @@ public class ScribingTableContainer extends ItemCombinerMenu
 
     public ScribingTableContainer(Inventory playerInv, int windowId, ContainerLevelAccess access)
     {
-        super(TFCContainerTypes.SCRIBING_TABLE.get(), windowId, playerInv, access);
+        super(TFCContainerTypes.SCRIBING_TABLE.get(), windowId, playerInv, access, SLOT_DEFINITION);
     }
 
     @Override
@@ -149,15 +155,6 @@ public class ScribingTableContainer extends ItemCombinerMenu
         this.broadcastChanges();
     }
 
-    @Override
-    protected ItemCombinerMenuSlotDefinition createInputSlotDefinitions()
-    {
-        return ItemCombinerMenuSlotDefinition.create()
-            .withSlot(0, 27, 47, (s) -> true)
-            .withSlot(1, 76, 47, (s) -> true)
-            .withResultSlot(2, 134, 47)
-            .build();
-    }
 
 
     public void setItemName(String text)
