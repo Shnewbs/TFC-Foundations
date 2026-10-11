@@ -114,7 +114,7 @@ public final class RegistrationHelpers
     @SuppressWarnings("ConstantConditions")
     public static <T extends BlockEntity> DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> register(DeferredRegister<BlockEntityType<?>> blockEntities, String name, BlockEntityType.BlockEntitySupplier<T> factory, Supplier<? extends Block> block)
     {
-        return blockEntities.register(name, () -> BlockEntityType.Builder.of(factory, block.get()).build(null));
+        return blockEntities.register(name, () -> new BlockEntityType<>(factory, block.get()));
     }
 
     /**
@@ -123,7 +123,7 @@ public final class RegistrationHelpers
     @SuppressWarnings("ConstantConditions")
     public static <T extends BlockEntity> DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> register(DeferredRegister<BlockEntityType<?>> blockEntities, String name, BlockEntityType.BlockEntitySupplier<T> factory, Stream<? extends Supplier<? extends Block>> blocks)
     {
-        return blockEntities.register(name, () -> BlockEntityType.Builder.of(factory, blocks.map(Supplier::get).toArray(Block[]::new)).build(null));
+        return blockEntities.register(name, () -> new BlockEntityType<>(factory, blocks.map(Supplier::get).toArray(Block[]::new)));
     }
 
     // Containers
