@@ -215,6 +215,18 @@ public class BloomeryBlockEntity extends TickableBlockEntity implements ICalenda
         return inputStacks;
     }
 
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state)
+    {
+        // Called while the block entity and its inventory are still available.
+        // The old Block#onRemove callback no longer exists in Minecraft 26.1.
+        if (level != null && !level.isClientSide())
+        {
+            ejectInventory();
+        }
+        super.preRemoveSideEffects(pos, state);
+    }
+
     public void ejectInventory()
     {
         dumpItems();
