@@ -129,9 +129,9 @@ public class WattleBlock extends StainedWattleBlock implements IGhostBlockHandle
     }
 
     @Override
-    protected VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos)
+    protected VoxelShape getOcclusionShape(BlockState state)
     {
-        return state.getValue(WOVEN) ? super.getOcclusionShape(state, level, pos) : Shapes.empty();
+        return state.getValue(WOVEN) ? super.getOcclusionShape(state) : Shapes.empty();
     }
 
     @Override
