@@ -16,6 +16,7 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.ConversionParams;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -221,15 +222,17 @@ public class PackPredator extends Predator implements Temptable
                     if (getFamiliarity() > 0.99f)
                     {
                         final boolean wasBaby = isBaby();
-                        final Dog dog = convertTo(TFCEntities.DOG.get(), false);
-                        if (dog != null && level() instanceof ServerLevelAccessor server)
+                        if (level() instanceof ServerLevel server)
                         {
-                            dog.finalizeSpawn(server, level().getCurrentDifficultyAt(blockPosition()), EntitySpawnReason.CONVERSION, null);
-                            dog.setGender(isMale() ? Gender.MALE : Gender.FEMALE);
-                            if (!wasBaby)
-                            {
-                                dog.setBirthTickToALongTimeAgo();
-                            }
+                            final Gender gender = isMale() ? Gender.MALE : Gender.FEMALE;
+                            convertTo(TFCEntities.DOG.get(), ConversionParams.single(this, false, false), dog -> {
+                                dog.finalizeSpawn(server, server.getCurrentDifficultyAt(dog.blockPosition()), EntitySpawnReason.CONVERSION, null);
+                                dog.setGender(gender);
+                                if (!wasBaby)
+                                {
+                                    dog.setBirthTickToALongTimeAgo();
+                                }
+                            });
                         }
                     }
                 }
