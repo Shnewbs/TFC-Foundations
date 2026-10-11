@@ -7,6 +7,7 @@
 package net.dries007.tfc.common.recipes.ingredients;
 
 import java.util.stream.Stream;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -21,13 +22,21 @@ import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 public interface PreciseIngredient extends ICustomIngredient
 {
     @Override
+    default Stream<Holder<Item>> items()
+    {
+        // A precise modifier can accept any item, depending on the other ingredients
+        // in a recipe. Return registry holders; NeoForge resolves display separately.
+        return BuiltInRegistries.ITEM.listElements()
+            .filter(holder -> !holder.value().getDefaultInstance().isEmpty())
+            .map(holder -> (Holder<Item>) holder);
+    }
+
+    // Compatibility helper for TFC's item-stack previews. NeoForge 26.1 uses
+    // items() for ingredient matching and SlotDisplay for recipe-book displays.
     default Stream<ItemStack> getItems()
     {
-        // By default, we accept every item, once modified through this ingredient.
-        // This should only be used rarely, when we have a top-level precise ingredient which actually accepts all items
-        return BuiltInRegistries.ITEM.stream()
-            .map(Item::getDefaultInstance)
-            .filter(e -> !e.isEmpty())
+        return items()
+            .map(holder -> holder.value().getDefaultInstance())
             .map(this::modifyStackForDisplay);
     }
 
