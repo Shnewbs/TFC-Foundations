@@ -73,7 +73,7 @@ public final class TFCCreativeTabs
     public static final Id TFC_METALS_INGREDIENTS = register("08_tfc_metals_ingredients",
         () -> new ItemStack(TFCItems.METAL_ITEMS.get(Metal.BLACK_BRONZE).get(Metal.ItemType.INGOT)), TFCCreativeTabs::fillMetalsIngredientsTab);
     public static final Id TFC_SPAWN_EGGS = register("09_tfc_spawn_eggs",
-        () -> new ItemStack(Objects.requireNonNull(SpawnEggItem.byId(TFCEntities.CARIBOU.get()))), TFCCreativeTabs::fillSpawnEggsTab);
+        () -> new ItemStack(SpawnEggItem.byId(TFCEntities.CARIBOU.get()).orElseThrow()), TFCCreativeTabs::fillSpawnEggsTab);
 
 
     public static Stream<CreativeModeTab.DisplayItemsGenerator> generators()
