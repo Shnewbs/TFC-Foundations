@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.CompoundContainer;
 import net.minecraft.world.Container;
 import net.minecraft.world.MenuProvider;
@@ -92,7 +93,7 @@ public class TFCChestBlock extends ChestBlock implements IForgeBlockExtension, E
 
     public TFCChestBlock(ExtendedProperties properties, String textureLocation, Supplier<BlockEntityType<? extends ChestBlockEntity>> typeSupplier)
     {
-        super(properties.properties(), typeSupplier);
+        super(typeSupplier, SoundEvents.CHEST_OPEN, SoundEvents.CHEST_CLOSE, properties.properties());
         this.textureLocation = textureLocation;
         this.extendedProperties = properties;
     }
