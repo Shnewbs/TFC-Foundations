@@ -90,6 +90,6 @@ public class WaterWheelBlock extends ExtendedBlock implements EntityBlockExtensi
     @SuppressWarnings("deprecation")
     public RenderShape getRenderShape(BlockState state)
     {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
+        return RenderShape.INVISIBLE; // Geometry is supplied by the block entity renderer.
     }
 }
