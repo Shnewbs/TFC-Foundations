@@ -18,7 +18,9 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.ShapedRecipe;
@@ -227,7 +229,9 @@ public interface DataGenerationHelpers
 
             onFinish.accept(name, isAdvanced()
                 ? new AdvancedShapelessRecipe(ingredients, ItemStackProvider.of(output, outputs), remainder(), Optional.ofNullable(primaryInput))
-                : new ShapelessRecipe("", CraftingBookCategory.MISC, output, ingredients));
+                : new ShapelessRecipe(new Recipe.CommonInfo(true),
+                    new CraftingRecipe.CraftingBookInfo(CraftingBookCategory.MISC, ""),
+                    ItemStackTemplate.fromNonEmptyStack(output), ingredients));
         }
 
         public void shaped(String name)
@@ -249,7 +253,9 @@ public interface DataGenerationHelpers
             final ShapedRecipePattern pattern = ShapedRecipePattern.of(keys.build(), this.pattern);
             onFinish.accept(name, isAdvanced()
                 ? new AdvancedShapedRecipe(pattern, true, ItemStackProvider.of(output, outputs), remainder(), inputRow, inputCol)
-                : new ShapedRecipe("", CraftingBookCategory.MISC, pattern, output));
+                : new ShapedRecipe(new Recipe.CommonInfo(true),
+                    new CraftingRecipe.CraftingBookInfo(CraftingBookCategory.MISC, ""),
+                    pattern, ItemStackTemplate.fromNonEmptyStack(output)));
         }
 
         private Optional<ItemStackProvider> remainder()

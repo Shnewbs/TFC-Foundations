@@ -19,6 +19,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeMap;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.material.Fluid;
@@ -45,6 +46,13 @@ public record AlloyRecipe(
 
     @Nullable
     public static AlloyRecipe get(RecipeManager recipes, FluidAlloy alloy)
+    {
+        return RecipeHelpers.unbox(RecipeHelpers.getHolder(recipes, TFCRecipeTypes.ALLOY, alloy));
+    }
+
+    /** Match recipes against a resolved recipe snapshot without changing matching semantics. */
+    @Nullable
+    public static AlloyRecipe get(RecipeMap recipes, FluidAlloy alloy)
     {
         return RecipeHelpers.unbox(RecipeHelpers.getHolder(recipes, TFCRecipeTypes.ALLOY, alloy));
     }

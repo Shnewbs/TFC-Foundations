@@ -34,7 +34,7 @@ public class ChannelBlockEntityRenderer implements BlockEntityRenderer<ChannelBl
             return;
         }
 
-        Fluid fluid = BuiltInRegistries.FLUID.get(channel.getFluid());
+        Fluid fluid = BuiltInRegistries.FLUID.getValue(channel.getFluid());
         var texture = IClientFluidTypeExtensions.of(fluid.getFluidType()).getStillTexture();
         int color = RenderHelpers.getFluidColor(fluid);
         TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(RenderHelpers.BLOCKS_ATLAS).apply(texture);

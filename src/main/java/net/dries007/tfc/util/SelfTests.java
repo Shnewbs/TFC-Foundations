@@ -445,7 +445,7 @@ public final class SelfTests
     private static boolean validateUniqueLoomRecipes(RecipeMap manager)
     {
         final List<Item> errors = manager.byType(TFCRecipeTypes.LOOM.get()).stream()
-            .flatMap(recipe -> Arrays.stream(recipe.value().getItemStackIngredient().ingredient().getItems()))
+            .flatMap(recipe -> Arrays.stream(RecipeHelpers.stacks(recipe.value().getItemStackIngredient().ingredient())))
             .map(ItemStack::getItem)
             .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
             .entrySet().stream().filter(m -> m.getValue() > 1)
@@ -478,7 +478,7 @@ public final class SelfTests
     {
         final List<ItemStack> errors = manager.byType(TFCRecipeTypes.HEATING.get())
             .stream()
-            .flatMap(recipe -> Arrays.stream(recipe.value().getIngredient().getItems()))
+            .flatMap(recipe -> Arrays.stream(RecipeHelpers.stacks(recipe.value().getIngredient())))
             .filter(stack -> HeatCapability.getDefinition(stack) == null)
             .toList();
         return logErrors("{} items found as ingredients to heating recipes without a heat definition!", errors, LOGGER);
