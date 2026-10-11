@@ -12,6 +12,7 @@ import net.minecraft.world.level.ScheduledTickAccess;
 
 import java.util.Locale;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionResult;
@@ -59,9 +60,9 @@ public class CalendarClockBlock extends DeviceBlock
     }
 
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving)
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean isMoving)
     {
-        super.onRemove(state, level, pos, newState, isMoving);
+        super.affectNeighborsAfterRemoval(state, level, pos, isMoving);
         level.updateNeighborsAt(pos.relative(state.getValue(FACING).getOpposite()), this); // needed for strong power update
     }
 
