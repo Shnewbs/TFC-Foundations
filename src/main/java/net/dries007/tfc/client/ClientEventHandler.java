@@ -22,7 +22,7 @@ import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CraftingScreen;
 import net.minecraft.client.model.object.boat.BoatModel;
-import net.minecraft.client.model.animal.camel.CamelModel;
+import net.minecraft.client.model.animal.camel.AdultCamelModel;
 import net.minecraft.client.model.animal.equine.DonkeyModel;
 import net.minecraft.client.model.animal.fish.CodModel;
 import net.minecraft.client.model.animal.goat.GoatModel;
@@ -670,7 +670,7 @@ public final class ClientEventHandler
         event.registerEntityRenderer(TFCEntities.MULE.get(), ctx -> new TFCChestedHorseRenderer<>(ctx, 0.92F, RenderHelpers.layerId("mule"), "mule"));
         event.registerEntityRenderer(TFCEntities.DONKEY.get(), ctx -> new TFCChestedHorseRenderer<>(ctx, 0.87F, RenderHelpers.layerId("donkey"), "donkey"));
         event.registerEntityRenderer(TFCEntities.HORSE.get(), TFCHorseRenderer::new);
-        event.registerEntityRenderer(TFCEntities.DROMEDARY_CAMEL.get(), ctx -> new SimpleMobRenderer.Builder<>(ctx, CamelModel::new, "dromedary_camel").shadow(0.7f).texture((e) -> Identifier.withDefaultNamespace("textures/entity/camel/camel.png")).build());
+        event.registerEntityRenderer(TFCEntities.DROMEDARY_CAMEL.get(), ctx -> new SimpleMobRenderer.Builder<>(ctx, AdultCamelModel::new, "dromedary_camel").shadow(0.7f).texture((e) -> Identifier.withDefaultNamespace("textures/entity/camel/camel.png")).build());
         event.registerEntityRenderer(TFCEntities.BACTRIAN_CAMEL.get(), ctx -> new BactrianCamelRenderer<>(ctx, new BactrianCamelModel(RenderHelpers.bakeSimple(ctx, "bactrian_camel")), 0.6F));
         event.registerEntityRenderer(TFCEntities.RAT.get(), RatRenderer::new);
         event.registerEntityRenderer(TFCEntities.JERBOA.get(), JerboaRenderer::new);
@@ -818,7 +818,7 @@ public final class ClientEventHandler
         event.registerLayerDefinition(RenderHelpers.layerId("horse_chest"), () -> DonkeyModel.createBodyLayer(1F));
         event.registerLayerDefinition(RenderHelpers.layerId("mule"), () -> DonkeyModel.createBodyLayer(1F));
         event.registerLayerDefinition(RenderHelpers.layerId("donkey"), () -> DonkeyModel.createBodyLayer(1F));
-        event.registerLayerDefinition(RenderHelpers.layerId("dromedary_camel"), CamelModel::createBodyLayer);
+        event.registerLayerDefinition(RenderHelpers.layerId("dromedary_camel"), AdultCamelModel::createBodyLayer);
         event.registerLayerDefinition(RenderHelpers.layerId("bactrian_camel"), BactrianCamelModel::createBodyLayer);
         event.registerLayerDefinition(RenderHelpers.layerId("water_wheel"), WaterWheelModel::createBodyLayer);
         event.registerLayerDefinition(RenderHelpers.layerId("vane"), VaneModel::createBodyLayer);
