@@ -36,8 +36,13 @@ val generateTfcItemSelectors = tasks.register<Exec>("generateTfcItemSelectors") 
     inputs.file("tools/porting/generate_item_selectors.py")
     outputs.dir(generatedItemSelectorsRoot)
     outputs.file(layout.buildDirectory.file("reports/tfcItemSelectors.json"))
+    // Windows commonly exposes Python as "python", while Unix uses "python3".
+    // Override with -PtfcPythonExecutable=<path> for custom installations.
+    val pythonExecutable = providers.gradleProperty("tfcPythonExecutable").orElse(
+        providers.systemProperty("os.name").map { if (it.startsWith("Windows", ignoreCase = true)) "python" else "python3" }
+    )
     commandLine(
-        "python3", "tools/porting/generate_item_selectors.py",
+        pythonExecutable.get(), "tools/porting/generate_item_selectors.py",
         "--output", generatedItemSelectorsRoot.get().asFile.absolutePath,
         "--report", layout.buildDirectory.file("reports/tfcItemSelectors.json").get().asFile.absolutePath
     )
