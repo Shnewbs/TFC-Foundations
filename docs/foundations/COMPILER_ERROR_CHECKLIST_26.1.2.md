@@ -4,7 +4,7 @@
 **Baseline:** 190 reported Java errors across 96 files. This is a Gradle Problems Report subset, **not** a complete count of compiler diagnostic occurrences or the entire migration backlog.
 
 Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current branch, **not** yet confirmed by a successful fresh Gradle build. `- [ ]` = outstanding. Diagnostics refer to line numbers in the user's older source checkout and may move after patches.
-**Checklist:** 53 source-addressed, 137 still open from these 190 entries. No successful post-fix compilation has been claimed.
+**Checklist:** 54 source-addressed, 136 still open from these 190 entries. No successful post-fix compilation has been claimed.
 
 
 ## Status and release gates
@@ -220,7 +220,7 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 
 **`src/main/java/net/dries007/tfc/common/blocks/ExtendedProperties.java`**
 - [x] ~~Line 209~~ — source-addressed (`5417484`); pending Java 25 Gradle compilation
-- [ ] Line 210 — reported Java compilation error
+- [x] ~~Line 210~~ — source-addressed (deferred-safe registry-ID loot table override); pending Java 25 Gradle compilation and drop testing
 - [x] ~~Line 216~~ — source-addressed (`5417484`); pending Java 25 Gradle compilation
 
 **`src/main/java/net/dries007/tfc/common/blocks/TFCBubbleColumnBlock.java`**

@@ -6,12 +6,16 @@
 
 package net.dries007.tfc.common.blocks;
 
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.ToDoubleFunction;
 import java.util.function.ToIntFunction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.item.DyeColor;
@@ -34,6 +38,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.common.blocks.wood.TFCChestBlock;
+import net.dries007.tfc.util.registry.IdHolder;
 
 /**
  * An extension of {@link BlockBehaviour.Properties} to allow setting properties in a constructor that normally require an override.
@@ -207,7 +212,24 @@ public class ExtendedProperties
     public ExtendedProperties dynamicShape() { properties.dynamicShape(); return this; }
     public ExtendedProperties noLootTable() { properties.noLootTable(); return this; }
     public ExtendedProperties dropsLike(Block block) { properties.overrideLootTable(block.getLootTable()); return this; }
-    public ExtendedProperties dropsLike(Supplier<Block> block) { properties.lootFrom(block); return this; }
+    /**
+     * Reuse a registered block's default loot table without resolving the block during
+     * deferred registration. The old Properties.lootFrom(Supplier) API was removed.
+     * All current callers supply TFC registry holders, including wood signs.
+     */
+    public ExtendedProperties dropsLike(Supplier<Block> block)
+    {
+        if (block instanceof IdHolder<?> holder)
+        {
+            final Identifier id = holder.getId();
+            properties.overrideLootTable(Optional.of(ResourceKey.create(
+                Registries.LOOT_TABLE,
+                Identifier.fromNamespaceAndPath(id.getNamespace(), "blocks/" + id.getPath())
+            )));
+            return this;
+        }
+        throw new IllegalArgumentException("dropsLike requires a registry-backed block supplier with an identifier");
+    }
     public ExtendedProperties air() { properties.air(); return this; }
     public ExtendedProperties isValidSpawn(BlockBehaviour.StateArgumentPredicate<EntityType<?>> isValidSpawn) { properties.isValidSpawn(isValidSpawn); return this; }
     public ExtendedProperties isRedstoneConductor(BlockBehaviour.StatePredicate isRedstoneConductor) { properties.isRedstoneConductor(isRedstoneConductor); return this; }

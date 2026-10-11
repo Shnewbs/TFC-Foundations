@@ -1,5 +1,12 @@
 # TFC Foundations — Current Project Status
 
+## 2026-10-12 — Deferred block loot-table API migration (source only)
+
+On existing `26.1.2`, `ExtendedProperties.dropsLike(Supplier<Block>)` now uses the supplier's `IdHolder.getId()` to construct the same default `<namespace>:blocks/<path>` loot-table key via `Properties.overrideLootTable(Optional<ResourceKey<LootTable>>)`. This replaces removed `Properties.lootFrom(Supplier)` without calling `Supplier.get()` during block registration. Audited call sites: standing/wall torch pairs in `TFCBlocks` and standing/wall wood signs in `Wood`; their suppliers resolve to `TFCBlocks.Id` registry holders. Suppliers without IDs now fail explicitly rather than forcing unsafe early block construction. Full block drops, registrations, resource data and game runtime remain untested. EUPL license and all block/loot identifiers are unchanged.
+
+The source-addressed compiler checklist subset is now **54 / 190**, with **136 still open**. These counts record source changes, **not a verified compilation pass**. The latest available Gradle failure predates recent source commits, so it does not validate this fix. Current local runtime lacks Java 25 and the resolved NeoForge dependency classpath; no Gradle build, JAR, client/server startup, or gameplay testing was possible. Historical port branches were checked: the wholly ancestor branches need no merge; divergent branches require careful per-file reconciliation and were not blindly merged. Minecraft 26.3 `26.x` stays separate. No GitHub Actions run was triggered.
+
+
 ## 2026-10-11 — Animal conversion API continuation (source only)
 
 On `26.1.2`, commits `860c9ee` and `9c899d9` replace the removed boolean `Mob.convertTo` overload in wolf-to-dog and ocelot-to-cat taming with `ConversionParams.single` and native after-conversion callbacks. The callbacks preserve spawn initialization and adult age; wolf conversion also preserves gender. The source was reread after publication. The 190-entry report checklist is now **53 source-addressed / 137 open**; these two entries still require a clean build. Local runtime is Java 17. The checked-in Gradle 9.2.1 wrapper could not download its distribution because network sockets are blocked, so no javac task started; Java 25 and the dependency cache are also absent. There is no full compile, runnable JAR, or gameplay test from this checkpoint. The `26.x` forward track and Minecraft 1.21.1 were not changed.
