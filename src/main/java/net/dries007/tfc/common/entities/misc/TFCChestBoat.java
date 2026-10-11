@@ -11,11 +11,11 @@ import java.util.function.Supplier;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.vehicle.boat.Boat;
 import net.minecraft.world.entity.vehicle.boat.ChestBoat;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
@@ -34,12 +34,10 @@ public class TFCChestBoat extends ChestBoat implements ISlotCallback
 {
     public static final EntityDataAccessor<ItemStack> CHEST_ITEM = SynchedEntityData.defineId(TFCChestBoat.class, EntityDataSerializers.ITEM_STACK);
 
-    private final Supplier<? extends Item> drop;
 
-    public TFCChestBoat(EntityType<? extends Boat> type, Level level, Supplier<? extends Item> drop)
+    public TFCChestBoat(EntityType<? extends ChestBoat> type, Level level, Supplier<? extends Item> drop)
     {
-        super(type, level);
-        this.drop = drop;
+        super(type, level, drop::get);
     }
 
     @Nullable
@@ -57,10 +55,10 @@ public class TFCChestBoat extends ChestBoat implements ISlotCallback
     }
 
     @Override
-    public void destroy(DamageSource source)
+    public void destroy(ServerLevel server, DamageSource source)
     {
-        super.destroy(source);
-        spawnAtLocation(getChestItem().copy());
+        super.destroy(server, source);
+        spawnAtLocation(server, getChestItem().copy());
     }
 
     @Override
@@ -106,12 +104,6 @@ public class TFCChestBoat extends ChestBoat implements ISlotCallback
     public EntityType<?> getType()
     {
         return super.getType();
-    }
-
-    @Override
-    public Item getDropItem()
-    {
-        return drop.get();
     }
 
     public ItemStack getChestItem()

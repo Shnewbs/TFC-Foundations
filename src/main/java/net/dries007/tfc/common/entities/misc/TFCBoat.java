@@ -16,6 +16,7 @@ import net.minecraft.world.entity.vehicle.boat.Boat;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import net.dries007.tfc.common.items.ChestBlockItem;
 
@@ -23,17 +24,15 @@ import net.dries007.tfc.common.items.ChestBlockItem;
 public class TFCBoat extends Boat
 {
     private final Supplier<EntityType<TFCChestBoat>> boatChest;
-    private final Supplier<? extends Item> drop;
 
     public TFCBoat(EntityType<? extends Boat> type, Level level, Supplier<EntityType<TFCChestBoat>> boatChest, Supplier<? extends Item> drop)
     {
-        super(type, level);
+        super(type, level, drop::get);
         this.boatChest = boatChest;
-        this.drop = drop;
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand)
+    public InteractionResult interact(Player player, InteractionHand hand, Vec3 interactionPos)
     {
         final ItemStack item = player.getItemInHand(hand);
         if (item.getItem() instanceof ChestBlockItem)
@@ -55,12 +54,6 @@ public class TFCBoat extends Boat
                 return (level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
             }
         }
-        return super.interact(player, hand);
-    }
-
-    @Override
-    public Item getDropItem()
-    {
-        return drop.get();
+        return super.interact(player, hand, interactionPos);
     }
 }
