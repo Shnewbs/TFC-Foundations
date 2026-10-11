@@ -163,7 +163,7 @@ public class TamableAi
         return ActivityData.create(Activity.FIGHT, 10, ImmutableList.of(
             SetWalkTargetFromAttackTargetIfTargetOutOfReach.create(1.15F),
             MeleeAttack.create(40),
-            StopAttackingIfTargetInvalid.create(TamableAi::couldFlee, (t, e) -> t.refreshCommandOnNextTick(), false)
+            StopAttackingIfTargetInvalid.create((serverLevel, target) -> couldFlee(target), (t, e) -> t.refreshCommandOnNextTick(), false)
         ), MemoryModuleType.ATTACK_TARGET);
     }
 
