@@ -44,7 +44,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
@@ -176,8 +176,8 @@ public abstract class TFCChestedHorse extends AbstractChestedHorse implements Ho
                         }
                         else
                         {
-                            final IFluidHandlerItem destFluidItemHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
-                            final IFluidHandlerItem sourceFluidItemHandler = getChestItem().getCapability(Capabilities.FluidHandler.ITEM);
+                            final IFluidHandlerItem destFluidItemHandler = FluidUtil.getFluidHandler(stack).orElse(null);
+                            final IFluidHandlerItem sourceFluidItemHandler = FluidUtil.getFluidHandler(getChestItem()).orElse(null);
                             if (destFluidItemHandler != null && sourceFluidItemHandler != null)
                             {
                                 if (FluidHelpers.transferBetweenItemAndOther(getChestItem(), destFluidItemHandler, sourceFluidItemHandler, destFluidItemHandler, FluidHelpers.Transfer.FILL, level(), blockPosition(), FluidHelpers.with(player, hand)))
