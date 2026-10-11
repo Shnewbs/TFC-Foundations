@@ -44,7 +44,10 @@ public final class ClientSolarCalculatorBridge
                     Calendars.CLIENT.getCalendarFractionOfDay());
             }
         }
-        return maybeLevel.getLevelData().getDayTime(); // Fallback
+        // LevelData no longer stores day time in Minecraft 26.1. Read the
+        // overworld clock when available; worldgen-only accessors can only
+        // provide monotonically increasing game time as a fallback.
+        return maybeLevel instanceof Level level ? level.getOverworldClockTime() : maybeLevel.getLevelData().getGameTime();
     }
 
     public static SkyPos getSunPosition(Level level, BlockPos pos)
