@@ -77,7 +77,7 @@ public record MetalItem(
             values.clear();
 
             BuiltInRegistries.ITEM.getTags().forEach(pair -> {
-                final Identifier id = pair.getFirst().location();
+                final Identifier id = pair.key().location();
                 if (id.getNamespace().equals("c"))
                 {
                     final String[] path = id.getPath().split("/");
@@ -89,7 +89,7 @@ public record MetalItem(
                     {
                         final String metalName = path[1];
                         final MetalItem metal = instances.computeIfAbsent(metalName, key -> new MetalItem(metalName));
-                        pair.getSecond().forEach(holder -> values.compute(holder.value(), (key, old) -> {
+                        pair.forEach(holder -> values.compute(holder.value(), (key, old) -> {
                             if (old != null)
                             {
                                 LOGGER.warn("Item {} was inferred to match multiple metals {} and {}, using former", key, old.name, metalName);
