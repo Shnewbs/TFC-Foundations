@@ -27,6 +27,7 @@ import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.wood.SewingTableBlock;
 import net.dries007.tfc.common.capabilities.InventoryItemHandler;
 import net.dries007.tfc.common.container.slot.CallbackSlot;
+import net.dries007.tfc.common.recipes.RecipeHelpers;
 import net.dries007.tfc.common.recipes.SewingRecipe;
 import net.dries007.tfc.common.recipes.TFCRecipeTypes;
 import net.dries007.tfc.common.recipes.input.NonEmptyInput;
@@ -131,7 +132,10 @@ public class SewingTableContainer extends Container implements ISlotCallback, Bu
     public void updateResultItem()
     {
         access.execute((level, pos) -> {
-            level.getRecipeManager().getRecipeFor(TFCRecipeTypes.SEWING.get(), input, level).ifPresentOrElse(recipe -> {
+            RecipeHelpers.getRecipes(level, TFCRecipeTypes.SEWING).stream()
+                .filter(recipe -> recipe.value().matches(input, level))
+                .findFirst()
+                .ifPresentOrElse(recipe -> {
                 final ItemStack result = recipe.value().getResultItem(level.registryAccess());
                 if (result.getItem() != inventory.getStackInSlot(SLOT_RESULT).getItem())
                 {
