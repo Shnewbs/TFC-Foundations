@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.model.data.ModelData;
@@ -22,6 +23,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
+import net.dries007.tfc.common.blocks.devices.IngotPileBlock;
 import net.dries007.tfc.util.MetalItem;
 import net.dries007.tfc.util.ValueIoHelpers;
 
@@ -54,6 +56,18 @@ public class IngotPileBlockEntity extends TFCBlockEntity
         entries.add(new Entry(stack));
         BlockEntityModelData.refresh(this);
         markForSync();
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state)
+    {
+        // Preserve the old pile-drop behavior before the block entity disappears.
+        // Creative-mode removal already voids the pile contents before this hook.
+        if (level != null && !level.isClientSide() && state.getBlock() instanceof IngotPileBlock)
+        {
+            removeAllIngots(stack -> Block.popResource(level, pos, stack));
+        }
+        super.preRemoveSideEffects(pos, state);
     }
 
     public void removeAllIngots(Consumer<ItemStack> ingotConsumer)

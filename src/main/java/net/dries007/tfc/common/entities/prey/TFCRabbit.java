@@ -72,6 +72,9 @@ public class TFCRabbit extends Rabbit implements MammalProperties
 
     private static final CommonAnimalData ANIMAL_DATA = CommonAnimalData.create(TFCRabbit.class);
     private static final EntityDataAccessor<Long> PREGNANT_TIME = SynchedEntityData.defineId(TFCRabbit.class, EntityDataSerializers.LONG);
+    // Vanilla Rabbit#setVariant became private in 26.1. Keep the TFC-specific
+    // genetics variant synchronized independently for rendering and breeding.
+    private static final EntityDataAccessor<Integer> TFC_VARIANT = SynchedEntityData.defineId(TFCRabbit.class, EntityDataSerializers.INT);
 
     @Nullable private CompoundTag genes;
     private final AnimalConfig config;
@@ -139,12 +142,23 @@ public class TFCRabbit extends Rabbit implements MammalProperties
     }
 
     @Override
+    public Variant getVariant()
+    {
+        return Variant.byId(entityData.get(TFC_VARIANT));
+    }
+
+    public void setVariant(Variant variant)
+    {
+        entityData.set(TFC_VARIANT, variant.id());
+    }
+
+    @Override
     public void createGenes(CompoundTag tag, TFCAnimalProperties male)
     {
         MammalProperties.super.createGenes(tag, male);
-        tag.putString("variant1", getVariant().getSerializedName());
+        tag.putInt("variant1", getVariant().id());
         if (male instanceof TFCRabbit rabbit)
-            tag.putString("variant2", rabbit.getVariant().getSerializedName());
+            tag.putInt("variant2", rabbit.getVariant().id());
     }
 
     @Override
@@ -153,15 +167,31 @@ public class TFCRabbit extends Rabbit implements MammalProperties
         MammalProperties.super.applyGenes(tag, baby);
         if (baby instanceof TFCRabbit rabbit)
         {
-            if (NbtHelpers.hasTag(tag, "variant2", Tag.TAG_INT) && random.nextInt(10) != 0)
+            if ((NbtHelpers.hasTag(tag, "variant2", Tag.TAG_INT) || NbtHelpers.hasTag(tag, "variant2", Tag.TAG_STRING))
+                && random.nextInt(10) != 0)
             {
-                rabbit.setVariant(Variant.byId(random.nextBoolean() ? tag.getIntOr("variant1", 0) : tag.getIntOr("variant2", 0)));
+                rabbit.setVariant(readGeneVariant(tag, random.nextBoolean() ? "variant1" : "variant2"));
             }
             else if (level() instanceof ServerLevelAccessor server)
             {
                 rabbit.setVariant(getRandomRabbitType(server, blockPosition()));
             }
         }
+    }
+
+    private static Variant readGeneVariant(CompoundTag tag, String key)
+    {
+        // The earlier port wrote string variants but read them as ints.
+        // Support both saved formats to avoid losing existing rabbit genetics.
+        if (NbtHelpers.hasTag(tag, key, Tag.TAG_INT))
+            return Variant.byId(tag.getIntOr(key, 0));
+        final String savedName = tag.getStringOr(key, "");
+        for (Variant variant : Variant.values())
+        {
+            if (variant.getSerializedName().equals(savedName))
+                return variant;
+        }
+        return Variant.byId(0);
     }
 
     @Override
@@ -241,6 +271,7 @@ public class TFCRabbit extends Rabbit implements MammalProperties
         super.defineSynchedData(builder);
         animalData().define(builder);
         builder.define(PREGNANT_TIME, -1L);
+        builder.define(TFC_VARIANT, 0);
     }
 
     @Override
@@ -249,6 +280,7 @@ public class TFCRabbit extends Rabbit implements MammalProperties
         super.addAdditionalSaveData(nbt);
         saveCommonAnimalData(nbt);
         nbt.putInt("TFCMoreCarrotTicks", moreCarrotTicks);
+        nbt.putInt("TFCVariant", getVariant().id());
     }
 
     @Override
@@ -257,6 +289,8 @@ public class TFCRabbit extends Rabbit implements MammalProperties
         super.readAdditionalSaveData(nbt);
         readCommonAnimalData(nbt);
         moreCarrotTicks = nbt.getIntOr("TFCMoreCarrotTicks", 0);
+        // Old saves only contain vanilla Rabbit variant data; migrate that on load.
+        setVariant(Variant.byId(nbt.getIntOr("TFCVariant", super.getVariant().id())));
     }
 
     @Override

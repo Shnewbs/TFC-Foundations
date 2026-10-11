@@ -35,6 +35,7 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.TerraFirmaCraft;
+import net.dries007.tfc.common.blocks.devices.DeviceBlock;
 import net.dries007.tfc.common.capabilities.BlockCapabilities;
 import net.dries007.tfc.common.capabilities.InventoryItemHandler;
 import net.dries007.tfc.common.capabilities.SidedHandler;
@@ -168,6 +169,18 @@ public abstract class InventoryBlockEntity<C extends IItemHandlerModifiable & Va
         }
     }
 
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state)
+    {
+        // In 26.1 the block entity is removed before the block's neighbor callback.
+        // Route the original DeviceBlock DROP/SAVE/NOOP policy here instead.
+        if (level != null && !level.isClientSide() && state.getBlock() instanceof DeviceBlock block)
+        {
+            block.handleInventoryRemoval(this);
+        }
+        super.preRemoveSideEffects(pos, state);
+    }
+
     public void ejectInventory()
     {
         assert level != null;
@@ -178,6 +191,9 @@ public abstract class InventoryBlockEntity<C extends IItemHandlerModifiable & Va
                 Helpers.spawnItem(level, worldPosition, stack);
             }
         }
+        // An ejected inventory must not be eligible for another drop on a repeated
+        // cleanup path. Do not clear SAVE/NOOP inventories: those never call eject.
+        clearContent();
     }
 
     @Override

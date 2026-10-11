@@ -151,16 +151,6 @@ public class IngotPileBlock extends ExtendedBlock implements EntityBlockExtensio
     }
 
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving)
-    {
-        if (level.getBlockEntity(pos) instanceof IngotPileBlockEntity pile && newState.getBlock() != this)
-        {
-            pile.removeAllIngots(ingot -> popResource(level, pos, ingot));
-        }
-        super.onRemove(state, level, pos, newState, isMoving);
-    }
-
-    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         super.createBlockStateDefinition(builder.add(getCountProperty()));

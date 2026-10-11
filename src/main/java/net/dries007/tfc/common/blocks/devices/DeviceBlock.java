@@ -9,7 +9,6 @@ package net.dries007.tfc.common.blocks.devices;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,7 +20,6 @@ import net.dries007.tfc.common.blocks.ExtendedBlock;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.IForgeBlockExtension;
 import net.dries007.tfc.common.component.size.IItemSize;
-import net.dries007.tfc.util.Helpers;
 
 /**
  * Base class for blocks which:
@@ -42,18 +40,13 @@ public class DeviceBlock extends ExtendedBlock implements IForgeBlockExtension, 
         this.removeBehavior = removeBehavior;
     }
 
-    @Override
-    protected void affectNeighborsAfterRemoval(BlockState state, net.minecraft.server.level.ServerLevel level, BlockPos pos, boolean movedByPiston)
+    /**
+     * Invoked while the block entity still exists, before the engine removes it.
+     * The 26.1 affectNeighborsAfterRemoval callback is too late for inventory drops.
+     */
+    public final void handleInventoryRemoval(InventoryBlockEntity<?> entity)
     {
-        // Minecraft 26.1 removed onRemove. This callback runs after removal, so a
-        // block entity might already be gone; inventory-drop semantics must be
-        // checked in a live world before the migration is considered complete.
-        final BlockEntity entity = level.getBlockEntity(pos);
-        if (entity instanceof InventoryBlockEntity<?> inv && level.getBlockState(pos).getBlock() != state.getBlock())
-        {
-            beforeRemove(inv);
-        }
-        super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
+        beforeRemove(entity);
     }
 
     @Override
