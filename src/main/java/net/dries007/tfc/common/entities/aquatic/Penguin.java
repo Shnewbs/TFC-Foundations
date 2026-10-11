@@ -68,7 +68,7 @@ public class Penguin extends AmphibiousAnimal
 
     public void playAmbientSound()
     {
-        if (!this.isInWaterOrBubble())
+        if (!this.isInWater() && !this.level().getBlockState(this.blockPosition()).is(net.minecraft.world.level.block.Blocks.BUBBLE_COLUMN))
         {
             super.playAmbientSound();
         }
