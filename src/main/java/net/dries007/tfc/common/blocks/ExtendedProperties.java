@@ -206,14 +206,14 @@ public class ExtendedProperties
     public ExtendedProperties randomTicks() { properties.randomTicks(); return this; }
     public ExtendedProperties dynamicShape() { properties.dynamicShape(); return this; }
     public ExtendedProperties noLootTable() { properties.noLootTable(); return this; }
-    public ExtendedProperties dropsLike(Block block) { properties.lootFrom(() -> block); return this; }
+    public ExtendedProperties dropsLike(Block block) { properties.overrideLootTable(block.getLootTable()); return this; }
     public ExtendedProperties dropsLike(Supplier<Block> block) { properties.lootFrom(block); return this; }
     public ExtendedProperties air() { properties.air(); return this; }
     public ExtendedProperties isValidSpawn(BlockBehaviour.StateArgumentPredicate<EntityType<?>> isValidSpawn) { properties.isValidSpawn(isValidSpawn); return this; }
     public ExtendedProperties isRedstoneConductor(BlockBehaviour.StatePredicate isRedstoneConductor) { properties.isRedstoneConductor(isRedstoneConductor); return this; }
     public ExtendedProperties isSuffocating(BlockBehaviour.StatePredicate isSuffocating) { properties.isSuffocating(isSuffocating); return this; }
     public ExtendedProperties isViewBlocking(BlockBehaviour.StatePredicate isViewBlocking) { properties.isViewBlocking(isViewBlocking); return this; }
-    public ExtendedProperties hasPostProcess(BlockBehaviour.StatePredicate hasPostProcess) { properties.hasPostProcess(hasPostProcess); return this; }
+    public ExtendedProperties hasPostProcess(BlockBehaviour.StatePredicate hasPostProcess) { properties.postProcess((state, level, pos) -> hasPostProcess.test(state, level, pos) ? pos : null); return this; }
     public ExtendedProperties emissiveRendering(BlockBehaviour.StatePredicate emissiveRendering) { properties.emissiveRendering(emissiveRendering); return this; }
     public ExtendedProperties requiresCorrectToolForDrops() { properties.requiresCorrectToolForDrops(); return this; }
     public ExtendedProperties mapColor(MapColor color) { properties.mapColor(color); return this; }
