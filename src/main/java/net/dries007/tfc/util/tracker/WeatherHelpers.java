@@ -321,7 +321,7 @@ public final class WeatherHelpers
         int total = 0;
 
         final SectionStorageAccessor<PoiSection> poi = getPoiManager(level);
-        for (int sectionY = level.getMaxSection() - 1; sectionY >= level.getMinSection(); sectionY--)
+        for (int sectionY = level.getMaxSectionY() - 1; sectionY >= level.getMinSectionY(); sectionY--)
         {
             final Set<PoiRecord> objects = getPoiRecords(poi, chunkPos, sectionY);
             if (objects != null)
@@ -342,7 +342,7 @@ public final class WeatherHelpers
         // PoiManager doesn't have the methods we need, and they look pretty slow. We just need a randomly sampled poi from this chunk, and we
         // don't really care about section. So this is likely more efficient.
         final SectionStorageAccessor<PoiSection> poi = getPoiManager(level);
-        for (int sectionY = level.getMinSection(); sectionY < level.getMaxSection(); sectionY++)
+        for (int sectionY = level.getMinSectionY(); sectionY < level.getMaxSectionY(); sectionY++)
         {
             final Set<PoiRecord> entries = getPoiRecords(poi, chunkPos, sectionY);
             if (entries != null && !entries.isEmpty())
