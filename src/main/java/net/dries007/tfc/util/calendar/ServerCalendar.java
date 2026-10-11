@@ -12,6 +12,7 @@ import net.minecraft.gametest.framework.GameTestServer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.clock.WorldClocks;
 import net.minecraft.world.level.gamerules.GameRules;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.level.GameRuleChangedEvent;
@@ -164,7 +165,7 @@ public final class ServerCalendar extends Calendar
     {
         // Just force day time (in vanilla) to be set to the same as our calendar, plus an offset so that vanilla can calculate % 24_000
         // values correctly. In this case, that means advancing so 0 calendar time (midnight) = 18_000 (vanilla midnight)
-        level.setDayTime(calendarTicks + 18_000L);
+        level.clockManager().setTotalTicks(level.registryAccess().getOrThrow(WorldClocks.OVERWORLD), calendarTicks + 18_000L);
     }
 
     @SuppressWarnings("DataFlowIssue")
