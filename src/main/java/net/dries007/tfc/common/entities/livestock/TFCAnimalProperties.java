@@ -182,9 +182,10 @@ public interface TFCAnimalProperties extends GenderedRenderAnimal, BrainAnimalBe
                 {
                     ItemHandlerHelper.giveItemToPlayer(player, bowl.stack().copy());
                 }
-                if (stack.hasCraftingRemainingItem())
+                final var remainder = stack.getItem().getCraftingRemainder(stack);
+                if (remainder != null)
                 {
-                    ItemHandlerHelper.giveItemToPlayer(player, stack.getCraftingRemainingItem());
+                    ItemHandlerHelper.giveItemToPlayer(player, remainder.create());
                 }
                 stack.shrink(1);
             }

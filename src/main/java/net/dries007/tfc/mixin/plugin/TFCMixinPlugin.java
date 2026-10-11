@@ -67,7 +67,7 @@ public class TFCMixinPlugin implements IMixinConfigPlugin
         // This class lives in the optional Jade source set. Never ask Mixin to load
         // it when this build omits that adapter, even if the player installs Jade.
         final String jadeMixin = "client.compat.jade.NextEntityDropProviderMixin";
-        if (FMLEnvironment.dist == Dist.CLIENT
+        if (FMLEnvironment.getDist() == Dist.CLIENT
             && LoadingModList.get().getModFileById("jade") != null
             && getClass().getClassLoader().getResource("net/dries007/tfc/mixin/" + jadeMixin.replace('.', '/') + ".class") != null)
         {
