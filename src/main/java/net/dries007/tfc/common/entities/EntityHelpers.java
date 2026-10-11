@@ -180,12 +180,12 @@ public final class EntityHelpers
 
     public static boolean isMovingOnLand(Entity entity)
     {
-        return entity.onGround() && entity.getDeltaMovement().lengthSqr() > 1.0E-6D && !entity.isInWaterOrBubble();
+        return entity.onGround() && entity.getDeltaMovement().lengthSqr() > 1.0E-6D && !entity.isInWater();
     }
 
     public static boolean isMovingInWater(Entity entity)
     {
-        return entity.isInWaterOrBubble();
+        return entity.isInWater();
     }
 
     public static boolean startOrStop(AnimationState state, boolean go, int tickCount)
