@@ -321,7 +321,7 @@ public abstract class SeasonalPlantBlock extends BushBlock implements IForgeBloc
     }
 
     @Override
-    public MapCodec<? extends BushBlock> codec()
+    public MapCodec<BushBlock> codec()
     {
         return fakeBlockCodec();
     }

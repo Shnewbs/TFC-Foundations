@@ -253,7 +253,7 @@ public class FruitTreeSaplingBlock extends BushBlock implements IForgeBlockExten
     }
 
     @Override
-    public MapCodec<? extends BushBlock> codec()
+    public MapCodec<BushBlock> codec()
     {
         return fakeBlockCodec();
     }
