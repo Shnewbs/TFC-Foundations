@@ -28,7 +28,7 @@ public abstract class SoundEngineMixin
         if (((SoundEngine) (Object) this).soundManager.getSoundEvent(res) == null && res.getNamespace().equals("minecraft"))
         {
             ONLY_WARN_ONCE.add(res);
-            return SoundEvents.FIRE_EXTINGUISH.getLocation();
+            return SoundEvents.FIRE_EXTINGUISH.location();
         }
         return res;
     }
