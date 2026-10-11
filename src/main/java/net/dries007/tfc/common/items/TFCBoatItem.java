@@ -15,6 +15,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.boat.Boat;
@@ -74,7 +75,7 @@ public class TFCBoatItem extends BoatItem
             if (hitresult.getType() == HitResult.Type.BLOCK)
             {
                 // tfc start
-                TFCBoat boat = this.boat.get().create(level);
+                TFCBoat boat = this.boat.get().create(level, EntitySpawnReason.SPAWN_ITEM_USE);
                 if (boat != null)
                 {
                     boat.setPos(hitresult.getLocation().x, hitresult.getLocation().y, hitresult.getLocation().z);

@@ -32,7 +32,7 @@ public class TorchItem extends StandingAndWallBlockItem
 {
     public TorchItem(Block floorBlock, Block wallBlockIn, Properties propertiesIn)
     {
-        super(floorBlock, wallBlockIn, propertiesIn, Direction.DOWN);
+        super(floorBlock, wallBlockIn, Direction.DOWN, propertiesIn);
     }
 
     @Override
@@ -83,10 +83,10 @@ public class TorchItem extends StandingAndWallBlockItem
 
         if (Helpers.isBlock(checkState, TFCTags.Blocks.LIT_BY_DROPPED_TORCH))
         {
-            if (itemEntity.getAge() > ageRequirement && level.getRandom().nextFloat() < 0.01f && !level.isClientSide())
+            if (itemEntity.getAge() > ageRequirement && level.getRandom().nextFloat() < 0.01f && level instanceof ServerLevel serverLevel)
             {
                 StartFireEvent.startFire(level, isNotInBlock ? downPos : pos, checkState, Direction.UP, null, ItemStack.EMPTY, StartFireEvent.FireStrength.STRONG, -1);
-                itemEntity.kill();
+                itemEntity.kill(serverLevel);
                 return true;
             }
             else

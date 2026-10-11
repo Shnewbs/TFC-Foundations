@@ -65,7 +65,7 @@ public class BowlBlock extends BottomSupportedDeviceBlock
                     GlassWorking.apply(held, op);
                     inventory.getStackInSlot(0).shrink(1);
                     Helpers.playSound(level, pos, SoundEvents.SAND_PLACE);
-                    player.getCooldowns().addCooldown(held.getItem(), 10);
+                    player.getCooldowns().addCooldown(held, 10);
                     return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                 }
                 return InteractionResult.TRY_WITH_EMPTY_HAND;

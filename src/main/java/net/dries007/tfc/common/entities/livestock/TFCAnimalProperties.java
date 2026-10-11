@@ -326,7 +326,7 @@ public interface TFCAnimalProperties extends GenderedRenderAnimal, BrainAnimalBe
             }
             else if (other == this)
             {
-                final Entity baby = getEntityTypeForBaby().create(level);
+                final Entity baby = getEntityTypeForBaby().create(level, EntitySpawnReason.BREEDING);
                 if (baby instanceof TFCAnimalProperties properties && baby instanceof AgeableMob ageable)
                 {
                     setBabyTraits(properties);

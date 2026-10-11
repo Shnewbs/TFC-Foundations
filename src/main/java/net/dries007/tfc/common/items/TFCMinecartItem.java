@@ -12,6 +12,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -78,7 +79,7 @@ public class TFCMinecartItem extends Item
 
     public boolean createMinecartEntity(Level level, ItemStack stack, double x, double y, double z)
     {
-        final Entity entity = entityType.get().create(level);
+        final Entity entity = entityType.get().create(level, EntitySpawnReason.SPAWN_ITEM_USE);
         if (entity != null)
         {
             entity.setPos(x, y, z);

@@ -57,7 +57,7 @@ public class FirestarterItem extends Item
                     {
                         stack.hurtAndBreak(1, serverLevel, player, r -> {
                             // Add a cooldown to the offhand item to make it less likely to immediately use it on top of the fire
-                            player.getCooldowns().addCooldown(player.getOffhandItem().getItem(), 20);
+                            player.getCooldowns().addCooldown(player.getOffhandItem(), 20);
                         });
                     }
                 }

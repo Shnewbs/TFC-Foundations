@@ -16,6 +16,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.Brain;
@@ -223,7 +224,7 @@ public abstract class OviparousAnimal extends ProducingAnimal implements Pluckab
         final ItemStack stack = new ItemStack(Items.EGG);
         if (isFertilized())
         {
-            final OviparousAnimal baby = ((EntityType<OviparousAnimal>) getType()).create(level());
+            final OviparousAnimal baby = ((EntityType<OviparousAnimal>) getType()).create(level(), EntitySpawnReason.BREEDING);
             if (baby != null)
             {
                 baby.setGender(Gender.valueOf(random.nextBoolean()));

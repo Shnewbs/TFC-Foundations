@@ -91,10 +91,7 @@ public class ThrownJavelin extends AbstractArrow
                 return;
             }
 
-            if (level instanceof ServerLevel server)
-            {
-                EnchantmentHelper.doPostAttackEffectsWithItemSource(server, entity, src, this.getWeaponItem());
-            }
+            EnchantmentHelper.doPostAttackEffectsWithItemSource(server, entity, src, this.getWeaponItem());
 
             if (entity instanceof LivingEntity livingentity)
             {

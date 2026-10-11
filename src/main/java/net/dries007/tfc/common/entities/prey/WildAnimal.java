@@ -163,7 +163,7 @@ public class WildAnimal extends AgeableMob implements GenderedRenderAnimal
     @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob mob)
     {
-        return (AgeableMob) getType().create(level);
+        return (AgeableMob) getType().create(level, EntitySpawnReason.BREEDING);
     }
 
     @Override
