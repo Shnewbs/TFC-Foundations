@@ -133,7 +133,7 @@ public final class ClientHelpers
         assert level != null;
         final BlockPos pos = camera.blockPosition();
         final FluidState state = level.getFluidState(pos);
-        if (Helpers.isFluid(state, TFCTags.Fluids.ANY_INFINITE_WATER) && camera.getPosition().y < (float) pos.getY() + state.getHeight(level, pos))
+        if (Helpers.isFluid(state, TFCTags.Fluids.ANY_INFINITE_WATER) && camera.position().y < (float) pos.getY() + state.getHeight(level, pos))
         {
             return FogType.WATER;
         }
