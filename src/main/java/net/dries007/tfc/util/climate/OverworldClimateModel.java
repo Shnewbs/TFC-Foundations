@@ -347,7 +347,7 @@ public class OverworldClimateModel implements ClimateModel
             // The basic formulation is that we have prevailing winds which head in predictable angles. They will alternate based
             // on if it is currently day or night, and based on the "band", which are strips of coordinates which alternate N-S (based
             // on the Z-coordinate)
-            final boolean isDay = level.getDayTime() % 24000 < 12000;
+            final boolean isDay = level.getOverworldClockTime() % 24000 < 12000;
 
             final int windScale = TFCConfig.SERVER.oceanWindScale.get();
             final boolean oddBand = pos.getZ() < 0 ?
