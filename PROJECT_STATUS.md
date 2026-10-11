@@ -1,5 +1,13 @@
 # TFC Foundations — Current Project Status
 
+## 2026-10-11 — Local Gradle Java errors and active source repairs
+
+The user's Windows Gradle build moved past Python item-selector generation and reached `:compileJava`, which **failed** with Minecraft 26.1.2/NeoForge API errors. The uploaded Gradle Problems Report has **190 top-level error entries** (across 96 files) plus warnings/advice. These are a report subset, not the complete number of javac errors emitted by the build. The checklist is at [COMPILER_ERROR_CHECKLIST_26.1.2.md](docs/foundations/COMPILER_ERROR_CHECKLIST_26.1.2.md): **35 source-addressed, 155 still unchecked**. Crossed-out items have **not** yet been proven clean by a follow-up Gradle run.
+
+Most recent source fixes, committed **directly** to `26.1.2` without creating branches: glassworking item tooltip callback (`a39cd36`), biome precipitation/sea-level argument (`f55759d`), tamable stop-attack predicate (`fc29c56`), holding minecart interaction/spawn/destroy method signatures (`91c27f9`), spring/salt fluid entity checks (`dd86ac8`), bubble-column client-level accessor (`3d63e55`), rejecting invalid minecart chest slots (`4fff220`), client camera block-position accessor (`a8b6ede`), and block-entity type constructor registration (`8210c9e`). The source and checklist were reread after pushes; there was no local Java 25 or full NeoForge classpath available for actual compilation. Rendering state extraction, capabilities' resource-handler migration, GUI/JEI/Patchouli and other errors still require substantial implementation.
+
+**Do not mark this playable.** `compileJava`, full `build`, client/dedicated server startup, worldgen, save/reload, and survival scenarios all remain unverified or failed in the latest available evidence.
+
 ## Branch consolidation audit — 2026-10-11 UTC
 
 The only intended long-lived branches are `26.1.2` (first playable) and `26.x` (26.3/future 26.4). Three temporary `port/` branches remain visible pending deletion; **do not create more**.
