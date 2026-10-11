@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 import re
 
-PATTERN = re.compile(r"^(?P<file>.+?[.]java):(?P<line>[0-9]+): error: (?P<message>.*)$", re.MULTILINE)
+PATTERN = re.compile(r"^\s*(?P<file>.+?[.]java):(?P<line>[0-9]+): error: (?P<message>.*)$", re.MULTILINE)
 
 def analyze(text):
     errors = [dict(file=m.group("file").replace(chr(92), "/"), line=int(m.group("line")), message=m.group("message")) for m in PATTERN.finditer(text)]
