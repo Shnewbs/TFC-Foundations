@@ -64,7 +64,7 @@ public final class ClearWorldCommand
 
         final BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
         final Predicate<BlockState> predicate = preset.make(source.getServer());
-        final int minY = level.getMinBuildHeight();
+        final int minY = level.getMinY();
 
         int blocksRemoved = 0;
 

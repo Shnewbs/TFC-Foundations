@@ -175,7 +175,7 @@ public class TFCFallingBlockEntity extends FallingBlockEntity
                 if (!onGround())
                 {
                     failedBreakCheck = false;
-                    if ((time > 100 && (posAt.getY() < level().getMinBuildHeight() || posAt.getY() > level().getMaxBuildHeight())) || time > 600)
+                    if ((time > 100 && (posAt.getY() < level().getMinY() || posAt.getY() > level().getMaxY())) || time > 600)
                     {
                         attemptToDropAsItem(fallingBlockState);
                         remove(RemovalReason.DISCARDED);

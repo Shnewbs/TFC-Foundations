@@ -99,7 +99,7 @@ public class GrowingFruitTreeBranchBlock extends FruitTreeBranchBlock implements
         FruitTreeBranchBlock body = (FruitTreeBranchBlock) this.body.get();
         BlockPos abovePos = pos.above();
         final boolean natural = state.getValue(NATURAL);
-        if (canGrowInto(level, abovePos) && abovePos.getY() < level.getMaxBuildHeight() - 1 && level.getBlockEntity(pos) instanceof TickingPlantBlockEntity activeBranch)
+        if (canGrowInto(level, abovePos) && abovePos.getY() < level.getMaxY() && level.getBlockEntity(pos) instanceof TickingPlantBlockEntity activeBranch)
         {
             final BlockPos stemPos = activeBranch.getStemPos();
             int stage = state.getValue(STAGE);

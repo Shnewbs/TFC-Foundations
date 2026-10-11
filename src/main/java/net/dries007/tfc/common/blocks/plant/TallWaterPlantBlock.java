@@ -121,7 +121,7 @@ public abstract class TallWaterPlantBlock extends TFCTallGrassBlock implements I
             return null;
         }
 
-        return pos.getY() < context.getLevel().getMaxBuildHeight() - 1 && context.getLevel().getBlockState(pos.above()).canBeReplaced(context) ? state : null;
+        return pos.getY() < context.getLevel().getMaxY() && context.getLevel().getBlockState(pos.above()).canBeReplaced(context) ? state : null;
     }
 
     @Override
