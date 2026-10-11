@@ -1,5 +1,9 @@
 # TFC Foundations — Current Project Status
 
+## 2026-10-11 — Animal conversion API continuation (source only)
+
+On `26.1.2`, commits `860c9ee` and `9c899d9` replace the removed boolean `Mob.convertTo` overload in wolf-to-dog and ocelot-to-cat taming with `ConversionParams.single` and native after-conversion callbacks. The callbacks preserve spawn initialization and adult age; wolf conversion also preserves gender. The source was reread after publication. The 190-entry report checklist is now **53 source-addressed / 137 open**; these two entries still require a clean build. No Java 25, dependency cache, full compile, runnable JAR, or gameplay test was available in this environment. The `26.x` forward track and Minecraft 1.21.1 were not changed.
+
 ## 2026-10-11 — Ten additional javac API corrections (not compiled)
 
 The source-only checklist now shows **51 source-addressed / 139 open** of its original 190-entry subset. Newly committed direct-branch fixes: clock removal hook, POI holder lookup, penguin water/bubble ambient check, horse listener superclass/override cleanup, direct block loot table transfer and postprocess callback, barrel rack release, bloomery inventory ejection in block entity pre-remove effects, and inventory tooltip `GuiGraphicsExtractor` conversion (height + image API).
