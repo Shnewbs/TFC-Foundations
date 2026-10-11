@@ -4,7 +4,7 @@
 **Baseline:** 190 reported Java errors across 96 files. This is a Gradle Problems Report subset, **not** a complete count of compiler diagnostic occurrences or the entire migration backlog.
 
 Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current branch, **not** yet confirmed by a successful fresh Gradle build. `- [ ]` = outstanding. Diagnostics refer to line numbers in the user's older source checkout and may move after patches.
-**Checklist:** 28 source-addressed, 162 still open from these 190 entries. No successful post-fix compilation has been claimed.
+**Checklist:** 30 source-addressed, 160 still open from these 190 entries. No successful post-fix compilation has been claimed.
 
 
 ## Status and release gates
@@ -274,10 +274,10 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [x] ~~Line 324~~ — source-addressed (649c395); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/blocks/wood/TFCChestBlock.java`**
-- [ ] Line 95 — reported Java compilation error
+- [x] ~~Line 95~~ — source-addressed (`5a6c1cc`); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/container/ScribingTableContainer.java`**
-- [ ] Line 78 — reported Java compilation error
+- [x] ~~Line 78~~ — source-addressed (`3a83131`); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/entities/ai/livestock/DelegatingTemptingSensor.java`**
 - [x] ~~Line 43~~ — source-addressed (44d88da); pending clean-build verification
@@ -409,6 +409,9 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [x] ~~Line 345~~ — source-addressed (`abfbe44`, section-height accessor); pending clean-build verification
 
 ## Additional compiler fixes from the full Gradle report (outside the 190-entry subset)
+
+- [x] ~~Scribing table legacy `createInputSlotDefinitions()` override~~ — replaced with the same three-slot layout supplied at construction (`3a83131`); pending build verification. Original 190-row item tracks the constructor at line 78.
+
 
 The uploaded HTML contains many more diagnostics than the original 190-row summary; the following have source patches but do **not** change the 190-entry checklist counts.
 
