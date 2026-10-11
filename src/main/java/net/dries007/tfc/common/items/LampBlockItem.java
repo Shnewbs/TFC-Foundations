@@ -57,9 +57,11 @@ public class LampBlockItem extends BlockItem
     }
 
     @Override
-    public String getDescriptionId(ItemStack stack)
+    public Component getName(ItemStack stack)
     {
-        return FluidHelpers.getContainedFluid(stack).isEmpty() ? super.getDescriptionId(stack) : super.getDescriptionId(stack) + ".filled";
+        return FluidHelpers.getContainedFluid(stack).isEmpty()
+            ? super.getName(stack)
+            : Component.translatable(super.getDescriptionId() + ".filled");
     }
 
     @Override
