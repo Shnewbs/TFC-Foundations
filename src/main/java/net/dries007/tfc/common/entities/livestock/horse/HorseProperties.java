@@ -121,7 +121,7 @@ public interface HorseProperties extends MammalProperties
     @Override
     default SoundEvent eatingSound(ItemStack stack)
     {
-        return getEntity().getEatingSound(stack);
+        return getEntity().getEatingSound();
     }
 
     @Override
