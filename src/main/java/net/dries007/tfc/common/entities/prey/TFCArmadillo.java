@@ -80,7 +80,7 @@ public class TFCArmadillo extends Armadillo implements Temptable, Scareable
     @Override
     public boolean isScaredBy(LivingEntity entity)
     {
-        if (entity.getType().is(TFCTags.Entities.LAND_PREDATORS) && !entity.isSleeping())
+        if (entity.getType().builtInRegistryHolder().is(TFCTags.Entities.LAND_PREDATORS) && !entity.isSleeping())
         {
             return true;
         }
