@@ -217,7 +217,7 @@ public class ExtendedProperties
      * deferred registration. The old Properties.lootFrom(Supplier) API was removed.
      * All current callers supply TFC registry holders, including wood signs.
      */
-    public ExtendedProperties dropsLike(Supplier<Block> block)
+    public ExtendedProperties dropsLike(Supplier<? extends Block> block)
     {
         if (block instanceof IdHolder<?> holder)
         {
