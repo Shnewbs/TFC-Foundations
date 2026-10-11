@@ -9,8 +9,11 @@ package net.dries007.tfc.common.recipes.ingredients;
 import java.util.Objects;
 import java.util.stream.Stream;
 import com.mojang.serialization.MapCodec;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.material.Fluid;
@@ -44,6 +47,14 @@ public record FluidContentIngredient(SizedFluidIngredient fluid) implements ICus
     }
 
     @Override
+    public Stream<Holder<Item>> items()
+    {
+        // Enumerate fillable containers without discarding the existing fluid checks.
+        return getItems().map(stack -> BuiltInRegistries.ITEM.wrapAsHolder(stack.getItem())).distinct();
+    }
+
+    // Keep the legacy preview list for TFC display paths; item holders cannot
+    // represent how much fluid a display stack contains.
     public Stream<ItemStack> getItems()
     {
         return RecipeHelpers.stream(fluid)
