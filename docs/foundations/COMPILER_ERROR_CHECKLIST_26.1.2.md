@@ -4,7 +4,7 @@
 **Baseline:** 190 reported Java errors across 96 files. This is a Gradle Problems Report subset, **not** a complete count of compiler diagnostic occurrences or the entire migration backlog.
 
 Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current branch, **not** yet confirmed by a successful fresh Gradle build. `- [ ]` = outstanding. Diagnostics refer to line numbers in the user's older source checkout and may move after patches.
-**Checklist:** 34 source-addressed, 156 still open from these 190 entries. No successful post-fix compilation has been claimed.
+**Checklist:** 35 source-addressed, 155 still open from these 190 entries. No successful post-fix compilation has been claimed.
 
 
 ## Status and release gates
@@ -67,7 +67,7 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 **`src/main/java/net/dries007/tfc/client/ClientForgeEventHandler.java`**
 - [x] ~~Line 504~~ — source-addressed (`314460b`); pending clean-build verification
 - [ ] Line 563 — reported Java compilation error
-- [ ] Line 566 — reported Java compilation error
+- [x] ~~Line 566~~ — source-addressed (`a8b6ede`, camera `blockPosition()` accessor); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/client/ClientInventoryTooltip.java`**
 - [ ] Line 18 — reported Java compilation error
@@ -419,6 +419,7 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [x] ~~Holding minecart activator receives ServerLevel~~ — `HoldingMinecart.java`, commit `91c27f9`; pending compilation.
 - [x] ~~Obsolete minecart type/custom-display overrides removed~~ — `HoldingMinecart.java`, commit `91c27f9`; needs gameplay/rendering verification.
 - [x] ~~Client bubble-column ambience accesses player level using `level()`~~ — `TFCBubbleColumnAmbientSoundHandler.java`, commit `3d63e55`; pending compilation.
+- [x] ~~Fog camera block-position lookup uses `Camera.blockPosition()`~~ — `ClientForgeEventHandler.java`, commit `a8b6ede`; pending compilation. Original 190-row item tracks line 566.
 - [x] ~~Invalid chest-minecart slot rejects writes instead of referencing removed `SlotAccess.NULL`~~ — `TFCMinecartChest.java`, commit `4fff220`; pending compilation.
 
 
