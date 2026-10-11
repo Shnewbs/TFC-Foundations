@@ -61,9 +61,9 @@ public class PotBlock extends FirepitBlock
             double z = pos.getZ() + 0.5;
             for (int i = 0; i < random.nextInt(5) + 4; i++)
             {
-                level.addParticle(TFCParticles.BUBBLE.get(), false, x + random.nextFloat() * 0.375 - 0.1875, y + 0.625, z + random.nextFloat() * 0.375 - 0.1875, 0, 0.05D, 0);
+                level.addParticle(TFCParticles.BUBBLE.get(), x + random.nextFloat() * 0.375 - 0.1875, y + 0.625, z + random.nextFloat() * 0.375 - 0.1875, 0, 0.05D, 0);
             }
-            level.addParticle(TFCParticles.STEAM.get(), false, x, y + 0.8, z, Helpers.triangle(random), 0.5, Helpers.triangle(random));
+            level.addParticle(TFCParticles.STEAM.get(), x, y + 0.8, z, Helpers.triangle(random), 0.5, Helpers.triangle(random));
             level.playLocalSound(x, y, z, SoundEvents.WATER_AMBIENT, SoundSource.BLOCKS, 1.0F, random.nextFloat() * 0.7F + 0.4F, false);
         });
     }
