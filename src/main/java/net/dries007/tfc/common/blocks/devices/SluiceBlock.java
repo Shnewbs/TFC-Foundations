@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -139,7 +140,7 @@ public class SluiceBlock extends DeviceBlock implements EntityBlockExtension
     }
 
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving)
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean isMoving)
     {
         if (!level.isClientSide())
         {
@@ -157,7 +158,7 @@ public class SluiceBlock extends DeviceBlock implements EntityBlockExtension
                 }
             }
         }
-        super.onRemove(state, level, pos, newState, isMoving);
+        super.affectNeighborsAfterRemoval(state, level, pos, isMoving);
     }
 
     @Override
