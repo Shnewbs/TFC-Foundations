@@ -81,8 +81,8 @@ public class RamTargetTFC extends Behavior<RammingPrey>
         {
             LivingEntity livingentity = list.get(0);
             livingentity.hurt(level.damageSources().noAggroMobAttack(rammingPrey), ((float) rammingPrey.getAttributeValue(Attributes.ATTACK_DAMAGE)) * rammingPrey.getAttackDamageMultiplier());
-            int i = rammingPrey.hasEffect(MobEffects.MOVEMENT_SPEED) ? rammingPrey.getEffect(MobEffects.MOVEMENT_SPEED).getAmplifier() + 1 : 0;
-            int j = rammingPrey.hasEffect(MobEffects.MOVEMENT_SLOWDOWN) ? rammingPrey.getEffect(MobEffects.MOVEMENT_SLOWDOWN).getAmplifier() + 1 : 0;
+            int i = rammingPrey.hasEffect(MobEffects.SPEED) ? rammingPrey.getEffect(MobEffects.SPEED).getAmplifier() + 1 : 0;
+            int j = rammingPrey.hasEffect(MobEffects.SLOWNESS) ? rammingPrey.getEffect(MobEffects.SLOWNESS).getAmplifier() + 1 : 0;
             float f = 0.25F * (float) (i - j);
             float f1 = Mth.clamp(rammingPrey.getSpeed() * 1.65F, 0.2F, 3.0F) + f;
             float f2 = livingentity.isDamageSourceBlocked(level.damageSources().mobAttack(rammingPrey)) ? 0.5F : 1.0F;
