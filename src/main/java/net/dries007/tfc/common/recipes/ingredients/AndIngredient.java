@@ -10,9 +10,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 import com.mojang.serialization.MapCodec;
+import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
@@ -50,9 +52,17 @@ public record AndIngredient(List<Ingredient> children) implements ICustomIngredi
     }
 
     @Override
+    public Stream<Holder<Item>> items()
+    {
+        // Only items admitted by the base ingredient can satisfy the intersection.
+        // Component-specific restrictions remain in test(ItemStack).
+        return children.getFirst().items();
+    }
+
+    // Retain TFC's stack-preview transformations for callers that need them.
     public Stream<ItemStack> getItems()
     {
-        return Arrays.stream(children.getFirst().getItems())
+        return children.getFirst().items().map(holder -> holder.value().getDefaultInstance())
             .map(stack -> {
                 for (Ingredient other : children)
                 {
