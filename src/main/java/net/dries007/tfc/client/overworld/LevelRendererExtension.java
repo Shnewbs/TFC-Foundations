@@ -206,7 +206,7 @@ public class LevelRendererExtension extends DimensionSpecialEffects.OverworldEff
 
                 final PoseStack stack = new PoseStack();
                 final Vec3 skyColor = level.getSkyColor(Minecraft.getInstance().gameRenderer.getMainCamera().getPosition(), partialTick);
-                final SkyPos sunPos = ClientSolarCalculatorBridge.getSunPosition(level, camera.getBlockPosition());
+                final SkyPos sunPos = ClientSolarCalculatorBridge.getSunPosition(level, camera.blockPosition());
 
                 stack.mulPose(frustumMatrix);
 
@@ -259,7 +259,7 @@ public class LevelRendererExtension extends DimensionSpecialEffects.OverworldEff
                 // Stars
                 if (nightAlpha > 0.0F && starBuffer != null)
                 {
-                    final SkyPos starPos = ClientSolarCalculatorBridge.getStarPosition(level, camera.getBlockPosition());
+                    final SkyPos starPos = ClientSolarCalculatorBridge.getStarPosition(level, camera.blockPosition());
 
                     RenderSystem.setShaderColor(nightAlpha, nightAlpha, nightAlpha, nightAlpha);
                     FogRenderer.setupNoFog();
@@ -289,7 +289,7 @@ public class LevelRendererExtension extends DimensionSpecialEffects.OverworldEff
 
                 // Sun and Moon positions
                 final Matrix4f sun = rotateTo(stack, sunPos);
-                final SkyPos moonPos = ClientSolarCalculatorBridge.getMoonPosition(level, camera.getBlockPosition());
+                final SkyPos moonPos = ClientSolarCalculatorBridge.getMoonPosition(level, camera.blockPosition());
                 final Matrix4f moon = rotateTo(stack, moonPos);
 
                 // We need to cut a sky-colored quad out of the sky in order to render the sun and moon with the correct blending
