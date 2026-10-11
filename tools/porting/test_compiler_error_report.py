@@ -23,6 +23,12 @@ class CompilerReportTests(unittest.TestCase):
     def test_ignores_warnings(self):
         self.assertEqual(analyze('src/Foo.java:7: warning: deprecated\n')['total'], 0)
 
+    def test_indented_gradle_output(self):
+        log = '  src/main/java/Test.java:21: error: incompatible types\n'
+        result = analyze(log)
+        self.assertEqual(result['total'], 1)
+        self.assertEqual(result['errors'][0]['file'], 'src/main/java/Test.java')
+
     def test_repeated_errors_are_occurrences(self):
         log = 'src/Foo.java:7: error: missing\nsrc/Foo.java:7: error: missing\n'
         self.assertEqual(analyze(log)['total'], 2)
