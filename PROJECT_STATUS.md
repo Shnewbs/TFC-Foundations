@@ -2,7 +2,7 @@
 
 ## 2026-10-11 — Animal conversion API continuation (source only)
 
-On `26.1.2`, commits `860c9ee` and `9c899d9` replace the removed boolean `Mob.convertTo` overload in wolf-to-dog and ocelot-to-cat taming with `ConversionParams.single` and native after-conversion callbacks. The callbacks preserve spawn initialization and adult age; wolf conversion also preserves gender. The source was reread after publication. The 190-entry report checklist is now **53 source-addressed / 137 open**; these two entries still require a clean build. No Java 25, dependency cache, full compile, runnable JAR, or gameplay test was available in this environment. The `26.x` forward track and Minecraft 1.21.1 were not changed.
+On `26.1.2`, commits `860c9ee` and `9c899d9` replace the removed boolean `Mob.convertTo` overload in wolf-to-dog and ocelot-to-cat taming with `ConversionParams.single` and native after-conversion callbacks. The callbacks preserve spawn initialization and adult age; wolf conversion also preserves gender. The source was reread after publication. The 190-entry report checklist is now **53 source-addressed / 137 open**; these two entries still require a clean build. Local runtime is Java 17. The checked-in Gradle 9.2.1 wrapper could not download its distribution because network sockets are blocked, so no javac task started; Java 25 and the dependency cache are also absent. There is no full compile, runnable JAR, or gameplay test from this checkpoint. The `26.x` forward track and Minecraft 1.21.1 were not changed.
 
 ## 2026-10-11 — Ten additional javac API corrections (not compiled)
 
