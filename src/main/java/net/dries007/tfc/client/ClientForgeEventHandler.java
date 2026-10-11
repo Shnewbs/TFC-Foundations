@@ -563,7 +563,7 @@ public class ClientForgeEventHandler
         if (mc.level != null && event.getMode() == FogRenderer.FogMode.FOG_TERRAIN)
         {
             final FogType fluid = event.getCamera().getFluidInCamera();
-            final BlockPos pos = event.getCamera().getBlockPosition();
+            final BlockPos pos = event.getCamera().blockPosition();
             if (fluid == FogType.NONE)
             {
                 final float fog = Climate.get(mc.level).getFog(mc.level, pos);
