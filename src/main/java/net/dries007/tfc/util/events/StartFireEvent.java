@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FireChargeItem;
@@ -128,9 +128,9 @@ public final class StartFireEvent extends Event implements ICancellableEvent
                 if (sticks >= 3 && !initialLogs.isEmpty())
                 {
                     final float kindlingModifier = Math.min(0.1F * (float) kindling, 0.5F);
-                    if (level.getRandom().nextFloat() < firepitBaseChance + kindlingModifier)
+                    if (level instanceof ServerLevel serverLevel && level.getRandom().nextFloat() < firepitBaseChance + kindlingModifier)
                     {
-                        usableItems.forEach(Entity::kill);
+                        usableItems.forEach(item -> item.kill(serverLevel));
 
                         final BlockState firepitState;
                         if (player != null)

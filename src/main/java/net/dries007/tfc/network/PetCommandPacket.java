@@ -42,7 +42,7 @@ public record PetCommandPacket(
 
     void handle(@Nullable ServerPlayer player)
     {
-        if (player != null && player.serverLevel().getEntity(entityId) instanceof TamableMammal pet)
+        if (player != null && ((net.minecraft.server.level.ServerLevel) player.level()).getEntity(entityId) instanceof TamableMammal pet)
         {
             if (pet.willListenTo(command, false))
             {
