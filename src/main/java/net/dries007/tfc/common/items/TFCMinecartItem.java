@@ -58,7 +58,7 @@ public class TFCMinecartItem extends Item
             {
                 RailShape railshape = state.getBlock() instanceof BaseRailBlock ? ((BaseRailBlock) state.getBlock()).getRailDirection(state, level, pos, null) : RailShape.NORTH_SOUTH;
                 double offset = 0.0D;
-                if (railshape.isAscending())
+                if (isAscendingRail(railshape))
                 {
                     offset = 0.5D;
                 }
@@ -75,6 +75,16 @@ public class TFCMinecartItem extends Item
             }
             return InteractionResult.PASS;
         }
+    }
+
+    /** Replaces the removed RailShape.isAscending() API while retaining slope placement height. */
+    public static boolean isAscendingRail(RailShape shape)
+    {
+        return switch (shape)
+        {
+            case ASCENDING_NORTH, ASCENDING_SOUTH, ASCENDING_EAST, ASCENDING_WEST -> true;
+            default -> false;
+        };
     }
 
     public boolean createMinecartEntity(Level level, ItemStack stack, double x, double y, double z)
