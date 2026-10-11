@@ -108,8 +108,8 @@ public final class TerraFirmaCraft
         LOGGER.info("Options: Assertions = {}, Debug = {}, Production = {}, Dist = {}, Self Test = {} (Fatal = {})",
             detectAssertionsEnabled(),
             LOGGER.isDebugEnabled(),
-            FMLEnvironment.production,
-            FMLEnvironment.dist,
+            FMLEnvironment.isProduction(),
+            FMLEnvironment.getDist(),
             SelfTests.ENABLED,
             SelfTests.THROW_ON_FAIL);
 
@@ -185,7 +185,7 @@ public final class TerraFirmaCraft
         CalendarEventHandler.init();
         ForgeEventHandler.init();
 
-        if (FMLEnvironment.dist == Dist.CLIENT)
+        if (FMLEnvironment.getDist() == Dist.CLIENT)
         {
             ClientEventHandler.init(mod, bus);
             ClientForgeEventHandler.init();
