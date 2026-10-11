@@ -56,7 +56,7 @@ public class AmphibianPlayDeadBehavior extends Behavior<AmphibiousAnimal>
         if (animal.isPlayingDeadEffective())
         {
             animal.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 200, 0, false, false));
-            animal.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 200, 2, false, false));
+            animal.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 200, 2, false, false));
         }
     }
 }
