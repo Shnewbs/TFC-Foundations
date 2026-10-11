@@ -24,7 +24,6 @@ import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.fog.FogRenderer;
 import net.minecraft.client.resources.sounds.AmbientSoundHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -560,21 +559,20 @@ public class ClientForgeEventHandler
     public static void onFogRender(ViewportEvent.RenderFog event)
     {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.level != null && event.getMode() == FogRenderer.FogMode.FOG_TERRAIN)
+        if (mc.level != null)
         {
-            final FogType fluid = event.getCamera().getFluidInCamera();
+            final FogType fluid = event.getType();
             final BlockPos pos = event.getCamera().blockPosition();
             if (fluid == FogType.NONE)
             {
                 final float fog = Climate.get(mc.level).getFog(mc.level, pos);
                 if (fog != 0)
                 {
-                    final float renderDistance = mc.gameRenderer.getRenderDistance();
+                    final float renderDistance = event.getFarPlaneDistance();
                     final float density = renderDistance * (1 - Math.min(0.86f, fog));
 
                     event.setNearPlaneDistance(density - Mth.clamp(renderDistance / 10.0F, 4.0F, 64.0F));
                     event.setFarPlaneDistance(density);
-                    event.setCanceled(true);
                 }
             }
             else if (fluid == FogType.WATER)
@@ -589,7 +587,6 @@ public class ClientForgeEventHandler
                 {
                     waterFogLevel = player != null && player.hasEffect(MobEffects.NIGHT_VISION) ? 1f : Mth.lerp(0.01f, waterFogLevel, fog);
                     event.scaleFarPlaneDistance(waterFogLevel);
-                    event.setCanceled(true);
                 }
                 else
                 {
