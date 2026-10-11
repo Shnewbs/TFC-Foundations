@@ -119,7 +119,6 @@ public abstract class TFCChestedHorse extends AbstractChestedHorse implements Ho
     @Override
     public void containerChanged(Container container)
     {
-        super.containerChanged(container);
         overburdened = Helpers.getCarryCount(container).isNonZero();
     }
 
