@@ -56,7 +56,7 @@ public class PrepareRamNearestTargetTFC<E extends PathfinderMob> extends Behavio
 
         brain.getMemory(MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES).flatMap((nearestVisibleLivingEntities) -> {
             return nearestVisibleLivingEntities.findClosest((nearestVisibleEntity) -> {
-                return ramTargeting.test(rammingPrey, nearestVisibleEntity);
+                return ramTargeting.test(level, rammingPrey, nearestVisibleEntity);
             });
         }).ifPresent((target) -> {
             this.chooseRamPosition(rammingPrey, target);
