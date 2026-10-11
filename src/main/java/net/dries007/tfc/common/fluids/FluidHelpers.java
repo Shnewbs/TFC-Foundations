@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.common.fluids;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 
@@ -307,7 +308,7 @@ public final class FluidHelpers
                 {
                     queryState = state.getFluidState().createLegacyBlock();
                 }
-                if (EventHooks.canCreateFluidSource(level, pos, queryState))
+                if (level instanceof ServerLevel serverLevel && EventHooks.canCreateFluidSource(serverLevel, pos, queryState))
                 {
                     fluid.setAmount(Integer.MAX_VALUE);
                 }
@@ -641,7 +642,7 @@ public final class FluidHelpers
             // canPassThroughWall detects if a fluid state has a barrier - e.g. via a stair edge - that would prevent it from connecting to the current block.
             if (offsetFluid.getType() instanceof FlowingFluid && ((FlowingFluidAccessor) self).invoke$canPassThroughWall(direction, level, pos, blockStateIn, offsetPos, offsetState))
             {
-                if (offsetFluid.isSource() && EventHooks.canCreateFluidSource(level, offsetPos, offsetState))
+                if (offsetFluid.isSource() && level instanceof ServerLevel serverLevel && EventHooks.canCreateFluidSource(serverLevel, offsetPos, offsetState))
                 {
                     adjacentSourceBlocks++;
                     adjacentSourceBlocksByFluid.mergeInt((FlowingFluid) offsetFluid.getType(), 1, Integer::sum);

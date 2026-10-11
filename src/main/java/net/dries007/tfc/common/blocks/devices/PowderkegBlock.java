@@ -67,7 +67,7 @@ public class PowderkegBlock extends SealableDeviceBlock
             }
             else
             {
-                level.neighborChanged(pos, TFCBlocks.POWDERKEG.get(), pos); // Update the powderkeg so it checks if it should light
+                level.neighborChanged(pos, TFCBlocks.POWDERKEG.get(), null); // Update the powderkeg so it checks if it should light
                 powderkeg.onSeal();
             }
         });

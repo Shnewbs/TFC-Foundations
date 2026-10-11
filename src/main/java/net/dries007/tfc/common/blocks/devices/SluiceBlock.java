@@ -177,7 +177,7 @@ public class SluiceBlock extends DeviceBlock implements EntityBlockExtension
     }
 
     @Override
-    public void wasExploded(Level level, BlockPos pos, Explosion explosion)
+    public void wasExploded(ServerLevel level, BlockPos pos, Explosion explosion)
     {
         final BlockState state = level.getBlockState(pos);
         if (state.hasProperty(FACING))

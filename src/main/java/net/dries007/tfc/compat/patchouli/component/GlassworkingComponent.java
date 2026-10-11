@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -33,7 +34,7 @@ public class GlassworkingComponent extends InputOutputComponent<GlassworkingReci
         int idx = 0;
         for (GlassOperation operation : recipe.operations())
         {
-            final Component text = Component.literal((idx + 1) + ". ").append(Component.translatable(operation.getTranslationId())).withStyle(Style.EMPTY.withFont(Minecraft.UNIFORM_FONT));
+            final Component text = Component.literal((idx + 1) + ". ").append(Component.translatable(operation.getTranslationId())).withStyle(Style.EMPTY.withFont(new FontDescription.Resource(Minecraft.UNIFORM_FONT)));
             graphics.drawString(font, text, 14, 30 + (idx * 9), 0x404040, false);
             idx++;
         }

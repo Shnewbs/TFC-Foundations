@@ -86,7 +86,7 @@ public class SeaIceBlock extends IceBlock
         {
             // Use salt water here
             level.setBlockAndUpdate(pos, TFCBlocks.SALT_WATER.get().defaultBlockState());
-            level.neighborChanged(pos, TFCBlocks.SALT_WATER.get(), pos);
+            level.neighborChanged(pos, TFCBlocks.SALT_WATER.get(), null);
         }
     }
 }

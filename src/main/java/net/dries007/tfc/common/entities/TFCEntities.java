@@ -10,6 +10,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -231,7 +233,7 @@ public class TFCEntities
         final String id = name.toLowerCase(Locale.ROOT);
         return new Id<>(ENTITIES.register(id, () -> {
             if (!serialize) builder.noSave();
-            return builder.build(MOD_ID + ":" + id);
+            return builder.build(ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(MOD_ID, id)));
         }));
     }
 

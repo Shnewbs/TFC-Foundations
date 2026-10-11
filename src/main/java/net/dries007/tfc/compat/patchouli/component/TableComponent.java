@@ -19,6 +19,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.GsonHelper;
@@ -96,7 +97,7 @@ public class TableComponent extends CustomComponent
                 else
                 {
                     asTextComponent(element)
-                        .map(text -> new TableEntry(ConfigTextFunction.substitute(text).copy().withStyle(style -> style.withFont(Minecraft.UNIFORM_FONT)), 0))
+                        .map(text -> new TableEntry(ConfigTextFunction.substitute(text).copy().withStyle(style -> style.withFont(new FontDescription.Resource(Minecraft.UNIFORM_FONT))), 0))
                         .ifPresent(entries::add);
                 }
             }
@@ -108,7 +109,7 @@ public class TableComponent extends CustomComponent
                 asTextComponent(json.get("text"))
                     .map(text -> {
                         final int color = Integer.decode(GsonHelper.getAsString(json, "color"));
-                        return new TableEntry(text.copy().withStyle(Style.EMPTY.withFont(Minecraft.UNIFORM_FONT)), convert(color));
+                        return new TableEntry(text.copy().withStyle(Style.EMPTY.withFont(new FontDescription.Resource(Minecraft.UNIFORM_FONT))), convert(color));
                     })
                     .ifPresent(legend::add);
             }
@@ -182,7 +183,7 @@ public class TableComponent extends CustomComponent
             {
                 final int legendX = 130;
                 int legendY = totalHeight + 14 + 2;
-                graphics.drawString(font, Component.translatable("tfc.tooltip.legend").withStyle(Style.EMPTY.withFont(Minecraft.UNIFORM_FONT).withBold(true)), legendX, legendY, 0,  false);
+                graphics.drawString(font, Component.translatable("tfc.tooltip.legend").withStyle(Style.EMPTY.withFont(new FontDescription.Resource(Minecraft.UNIFORM_FONT)).withBold(true)), legendX, legendY, 0,  false);
                 legendY += 9;
                 for (TableEntry entry : legend)
                 {

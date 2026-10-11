@@ -73,6 +73,7 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
+import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.level.storage.ServerLevelData;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -269,7 +270,7 @@ public final class ForgeEventHandler
             final RandomSource random = new XoroshiroRandomSource(level.getSeed());
             final ChunkPos chunkPos = ChunkPos.containing(extension.findSpawnBiome(random));
 
-            levelData.setSpawn(chunkPos.getWorldPosition().offset(8, generator.getSpawnHeight(level), 8), 0.0F);
+            levelData.setSpawn(LevelData.RespawnData.of(level.dimension(), chunkPos.getWorldPosition().offset(8, generator.getSpawnHeight(level), 8), 0.0F, 0.0F));
             boolean foundExactSpawn = false;
             int x = 0, z = 0;
             int xStep = 0;
@@ -282,7 +283,7 @@ public final class ForgeEventHandler
                     final BlockPos spawnPos = PlayerSpawnFinder.getSpawnPosInChunk(level, new ChunkPos(chunkPos.x() + x, chunkPos.z() + z));
                     if (spawnPos != null)
                     {
-                        levelData.setSpawn(spawnPos, 0);
+                        levelData.setSpawn(LevelData.RespawnData.of(level.dimension(), spawnPos, 0.0F, 0.0F));
                         foundExactSpawn = true;
                         break;
                     }

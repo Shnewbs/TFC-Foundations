@@ -7,6 +7,7 @@
 package net.dries007.tfc.common.fluids;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
@@ -40,7 +41,10 @@ public abstract class MoltenFluid extends BaseFlowingFluid
     @Override
     protected void randomTick(Level worldIn, BlockPos pos, FluidState state, RandomSource random)
     {
-        lava.randomTick(worldIn, pos, state, random);
+        if (worldIn instanceof ServerLevel serverLevel)
+        {
+            lava.randomTick(serverLevel, pos, state, random);
+        }
     }
 
     @Nullable

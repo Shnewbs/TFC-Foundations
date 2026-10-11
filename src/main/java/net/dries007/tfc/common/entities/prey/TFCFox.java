@@ -129,7 +129,7 @@ public class TFCFox extends Fox
         {
             TFCFox fox = TFCFox.this;
             Level level = fox.level();
-            if (EventHooks.canEntityGrief(level, fox))
+            if (level instanceof ServerLevel serverLevel && EventHooks.canEntityGrief(serverLevel, fox))
             {
                 BlockState currentState = level.getBlockState(blockPos);
                 if (currentState.getBlock() instanceof SeasonalPlantBlock seasonal && fox.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty())
