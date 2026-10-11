@@ -30,6 +30,21 @@ import net.dries007.tfc.common.container.TFCContainerTypes;
 
 public class TFCMinecartChest extends MinecartChest
 {
+    private static final SlotAccess INVALID_SLOT = new SlotAccess()
+    {
+        @Override
+        public ItemStack get()
+        {
+            return ItemStack.EMPTY;
+        }
+
+        @Override
+        public boolean set(ItemStack stack)
+        {
+            return false;
+        }
+    };
+
     public static final EntityDataAccessor<ItemStack> DATA_CART_ITEM = SynchedEntityData.defineId(TFCMinecartChest.class, EntityDataSerializers.ITEM_STACK);
     public static final EntityDataAccessor<ItemStack> DATA_CHEST_ITEM = SynchedEntityData.defineId(TFCMinecartChest.class, EntityDataSerializers.ITEM_STACK);
 
@@ -65,7 +80,7 @@ public class TFCMinecartChest extends MinecartChest
                 setItem(index, stack);
                 return true;
             }
-        } : SlotAccess.NULL;
+        } : INVALID_SLOT;
     }
 
     @Override
