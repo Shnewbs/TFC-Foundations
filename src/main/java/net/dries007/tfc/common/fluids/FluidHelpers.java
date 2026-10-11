@@ -76,7 +76,7 @@ public final class FluidHelpers
      */
     public static boolean isInWaterLikeFluid(Entity entity)
     {
-        return entity.isInFluidType((fluidType, value) -> fluidType == TFCFluids.SALT_WATER.type().get() || fluidType == TFCFluids.SPRING_WATER.type().get());
+        return entity.isInFluidType(TFCFluids.SALT_WATER.type().get()) || entity.isInFluidType(TFCFluids.SPRING_WATER.type().get());
     }
 
     /**
