@@ -189,7 +189,7 @@ public class LampBlock extends ExtendedBlock implements EntityBlockExtension
     protected void onProjectileHit(Level level, BlockState state, BlockHitResult hit, Projectile projectile)
     {
         BlockPos blockpos = hit.getBlockPos();
-        if (level instanceof ServerLevel serverLevel && projectile.mayInteract(level, blockpos) && Helpers.isEntity(projectile, EntityTypeTags.IMPACT_PROJECTILES))
+        if (level instanceof ServerLevel serverLevel && projectile.mayInteract(serverLevel, blockpos) && Helpers.isEntity(projectile, EntityTypeTags.IMPACT_PROJECTILES))
         {
             serverLevel.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.GLASS.defaultBlockState()), projectile.getX(), projectile.getY(), projectile.getZ(), 10, 0, 0, 0, 0.15f);
             level.destroyBlock(blockpos, true, projectile);

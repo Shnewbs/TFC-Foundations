@@ -46,7 +46,7 @@ public class TFCDamageTypes
 
     private static Holder<DamageType> fetch(ResourceKey<DamageType> type, Level level)
     {
-        return level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(type);
+        return level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(type);
     }
 
 }

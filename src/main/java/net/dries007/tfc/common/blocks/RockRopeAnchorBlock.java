@@ -45,6 +45,6 @@ public class RockRopeAnchorBlock extends RopeAnchorBlock
     @Override
     public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player)
     {
-        return spike.get().getCloneItemStack(state, target, level, pos, player);
+        return spike.get().getCloneItemStack(level, pos, getStateAfterRemoval(state), false, player);
     }
 }

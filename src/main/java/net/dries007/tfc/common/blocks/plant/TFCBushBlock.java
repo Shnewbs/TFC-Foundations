@@ -48,7 +48,7 @@ public class TFCBushBlock extends BushBlock implements IForgeBlockExtension
     }
 
     @Override
-    protected MapCodec<? extends BushBlock> codec()
+    public MapCodec<? extends BushBlock> codec()
     {
         return fakeBlockCodec();
     }
