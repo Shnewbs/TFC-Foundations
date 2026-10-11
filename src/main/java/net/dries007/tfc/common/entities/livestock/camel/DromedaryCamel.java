@@ -313,9 +313,9 @@ public class DromedaryCamel extends AbstractCamel implements HorseProperties
     }
 
     @Override
-    public boolean isInvulnerableTo(DamageSource src)
+    public boolean isInvulnerableTo(ServerLevel level, DamageSource src)
     {
-        return src.is(DamageTypes.CACTUS) || super.isInvulnerableTo(src);
+        return src.is(DamageTypes.CACTUS) || super.isInvulnerableTo(level, src);
     }
 
     @Override
