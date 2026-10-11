@@ -116,7 +116,8 @@ public abstract class TFCChestedHorse extends AbstractChestedHorse implements Ho
         return !getChestItem().isEmpty() && Helpers.isItem(getChestItem(), Tags.Items.CHESTS_WOODEN);
     }
 
-    @Override
+    // Former AbstractHorse inventory callback; retained as an explicit helper until
+    // the 26.1.2 inventory-change notifications can be wired and gameplay-tested.
     public void containerChanged(Container container)
     {
         overburdened = Helpers.getCarryCount(container).isNonZero();
