@@ -57,7 +57,7 @@ import net.dries007.tfc.world.chunkdata.ChunkData;
  */
 public final class WeatherHelpers
 {
-    private static final Holder<PoiType> CLIMATE = BuiltInRegistries.POINT_OF_INTEREST_TYPE.getHolderOrThrow(TFCPoiTypes.CLIMATE.unwrapKey().orElseThrow());
+    private static final Holder<PoiType> CLIMATE = BuiltInRegistries.POINT_OF_INTEREST_TYPE.getOrThrow(TFCPoiTypes.CLIMATE.unwrapKey().orElseThrow());
 
     // The number of ticks per a single snow accumulation/melt event in a single chunk. For reference, vanilla operates at
     // (48 / randomTickSpeed), or 16 ticks. We do melting much slower, since it's statistically much less likely to be raining
