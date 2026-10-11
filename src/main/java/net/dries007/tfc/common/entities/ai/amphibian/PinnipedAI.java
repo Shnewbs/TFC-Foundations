@@ -165,7 +165,7 @@ public class PinnipedAI
             GateBehavior.OrderPolicy.ORDERED,
             GateBehavior.RunningPolicy.TRY_ALL,
             ImmutableList.of(
-                Pair.of(StartAttacking.<E>create((serverLevel, entity) -> PinnipedAI.getAttackTarget(entity)), 2),
+                Pair.of(StartAttacking.<AmphibiousAnimal>create((serverLevel, entity) -> PinnipedAI.getAttackTarget(entity)), 2),
                 Pair.of(RandomStroll.swim(0.5F), 2),
                 Pair.of(RandomStroll.stroll(0.15F, false), 2),
                 Pair.of(SetWalkTargetFromLookTarget.create(PinnipedAI::canSetWalkTargetFromLookTarget, PinnipedAI::getSpeedModifier, 3), 3),
