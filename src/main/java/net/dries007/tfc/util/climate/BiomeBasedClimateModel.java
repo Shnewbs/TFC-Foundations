@@ -38,6 +38,6 @@ public enum BiomeBasedClimateModel implements ClimateModel
     @Override
     public float getAverageRainfall(LevelReader level, BlockPos pos)
     {
-        return level.getBiome(pos).value().getPrecipitationAt(pos) != Biome.Precipitation.NONE ? 300f : 0f;
+        return level.getBiome(pos).value().getPrecipitationAt(pos, level.getSeaLevel()) != Biome.Precipitation.NONE ? 300f : 0f;
     }
 }
