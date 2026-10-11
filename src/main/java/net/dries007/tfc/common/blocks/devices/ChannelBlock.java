@@ -18,6 +18,7 @@ import net.minecraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -96,7 +97,7 @@ public class ChannelBlock extends ExtendedBlock implements EntityBlockExtension
     }
 
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid)
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, ItemStack tool, boolean willHarvest, FluidState fluid)
     {
         // On destroy, notify source channel that all flows going through this
         // channel have been broken
@@ -106,11 +107,11 @@ public class ChannelBlock extends ExtendedBlock implements EntityBlockExtension
                 channel -> channel.notifyBrokenLink(channel.getNumberOfFlows()));
         }
 
-        return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+        return super.onDestroyedByPlayer(state, level, pos, player, tool, willHarvest, fluid);
     }
 
     @Override
-    public void onBlockExploded(BlockState state, Level level, BlockPos pos, Explosion explosion)
+    public void onBlockExploded(BlockState state, ServerLevel level, BlockPos pos, Explosion explosion)
     {
         // On destroy, notify source channel that all flows going through this
         // channel have been broken

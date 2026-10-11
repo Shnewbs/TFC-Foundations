@@ -13,6 +13,7 @@ import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.LevelReader;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -95,7 +96,7 @@ public class MoldTableBlock extends ExtendedBlock implements EntityBlockExtensio
     }
 
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid)
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, ItemStack tool, boolean willHarvest, FluidState fluid)
     {
         // On destroy, notify source channel that all flows going through this
         // channel have been broken
@@ -104,11 +105,11 @@ public class MoldTableBlock extends ExtendedBlock implements EntityBlockExtensio
             level.getBlockEntity(pos, TFCBlockEntities.MOLD_TABLE.get()).ifPresent(MoldTableBlockEntity::finishFlow);
         }
 
-        return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+        return super.onDestroyedByPlayer(state, level, pos, player, tool, willHarvest, fluid);
     }
 
     @Override
-    public void onBlockExploded(BlockState state, Level level, BlockPos pos, Explosion explosion)
+    public void onBlockExploded(BlockState state, ServerLevel level, BlockPos pos, Explosion explosion)
     {
         // On destroy, notify source channel that all flows going through this
         // channel have been broken

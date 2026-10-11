@@ -53,13 +53,13 @@ public class DecayingBlock extends ExtendedBlock implements EntityBlockExtension
     }
 
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid)
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, ItemStack tool, boolean willHarvest, FluidState fluid)
     {
         if (level.getBlockEntity(pos) instanceof DecayingBlockEntity decaying && player.isCreative())
         {
             decaying.setStack(ItemStack.EMPTY);
         }
-        return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+        return super.onDestroyedByPlayer(state, level, pos, player, tool, willHarvest, fluid);
     }
 
     @Nullable

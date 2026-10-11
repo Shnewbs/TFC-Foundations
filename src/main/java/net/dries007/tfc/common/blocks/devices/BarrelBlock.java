@@ -303,7 +303,7 @@ public class BarrelBlock extends SealableDeviceBlock
     }
 
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid)
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, ItemStack tool, boolean willHarvest, FluidState fluid)
     {
         if (state.getValue(RACK))
         {
@@ -313,7 +313,7 @@ public class BarrelBlock extends SealableDeviceBlock
         }
         else
         {
-            return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+            return super.onDestroyedByPlayer(state, level, pos, player, tool, willHarvest, fluid);
         }
     }
 
