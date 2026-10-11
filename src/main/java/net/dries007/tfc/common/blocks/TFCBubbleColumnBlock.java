@@ -73,7 +73,7 @@ public class TFCBubbleColumnBlock extends BubbleColumnBlock
             return;
         final BlockState newColumn = columnBlock.defaultBlockState().setValue(BubbleColumnBlock.DRAG_DOWN, true);
 
-        while (cursor.getY() >= level.getMinBuildHeight() && cursor.getY() < level.getMaxBuildHeight())
+        while (cursor.getY() >= level.getMinY() && cursor.getY() <= level.getMaxY())
         {
             BlockState state = level.getBlockState(cursor);
 

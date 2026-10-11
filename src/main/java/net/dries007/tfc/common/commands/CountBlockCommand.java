@@ -53,7 +53,7 @@ public final class CountBlockCommand
         {
             for (int z = -radius; z <= radius; z++)
             {
-                for (int y = level.getMinBuildHeight(); y < level.getMaxBuildHeight(); y++)
+                for (int y = level.getMinY(); y <= level.getMaxY(); y++)
                 {
                     cursor.set(center).move(x, 0, z).setY(y);
                     if (block.test(new BlockInWorld(level, cursor, true)))

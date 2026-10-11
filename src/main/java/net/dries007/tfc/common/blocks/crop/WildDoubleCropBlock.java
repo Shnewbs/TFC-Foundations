@@ -144,7 +144,7 @@ public class WildDoubleCropBlock extends WildCropBlock
     public BlockState getStateForPlacement(BlockPlaceContext context)
     {
         BlockPos pos = context.getClickedPos();
-        return pos.getY() < context.getLevel().getMaxBuildHeight() - 1 && context.getLevel().getBlockState(pos.above()).canBeReplaced(context) ? super.getStateForPlacement(context) : null;
+        return pos.getY() < context.getLevel().getMaxY() && context.getLevel().getBlockState(pos.above()).canBeReplaced(context) ? super.getStateForPlacement(context) : null;
     }
 
     @Override

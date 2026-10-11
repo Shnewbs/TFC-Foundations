@@ -63,7 +63,7 @@ public abstract class ClimbingCropBlock extends DoubleCropBlock implements IGhos
     {
         final ItemStack heldStack = player.getItemInHand(hand);
         final BlockPos posAbove = pos.above();
-        if (Helpers.isItem(heldStack.getItem(), Tags.Items.RODS_WOODEN) && !state.getValue(STICK) && level.isEmptyBlock(posAbove) && posAbove.getY() <= level.getMaxBuildHeight())
+        if (Helpers.isItem(heldStack.getItem(), Tags.Items.RODS_WOODEN) && !state.getValue(STICK) && level.isEmptyBlock(posAbove) && posAbove.getY() <= level.getMaxY())
         {
             if (!level.isClientSide())
             {
@@ -112,7 +112,7 @@ public abstract class ClimbingCropBlock extends DoubleCropBlock implements IGhos
     public BlockState getStateToDraw(Level level, Player player, BlockState state, Direction direction, BlockPos pos, double x, double y, double z, ItemStack item)
     {
         BlockPos abovePos = pos.above();
-        if (Helpers.isItem(item.getItem(), Tags.Items.RODS_WOODEN) && !state.getValue(STICK) && level.isEmptyBlock(abovePos) && abovePos.getY() <= level.getMaxBuildHeight())
+        if (Helpers.isItem(item.getItem(), Tags.Items.RODS_WOODEN) && !state.getValue(STICK) && level.isEmptyBlock(abovePos) && abovePos.getY() <= level.getMaxY())
         {
             return state.setValue(STICK, true);
         }

@@ -706,7 +706,7 @@ public class LevelRendererExtension extends DimensionSpecialEffects.OverworldEff
                     cursor.setWithOffset(cameraPos, dx, 0, dz);
                     cursor.setY(level.getHeight(Heightmap.Types.MOTION_BLOCKING, cursor.getX(), cursor.getZ()));
 
-                    if (cursor.getY() > level.getMinBuildHeight() && cursor.getY() <= cameraPos.getY() + 10 && cursor.getY() >= cameraPos.getY() - 10)
+                    if (cursor.getY() > level.getMinY() && cursor.getY() <= cameraPos.getY() + 10 && cursor.getY() >= cameraPos.getY() - 10)
                     {
                         cursor.move(Direction.DOWN);
                         addedAnyParticles = true;
