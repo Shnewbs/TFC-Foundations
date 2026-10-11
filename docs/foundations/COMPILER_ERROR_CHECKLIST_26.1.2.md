@@ -4,7 +4,7 @@
 **Baseline:** 190 reported Java errors across 96 files. This is a Gradle Problems Report subset, **not** a complete count of compiler diagnostic occurrences or the entire migration backlog.
 
 Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current branch, **not** yet confirmed by a successful fresh Gradle build. `- [ ]` = outstanding. Diagnostics refer to line numbers in the user's older source checkout and may move after patches.
-**Checklist:** 41 source-addressed, 149 still open from these 190 entries. No successful post-fix compilation has been claimed.
+**Checklist:** 51 source-addressed, 139 still open from these 190 entries. No successful post-fix compilation has been claimed.
 
 
 ## Status and release gates
@@ -71,8 +71,8 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 
 **`src/main/java/net/dries007/tfc/client/ClientInventoryTooltip.java`**
 - [ ] Line 18 — reported Java compilation error
-- [ ] Line 29 — reported Java compilation error
-- [ ] Line 41 — reported Java compilation error
+- [x] ~~Line 29~~ — source-addressed (`549d826`); pending Java 25 Gradle compilation
+- [x] ~~Line 41~~ — source-addressed (`549d826`); pending Java 25 Gradle compilation
 
 **`src/main/java/net/dries007/tfc/client/DocumentedVertexConsumer.java`**
 - [ ] Line 37 — reported Java compilation error
@@ -219,9 +219,9 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 ### Gameplay / world / entities / recipes
 
 **`src/main/java/net/dries007/tfc/common/blocks/ExtendedProperties.java`**
-- [ ] Line 209 — reported Java compilation error
+- [x] ~~Line 209~~ — source-addressed (`5417484`); pending Java 25 Gradle compilation
 - [ ] Line 210 — reported Java compilation error
-- [ ] Line 216 — reported Java compilation error
+- [x] ~~Line 216~~ — source-addressed (`5417484`); pending Java 25 Gradle compilation
 
 **`src/main/java/net/dries007/tfc/common/blocks/TFCBubbleColumnBlock.java`**
 - [x] ~~Line 126~~ — source-addressed (`9372f0d`, corrected by `ceca573`); pending clean-build verification
@@ -236,13 +236,13 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [x] ~~Line 76~~ — source-addressed (`23feb1a`); **requires Gradle recheck**
 
 **`src/main/java/net/dries007/tfc/common/blocks/devices/BarrelBlock.java`**
-- [ ] Line 276 — reported Java compilation error
+- [x] ~~Line 276~~ — source-addressed (`3121685`); pending Java 25 Gradle compilation
 
 **`src/main/java/net/dries007/tfc/common/blocks/devices/BloomeryBlock.java`**
-- [ ] Line 280 — reported Java compilation error
+- [x] ~~Line 280~~ — source-addressed (`820ad7e + aea7677`); pending Java 25 Gradle compilation
 
 **`src/main/java/net/dries007/tfc/common/blocks/devices/CalendarClockBlock.java`**
-- [ ] Line 64 — reported Java compilation error
+- [x] ~~Line 64~~ — source-addressed (`d6ebf02`); pending Java 25 Gradle compilation
 
 **`src/main/java/net/dries007/tfc/common/blocks/devices/NestBoxBlock.java`**
 - [x] ~~Line 51~~ — source-addressed (`0eb14e0`); **requires Gradle recheck**
@@ -298,13 +298,13 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [ ] Line 129 — reported Java compilation error
 
 **`src/main/java/net/dries007/tfc/common/entities/aquatic/Penguin.java`**
-- [ ] Line 71 — reported Java compilation error
+- [x] ~~Line 71~~ — source-addressed (`36637fb`); pending Java 25 Gradle compilation
 
 **`src/main/java/net/dries007/tfc/common/entities/livestock/horse/HorseProperties.java`**
 - [x] ~~Line 124~~ — source-addressed (ebe4aba); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/entities/livestock/horse/TFCChestedHorse.java`**
-- [ ] Line 122 — reported Java compilation error
+- [x] ~~Line 122~~ — source-addressed (`afaa273`); pending Java 25 Gradle compilation
 
 **`src/main/java/net/dries007/tfc/common/entities/misc/HoldingMinecart.java`**
 - [x] ~~Line 166~~ — source-addressed (`91c27f9`); pending clean-build verification
@@ -402,7 +402,7 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [ ] Line 68 — reported Java compilation error
 
 **`src/main/java/net/dries007/tfc/util/tracker/WeatherHelpers.java`**
-- [ ] Line 60 — reported Java compilation error
+- [x] ~~Line 60~~ — source-addressed (`5e4a0a0`); pending Java 25 Gradle compilation
 - [x] ~~Line 324~~ — source-addressed (`abfbe44`, section-height accessor); pending clean-build verification
 - [x] ~~Line 324~~ — source-addressed (`abfbe44`, section-height accessor); pending clean-build verification
 - [x] ~~Line 345~~ — source-addressed (`abfbe44`, section-height accessor); pending clean-build verification
@@ -453,6 +453,23 @@ These ten fixes are committed directly to `26.1.2`. Six appear in the original 1
 - [x] ~~Predator swimming predicate missing the entity parameter~~ — `846324c`; new 3-argument predicate retains fluid type and height checks
 
 **Runtime caution:** The three `INVISIBLE` blocks require functioning block-entity renderers before they can be considered visually playable. The server-only removal hooks require world/save/reload and drop/power/seat testing; no successful runtime test has happened.
+
+## 2026-10-11 — Ten more compiler diagnostic repairs
+
+Ten entries from the original Gradle report have source-level corrections committed directly to `26.1.2`. All require a clean Java 25 build; **none** is marked compile-verified:
+
+- [x] ~~Calendar clock redstone neighbor removal hook~~ — `d6ebf02`
+- [x] ~~Climate POI registry holder lookup~~ — `5e4a0a0`
+- [x] ~~Penguin water/bubble-column ambient behavior~~ — `36637fb`
+- [x] ~~Horse inventory callback no longer calls nonexistent superclass method~~ — `afaa273`
+- [x] ~~Direct block loot-table copying uses `getLootTable` and `overrideLootTable`~~ — `5417484`
+- [x] ~~Post-process predicate mapped to the new block-position callback~~ — `5417484`
+- [x] ~~Barrel rack drops retained in `affectNeighborsAfterRemoval`~~ — `3121685`
+- [x] ~~Bloomery inventory ejection migrated from removed `onRemove` hook to `preRemoveSideEffects`~~ — `820ad7e`, `aea7677`
+- [x] ~~Inventory tooltip height now takes a `Font`~~ — `549d826`
+- [x] ~~Inventory tooltip image extraction uses `GuiGraphicsExtractor`, textured pipeline and item/decorations calls~~ — `549d826`
+
+**Open migration risk:** `ExtendedProperties.dropsLike(Supplier<Block>)` still invokes removed `Properties.lootFrom`. It needs a deferred-safe loot-table mapping, not an eager `block.get()` lookup during registration. Its original line-210 checklist item remains unchecked. Other rendering/capability issues also remain unresolved.
 
 ## Other changes not represented by one of these 190 report entries
 
