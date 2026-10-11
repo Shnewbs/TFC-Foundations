@@ -19,6 +19,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -267,13 +268,14 @@ public class BarrelBlock extends SealableDeviceBlock
     }
 
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving)
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean isMoving)
     {
+        final BlockState newState = level.getBlockState(pos);
         if (!(Helpers.isBlock(state, newState.getBlock())) && state.getValue(RACK) && !(newState.getBlock() instanceof BarrelRackBlock) && !isMoving)
         {
             Helpers.spawnItem(level, pos, new ItemStack(TFCBlocks.BARREL_RACK.get()));
         }
-        super.onRemove(state, level, pos, newState, isMoving);
+        super.affectNeighborsAfterRemoval(state, level, pos, isMoving);
     }
 
     @Override
