@@ -136,7 +136,7 @@ public final class DispenserBehaviors
                 double offset;
                 if (Helpers.isBlock(state, BlockTags.RAILS))
                 {
-                    offset = railshape.isAscending() ? 0.6 : 0.1;
+                    offset = RailShapeCompat.isAscending(railshape) ? 0.6 : 0.1;
                 }
                 else
                 {
@@ -147,7 +147,7 @@ public final class DispenserBehaviors
 
                     BlockState offsetState = level.getBlockState(offsetPos.below());
                     @SuppressWarnings("deprecation") final RailShape offsetShape = offsetState.getBlock() instanceof BaseRailBlock ? offsetState.getValue(((BaseRailBlock) offsetState.getBlock()).getShapeProperty()) : RailShape.NORTH_SOUTH;
-                    offset = direction != Direction.DOWN && offsetShape.isAscending() ? -0.4 : -0.9;
+                    offset = direction != Direction.DOWN && RailShapeCompat.isAscending(offsetShape) ? -0.4 : -0.9;
                 }
                 cartItem.createMinecartEntity(level, stack, x, y + offset, z);
                 return stack;

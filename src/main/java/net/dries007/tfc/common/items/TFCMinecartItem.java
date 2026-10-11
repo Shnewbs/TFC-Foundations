@@ -25,6 +25,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 
 import net.dries007.tfc.common.entities.misc.TFCMinecartChest;
 import net.dries007.tfc.util.Helpers;
+import net.dries007.tfc.util.RailShapeCompat;
 
 public class TFCMinecartItem extends Item
 {
@@ -58,7 +59,7 @@ public class TFCMinecartItem extends Item
             {
                 RailShape railshape = state.getBlock() instanceof BaseRailBlock ? ((BaseRailBlock) state.getBlock()).getRailDirection(state, level, pos, null) : RailShape.NORTH_SOUTH;
                 double offset = 0.0D;
-                if (railshape.isAscending())
+                if (RailShapeCompat.isAscending(railshape))
                 {
                     offset = 0.5D;
                 }

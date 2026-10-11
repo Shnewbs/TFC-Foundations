@@ -15,7 +15,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpawnEggItem;
@@ -26,6 +25,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import net.dries007.tfc.TerraFirmaCraft;
+import net.dries007.tfc.util.VanillaDyeLookup;
 import net.dries007.tfc.common.blocks.DecorationBlockHolder;
 import net.dries007.tfc.common.blocks.GroundcoverBlockType;
 import net.dries007.tfc.common.blocks.OreDeposit;
@@ -1127,7 +1127,7 @@ public final class TFCCreativeTabs
 
         for (DyeColor color : DyeColor.values())
         {
-            out.accept(DyeItem.byColor(color));
+            out.accept(VanillaDyeLookup.byColor(color));
         }
 
         TFCItems.GEMS.values().forEach(out::accept);

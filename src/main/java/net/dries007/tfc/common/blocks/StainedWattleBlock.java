@@ -18,7 +18,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
@@ -39,6 +38,7 @@ import org.jetbrains.annotations.Nullable;
 import net.dries007.tfc.client.IGhostBlockHandler;
 import net.dries007.tfc.client.TFCSounds;
 import net.dries007.tfc.util.Helpers;
+import net.dries007.tfc.util.VanillaDyeLookup;
 
 public class StainedWattleBlock extends ExtendedBlock implements IGhostBlockHandler
 {
@@ -103,7 +103,7 @@ public class StainedWattleBlock extends ExtendedBlock implements IGhostBlockHand
     private static BlockState getPossibleDyedState(ItemStack item, BlockState current)
     {
         BlockState found = Arrays.stream(Helpers.DYE_COLORS)
-            .filter(color -> Helpers.isItem(item, DyeItem.byColor(color)))
+            .filter(color -> Helpers.isItem(item, VanillaDyeLookup.byColor(color)))
             .map(color -> TFCBlocks.STAINED_WATTLE.get(color).get().defaultBlockState())
             .findFirst().orElse(null);
         return found != null && found.getBlock() != current.getBlock() ? found : null;
