@@ -9,6 +9,7 @@ package net.dries007.tfc.common.blocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.EnchantmentTags;
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -61,7 +62,7 @@ public class SeaIceBlock extends IceBlock
         super.playerDestroy(level, player, pos, state, te, stack);
         if (EnchantmentHelper.hasTag(stack, EnchantmentTags.PREVENTS_ICE_MELTING))
         {
-            if (level.dimensionType().ultraWarm())
+            if (level.environmentAttributes().getDimensionValue(EnvironmentAttributes.WATER_EVAPORATES))
             {
                 level.removeBlock(pos, false);
                 return;
@@ -78,7 +79,7 @@ public class SeaIceBlock extends IceBlock
     @Override
     protected void melt(BlockState state, Level level, BlockPos pos)
     {
-        if (level.dimensionType().ultraWarm())
+        if (level.environmentAttributes().getDimensionValue(EnvironmentAttributes.WATER_EVAPORATES))
         {
             level.removeBlock(pos, false);
         }
