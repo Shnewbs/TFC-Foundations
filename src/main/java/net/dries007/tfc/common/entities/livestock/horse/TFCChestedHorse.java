@@ -234,7 +234,7 @@ public abstract class TFCChestedHorse extends AbstractChestedHorse implements Ho
             }
             else
             {
-                if (isTamed() && getOwnerUUID() == null) // tfc: add an owner
+                if (isTamed() && getOwnerReference() == null) // tfc: add an owner
                 {
                     tameWithName(player);
                 }

@@ -249,7 +249,7 @@ public class TFCHorse extends Horse implements HorseProperties
             }
             else
             {
-                if (isTamed() && getOwnerUUID() == null) // tfc: add an owner
+                if (isTamed() && getOwnerReference() == null) // tfc: add an owner
                 {
                     tameWithName(player);
                 }
