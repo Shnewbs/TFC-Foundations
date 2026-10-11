@@ -15,7 +15,8 @@ public enum CraftingRemainderModifier implements ItemStackModifier
     @Override
     public ItemStack apply(ItemStack stack, ItemStack input, Context context)
     {
-        return input.getCraftingRemainingItem();
+        final var remainder = input.getItem().getCraftingRemainder(input);
+        return remainder != null ? remainder.create() : ItemStack.EMPTY;
     }
 
     @Override
