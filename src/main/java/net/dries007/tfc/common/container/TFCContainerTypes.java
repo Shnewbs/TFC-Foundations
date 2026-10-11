@@ -70,7 +70,7 @@ public final class TFCContainerTypes
     public static final Id<MoldLikeAlloyContainer> MOLD_LIKE_ALLOY = registerItem("mold_like_alloy", MoldLikeAlloyContainer::create);
 
     public static final Id<KnappingContainer> KNAPPING = register("knapping", (windowId, playerInventory, buffer) -> {
-        final KnappingType knappingType = KnappingType.MANAGER.getOrThrow(buffer.readResourceLocation());
+        final KnappingType knappingType = KnappingType.MANAGER.getOrThrow(buffer.readIdentifier());
         final ItemStackContainerProvider.Info info = ItemStackContainerProvider.read(buffer, playerInventory);
         return KnappingContainer.create(info.stack(), knappingType, info.hand(), info.slot(), playerInventory, windowId);
     });
