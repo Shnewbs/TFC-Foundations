@@ -102,7 +102,7 @@ public abstract class AmphibiousAnimal extends WildAnimal implements Temptable
     {
         getBrain().tick(serverLevel, this);
         AmphibianAi.updateActivity(this);
-        if (!isNoAi() && !isInWaterOrBubble())
+        if (!isNoAi() && !isInWater())
         {
             Optional<Integer> optionalTicks = this.getBrain().getMemory(MemoryModuleType.PLAY_DEAD_TICKS);
             setPlayingDead(optionalTicks.isPresent() && optionalTicks.get() > 0);
