@@ -133,17 +133,17 @@ public abstract class TFCChestedHorse extends AbstractChestedHorse implements Ho
     }
 
     @Override
-    protected void dropEquipment()
+    protected void dropEquipment(ServerLevel serverLevel)
     {
         if (!getChestItem().isEmpty())
         {
             if (!level().isClientSide())
             {
-                spawnAtLocation(getChestItem());
+                spawnAtLocation(serverLevel, getChestItem());
             }
             setChestItem(ItemStack.EMPTY);
         }
-        super.dropEquipment();
+        super.dropEquipment(serverLevel);
     }
 
     @Override

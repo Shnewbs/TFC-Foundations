@@ -33,7 +33,9 @@ public class Seat extends Entity
         {
             Seat seat = TFCEntities.SEAT.get().create(level, EntitySpawnReason.TRIGGERED);
             assert seat != null;
-            seat.moveTo(pos, 0f, 0f);
+            seat.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+            seat.setYRot(0f);
+            seat.setXRot(0f);
             level.addFreshEntity(seat);
             sitter.startRiding(seat);
         }

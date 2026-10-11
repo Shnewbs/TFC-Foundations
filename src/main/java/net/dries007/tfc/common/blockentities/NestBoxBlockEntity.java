@@ -80,7 +80,9 @@ public class NestBoxBlockEntity extends TickableInventoryBlockEntity<ItemStackHa
                 if (egg != null && egg.canHatch(stack))
                 {
                     egg.hatch(level).ifPresent(entity -> {
-                        entity.moveTo(pos, 0f, 0f);
+                        entity.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+                        entity.setYRot(0f);
+                        entity.setXRot(0f);
                         level.addFreshEntity(entity);
                     });
                     nest.inventory.setStackInSlot(slot, ItemStack.EMPTY);

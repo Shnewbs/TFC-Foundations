@@ -38,7 +38,9 @@ public class TadpoleMixin
             final Frog frog = TFCEntities.FROG.get().create(server, EntitySpawnReason.CONVERSION);
             if (frog != null)
             {
-                frog.moveTo(pole.getX(), pole.getY(), pole.getZ(), pole.getYRot(), pole.getXRot());
+                frog.setPos(pole.getX(), pole.getY(), pole.getZ());
+                frog.setYRot(pole.getYRot());
+                frog.setXRot(pole.getXRot());
                 frog.finalizeSpawn(server, server.getCurrentDifficultyAt(frog.blockPosition()), EntitySpawnReason.CONVERSION, null);
                 frog.setNoAi(pole.isNoAi());
                 if (pole.hasCustomName())
