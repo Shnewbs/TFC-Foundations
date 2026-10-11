@@ -4,7 +4,7 @@
 **Baseline:** 190 reported Java errors across 96 files. This is a Gradle Problems Report subset, **not** a complete count of compiler diagnostic occurrences or the entire migration backlog.
 
 Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current branch, **not** yet confirmed by a successful fresh Gradle build. `- [ ]` = outstanding. Diagnostics refer to line numbers in the user's older source checkout and may move after patches.
-**Checklist:** 30 source-addressed, 160 still open from these 190 entries. No successful post-fix compilation has been claimed.
+**Checklist:** 34 source-addressed, 156 still open from these 190 entries. No successful post-fix compilation has been claimed.
 
 
 ## Status and release gates
@@ -283,7 +283,7 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [x] ~~Line 43~~ — source-addressed (44d88da); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/entities/ai/pet/TamableAi.java`**
-- [ ] Line 166 — reported Java compilation error
+- [x] ~~Line 166~~ — source-addressed (`fc29c56`); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/entities/ai/predator/AggressiveSwim.java`**
 - [ ] Line 34 — reported Java compilation error
@@ -307,11 +307,11 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [ ] Line 122 — reported Java compilation error
 
 **`src/main/java/net/dries007/tfc/common/entities/misc/HoldingMinecart.java`**
-- [ ] Line 166 — reported Java compilation error
-- [ ] Line 176 — reported Java compilation error
+- [x] ~~Line 166~~ — source-addressed (`91c27f9`); pending clean-build verification
+- [x] ~~Line 176~~ — source-addressed (`91c27f9`); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/fluids/FluidHelpers.java`**
-- [ ] Line 79 — reported Java compilation error
+- [x] ~~Line 79~~ — source-addressed (`dd86ac8`); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/recipes/ingredients/AndIngredient.java`**
 - [x] ~~Line 29~~ — source-addressed (`b380c07`, holder-based `items()`); pending clean-build verification
@@ -409,6 +409,19 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [x] ~~Line 345~~ — source-addressed (`abfbe44`, section-height accessor); pending clean-build verification
 
 ## Additional compiler fixes from the full Gradle report (outside the 190-entry subset)
+
+### 2026-10-11 additional repair batch
+
+- [x] ~~Glassworking item tooltip method migrated to `TooltipDisplay` and component consumer~~ — `GlassworkingItem.java`, commit `a39cd36`; pending compilation.
+- [x] ~~Biome precipitation takes a sea-level argument~~ — `BiomeBasedClimateModel.java`, commit `f55759d`; pending compilation.
+- [x] ~~Holding minecart interaction now receives hit position~~ — `HoldingMinecart.java`, commit `91c27f9`; pending compilation.
+- [x] ~~Vanilla minecart construction uses entity type and position assignment~~ — `HoldingMinecart.java`, commit `91c27f9`; pending compilation.
+- [x] ~~Holding minecart activator receives ServerLevel~~ — `HoldingMinecart.java`, commit `91c27f9`; pending compilation.
+- [x] ~~Obsolete minecart type/custom-display overrides removed~~ — `HoldingMinecart.java`, commit `91c27f9`; needs gameplay/rendering verification.
+- [x] ~~Client bubble-column ambience accesses player level using `level()`~~ — `TFCBubbleColumnAmbientSoundHandler.java`, commit `3d63e55`; pending compilation.
+- [x] ~~Invalid chest-minecart slot rejects writes instead of referencing removed `SlotAccess.NULL`~~ — `TFCMinecartChest.java`, commit `4fff220`; pending compilation.
+
+
 
 - [x] ~~Scribing table legacy `createInputSlotDefinitions()` override~~ — replaced with the same three-slot layout supplied at construction (`3a83131`); pending build verification. Original 190-row item tracks the constructor at line 78.
 
