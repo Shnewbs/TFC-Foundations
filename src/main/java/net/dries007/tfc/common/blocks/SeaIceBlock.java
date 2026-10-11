@@ -30,7 +30,7 @@ public class SeaIceBlock extends IceBlock
     }
 
     @Override
-    public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float fallDistance)
+    public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, double fallDistance)
     {
         if (fallDistance > 5)
         {
