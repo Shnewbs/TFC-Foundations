@@ -22,7 +22,7 @@ import net.dries007.tfc.util.registry.RegistryHolder;
 
 public final class TFCIngredients
 {
-    public static final SizedIngredient EMPTY_ITEM = new SizedIngredient(Ingredient.EMPTY, 1);
+    public static final SizedIngredient EMPTY_ITEM = new SizedIngredient(Ingredient.of(), 1);
 
     public static final DeferredRegister<IngredientType<?>> TYPES = DeferredRegister.create(NeoForgeRegistries.INGREDIENT_TYPES, TerraFirmaCraft.MOD_ID);
 

@@ -35,7 +35,7 @@ public record FoodDefinition(
         FoodDefinition::new
     );
 
-    public static final FoodDefinition DEFAULT = new FoodDefinition(Ingredient.EMPTY, FoodData.EMPTY, true);
+    public static final FoodDefinition DEFAULT = new FoodDefinition(Ingredient.of(), FoodData.EMPTY, true);
 
     @Override
     public boolean matches(ItemStack input)

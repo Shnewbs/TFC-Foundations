@@ -41,7 +41,7 @@ public record HeatDefinition(
         HeatDefinition::new
     );
 
-    public static final HeatDefinition DEFAULT = new HeatDefinition(Ingredient.EMPTY, 0f, 0f, 0f);
+    public static final HeatDefinition DEFAULT = new HeatDefinition(Ingredient.of(), 0f, 0f, 0f);
 
     @Override
     public boolean matches(ItemStack input)

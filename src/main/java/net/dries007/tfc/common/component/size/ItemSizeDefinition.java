@@ -34,7 +34,7 @@ public record ItemSizeDefinition(
 
     public ItemSizeDefinition(Size size, Weight weight)
     {
-        this(Ingredient.EMPTY, size, weight);
+        this(Ingredient.of(), size, weight);
     }
 
     @Override
