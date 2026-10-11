@@ -420,6 +420,7 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [x] ~~Obsolete minecart type/custom-display overrides removed~~ — `HoldingMinecart.java`, commit `91c27f9`; needs gameplay/rendering verification.
 - [x] ~~Client bubble-column ambience accesses player level using `level()`~~ — `TFCBubbleColumnAmbientSoundHandler.java`, commit `3d63e55`; pending compilation.
 - [x] ~~Fog camera block-position lookup uses `Camera.blockPosition()`~~ — `ClientForgeEventHandler.java`, commit `a8b6ede`; pending compilation. Original 190-row item tracks line 566.
+- [x] ~~Two `BlockEntityType.Builder` registrations migrated to direct factory/blocks constructors~~ — `RegistrationHelpers.java`, commit `8210c9e`; pending compilation.
 - [x] ~~Invalid chest-minecart slot rejects writes instead of referencing removed `SlotAccess.NULL`~~ — `TFCMinecartChest.java`, commit `4fff220`; pending compilation.
 
 
