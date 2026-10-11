@@ -1,5 +1,17 @@
 # TFC Foundations — Current Project Status
 
+## Branch consolidation audit — 2026-10-11 UTC
+
+The only intended long-lived branches are `26.1.2` (first playable) and `26.x` (26.3/future 26.4). Three temporary `port/` branches remain visible pending deletion; **do not create more**.
+
+- `port/26.1.2-horse-rope-api`: identical commit to `26.1.2` at audit; zero ahead/behind.
+- `port/26.1.2-cooldown-api`: historical unique commit, but all three affected Java file blobs match `26.1.2` byte-for-byte. Changes are already present; no new merge is needed.
+- `port/26.1.2-entity-spawn-20261011`: historical unique commit, but all seven affected Java file blobs match `26.1.2` byte-for-byte. Changes are already present; no new merge is needed.
+- No open pull requests were found at audit. Deleting the redundant refs requires a GitHub branch-delete action, which is unavailable through the currently connected GitHub integration; **do not force-push or reset refs just to make a branch disappear**.
+- This audit is source-content verification, not a successful compile. There is no newly verified Java 25 build, client startup or playable JAR as a result of this check.
+
+Continue new source work directly on `26.1.2`; carry applicable verified migrations independently into `26.x`.
+
 Updated 2026-10-10 UTC. Latest verified build summary is first; later sections preserve a historical checkpoint.
 
 **Version 0.0.0 remains an incomplete source port. Full compilation, client/server startup and survival testing have not passed. No playable JAR or release was produced by this checkpoint.**
