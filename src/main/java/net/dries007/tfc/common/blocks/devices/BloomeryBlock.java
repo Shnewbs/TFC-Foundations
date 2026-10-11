@@ -271,16 +271,6 @@ public class BloomeryBlock extends DeviceBlock implements EntityBlockExtension
     }
 
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving)
-    {
-        if (!(Helpers.isBlock(state, newState.getBlock())) && level.getBlockEntity(pos) instanceof BloomeryBlockEntity bloomery)
-        {
-            bloomery.ejectInventory();
-        }
-        super.onRemove(state, level, pos, newState, isMoving);
-    }
-
-    @Override
     protected BlockState rotate(BlockState state, Rotation rot)
     {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
