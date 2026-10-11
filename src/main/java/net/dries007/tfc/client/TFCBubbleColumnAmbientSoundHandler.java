@@ -28,7 +28,7 @@ public class TFCBubbleColumnAmbientSoundHandler implements AmbientSoundHandler
     @Override
     public void tick()
     {
-        Level level = player.clientLevel;
+        Level level = player.level();
         BlockState stateAt = level.getBlockStatesIfLoaded(player.getBoundingBox().inflate(0.0D, -0.4F, 0.0D).deflate(1.0E-6D)).filter((state) -> state.getBlock() instanceof TFCBubbleColumnBlock).findFirst().orElse(null);
         if (stateAt != null)
         {
