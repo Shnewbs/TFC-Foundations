@@ -461,7 +461,7 @@ Ten entries from the original Gradle report have source-level corrections commit
 - [x] ~~Calendar clock redstone neighbor removal hook~~ — `d6ebf02`
 - [x] ~~Climate POI registry holder lookup~~ — `5e4a0a0`
 - [x] ~~Penguin water/bubble-column ambient behavior~~ — `36637fb`
-- [x] ~~Horse inventory callback no longer calls nonexistent superclass method~~ — `afaa273`
+- [x] ~~Horse invalid superclass callback and `@Override` removed~~ — `afaa273`, `4efc2e9`; **the new inventory notification path is not yet wired and needs gameplay verification**
 - [x] ~~Direct block loot-table copying uses `getLootTable` and `overrideLootTable`~~ — `5417484`
 - [x] ~~Post-process predicate mapped to the new block-position callback~~ — `5417484`
 - [x] ~~Barrel rack drops retained in `affectNeighborsAfterRemoval`~~ — `3121685`
