@@ -28,7 +28,7 @@ public class PropickCommand
     public static LiteralArgumentBuilder<CommandSourceStack> create()
     {
         return Commands.literal("propick")
-            .requires(source -> source.hasPermission(2))
+            .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
             .then(Commands.literal("scan")
                 .executes(cmd -> scan(cmd.getSource()))
             )

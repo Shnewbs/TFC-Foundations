@@ -39,7 +39,7 @@ public class AddTrimCommand
 
     public static LiteralArgumentBuilder<CommandSourceStack> create(CommandBuildContext buildContext)
     {
-        return Commands.literal("trim").requires(source -> source.hasPermission(2))
+        return Commands.literal("trim").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
             .then(Commands.argument("material", ItemArgument.item(buildContext))
                 .then(Commands.argument("pattern", ItemArgument.item(buildContext))
                     .executes(context -> addTrim(context.getSource(), context.getArgument("material", ItemInput.class).getItem(), context.getArgument("pattern", ItemInput.class).getItem(), context.getSource().getPlayerOrException().getMainHandItem()))

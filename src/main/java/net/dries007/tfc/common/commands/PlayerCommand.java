@@ -31,7 +31,7 @@ public final class PlayerCommand
     public static LiteralArgumentBuilder<CommandSourceStack> create()
     {
         return Commands.literal("player")
-            .requires(source -> source.hasPermission(2))
+            .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
             .then(Commands.argument("target", EntityArgument.player())
                 .then(Commands.literal("query")
                     .then(Commands.literal("hunger")

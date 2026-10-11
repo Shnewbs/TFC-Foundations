@@ -27,7 +27,7 @@ public final class TimeCommand
     public static LiteralArgumentBuilder<CommandSourceStack> create()
     {
         return Commands.literal("time")
-            .requires(source -> source.hasPermission(2))
+            .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
             .then(Commands.literal("set")
                 .then(Commands.literal("dayLength")
                     .then(Commands.literal("vanilla").executes(c -> setDayLength(c, 20))) // Default Vanilla

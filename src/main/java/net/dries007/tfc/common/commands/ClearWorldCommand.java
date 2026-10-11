@@ -45,7 +45,7 @@ public final class ClearWorldCommand
     public static LiteralArgumentBuilder<CommandSourceStack> create()
     {
         return Commands.literal("clearworld")
-            .requires(source -> source.hasPermission(2))
+            .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
             .then(Commands.argument("radius", IntegerArgumentType.integer(1, 250))
                 .then(Commands.argument("preset", EnumArgument.enumArgument(Preset.class))
                     .executes(cmd -> clearWorld(cmd.getSource(), IntegerArgumentType.getInteger(cmd, "radius"), cmd.getArgument("preset", Preset.class)))

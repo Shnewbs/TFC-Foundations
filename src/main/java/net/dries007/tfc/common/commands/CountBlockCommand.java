@@ -29,7 +29,7 @@ public final class CountBlockCommand
     public static LiteralArgumentBuilder<CommandSourceStack> create(CommandBuildContext cmdContext)
     {
         return Commands.literal("count")
-            .requires(source -> source.hasPermission(2))
+            .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
             .then(Commands.argument("radius", IntegerArgumentType.integer(1, 250))
                 .then(Commands.argument("block", BlockPredicateArgument.blockPredicate(cmdContext))
                     .executes(context -> countBlock(

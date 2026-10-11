@@ -44,7 +44,14 @@ public record ProspectedPacket(
         if (player != null)
         {
             NeoForge.EVENT_BUS.post(new ProspectedEvent(player, result, block));
-            player.displayClientMessage(result.getText(block), TFCConfig.CLIENT.sendProspectResultsToActionbar.get());
+            if (TFCConfig.CLIENT.sendProspectResultsToActionbar.get())
+            {
+                player.sendOverlayMessage(result.getText(block));
+            }
+            else
+            {
+                player.sendSystemMessage(result.getText(block));
+            }
         }
     }
 }
