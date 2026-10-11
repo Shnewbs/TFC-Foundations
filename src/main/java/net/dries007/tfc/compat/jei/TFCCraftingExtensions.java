@@ -26,6 +26,21 @@ import net.dries007.tfc.common.recipes.outputs.ExtraProductModifier;
 // todo: advanced shaped recipes?
 public final class TFCCraftingExtensions
 {
+    // NeoForge 26.1 exposes item holders; JEI still displays ItemStacks.
+    // Retain TFC's component-aware previews for precise and composite ingredients.
+    private static List<ItemStack> previewItems(Ingredient ingredient)
+    {
+        if (ingredient.getCustomIngredient() instanceof net.dries007.tfc.common.recipes.ingredients.AndIngredient and)
+        {
+            return and.getItems().toList();
+        }
+        if (ingredient.getCustomIngredient() instanceof net.dries007.tfc.common.recipes.ingredients.PreciseIngredient precise)
+        {
+            return precise.getItems().toList();
+        }
+        return ingredient.items().map(holder -> holder.value().getDefaultInstance()).toList();
+    }
+
     public static void register(IVanillaCategoryExtensionRegistration registry)
     {
         registry.getCraftingCategory().addExtension(AdvancedShapelessRecipe.class, new ICraftingCategoryExtension<>()
@@ -36,7 +51,7 @@ public final class TFCCraftingExtensions
                 final AdvancedShapelessRecipe recipe = recipeHolder.value();
                 final NonNullList<Ingredient> ingredients = recipe.getIngredients();
                 final List<List<ItemStack>> inputs = ingredients.stream()
-                    .map(ingredient -> List.of(ingredient.getItems()))
+                    .map(TFCCraftingExtensions::previewItems)
                     .toList();
 
                 final Optional<Ingredient> primaryIngredient = recipe.getPrimaryIngredient();
@@ -52,7 +67,7 @@ public final class TFCCraftingExtensions
                 }
 
                 // locate a matching ingredient to the primary ingredient
-                final List<ItemStack> primaryItems = List.of(primaryIngredient.get().getItems());
+                final List<ItemStack> primaryItems = previewItems(primaryIngredient.get());
                 int primaryIndex = -1;
                 for (int i = 0; i < inputs.size(); i++)
                 {
