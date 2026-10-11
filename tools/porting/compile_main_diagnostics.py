@@ -8,7 +8,6 @@ import subprocess
 from collections import Counter
 
 
-
 ERROR_PATTERN = re.compile(r'^(?P<path>.+?\.java):(?P<line>\d+): error: (?P<message>.*)    out = Path('port-diagnostics')
     cp = out / 'classpath.txt'
     if not cp.is_file():
@@ -53,25 +52,18 @@ if __name__ == '__main__':
     raise SystemExit(main())
 , re.MULTILINE)
 
-
-def write_error_reports(output_directory, log_text):
-    """Save stable diagnostic locations and rank files by compiler errors."""
-    diagnostics = [
-        {'file': match.group('path').replace('\\', '/'),
-         'line': int(match.group('line')),
-         'message': match.group('message').strip()}
-        for match in ERROR_PATTERN.finditer(log_text)
-    ]
+def write_error_reports(out, log_text):
+    diagnostics = [{'file': m.group('path').replace('\\', '/'),
+                    'line': int(m.group('line')), 'message': m.group('message').strip()}
+                   for m in ERROR_PATTERN.finditer(log_text)]
     counts = Counter(item['file'] for item in diagnostics)
-    (output_directory / 'main-javac-errors.json').write_text(
-        json.dumps({'total': len(diagnostics), 'errors': diagnostics}, indent=2) + '\n'
-    )
-    (output_directory / 'main-javac-by-file.json').write_text(
-        json.dumps({'total': len(diagnostics), 'files': [
-            {'file': name, 'errors': number}
-            for name, number in sorted(counts.items(), key=lambda entry: (-entry[1], entry[0]))
-        ]}, indent=2) + '\n'
-    )
+    (out / 'main-javac-errors.json').write_text(json.dumps(
+        {'total': len(diagnostics), 'errors': diagnostics}, indent=2) + '\n')
+    (out / 'main-javac-by-file.json').write_text(json.dumps(
+        {'total': len(diagnostics), 'files': [
+            {'file': name, 'errors': count}
+            for name, count in sorted(counts.items(), key=lambda item: (-item[1], item[0]))
+        ]}, indent=2) + '\n')
     return len(diagnostics)
 
 
