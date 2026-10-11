@@ -97,7 +97,7 @@ public class FluidContainerItem extends Item
         final FluidStack fluid = FluidHelpers.getContainedFluid(stack);
         if (!fluid.isEmpty())
         {
-            return Component.translatable(getDescriptionId(stack) + ".filled", fluid.getHoverName());
+            return Component.translatable(getDescriptionId() + ".filled", fluid.getHoverName());
         }
         return super.getName(stack);
     }

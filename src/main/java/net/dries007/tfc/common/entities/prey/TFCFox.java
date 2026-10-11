@@ -99,7 +99,7 @@ public class TFCFox extends Fox
     @Override
     public TFCFox getBreedOffspring(ServerLevel level, AgeableMob other)
     {
-        TFCFox fox = TFCEntities.FOX.get().create(level);
+        TFCFox fox = TFCEntities.FOX.get().create(level, EntitySpawnReason.BREEDING);
         setVariant(this.random.nextBoolean() ? this.getVariant() : ((TFCFox) other).getVariant());
         return fox;
     }

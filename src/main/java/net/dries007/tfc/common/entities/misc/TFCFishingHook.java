@@ -183,7 +183,7 @@ public class TFCFishingHook extends FishingHook implements IEntityWithComplexSpa
         if (getPlayerOwner() == null)
         {
             TerraFirmaCraft.LOGGER.error("Failed to recreate fishing hook on client. {} (id: {}) is not a valid owner.", this.level().getEntity(id), id);
-            kill();
+            discard();
         }
     }
 

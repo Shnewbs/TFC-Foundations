@@ -28,7 +28,7 @@ public class IcicleBlock extends ThinSpikeBlock
      */
     public static void spawnDripParticle(Level level, BlockPos pos, BlockState state)
     {
-        Vec3 offset = state.getOffset(level, pos);
+        Vec3 offset = state.getOffset(pos);
         level.addParticle(ParticleTypes.DRIPPING_DRIPSTONE_WATER, pos.getX() + 0.5D + offset.x, ((pos.getY() + 1) - 0.6875F) - 0.0625D, pos.getZ() + 0.5D + offset.z, 0.0D, 0.0D, 0.0D);
     }
 

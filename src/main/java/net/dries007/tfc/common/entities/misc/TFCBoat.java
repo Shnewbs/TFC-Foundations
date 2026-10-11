@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.boat.Boat;
 import net.minecraft.world.item.Item;
@@ -37,7 +38,7 @@ public class TFCBoat extends Boat
         final ItemStack item = player.getItemInHand(hand);
         if (item.getItem() instanceof ChestBlockItem)
         {
-            final TFCChestBoat boat = boatChest.get().create(player.level());
+            final TFCChestBoat boat = boatChest.get().create(player.level(), EntitySpawnReason.CONVERSION);
             if (boat != null)
             {
                 boat.setPos(position());

@@ -68,7 +68,7 @@ public class TFCArmadillo extends Armadillo implements Temptable, Scareable
     @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob mob)
     {
-        return TFCEntities.ARMADILLO.get().create(level);
+        return TFCEntities.ARMADILLO.get().create(level, EntitySpawnReason.BREEDING);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class TFCArmadillo extends Armadillo implements Temptable, Scareable
         if (this.isAlive() && !this.isBaby() && getProductsCooldown() == 0)
         {
             this.playSound(SoundEvents.ARMADILLO_SCUTE_DROP, 1.0F, (this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F);
-            this.spawnAtLocation(Items.ARMADILLO_SCUTE);
+            this.spawnAtLocation(serverLevel, Items.ARMADILLO_SCUTE);
             this.gameEvent(GameEvent.ENTITY_PLACE);
             setProductsCooldown();
         }

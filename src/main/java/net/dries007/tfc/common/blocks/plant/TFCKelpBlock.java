@@ -103,7 +103,7 @@ public abstract class TFCKelpBlock extends BodyPlantBlock implements IFluidLogga
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context)
     {
         VoxelShape voxelshape = super.getShape(state, level, pos, context);
-        Vec3 vector3d = state.getOffset(level, pos);
+        Vec3 vector3d = state.getOffset(pos);
         return voxelshape.move(vector3d.x, vector3d.y, vector3d.z);
     }
 

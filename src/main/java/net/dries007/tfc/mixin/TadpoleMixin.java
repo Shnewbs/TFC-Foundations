@@ -35,7 +35,7 @@ public class TadpoleMixin
         final Tadpole pole = (Tadpole) (Object) this;
         if (pole.level() instanceof ServerLevel server)
         {
-            final Frog frog = TFCEntities.FROG.get().create(server);
+            final Frog frog = TFCEntities.FROG.get().create(server, EntitySpawnReason.CONVERSION);
             if (frog != null)
             {
                 frog.moveTo(pole.getX(), pole.getY(), pole.getZ(), pole.getYRot(), pole.getXRot());

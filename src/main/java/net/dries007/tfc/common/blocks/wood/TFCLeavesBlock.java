@@ -73,9 +73,9 @@ public class TFCLeavesBlock extends Block implements ILeavesBlock, IForgeBlockEx
 
     public static void onEntityInside(Level level, Entity entity)
     {
-        if (Helpers.isEntity(entity, TFCTags.Entities.DESTROYED_BY_LEAVES))
+        if (Helpers.isEntity(entity, TFCTags.Entities.DESTROYED_BY_LEAVES) && level instanceof ServerLevel server)
         {
-            entity.kill();
+            entity.kill(server);
         }
         if (level.getRandom().nextInt(20) == 0 && level instanceof ServerLevel server && Helpers.hasMoved(entity))
         {

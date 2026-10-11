@@ -167,7 +167,7 @@ public class TFCFrog extends Frog implements Temptable, BrainAnimalBehavior
     {
         if (mob == this)
         {
-            TFCFrog frog = TFCEntities.FROG.get().create(level);
+            TFCFrog frog = TFCEntities.FROG.get().create(level, EntitySpawnReason.BREEDING);
             if (frog != null)
             {
                 frog.getBrain().setMemory(MemoryModuleType.LONG_JUMP_COOLDOWN_TICKS, UniformInt.of(100, 140).sample(random));

@@ -11,6 +11,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.animal.panda.Panda;
 import net.minecraft.world.entity.player.Player;
@@ -43,7 +44,7 @@ public class TFCPanda extends Panda
     @Nullable
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob parent)
     {
-        final Panda panda = TFCEntities.PANDA.get().create(level);
+        final Panda panda = TFCEntities.PANDA.get().create(level, EntitySpawnReason.BREEDING);
         if (panda != null)
         {
             if (parent instanceof Panda pandaParent)
