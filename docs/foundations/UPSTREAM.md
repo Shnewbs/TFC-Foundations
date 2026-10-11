@@ -2,7 +2,7 @@
 
 Upstream: https://github.com/TerraFirmaCraft/TerraFirmaCraft
 
-Observed 2026-10-10. Rediscover branches each scan. Previous observation: 2026-10-08; initial 1.21.x baseline remains e9d9a88a187d5a33064e2d86b2803f54238cadd6.
+Observed 2026-10-11. Rediscover branches each scan. Previous observations: 2026-10-08 through 2026-10-10; initial 1.21.x baseline remains e9d9a88a187d5a33064e2d86b2803f54238cadd6.
 
 | Branch | Observed tip |
 | --- | --- |
@@ -11,7 +11,7 @@ Observed 2026-10-10. Rediscover branches each scan. Previous observation: 2026-1
 | 1.17.x | afddbb2f477b0a7c6dee2f3f98e9fc81851f1f9e |
 | 1.18.x | caf1ec2f527d79d15bda64871014b690b6484a59 |
 | 1.20.x | 8bcb23fc2afb30fc9c111ae45c57f401007de253 |
-| 1.21.x | 26c93da28f21bb6931ae9dd2d8a780a1831e664a |
+| 1.21.x | f67a160166b7c49b44b601a7e02457cae72d1f8d |
 
 These are observation cursors, not claims of integrated historical fixes. Daily upstream/version monitoring is active.
 
@@ -86,3 +86,38 @@ Official sources checked 2026-10-10:
 - 26.4 migration gate remains CLOSED. No dependency pin changed. Assess the newer 26.3 loader separately before upgrading; no compatibility/build/runtime validation performed here. Preserve 26.1.2 playable-build priority and the 26.x / 26.3 development track.
 
 This report advances observation cursors only. Integration cursor remains the initial 1.21.x base for upstream ancestry; independent port changes are not evidence that these new upstream fixes are implemented.
+
+## Watch report — 2026-10-11
+
+Scope: rediscovered every upstream branch, compared the 1.21.x tip with the 2026-10-10 observation cursor, inspected all issues/PRs updated since the previous scan, checked releases, and rechecked the official Mojang and NeoForge version sources.
+
+- Branch inventory remains six branches: 1.12.x, 1.16.x, 1.17.x, 1.18.x, 1.20.x and 1.21.x. No branch was added or removed.
+- 1.12.x, 1.16.x, 1.17.x, 1.18.x and 1.20.x are unchanged.
+- [1.21.x comparison](https://github.com/TerraFirmaCraft/TerraFirmaCraft/compare/26c93da28f21bb6931ae9dd2d8a780a1831e664a...f67a160166b7c49b44b601a7e02457cae72d1f8d): four forward commits; no history rewrite.
+- Fork snapshots checked: 26.x at `b519cc9484489ec67bf85628de382ecff4eb67c6`; 26.1.2 at `0ae943330a49ae395d4dab94569a3cfa08dc7d2f`. Both remain based on the initial `e9d9a88a187d5a33064e2d86b2803f54238cadd6` ancestry cursor and are 15 upstream commits behind by ancestry. Targeted file inspection below distinguishes independently equivalent code from missing changes.
+- No new upstream release. Latest observed releases remain 1.20.1 v3.2.27 (October 10) and 1.21.1 v4.2.11 (September 27).
+
+### Relevant merged fixes
+
+All regression tests below are REQUIRED, NOT RUN. No upstream commit was merged, no gameplay source or version pin was changed, and no artifact was published in this scan.
+
+| Upstream reference | Affected system and finding | Status in Foundations 26.x and 26.1.2 | Regression tests needed |
+| --- | --- | --- | --- |
+| [ab42a68](https://github.com/TerraFirmaCraft/TerraFirmaCraft/commit/ab42a68683a68167c755e273de2c13540f563664), [#3682](https://github.com/TerraFirmaCraft/TerraFirmaCraft/issues/3682), merged October 11 | Mob spawning: adds TFC thatch to vanilla's `prevent_mob_spawning_inside` block tag, preventing hostile mobs from materializing inside a thatch block | Port candidate, not inherited. Neither branch has the generated tag file or corresponding BuiltinBlockTags entry. Adapt to the target-version tag API instead of blindly cherry-picking | Dark-room natural-spawn test with a thatch floor/volume; hostile mobs cannot spawn inside thatch; valid nearby solid blocks still spawn normally; passive spawning and player placement remain unchanged; datapack reload preserves the tag |
+| [76dd9bb](https://github.com/TerraFirmaCraft/TerraFirmaCraft/commit/76dd9bbe0df2cca77162e25257fa2f4ce4e8f747), [#3748](https://github.com/TerraFirmaCraft/TerraFirmaCraft/issues/3748), merged October 11 | Armor rendering/resources: adds vanilla trim-material palette permutations for TFC armor textures. Upstream explicitly did not add TFC copper/iron to trim-material ingredient tags; the confirmed bug was missing textures | Port candidate, not inherited. Both branches' `assets/minecraft/atlases/blocks.json` end with TFC-specific `*_tfc` permutations and omit vanilla palettes | Apply all ten vanilla trim materials to every supported TFC armor material/piece; verify inventory, worn third-person and armor-stand rendering; no black/red missing texture; resource reload and multiplayer client display |
+| [c1daeac](https://github.com/TerraFirmaCraft/TerraFirmaCraft/commit/c1daeac00973ab60aee17e90a153b75eca6f532a) and [f67a160](https://github.com/TerraFirmaCraft/TerraFirmaCraft/commit/f67a160166b7c49b44b601a7e02457cae72d1f8d) | Datagen refreshes accompanying the two fixes; also normalizes generated food-tag ordering | Not independent gameplay fixes. Do not import generated outputs without porting their generators and regenerating under the target toolchain | Datagen is clean/reproducible; generated tag and atlas match generators; food tag membership unchanged, including cooked armadillo |
+
+### New or materially updated investigations
+
+- [#3751](https://github.com/TerraFirmaCraft/TerraFirmaCraft/issues/3751), opened October 11: Prospector's Pick always reports nothing in a modpack. Current evidence points to another mod adding an invalid entry to `tfc:prospectable`; it remains an unconfirmed conflict with no fix. Both port branches still depend on that tag. Before calling the port's propick working, test direct ore, nearby ore at radius boundaries, an empty area, the generated tag, and malformed/optional compatibility entries. Verify the target NeoForge tag-inspection command and ensure a bad external datapack produces a diagnosable reload error rather than silent false negatives.
+- [#3752](https://github.com/TerraFirmaCraft/TerraFirmaCraft/pull/3752), opened October 11 against 1.20.x: proposed guard prevents `promotePartial` from replacing initialized level-chunk data with null when cached partial data is missing, which otherwise can break capability serialization. It is open and unmerged. The current 1.21-derived port trees do not contain the legacy `ChunkDataProvider` or `promotePartial` path, so this exact patch is not applicable. Still add an analogous world-data regression test: generate a chunk, repeat any proto-to-level promotion path available in the target, save/reload, and verify TFC rock/climate/forest data serializes and remains stable. Include this in TFC Earth/worldgen testing.
+- [#3716](https://github.com/TerraFirmaCraft/TerraFirmaCraft/issues/3716) was only retitled; no new crash evidence or fix. [#3747](https://github.com/TerraFirmaCraft/TerraFirmaCraft/issues/3747) and [#3750](https://github.com/TerraFirmaCraft/TerraFirmaCraft/issues/3750) only received classification labels. Retain their existing worldgen and loom/Jade tests; no new implementation claim.
+
+### Version gate
+
+Official sources checked 2026-10-11:
+- [Mojang version manifest](https://piston-meta.mojang.com/mc/game/version_manifest_v2.json): latest release **26.3**; latest snapshot **26.4-snapshot-3**. There is still no released 26.4 entry.
+- [NeoForge Maven metadata](https://maven.neoforged.net/releases/net/neoforged/neoforge/maven-metadata.xml), lastUpdated **20261011194634**: NeoForge 26.3 has advanced to stable **26.3.0.76**; there is no 26.4 artifact.
+- 26.4 migration gate remains CLOSED. The 26.x branch remains pinned to `26.3.0.58-beta`; treat 26.3.0.76 as an upgrade candidate only after compile, client/server startup, worldgen, save/reload and multiplayer regression tests. No pin was changed in this watch run.
+
+This report advances observation cursors only. It does not advance integration or verification status.
