@@ -29,6 +29,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gamerules.GameRules;
@@ -76,7 +77,7 @@ public class HoldingMinecart extends AbstractMinecart
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand)
+    public InteractionResult interact(Player player, InteractionHand hand, Vec3 hitLocation)
     {
         // Always check the main hand. If the player has items in their main hand but not in their
         // offhand, then the passed in hand will be the offhand.
@@ -85,19 +86,14 @@ public class HoldingMinecart extends AbstractMinecart
             ItemHandlerHelper.giveItemToPlayer(player, getPickResult());
             setHoldItem(ItemStack.EMPTY);
 
-            final Minecart minecart = new Minecart(level(), getX(), getY(), getZ());
+            final Minecart minecart = new Minecart(EntityType.MINECART, level());
+            minecart.setPos(getX(), getY(), getZ());
             copyMinecart(this, minecart);
             discard();
             level().addFreshEntity(minecart);
             return (level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
         }
         return InteractionResult.PASS;
-    }
-
-    @Override
-    public Type getMinecartType()
-    {
-        return Type.CHEST;
     }
 
     @Override
@@ -161,9 +157,9 @@ public class HoldingMinecart extends AbstractMinecart
     }
 
     @Override
-    public void destroy(DamageSource source)
+    protected void destroy(ServerLevel serverLevel, DamageSource source)
     {
-        super.destroy(source);
+        super.destroy(serverLevel, source);
         if (Helpers.isDamageSource(source, DamageTypeTags.IS_FIRE) || Helpers.isDamageSource(source, DamageTypeTags.IS_EXPLOSION))
         {
             if (ifPowderkeg(this::explode))
@@ -171,9 +167,9 @@ public class HoldingMinecart extends AbstractMinecart
                 return;
             }
         }
-        if (level() instanceof ServerLevel serverLevel && serverLevel.getGameRules().get(GameRules.ENTITY_DROPS))
+        if (serverLevel.getGameRules().get(GameRules.ENTITY_DROPS))
         {
-            spawnAtLocation(getHoldItem().copy());
+            spawnAtLocation(serverLevel, getHoldItem().copy());
         }
     }
 
@@ -181,12 +177,6 @@ public class HoldingMinecart extends AbstractMinecart
     protected Item getDropItem()
     {
         return Items.MINECART;
-    }
-
-    @Override
-    public boolean hasCustomDisplay()
-    {
-        return true; // tells vanilla to render getDisplayBlockState
     }
 
     @Override
@@ -200,7 +190,7 @@ public class HoldingMinecart extends AbstractMinecart
     }
 
     @Override
-    public void activateMinecart(int x, int y, int z, boolean powered)
+    public void activateMinecart(ServerLevel level, int x, int y, int z, boolean powered)
     {
         if (powered && this.fuse < 0)
         {
