@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.redstone.Orientation;
 
 import net.dries007.tfc.common.blockentities.rotation.ClutchBlockEntity;
 import net.dries007.tfc.common.blocks.EntityBlockExtension;
@@ -56,7 +57,7 @@ public class ClutchBlock extends ExtendedRotatedPillarBlock implements EntityBlo
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block blockIn, Orientation orientation, boolean isMoving)
     {
         final boolean signal = level.hasNeighborSignal(pos);
         if (signal != state.getValue(POWERED))
