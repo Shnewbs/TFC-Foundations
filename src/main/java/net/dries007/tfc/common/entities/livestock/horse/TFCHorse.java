@@ -236,7 +236,7 @@ public class TFCHorse extends Horse implements HorseProperties
                 }
 
                 final boolean canBeSaddled = !this.isBaby() && !this.isSaddled() && stack.is(Items.SADDLE);
-                if (this.isBodyArmorItem(stack) || canBeSaddled)
+                if (this.isEquippableInSlot(stack, net.minecraft.world.entity.EquipmentSlot.BODY) || canBeSaddled)
                 {
                     this.openCustomInventoryScreen(player);
                     return (this.level().isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
