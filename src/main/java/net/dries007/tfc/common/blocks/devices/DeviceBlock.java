@@ -43,14 +43,17 @@ public class DeviceBlock extends ExtendedBlock implements IForgeBlockExtension, 
     }
 
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving)
+    protected void affectNeighborsAfterRemoval(BlockState state, net.minecraft.server.level.ServerLevel level, BlockPos pos, boolean movedByPiston)
     {
+        // Minecraft 26.1 removed onRemove. This callback runs after removal, so a
+        // block entity might already be gone; inventory-drop semantics must be
+        // checked in a live world before the migration is considered complete.
         final BlockEntity entity = level.getBlockEntity(pos);
-        if (entity instanceof InventoryBlockEntity<?> inv && !(Helpers.isBlock(state, newState.getBlock())))
+        if (entity instanceof InventoryBlockEntity<?> inv && level.getBlockState(pos).getBlock() != state.getBlock())
         {
             beforeRemove(inv);
         }
-        super.onRemove(state, level, pos, newState, isMoving);
+        super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
     }
 
     @Override
