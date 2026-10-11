@@ -414,7 +414,7 @@ public final class ForgeEventHandler
         final Level level = event.getLevel();
         if (!level.isClientSide())
         {
-            WorldTracker.get(level).addCollapsePositions(BlockPos.containing(event.getExplosion().center()), event.getExplosion().getToBlow());
+            WorldTracker.get(level).addCollapsePositions(BlockPos.containing(event.getExplosion().center()), event.getAffectedBlocks());
         }
     }
 
