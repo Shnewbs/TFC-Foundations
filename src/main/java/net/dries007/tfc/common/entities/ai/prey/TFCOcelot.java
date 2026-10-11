@@ -9,11 +9,13 @@ package net.dries007.tfc.common.entities.ai.prey;
 import net.dries007.tfc.common.recipes.RecipeHelpers;
 
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.ConversionParams;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -126,14 +128,15 @@ public class TFCOcelot extends Ocelot
                     if (getFamiliarity() > 0.99f)
                     {
                         final boolean wasBaby = isBaby();
-                        final TFCCat cat = convertTo(TFCEntities.CAT.get(), false);
-                        if (cat != null && level() instanceof ServerLevelAccessor server)
+                        if (level() instanceof ServerLevel server)
                         {
-                            cat.finalizeSpawn(server, level().getCurrentDifficultyAt(blockPosition()), EntitySpawnReason.CONVERSION, null);
-                            if (!wasBaby)
-                            {
-                                cat.setBirthTickToALongTimeAgo();
-                            }
+                            convertTo(TFCEntities.CAT.get(), ConversionParams.single(this, false, false), cat -> {
+                                cat.finalizeSpawn(server, server.getCurrentDifficultyAt(cat.blockPosition()), EntitySpawnReason.CONVERSION, null);
+                                if (!wasBaby)
+                                {
+                                    cat.setBirthTickToALongTimeAgo();
+                                }
+                            });
                         }
                     }
                 }
