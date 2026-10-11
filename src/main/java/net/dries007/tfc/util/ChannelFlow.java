@@ -184,7 +184,7 @@ public class ChannelFlow
                 BlockPos normal = new BlockPos(relative.getX() / distance, relative.getY() / distance,
                     relative.getZ() / distance);
                 flowSource.put(currentChannel,
-                    Pair.of(Direction.fromDelta(normal.getX(), normal.getY(), normal.getZ()), (byte) distance));
+                    Pair.of(Direction.getNearest(normal.getX(), normal.getY(), normal.getZ(), null), (byte) distance));
                 numFlows.put(channelSource, numFlows.getOrDefault(channelSource, 0) + 1);
             }
         }
@@ -205,7 +205,7 @@ public class ChannelFlow
         }
         BlockPos pos = source.getBlockPos().offset(originChannel.multiply(-1));
         level.getBlockEntity(originChannel, TFCBlockEntities.CHANNEL.get()).get().setLinkProperties(
-            Pair.of(Direction.fromDelta(pos.getX(), pos.getY(), pos.getZ()), (byte) 1),
+            Pair.of(Direction.getNearest(pos.getX(), pos.getY(), pos.getZ(), null), (byte) 1),
             false,
             numFlows.get(originChannel),
             fluidKey);
