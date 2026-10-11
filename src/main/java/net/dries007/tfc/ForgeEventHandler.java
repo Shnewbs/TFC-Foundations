@@ -440,7 +440,7 @@ public final class ForgeEventHandler
                 rules.set(GameRules.SPAWN_PATROLS, false, server);
                 rules.set(GameRules.SPAWN_WANDERING_TRADERS, false, server);
 
-                LOGGER.info("Updating TFC Relevant Game Rules for level {}.", level.dimension().location());
+                LOGGER.info("Updating TFC Relevant Game Rules for level {}.", level.dimension().identifier());
             }
 
             // This one is non-negotiable, it's required in order for the calendar to function
@@ -1352,7 +1352,7 @@ public final class ForgeEventHandler
     {
         if (event.shouldUpdateStaticData() && event.getUpdateCause() == TagsUpdatedEvent.UpdateCause.SERVER_DATA_LOAD)
         {
-            Helpers.updateReloadableData(event.getRegistryAccess(), Helpers.getUnsafeRecipeMap());
+            Helpers.updateReloadableData(event.getRegistries(), Helpers.getUnsafeRecipeMap());
         }
     }
 
