@@ -579,6 +579,7 @@ public final class ClientEventHandler
 
     public static void registerKeyBindings(RegisterKeyMappingsEvent event)
     {
+        event.registerCategory(TFCKeyBindings.CATEGORY);
         event.register(TFCKeyBindings.PLACE_BLOCK);
         event.register(TFCKeyBindings.CYCLE_CHISEL_MODE);
         event.register(TFCKeyBindings.STACK_FOOD);
