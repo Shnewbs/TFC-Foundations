@@ -28,7 +28,7 @@ public abstract class FogRendererMixin
     @Redirect(method = "setupColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/biome/Biome;getWaterFogColor()I"))
     private static int setupColorRedirectGetWaterFogColor(Biome biome, Camera camera, float partialTicks, ClientLevel level)
     {
-        return TFCColors.getWaterFogColor(level, biome, camera.getBlockPosition());
+        return TFCColors.getWaterFogColor(level, biome, camera.blockPosition());
     }
 
     /**

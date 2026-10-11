@@ -55,9 +55,9 @@ public class WildAnimal extends AgeableMob implements GenderedRenderAnimal
         this.step = sounds.step();
         getNavigation().setCanFloat(true);
         this.setPathfindingMalus(PathType.POWDER_SNOW, -1.0F);
-        this.setPathfindingMalus(PathType.DANGER_POWDER_SNOW, -1.0F);
-        this.setPathfindingMalus(PathType.DANGER_FIRE, 16.0F);
-        this.setPathfindingMalus(PathType.DAMAGE_FIRE, -1.0F);
+        this.setPathfindingMalus(PathType.ON_TOP_OF_POWDER_SNOW, -1.0F);
+        this.setPathfindingMalus(PathType.FIRE_IN_NEIGHBOR, 16.0F);
+        this.setPathfindingMalus(PathType.FIRE, -1.0F);
     }
 
     @Override

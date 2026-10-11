@@ -479,8 +479,8 @@ public enum Plant implements RegistryPlant
         FLOWERBED((plant, type) -> PlantBlock.createFlowerbed(plant, fire(nonSolid(plant)))),
         CACTUSBED((plant, type) -> TFCCactusBedBlock.createBarrel(plant, fire(solid().strength(0.25F).sound(SoundType.WOOL).offsetType(BlockBehaviour.OffsetType.XZ).dynamicShape()))),
         CACTUS_FLOWER((plant, type) -> PlantBlock.createCactusFlower(plant, fire(nonSolid(plant)).sound(SoundType.CROP))),
-        CACTUS((plant, type) -> TFCCactusBlock.create(plant, fire(solid().strength(0.25F).sound(SoundType.WOOL)).pathType(PathType.DAMAGE_OTHER))),
-        PASSABLE_CACTUS((plant, type) -> TFCPassableCactusBlock.create(plant, fire(nonSolid(plant).strength(0.25F).sound(SoundType.WOOL)).pathType(PathType.DAMAGE_OTHER))),
+        CACTUS((plant, type) -> TFCCactusBlock.create(plant, fire(solid().strength(0.25F).sound(SoundType.WOOL)).pathType(PathType.DAMAGING))),
+        PASSABLE_CACTUS((plant, type) -> TFCPassableCactusBlock.create(plant, fire(nonSolid(plant).strength(0.25F).sound(SoundType.WOOL)).pathType(PathType.DAMAGING))),
         DRY((plant, type) -> PlantBlock.createDry(plant, fire(nonSolid(plant).offsetType(BlockBehaviour.OffsetType.XZ)))),
         CREEPING((plant, type) -> CreepingPlantBlock.create(plant, fire(nonSolid(plant).hasPostProcess(TFCBlocks::always)))), // Post process ensures shape is updated after world gen
         CREEPING_STONE((plant, type) -> CreepingPlantBlock.createStone(plant, fire(nonSolid(plant).hasPostProcess(TFCBlocks::always)))),
@@ -498,8 +498,8 @@ public enum Plant implements RegistryPlant
         TWISTING_TOP_SHORT((plant, type) -> new TopPlantBlock(fire(nonSolidTallPlant(plant)), plant.transform(), Direction.UP, BodyPlantBlock.TWISTING_SHAPE, 2, 4, plant)),
         TWISTING_SOLID((plant, type) -> new BodyPlantBlock(fire(solidTallPlant()), plant.transform(), BodyPlantBlock.BODY_SHAPE, Direction.UP, plant)),
         TWISTING_SOLID_TOP((plant, type) -> new TopPlantBlock(fire(solidTallPlant()), plant.transform(), Direction.UP, BodyPlantBlock.TWISTING_SHAPE, 2, 5, plant)),
-        BRANCHING_CACTUS((plant, type) -> BranchingCactusBlock.createBody(fire(solid()).strength(0.25f).sound(SoundType.WOOL).pathType(PathType.DAMAGE_OTHER))),
-        BRANCHING_CACTUS_TOP((plant, type) -> GrowingBranchingCactusBlock.createGrowing(fire(solid()).randomTicks().strength(0.25f).sound(SoundType.WOOL).pathType(PathType.DAMAGE_OTHER), plant.transform(), plant.secondTransform())),
+        BRANCHING_CACTUS((plant, type) -> BranchingCactusBlock.createBody(fire(solid()).strength(0.25f).sound(SoundType.WOOL).pathType(PathType.DAMAGING))),
+        BRANCHING_CACTUS_TOP((plant, type) -> GrowingBranchingCactusBlock.createGrowing(fire(solid()).randomTicks().strength(0.25f).sound(SoundType.WOOL).pathType(PathType.DAMAGING), plant.transform(), plant.secondTransform())),
         // Water
         OCEAN_ROCK_CREEPING((plant, type) -> CreepingWaterPlantBlock.createRock(plant, TFCBlockStateProperties.SALT_WATER, ExtendedProperties.of(nonSolid(plant).sound(SoundType.BASALT)))),
         OCEAN_CREEPING((plant, type) -> CreepingWaterPlantBlock.create(plant, TFCBlockStateProperties.SALT_WATER, ExtendedProperties.of(nonSolid(plant).sound(SoundType.BASALT)))),
