@@ -4,7 +4,7 @@
 **Baseline:** 190 reported Java errors across 96 files. This is a Gradle Problems Report subset, **not** a complete count of compiler diagnostic occurrences or the entire migration backlog.
 
 Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current branch, **not** yet confirmed by a successful fresh Gradle build. `- [ ]` = outstanding. Diagnostics refer to line numbers in the user's older source checkout and may move after patches.
-**Checklist:** 11 source-addressed, 179 still open from these 190 entries. No successful post-fix compilation has been claimed.
+**Checklist:** 13 source-addressed, 177 still open from these 190 entries. No successful post-fix compilation has been claimed.
 
 
 ## Status and release gates
@@ -227,7 +227,7 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [x] ~~Line 126~~ — source-addressed (`9372f0d`, corrected by `ceca573`); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/blocks/TFCLightBlock.java`**
-- [ ] Line 129 — reported Java compilation error
+- [x] ~~Line 129~~ — source-addressed (`2aece7f`); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/blocks/WattleBlock.java`**
 - [x] ~~Line 134~~ — source-addressed (a06d734); pending clean-build verification
@@ -265,7 +265,7 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [x] ~~Line 51~~ — source-addressed (verified source already public); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/blocks/plant/TFCKelpBlock.java`**
-- [ ] Line 74 — reported Java compilation error
+- [x] ~~Line 74~~ — source-addressed (`df39e0c`); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/blocks/plant/fruit/FruitTreeSaplingBlock.java`**
 - [x] ~~Line 256~~ — source-addressed (verified source already public); pending clean-build verification
@@ -409,6 +409,8 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [ ] Line 345 — reported Java compilation error
 
 ## Other changes not represented by one of these 190 report entries
+
+- [x] ~~GlowArrow grounded state~~ (`aa20a04`) — use arrow accessor in place of removed field; pending compilation verification.
 
 - [x] ~~Bowl inventory mutations use the item handler extraction API~~ (commit `a3743be`) — gameplay source change; still needs runtime testing.
 - [x] ~~Python executable selection on Windows~~ (commit `d3e597f`) — the uploaded build report confirms execution reached Java compilation.
