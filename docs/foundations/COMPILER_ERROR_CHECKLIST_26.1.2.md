@@ -4,7 +4,7 @@
 **Baseline:** 190 reported Java errors across 96 files. This is a Gradle Problems Report subset, **not** a complete count of compiler diagnostic occurrences or the entire migration backlog.
 
 Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current branch, **not** yet confirmed by a successful fresh Gradle build. `- [ ]` = outstanding. Diagnostics refer to line numbers in the user's older source checkout and may move after patches.
-**Checklist:** 51 source-addressed, 139 still open from these 190 entries. No successful post-fix compilation has been claimed.
+**Checklist:** 53 source-addressed, 137 still open from these 190 entries. No successful post-fix compilation has been claimed.
 
 
 ## Status and release gates
@@ -289,13 +289,13 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [x] ~~Line 34~~ — source-addressed (`846324c`); **requires Gradle recheck**
 
 **`src/main/java/net/dries007/tfc/common/entities/ai/predator/PackPredator.java`**
-- [ ] Line 224 — reported Java compilation error
+- [x] ~~Line 224~~ — source-addressed (`860c9ee`, conversion callback); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/entities/ai/prey/PrepareRamNearestTargetTFC.java`**
 - [x] ~~Line 59~~ — source-addressed (de6ccb7); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/entities/ai/prey/TFCOcelot.java`**
-- [ ] Line 129 — reported Java compilation error
+- [x] ~~Line 129~~ — source-addressed (`9c899d9`, conversion callback); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/common/entities/aquatic/Penguin.java`**
 - [x] ~~Line 71~~ — source-addressed (`36637fb`); pending Java 25 Gradle compilation
