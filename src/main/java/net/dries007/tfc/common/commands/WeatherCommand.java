@@ -20,7 +20,7 @@ public class WeatherCommand
 
     public static LiteralArgumentBuilder<CommandSourceStack> create()
     {
-        return Commands.literal("weather").requires(source -> source.hasPermission(2))
+        return Commands.literal("weather").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
             .then(Commands.literal("enable")
                 .executes(context -> setEnabled(context.getSource(), true))
             )
