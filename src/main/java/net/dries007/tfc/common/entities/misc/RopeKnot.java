@@ -7,6 +7,7 @@
 package net.dries007.tfc.common.entities.misc;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.common.blocks.RopeAnchorBlock;
@@ -62,11 +64,11 @@ public class RopeKnot extends LeashFenceKnotEntity implements Leashable
     }
 
     @Override
-    public @Nullable ItemEntity spawnAtLocation(ItemStack stack, float y)
+    public @Nullable ItemEntity spawnAtLocation(ServerLevel server, ItemStack stack)
     {
         if (stack.getItem() == Items.LEAD)
             return null;
-        return super.spawnAtLocation(stack);
+        return super.spawnAtLocation(server, stack);
     }
 
     @Override
@@ -76,7 +78,7 @@ public class RopeKnot extends LeashFenceKnotEntity implements Leashable
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand)
+    public InteractionResult interact(Player player, InteractionHand hand, Vec3 location)
     {
         return InteractionResult.PASS;
     }
@@ -126,13 +128,13 @@ public class RopeKnot extends LeashFenceKnotEntity implements Leashable
     public void remove(Entity.RemovalReason reason)
     {
         if (!this.level().isClientSide() && reason.shouldDestroy() && this.isLeashed())
-            this.dropLeash(true, false);
+            this.dropLeash();
 
         super.remove(reason);
     }
 
     @Override
-    public void elasticRangeLeashBehaviour(Entity leashHolder, float distance)
+    public void onElasticLeashPull()
     {
         // no-op
     }
