@@ -115,7 +115,7 @@ public class GlowArrow extends AbstractArrow implements IGlow
     {
         super.tick();
         IGlow.super.tickGlow();
-        if (level().isClientSide() && !inGround)
+        if (level().isClientSide() && !isInGround())
         {
             level().addParticle(ParticleTypes.GLOW_SQUID_INK, getX(), getY(), getZ(), 0.0D, 0.0D, 0.0D);
         }
