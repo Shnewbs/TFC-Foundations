@@ -7,6 +7,7 @@
 package net.dries007.tfc.util.calendar;
 
 import java.util.List;
+import net.minecraft.network.chat.Component;
 import com.mojang.logging.LogUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -38,6 +39,8 @@ public class CalendarEventHandler
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final float SLEEP_TIME = 20f / 24f; // 8 pm
     private static final float WAKE_TIME = 5f / 24f; // 5 am
+    // Vanilla 26.1 expresses the daytime bed restriction as a problem message.
+    private static final Component VANILLA_DAYTIME_SLEEP_ERROR = Component.translatable("block.minecraft.bed.no_sleep");
 
     public static void init()
     {
@@ -77,13 +80,14 @@ public class CalendarEventHandler
 
     public static void onPlayerStartSleeping(CanPlayerSleepEvent event)
     {
-        if (event.getVanillaProblem() == BedSleepingProblem.NOT_POSSIBLE_NOW || event.getVanillaProblem() == null)
+        final BedSleepingProblem vanillaProblem = event.getVanillaProblem();
+        if (vanillaProblem == null || VANILLA_DAYTIME_SLEEP_ERROR.equals(vanillaProblem.message()))
         {
             // Vanilla denied it due to the time, or allowed it (without checking calendar time). We replace this with our outcome here
             // N.B. We can replace the vanilla tooltip from "Only at night/thunderstorm" to "Only at night" because we will
             // never use the former, and this is easier than alternatives for trying to hook into this logic
             final float time = Calendars.SERVER.getCalendarFractionOfDay();
-            event.setProblem((time >= SLEEP_TIME || time <= WAKE_TIME) ? null : BedSleepingProblem.NOT_POSSIBLE_NOW);
+            event.setProblem((time >= SLEEP_TIME || time <= WAKE_TIME) ? null : new BedSleepingProblem(VANILLA_DAYTIME_SLEEP_ERROR));
         }
     }
 
@@ -138,7 +142,7 @@ public class CalendarEventHandler
         if (event.getEntity() instanceof ServerPlayer player)
         {
             // Check total players and reset player / calendar time ticking
-            MinecraftServer server = player.getServer();
+            MinecraftServer server = player.level().getServer();
             if (server != null)
             {
                 LOGGER.info("Player Logged Out - Checking for Calendar Updates.");
@@ -164,7 +168,7 @@ public class CalendarEventHandler
         if (event.getEntity() instanceof ServerPlayer player)
         {
             // Check total players and reset player / calendar time ticking
-            MinecraftServer server = player.getServer();
+            MinecraftServer server = player.level().getServer();
             if (server != null)
             {
                 LOGGER.info("Player Logged In - Checking for Calendar Updates.");

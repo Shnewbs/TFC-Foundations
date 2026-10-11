@@ -14,7 +14,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.DyedItemColor;
 
-import net.dries007.tfc.util.VanillaDyeLookup;
 
 public record DyeLeatherModifier(DyeColor color) implements ItemStackModifier
 {
@@ -32,7 +31,7 @@ public record DyeLeatherModifier(DyeColor color) implements ItemStackModifier
     @Override
     public ItemStack apply(ItemStack stack, ItemStack input, Context context)
     {
-        return DyedItemColor.applyDyes(stack, List.of(VanillaDyeLookup.byColor(color)));
+        return DyedItemColor.applyDyes(stack, List.of(color));
     }
 
     @Override

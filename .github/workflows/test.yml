@@ -3,7 +3,7 @@ name: Validate target branch
 on:
   workflow_dispatch:
   push:
-    branches: [26.x, 26.1.2, "port/26.1.2-r14-validation"]
+    branches: [26.x, 26.1.2, "port/26.1.2-r14-validation", "port/26.1.2-r15-validation"]
   pull_request:
     branches: [26.x, 26.1.2]
 
