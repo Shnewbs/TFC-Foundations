@@ -37,9 +37,9 @@ import net.dries007.tfc.common.fluids.IFluidLoggable;
 
 public abstract class TFCKelpBlock extends BodyPlantBlock implements IFluidLoggable
 {
-    public static TFCKelpBlock create(Properties properties, Supplier<? extends Block> headBlock, Direction direction, VoxelShape shape, FluidProperty fluid, Plant plant)
+    public static TFCKelpBlock create(ExtendedProperties properties, Supplier<? extends Block> headBlock, Direction direction, VoxelShape shape, FluidProperty fluid, Plant plant)
     {
-        return new TFCKelpBlock(ExtendedProperties.of(properties.lootFrom(headBlock)), headBlock, shape, direction, plant)
+        return new TFCKelpBlock(properties, headBlock, shape, direction, plant)
         {
             @Override
             public FluidProperty getFluidProperty()
