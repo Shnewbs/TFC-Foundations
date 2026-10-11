@@ -418,7 +418,7 @@ public class TFCRabbit extends Rabbit implements MammalProperties
         {
             if (nextStartTick <= 0)
             {
-                if (!EventHooks.canEntityGrief(rabbit.level(), rabbit))
+                if (!(rabbit.level() instanceof ServerLevel serverLevel) || !EventHooks.canEntityGrief(serverLevel, rabbit))
                 {
                     return false;
                 }

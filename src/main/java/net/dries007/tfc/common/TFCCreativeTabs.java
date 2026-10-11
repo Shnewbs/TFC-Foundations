@@ -1273,11 +1273,7 @@ public final class TFCCreativeTabs
     private static void fillSpawnEggsTab(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output out)
     {
         TFCEntities.ENTITIES.getEntries().forEach(entity -> {
-            final SpawnEggItem item = SpawnEggItem.byId(entity.value());
-            if (item != null)
-            {
-                out.accept(item);
-            }
+            SpawnEggItem.byId(entity.value()).ifPresent(egg -> out.accept(egg.value()));
         });
     }
 

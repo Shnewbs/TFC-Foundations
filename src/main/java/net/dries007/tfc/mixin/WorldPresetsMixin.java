@@ -25,8 +25,8 @@ public abstract class WorldPresetsMixin
     @Inject(method = "createNormalWorldDimensions", at = @At("HEAD"), cancellable = true)
     private static void useTFCWorldAsDefault(RegistryAccess registryAccess, CallbackInfoReturnable<WorldDimensions> cir)
     {
-        cir.setReturnValue(registryAccess.registryOrThrow(Registries.WORLD_PRESET)
-            .getHolderOrThrow(ResourceKey.create(Registries.WORLD_PRESET, Helpers.resourceLocation(TFCConfig.COMMON.defaultWorldPreset.get())))
+        cir.setReturnValue(registryAccess.lookupOrThrow(Registries.WORLD_PRESET)
+            .getOrThrow(ResourceKey.create(Registries.WORLD_PRESET, Helpers.resourceLocation(TFCConfig.COMMON.defaultWorldPreset.get())))
             .value()
             .createWorldDimensions());
     }
