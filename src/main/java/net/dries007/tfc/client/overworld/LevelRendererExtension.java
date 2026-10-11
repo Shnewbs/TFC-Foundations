@@ -205,7 +205,7 @@ public class LevelRendererExtension extends DimensionSpecialEffects.OverworldEff
                 // visibility in the sky. We have to rewrite anything that currently uses daytime internally, as it will be wrong
 
                 final PoseStack stack = new PoseStack();
-                final Vec3 skyColor = level.getSkyColor(Minecraft.getInstance().gameRenderer.getMainCamera().getPosition(), partialTick);
+                final Vec3 skyColor = level.getSkyColor(Minecraft.getInstance().gameRenderer.getMainCamera().position(), partialTick);
                 final SkyPos sunPos = ClientSolarCalculatorBridge.getSunPosition(level, camera.blockPosition());
 
                 stack.mulPose(frustumMatrix);
@@ -679,7 +679,7 @@ public class LevelRendererExtension extends DimensionSpecialEffects.OverworldEff
         if (rainLevel > 0.0F)
         {
             final RandomSource random = RandomSource.create(ticks * 312987231L);
-            final BlockPos cameraPos = BlockPos.containing(camera.getPosition());
+            final BlockPos cameraPos = BlockPos.containing(camera.position());
             final BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
 
             // Calculate rainfall via the climate
