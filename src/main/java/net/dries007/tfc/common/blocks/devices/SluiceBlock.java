@@ -128,7 +128,7 @@ public class SluiceBlock extends DeviceBlock implements EntityBlockExtension
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, net.minecraft.world.level.block.entity.InsideBlockEffectApplier effectApplier, boolean moving)
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, net.minecraft.world.entity.InsideBlockEffectApplier effectApplier, boolean moving)
     {
         // 1.13 water physics causes items to fly everywhere, we need them to get 'caught' on the sluice
         if (state.getValue(UPPER) && entity instanceof ItemEntity item)
