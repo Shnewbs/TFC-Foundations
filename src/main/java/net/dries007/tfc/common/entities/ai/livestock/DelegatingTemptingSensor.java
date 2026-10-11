@@ -40,7 +40,7 @@ public class DelegatingTemptingSensor extends Sensor<PathfinderMob>
         Brain<?> brain = animal.getBrain();
         List<ServerPlayer> list = level.players().stream()
             .filter(EntitySelector.NO_SPECTATORS)
-            .filter(p -> TEMPT_TARGETING.test(animal, p))
+            .filter(p -> TEMPT_TARGETING.test(level, animal, p))
             .filter(p -> animal.closerThan(p, TEMPTATION_RANGE))
             .filter(p -> playerHoldingTemptation(p, animal))
             .sorted(Comparator.comparingDouble(animal::distanceToSqr))
