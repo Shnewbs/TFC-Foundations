@@ -166,18 +166,18 @@ public class AmphibianAi
         if (tracker.isPresent())
         {
             BlockPos pos = tracker.get().currentBlockPosition();
-            return EnvironmentHelpers.isWaterAt(level, pos) == entity.isInWaterOrBubble();
+            return EnvironmentHelpers.isWaterAt(level, pos) == entity.isInWater();
         }
         return false;
     }
 
     private static float getSpeedModifier(LivingEntity entity)
     {
-        return entity.isInWaterOrBubble() ? 0.5F : 0.15F;
+        return entity.isInWater() ? 0.5F : 0.15F;
     }
 
     private static float getChasingSpeedModifier(LivingEntity entity)
     {
-        return entity.isInWaterOrBubble() ? 0.6F : 0.17F;
+        return entity.isInWater() ? 0.6F : 0.17F;
     }
 }
