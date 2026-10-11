@@ -11,6 +11,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ScheduledTickAccess;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -73,9 +74,9 @@ public class VaneBlock extends DeviceBlock
         return state.getValue(ATTACHED_WIND_DEVICES) ? SHAPE_ATTACHED : SHAPE;
     }
 
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving)
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean isMoving)
     {
-        super.onRemove(state,level,pos,newState,isMoving);
+        super.affectNeighborsAfterRemoval(state, level, pos, isMoving);
         level.updateNeighborsAt(pos.below(), this); // needs this for strong power to update afaik
     }
 
