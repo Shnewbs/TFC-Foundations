@@ -151,3 +151,13 @@ The locally and independently CI-confirmed reduction is **1,997 to 1,927 (70 dia
 NOT RUN: live block-entity extraction, real chunk workers, atlas/material baking, registered whole-resource reload, GPU rendering, in-game appearance, client/server startup, world generation/save/reload, multiplayer, survival progression or performance measurements. Earlier registry-backed round trips and bootstrap-dependent probes remain unexecuted. Full downstream data/test compilation and packaging remain blocked; no playable JAR or release is claimed.
 
 Continue with the explicit target and release gates in [PROJECT_STATUS](../../PROJECT_STATUS.md).
+
+## 2026-10-12 — Upstream and version watch
+
+Updated [UPSTREAM.md](UPSTREAM.md#watch-report--2026-10-12) with the six-branch inventory, 17 newly reachable 1.21.x commits, four merged fix investigations, buoys/lobster traps and Chinese guide additions, issue-state changes, source inheritance evidence, and required (not executed) regressions.
+
+The block-entity parent save/load fix is independently equivalent in 26.1.2 through October 9 commit 46401c0; it remains absent in 26.x. JEI compact-grid focus, repeated-cell scraping and freezing-temperature tooltip fixes remain absent from both inspected source snapshots. Equivalent source is not runtime verification.
+
+Official manifest still reports release 26.3 / snapshot 26.4-snapshot-3; NeoForge metadata remains 26.3.0.76 with no 26.4 artifact. Preserve separate 26.1.2 playable priority and 26.x/26.3 track.
+
+Documentation-only watch; no source implementation, upstream merge, dependency pin change, compile/gameplay test or artifact publication. Tracking document commits: 26.x d6d9a47d2dd1a61c03b85e561010289ea5a9d724; 26.1.2 06b8fff7eb0b37db6a0b5808e8716d57bef52a39. Readback of both tracking files matched intended text.
