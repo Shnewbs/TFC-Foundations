@@ -2,7 +2,7 @@
 
 Upstream: https://github.com/TerraFirmaCraft/TerraFirmaCraft
 
-Observed 2026-10-11. Rediscover branches each scan. Previous observations: 2026-10-08 through 2026-10-10; initial 1.21.x baseline remains e9d9a88a187d5a33064e2d86b2803f54238cadd6.
+Observed 2026-10-12. Rediscover branches each scan. Previous observations: 2026-10-08 through 2026-10-11; initial 1.21.x baseline remains e9d9a88a187d5a33064e2d86b2803f54238cadd6.
 
 | Branch | Observed tip |
 | --- | --- |
@@ -11,7 +11,7 @@ Observed 2026-10-11. Rediscover branches each scan. Previous observations: 2026-
 | 1.17.x | afddbb2f477b0a7c6dee2f3f98e9fc81851f1f9e |
 | 1.18.x | caf1ec2f527d79d15bda64871014b690b6484a59 |
 | 1.20.x | 8bcb23fc2afb30fc9c111ae45c57f401007de253 |
-| 1.21.x | f67a160166b7c49b44b601a7e02457cae72d1f8d |
+| 1.21.x | 5e15971edbf03c82c1bfb32fae590f4b5c443009 |
 
 These are observation cursors, not claims of integrated historical fixes. Daily upstream/version monitoring is active.
 
@@ -121,3 +121,41 @@ Official sources checked 2026-10-11:
 - 26.4 migration gate remains CLOSED. The 26.x branch remains pinned to `26.3.0.58-beta`; treat 26.3.0.76 as an upgrade candidate only after compile, client/server startup, worldgen, save/reload and multiplayer regression tests. No pin was changed in this watch run.
 
 This report advances observation cursors only. It does not advance integration or verification status.
+
+## Watch report — 2026-10-12
+
+Scope: rediscovered all upstream branches, compared their exact tips with the October 11 cursors, inspected issues/PRs updated since that report and recent releases, and fetched the official version manifest and Maven XML directly.
+
+- Six branches remain: 1.12.x, 1.16.x, 1.17.x, 1.18.x, 1.20.x and 1.21.x. No added/deleted branch. The five branches other than 1.21.x retain their recorded SHAs.
+- [1.21.x comparison](https://github.com/TerraFirmaCraft/TerraFirmaCraft/compare/f67a160166b7c49b44b601a7e02457cae72d1f8d...5e15971edbf03c82c1bfb32fae590f4b5c443009): 17 newly reachable commits, forward history, zero behind. Some merged branch commits have earlier dates; reachability is the observation criterion.
+- Fork source snapshots inspected: 26.x at `778f7af3e991fdfb81af019fa5934db908ddd1ed`; 26.1.2 at `c330bc326eb3c5ae88ea4cdbb8002df9634ac7ac`. Both have upstream merge base `e9d9a88a187d5a33064e2d86b2803f54238cadd6` and lack 32 upstream commits by ancestry. Independently equivalent code is distinguished below.
+- No new upstream release: latest remain [1.20.1 v3.2.27](https://github.com/TerraFirmaCraft/TerraFirmaCraft/releases/tag/v3.2.27), October 10, and [1.21.1 v4.2.11](https://github.com/TerraFirmaCraft/TerraFirmaCraft/releases/tag/v4.2.11), September 27. Today's changes are branch changes, not a new released build.
+
+### Relevant merged fixes
+
+All dates below are October 12, 2026, UTC. Tests are REQUIRED, NOT RUN. Final upstream-tip files were checked in addition to individual patches.
+
+| Upstream commit / issue | Affected system | Foundations source status | Regression tests needed |
+| --- | --- | --- | --- |
+| [0ea63b5](https://github.com/TerraFirmaCraft/TerraFirmaCraft/commit/0ea63b503a82b61ee967ab07868b66d0b35b1417), [#3754](https://github.com/TerraFirmaCraft/TerraFirmaCraft/issues/3754), 13:29 UTC | DATA LOSS: empty TFCBlockEntity parent overrides skip NeoForge persistent data and serializable attachments when saving/loading; Firmalife wooden hive reproducer | 26.x: not inherited, overrides remain empty. 26.1.2: independently equivalent parent calls already present through ValueOutput/ValueInput, introduced by [46401c0](https://github.com/Shnewbs/TFC-Foundations/commit/46401c030a6d2a6e8d9721147837237d8b03605d) on October 9. This is source equivalence, not upstream ancestry or runtime verification | Put persistent marker and serializable attachment on a derived BE; set changed; save, fully unload chunk, load a NEW instance, and restart server. Verify marker, attachment and inventory survive. Same-object round trips can hide the bug. Exercise Firmalife only with target-compatible builds; audit derived save/load super calls |
+| [51f95d4](https://github.com/TerraFirmaCraft/TerraFirmaCraft/commit/51f95d47699c65911bbd91b18f6be018a148b872), [#3755](https://github.com/TerraFirmaCraft/TerraFirmaCraft/issues/3755), 13:26 UTC | JEI advanced shapeless recipes: focus links used ingredient indices against padded nine-slot grid; can throw or focus the wrong ingredient, e.g. Firmalife spoon | Not inherited in either branch; both TFCCraftingExtensions files still use inputSlots.get(primaryIndex). Port candidate; inspect actual target JEI layout API before applying | Recipes with 1, 2, 3, 4 and 5–9 inputs; primary ingredient in every position; matching/mismatching candidate counts; focus cycles input/output correctly; tool remainders preserved; spoon reproducer when compatible dependency exists |
+| [1b8cd11](https://github.com/TerraFirmaCraft/TerraFirmaCraft/commit/1b8cd1174440c5a5464233e79a37c2cdec8ba9c2), [#3753](https://github.com/TerraFirmaCraft/TerraFirmaCraft/issues/3753), 13:50 UTC | Hide scraping: repeat clicks on a completed cell no longer consume knife durability or show scraping particles; adds scraping recipe tooltip | Not inherited in either branch: onClicked remains void and callers damage knife/do particles unconditionally. 1.20.x backport is not merged; maintainer requests a signature-preserving PR for that legacy branch | Newly scraped cell costs durability once; repeated cell click costs none and gives no scraping feedback; all 16 cells, edges, final conversion and extra drop exactly once; save/unload/reload preserves progress, dye and textures; multiplayer sync; tooltip only for incomplete valid recipe |
+| [ea17ff4](https://github.com/TerraFirmaCraft/TerraFirmaCraft/commit/ea17ff4e6743b5b66cde7721ed2f45788e8ea9d0), [#3744](https://github.com/TerraFirmaCraft/TerraFirmaCraft/pull/3744), 13:52 UTC | Farmland/hoe/Jade climate temperatures at or below zero rendered null; splits item heat and climate display enums to prevent invalid COLOR climate config; device thermometer uses item heat mode | Not inherited in either branch: FarmlandBlock still calls heat-only format() for current and threshold temperatures. Port candidate; prior open-proposal status is superseded by this merge. Overlapping legacy PR #3745 remains open | Negative, zero and positive temperatures in Celsius/Fahrenheit/Kelvin/Rankine; crop min/max thresholds and climate/inventory/guide screens; old COLOR climate config reload/migration; thermometer in device versus ambient mode; preserve item heat colors and decimal precision |
+
+### New features and other investigations
+
+- [85fbb4a](https://github.com/TerraFirmaCraft/TerraFirmaCraft/commit/85fbb4a42e867686227105ba67d3278361e0ad16), 22:12 UTC: buoys and lobster traps, rope lowering/recall, bait/catch inventories, aquatic critter AI, loot/recipes/tags and renderers. [7c275fb](https://github.com/TerraFirmaCraft/TerraFirmaCraft/commit/7c275fb59190e1f3d5d658a5f56ba5501b9a3443), 22:13 UTC, supplies the trap renderer. Neither Foundations snapshot registers BUOYS or LOBSTER_TRAP; feature is not inherited. Optional future port, after compilation priority. Required coverage: supported water/source placement, blocked lowering path, rope count/refunds and disconnected line, moving traps preserves inventory/attachments without duplication, bait consumption and full-catch behavior, tagged species/loot, ordinary fishing bait and biome aquatic spawn regressions, chunk unload/restart, removal drops, all colors/orientations, rendering and multiplayer interaction/drinking dispatch.
+- [#3740](https://github.com/TerraFirmaCraft/TerraFirmaCraft/pull/3740) merged 13:53 UTC via [04a8c1f](https://github.com/TerraFirmaCraft/TerraFirmaCraft/commit/04a8c1f879db5782424d54e1357d4a052a731ba2): complete Simplified Chinese guide translation and generated pages. Not inherited in ancestry; sampled lighting page differs in both forks, so complete generated update is absent. Validate macros/placeholders, links, recipe pages and reproducible datagen when porting.
+- [#3751](https://github.com/TerraFirmaCraft/TerraFirmaCraft/issues/3751) closed at 06:10 UTC. [Maintainer diagnosis](https://github.com/TerraFirmaCraft/TerraFirmaCraft/issues/3751#issuecomment-6115097117) identifies TFC Metallum Overhaul (`tfcm`) referencing missing blocks through `#c:ores`, breaking `tfc:prospectable`; reporter acknowledged and planned to try removing it. No TFC fix commit or verified successful retest is established by closure. Retain generated prospectable-tag/invalid external tag and direct/nearby/empty propick regression tests.
+- [#3752](https://github.com/TerraFirmaCraft/TerraFirmaCraft/pull/3752) remains OPEN and UNMERGED against 1.20.x; updated 13:30 UTC. No new implementation evidence; retain previous world-data serialization/promotion test plan rather than importing the legacy capability patch.
+- #3640 received an update but no new comment evidence or merged fix was identified. Existing armor-trim closure is already covered by the October 11 report; do not duplicate it as today's fix.
+- Merge, AGENTS documentation and language-conflict cleanup commits do not establish additional tested gameplay fixes. Upstream attribution/licenses remain required for any future port.
+
+### Version gate
+
+Official metadata fetched directly on 2026-10-12:
+- [Mojang manifest](https://piston-meta.mojang.com/mc/game/version_manifest_v2.json): latest release **26.3** (September 15); latest snapshot **26.4-snapshot-3** (October 6). No released 26.4 entry.
+- [NeoForge Maven metadata](https://maven.neoforged.net/releases/net/neoforged/neoforge/maven-metadata.xml): latest **26.3.0.76**, lastUpdated **20261011194634**; no 26.4 version. Unchanged since previous report.
+- 26.4 migration remains unavailable. The 26.x branch still targets Minecraft 26.3 / NeoForge 26.3.0.58-beta; 26.1.2 remains a separate playable-build priority. No target/pin changed.
+
+Only documentation/observation cursors were updated by this watch. No upstream code merge, fix implementation, compile/runtime verification or artifact publication occurred. Integration and verified-release status do not advance.
