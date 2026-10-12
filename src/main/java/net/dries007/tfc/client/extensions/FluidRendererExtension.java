@@ -8,6 +8,10 @@ package net.dries007.tfc.client.extensions;
 
 import java.util.function.ToIntBiFunction;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.FluidModel;
+import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.client.fluid.FluidTintSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;
@@ -22,7 +26,7 @@ public record FluidRendererExtension(
     Identifier flowingTexture,
     @Nullable Identifier overlayTexture,
     @Nullable Identifier renderOverlayTexture
-) implements IClientFluidTypeExtensions
+) implements IClientFluidTypeExtensions, FluidTintSource
 {
     public FluidRendererExtension(int tintColor, Identifier stillTexture, Identifier flowingTexture, @Nullable Identifier overlayTexture, @Nullable Identifier renderOverlayTexture)
     {
@@ -30,34 +34,21 @@ public record FluidRendererExtension(
     }
 
     @Override
-    public int getTintColor()
+    public int color(FluidState state)
     {
         return tintColor;
     }
 
     @Override
-    public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos)
+    public int colorInWorld(FluidState state, BlockState blockState, BlockAndTintGetter getter, BlockPos pos)
     {
         return tintColorFunction.applyAsInt(getter, pos);
     }
 
-    @Override
-    public Identifier getStillTexture()
+    public FluidModel.Unbaked model()
     {
-        return stillTexture;
-    }
-
-    @Override
-    public Identifier getFlowingTexture()
-    {
-        return flowingTexture;
-    }
-
-    @Override
-    @Nullable
-    public Identifier getOverlayTexture()
-    {
-        return overlayTexture;
+        return new FluidModel.Unbaked(new Material(stillTexture), new Material(flowingTexture),
+            overlayTexture == null ? null : new Material(overlayTexture), this);
     }
 
     @Override

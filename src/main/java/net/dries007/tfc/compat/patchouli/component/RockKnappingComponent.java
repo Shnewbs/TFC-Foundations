@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
 import com.google.gson.annotations.SerializedName;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
@@ -66,7 +66,7 @@ public class RockKnappingComponent extends CustomComponent
     }
 
     @Override
-    public void render(GuiGraphics graphics, IComponentRenderContext context, float partialTicks, int mouseX, int mouseY)
+    public void extractRenderState(GuiGraphicsExtractor graphics, IComponentRenderContext context, float partialTicks, int mouseX, int mouseY)
     {
         if (recipes != null && recipes.length > 0)
         {
@@ -74,7 +74,7 @@ public class RockKnappingComponent extends CustomComponent
 
             renderSetup(graphics);
             KnappingComponent.render(graphics, context, mouseX, mouseY, recipe.recipe(), recipe.outputStack(), recipe.texture(), null, x, y);
-            graphics.pose().popPose();
+            graphics.pose().popMatrix();
         }
     }
 

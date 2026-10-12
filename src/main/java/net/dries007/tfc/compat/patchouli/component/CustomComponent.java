@@ -16,10 +16,17 @@ import java.util.function.UnaryOperator;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.serialization.JsonOps;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeMap;
 import com.mojang.logging.LogUtils;
 import net.minecraft.IdentifierException;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -45,7 +52,6 @@ import vazkii.patchouli.common.multiblock.SerializedMultiblock;
 
 import net.dries007.tfc.client.ClientHelpers;
 import net.dries007.tfc.client.RenderHelpers;
-import net.dries007.tfc.compat.patchouli.PatchouliIntegration;
 import net.dries007.tfc.util.Helpers;
 import net.dries007.tfc.util.tooltip.Tooltips;
 
@@ -82,22 +88,18 @@ public abstract class CustomComponent implements ICustomComponent
     }
 
     @Override
-    public abstract void render(GuiGraphics graphics, IComponentRenderContext context, float partialTicks, int mouseX, int mouseY);
+    public abstract void extractRenderState(GuiGraphicsExtractor graphics, IComponentRenderContext context, float partialTicks, int mouseX, int mouseY);
 
-    protected void renderSetup(GuiGraphics graphics)
+    protected void renderSetup(GuiGraphicsExtractor graphics)
     {
-        graphics.pose().pushPose();
-        graphics.pose().translate(x, y, 0);
-
-        RenderSystem.enableBlend();
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        RenderSystem.setShaderTexture(0, PatchouliIntegration.TEXTURE);
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(x, y);
     }
 
     /**
-     * Same code flow as {@link IComponentRenderContext#renderIngredient(GuiGraphics, int, int, int, int, Ingredient)} but with a {@code List<ItemStack>} instead.
+     * Same code flow as {@link IComponentRenderContext#renderIngredient(GuiGraphicsExtractor, int, int, int, int, Ingredient)} but with a {@code List<ItemStack>} instead.
      */
-    protected void renderItemStacks(IComponentRenderContext context, GuiGraphics graphics, int x, int y, int mouseX, int mouseY, List<ItemStack> stacks)
+    protected void renderItemStacks(IComponentRenderContext context, GuiGraphicsExtractor graphics, int x, int y, int mouseX, int mouseY, List<ItemStack> stacks)
     {
         if (!stacks.isEmpty())
         {
@@ -105,7 +107,7 @@ public abstract class CustomComponent implements ICustomComponent
         }
     }
 
-    protected void renderFluidStacks(IComponentRenderContext context, GuiGraphics graphics, int x, int y, int mouseX, int mouseY, List<FluidStack> fluids)
+    protected void renderFluidStacks(IComponentRenderContext context, GuiGraphicsExtractor graphics, int x, int y, int mouseX, int mouseY, List<FluidStack> fluids)
     {
         if (!fluids.isEmpty())
         {
@@ -113,12 +115,13 @@ public abstract class CustomComponent implements ICustomComponent
         }
     }
 
-    protected void renderFluidStack(IComponentRenderContext context, GuiGraphics graphics, int x, int y, int mouseX, int mouseY, FluidStack fluid)
+    protected void renderFluidStack(IComponentRenderContext context, GuiGraphicsExtractor graphics, int x, int y, int mouseX, int mouseY, FluidStack fluid)
     {
         if (!fluid.isEmpty())
         {
-            final TextureAtlasSprite sprite = RenderHelpers.getAndBindFluidSprite(fluid);
-            graphics.blit(x, y, 0, 16, 16, sprite);
+            final TextureAtlasSprite sprite = RenderHelpers.getFluidSprite(fluid);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, x, y, 16, 16,
+                RenderHelpers.getFluidColor(fluid));
 
             if (context.isAreaHovered(mouseX, mouseY, x, y, 16, 16))
             {
@@ -126,18 +129,17 @@ public abstract class CustomComponent implements ICustomComponent
                 tooltip.add(Tooltips.fluidUnitsOf(fluid));
                 context.setHoverTooltipComponents(tooltip);
             }
-            RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         }
     }
 
     protected List<ItemStack> unpackItemStackIngredient(SizedIngredient ingredient)
     {
-        return List.of(ingredient.getItems());
+        return ingredient.ingredient().items().map(item -> new ItemStack(item, ingredient.count())).toList();
     }
 
     protected List<FluidStack> unpackFluidStackIngredient(SizedFluidIngredient ingredient)
     {
-        return List.of(ingredient.getFluids());
+        return ingredient.ingredient().fluids().stream().map(fluid -> new FluidStack(fluid, ingredient.amount())).toList();
     }
 
     protected <V, T> Optional<T> asJson(V value, Function<V, T> parse)
@@ -158,7 +160,7 @@ public abstract class CustomComponent implements ICustomComponent
         final Component text;
         try
         {
-            text = Component.Serializer.fromJson(json, provider);
+            text = ComponentSerialization.CODEC.parse(provider.createSerializationContext(JsonOps.INSTANCE), json).getOrThrow(JsonSyntaxException::new);
         }
         catch (JsonSyntaxException e)
         {
@@ -176,22 +178,21 @@ public abstract class CustomComponent implements ICustomComponent
     @SuppressWarnings("unchecked")
     protected <T extends Recipe<?>> Optional<T> asRecipe(String variable, RecipeType<T> type)
     {
-        return asResourceLocation(variable)
-            .flatMap(e -> ClientHelpers.getLevelOrThrow()
-                .getRecipeManager()
-                .byKey(e)
-                .flatMap(recipe -> {
-                    if (recipe.value().getType() != type)
-                    {
-                        LOGGER.error("The recipe {} of type {} is not of type {}", e, BuiltInRegistries.RECIPE_TYPE.getKey(recipe.value().getType()), type);
-                        return Optional.empty();
-                    }
-                    return Optional.of((T) recipe.value());
-                })
-                .or(() -> {
-                    LOGGER.error("No recipe of type {} named {} ", BuiltInRegistries.RECIPE_TYPE.getKey(type), e);
-                    return Optional.empty();
-                }));
+        return asResourceLocation(variable).flatMap(id -> {
+            final RecipeMap recipes = ClientHelpers.tryGetSafeRecipeMap();
+            final RecipeHolder<?> holder = recipes == null ? null : recipes.byKey(ResourceKey.create(Registries.RECIPE, id));
+            if (holder == null)
+            {
+                LOGGER.error("No synchronized recipe of type {} named {}", BuiltInRegistries.RECIPE_TYPE.getKey(type), id);
+                return Optional.empty();
+            }
+            if (holder.value().getType() != type)
+            {
+                LOGGER.error("The recipe {} of type {} is not of type {}", id, BuiltInRegistries.RECIPE_TYPE.getKey(holder.value().getType()), type);
+                return Optional.empty();
+            }
+            return Optional.of((T) holder.value());
+        });
     }
 
     protected Optional<Identifier> asResourceLocation(String variable)
@@ -252,14 +253,14 @@ public abstract class CustomComponent implements ICustomComponent
 
     public static class MultiblockRenderer extends PageMultiblock
     {
-        public void render(IComponentRenderContext context, GuiGraphics poseStack, int mouseX, int mouseY, float partialTicks)
+        public void render(IComponentRenderContext context, GuiGraphicsExtractor poseStack, int mouseX, int mouseY, float partialTicks)
         {
             if (context instanceof GuiBookEntry entryContext)
             {
-                mc = context.getGui().getMinecraft();
+                mc = Minecraft.getInstance();
                 parent = entryContext;
                 book = entryContext.book;
-                render(poseStack, mouseX, mouseY, partialTicks);
+                extractRenderState(poseStack, mouseX, mouseY, partialTicks);
             }
         }
 

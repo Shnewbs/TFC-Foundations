@@ -8,7 +8,8 @@ package net.dries007.tfc.compat.patchouli.component;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -23,14 +24,14 @@ import net.dries007.tfc.config.TFCConfig;
 public class HeatingComponent extends InputOutputComponent<HeatingRecipe>
 {
     @Override
-    public void render(GuiGraphics graphics, IComponentRenderContext context, float partialTicks, int mouseX, int mouseY)
+    public void extractRenderState(GuiGraphicsExtractor graphics, IComponentRenderContext context, float partialTicks, int mouseX, int mouseY)
     {
         if (recipe == null) return;
 
         renderSetup(graphics);
 
         final int v = !recipe.getDisplayOutputFluid().isEmpty() ? 116 : 90;
-        graphics.blit(PatchouliIntegration.TEXTURE, 9, 0, 0, v, 98, 26, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, PatchouliIntegration.TEXTURE, 9, 0, 0, v, 98, 26, 256, 256);
 
         context.renderIngredient(graphics, 14, 5, mouseX, mouseY, getIngredient(recipe));
         context.renderItemStack(graphics, 86, 5, mouseX, mouseY, getOutput(recipe));
@@ -41,10 +42,10 @@ public class HeatingComponent extends InputOutputComponent<HeatingRecipe>
         {
             final Font font = Minecraft.getInstance().font;
             final int centerX = 64 - 8 - font.width(tooltip.getString()) / 2; // Page width = 64, Offset = 8,
-            graphics.drawString(font, tooltip, centerX, 28, 0x404040, false);
+            graphics.text(font, tooltip, centerX, 28, 0xFF404040, false);
         }
 
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
     }
 
     @Override

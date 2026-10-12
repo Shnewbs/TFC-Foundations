@@ -1,0 +1,880 @@
+{
+  "date": "2026-10-12",
+  "branch": "26.1.2",
+  "baseline_commit": "c920472da99c7c039f68aaa3b82114824e1a74fa",
+  "target": {
+    "minecraft": "26.1.2",
+    "neoforge": "26.1.2.114",
+    "java": "25",
+    "gradle": "9.2.1",
+    "patchouli": "26.1-94",
+    "jei": "29.43.0.107"
+  },
+  "diagnostic_before": {
+    "errors": 957,
+    "source_count": 1657,
+    "exit_code": 1,
+    "timed_out": false,
+    "annotation_processing": false
+  },
+  "diagnostic_after": {
+    "source_count": 1658,
+    "exit_code": 1,
+    "displayed_errors": 860,
+    "timed_out": false,
+    "annotation_processing": false,
+    "note": "Diagnostic main compilation only. Error counts can hide cascading or later failures; no gameplay or full Gradle success is implied."
+  },
+  "caveat": "Same main javac mode and resolved TFC-patched classpath. Counts include cascades, not independent bugs or a completion percentage.",
+  "toolchain_workaround": "Opt-in local NeoForm Runtime 2.0.31 host-Java fallback; official source compiled with exactly two ProcessHandle.Info.command fallbacks to java.home/bin/java. Normal dependency pins, game patches, source sets and build gates unchanged. Stock runtime not validated in this container.",
+  "instrument_model_smoke": {
+    "result": "PASS",
+    "pose_visibility_scenarios": 25,
+    "models": [
+      "Anemometer",
+      "CalendarClock",
+      "Vane",
+      "Javelin"
+    ],
+    "comparison": "Native root rendering versus previous per-part rendering; positions, UVs, normals and vertex multiplicity. Not GPU/live extraction testing.",
+    "geometry_factory_sha256_unchanged_from_baseline": {
+      "Anemometer": "3a8ab6c5cf4f3c65ced8548ed50d8fd7f636e43e637d11c3a32c45879d5c6baa",
+      "CalendarClock": "d2ed22f87599c27c423566fa11dc6e1c2ae45b223f7cf948ed6186746f085df8",
+      "Vane": "16394cf13aec1040bbb2584a9326bdf23fa2f2dbfac263169f9ef391020e582d",
+      "Javelin": "09f06d1fc2f8973916e0e5893ed3056c7849f5b7fa2e4f2e6326d2a61758f89e"
+    }
+  },
+  "changed_source_files_without_diagnostics": [
+    "src/main/java/net/dries007/tfc/client/extensions/FluidRendererExtension.java",
+    "src/main/java/net/dries007/tfc/client/model/entity/AnemometerModel.java",
+    "src/main/java/net/dries007/tfc/client/model/entity/CalendarClockModel.java",
+    "src/main/java/net/dries007/tfc/client/model/entity/JavelinModel.java",
+    "src/main/java/net/dries007/tfc/client/model/entity/VaneModel.java",
+    "src/main/java/net/dries007/tfc/client/render/blockentity/AnemometerBlockEntityRenderer.java",
+    "src/main/java/net/dries007/tfc/client/render/blockentity/CalendarClockBlockEntityRenderer.java",
+    "src/main/java/net/dries007/tfc/client/render/blockentity/VaneBlockEntityRenderer.java",
+    "src/main/java/net/dries007/tfc/client/render/entity/ThrownJavelinRenderer.java",
+    "src/main/java/net/dries007/tfc/common/effect/ExhaustedEffect.java",
+    "src/main/java/net/dries007/tfc/common/effect/ThirstEffect.java",
+    "src/main/java/net/dries007/tfc/compat/patchouli/component/BarrelComponent.java",
+    "src/main/java/net/dries007/tfc/compat/patchouli/component/CustomComponent.java",
+    "src/main/java/net/dries007/tfc/compat/patchouli/component/GlassworkingComponent.java",
+    "src/main/java/net/dries007/tfc/compat/patchouli/component/HeatingComponent.java",
+    "src/main/java/net/dries007/tfc/compat/patchouli/component/InputOutputComponent.java",
+    "src/main/java/net/dries007/tfc/compat/patchouli/component/KnappingComponent.java",
+    "src/main/java/net/dries007/tfc/compat/patchouli/component/LoomComponent.java",
+    "src/main/java/net/dries007/tfc/compat/patchouli/component/MultiMultiBlockComponent.java",
+    "src/main/java/net/dries007/tfc/compat/patchouli/component/RockKnappingComponent.java",
+    "src/main/java/net/dries007/tfc/compat/patchouli/component/SealedBarrelComponent.java",
+    "src/main/java/net/dries007/tfc/compat/patchouli/component/TableComponent.java",
+    "src/main/java/net/dries007/tfc/compat/patchouli/component/WeldingComponent.java",
+    "src/main/java/net/dries007/tfc/client/FluidModelRegistration.java"
+  ],
+  "remaining_errors_by_file": [
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "errors": 148
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "errors": 82
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/model/ContainedFluidModel.java",
+      "errors": 52
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/model/TrimmedItemModel.java",
+      "errors": 43
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/IngameOverlays.java",
+      "errors": 36
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PlacedItemBlockEntityRenderer.java",
+      "errors": 14
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/PowderKegExplosion.java",
+      "errors": 14
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/RenderHelpers.java",
+      "errors": 13
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/patchouli/PatchouliClientEventHandler.java",
+      "errors": 13
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/CrankshaftBlockEntityRenderer.java",
+      "errors": 11
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/TFCHangingSignBlockEntityRenderer.java",
+      "errors": 10
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/SelfTests.java",
+      "errors": 10
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/FirepitBlockEntityRenderer.java",
+      "errors": 9
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/SluiceBlockEntityRenderer.java",
+      "errors": 9
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PanItemRenderer.java",
+      "errors": 8
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/TFCSignBlockEntityRenderer.java",
+      "errors": 8
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/ChannelBlockEntityRenderer.java",
+      "errors": 6
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/LoomBlockEntityRenderer.java",
+      "errors": 6
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/MoldBlockEntityRenderer.java",
+      "errors": 6
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/QuernBlockEntityRenderer.java",
+      "errors": 6
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/commands/AddTrimCommand.java",
+      "errors": 6
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/prey/TFCFox.java",
+      "errors": 6
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/fluids/FluidHelpers.java",
+      "errors": 6
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/fluids/MixingFluid.java",
+      "errors": 6
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/BaseRecipeCategory.java",
+      "errors": 6
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/BreakingItemParticleMixin.java",
+      "errors": 6
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/ItemBlockRenderTypesMixin.java",
+      "errors": 6
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/extensions/ItemRendererExtension.java",
+      "errors": 5
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/AnvilBlockEntityRenderer.java",
+      "errors": 5
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/CharcoalForgeBlockEntityRenderer.java",
+      "errors": 5
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/JavelinItemRenderer.java",
+      "errors": 5
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/NestBoxBlockEntityRenderer.java",
+      "errors": 5
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/CastingRecipeCategory.java",
+      "errors": 5
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/ChunkMapMixin.java",
+      "errors": 5
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/SkeletonModelMixin.java",
+      "errors": 5
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/compat/sodium/ItemColorsMixin.java",
+      "errors": 5
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/BellowsBlockEntityRenderer.java",
+      "errors": 4
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/ChestItemRenderer.java",
+      "errors": 4
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/HotPouredGlassBlockEntityRenderer.java",
+      "errors": 4
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PowerLoomBlockEntityRenderer.java",
+      "errors": 4
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/TFCBellBlockEntityRenderer.java",
+      "errors": 4
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/TFCChestBlockEntityRenderer.java",
+      "errors": 4
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/entity/TFCFishingHookRenderer.java",
+      "errors": 4
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/prey/TFCFrog.java",
+      "errors": 4
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/items/FluidContainerItem.java",
+      "errors": 4
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/LampFuelRecipeCategory.java",
+      "errors": 4
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/SimpleItemRecipeCategory.java",
+      "errors": 4
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/ClientLevelMixin.java",
+      "errors": 4
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/ItemColorsMixin.java",
+      "errors": 4
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/PlayerItemInHandLayerMixin.java",
+      "errors": 4
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/Helpers.java",
+      "errors": 4
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/loot/CopyFluidFunction.java",
+      "errors": 4
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/CrateOverlays.java",
+      "errors": 3
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/TFCColors.java",
+      "errors": 3
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/BarrelBlockEntityRenderer.java",
+      "errors": 3
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/ToolRackBlockEntityRenderer.java",
+      "errors": 3
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/TripHammerBlockEntityRenderer.java",
+      "errors": 3
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/plant/Plant.java",
+      "errors": 3
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/aquatic/TFCSquid.java",
+      "errors": 3
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/items/BarrelBlockItem.java",
+      "errors": 3
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/GlassworkingRecipeCategory.java",
+      "errors": 3
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/HeatingRecipeCategory.java",
+      "errors": 3
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/SimplePotRecipeCategory.java",
+      "errors": 3
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/calendar/CalendarWorldData.java",
+      "errors": 3
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/ForgeEventHandler.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientHelpers.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/BowlBlockEntityRenderer.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/CrucibleBlockEntityRenderer.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/GlassBasinBlockEntityRenderer.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PowderkegBlockEntityRenderer.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blockentities/BarrelBlockEntity.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blockentities/MoldTableBlockEntity.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blockentities/PotBlockEntity.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/IForgeBlockExtension.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/TFCLightBlock.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/ThatchBlock.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/devices/CrucibleBlock.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/devices/SealableDeviceBlock.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/plant/coral/Coral.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/soil/IGrassBlock.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/wood/TFCLeavesBlock.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/capabilities/BlockCapabilities.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/capabilities/ItemCapabilities.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/component/EggComponent.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/container/MoldLikeAlloyContainer.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/container/ScribingTableContainer.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/ai/predator/PackPredator.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/fluids/IFluidLoggable.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/JEIIntegration.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/AlloyRecipeCategory.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/AnvilRecipeCategory.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/BarrelRecipeCategory.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/BlastFurnaceRecipeCategory.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/BloomeryRecipeCategory.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/ChiselRecipeCategory.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/JamPotRecipeCategory.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/KnappingRecipeCategory.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/LoomRecipeCategory.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/SealedBarrelRecipeCategory.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/SewingRecipeCategory.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/SoupPotRecipeCategory.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/WeldingRecipeCategory.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/transfer/AnvilRecipeTransferHandler.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/MilkBucketItemMixin.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/LiquidBlockRendererMixin.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/WaterDropParticleMixin.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/WorldSelectionListMixin.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/accessor/SignRendererAccessor.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/compat/patchouli/GuiBookMixin.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/PhysicalDamageType.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientForgeEventHandler.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/GrillBlockEntityRenderer.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PotBlockEntityRenderer.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/screen/MoldLikeAlloyScreen.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blockentities/BlastFurnaceBlockEntity.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blockentities/CharcoalForgeBlockEntity.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blockentities/CrucibleBlockEntity.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blockentities/PowderkegBlockEntity.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/BloomBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/CrateBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/FireboxBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/HotWaterBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/MoltenFluidBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/RiverWaterBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/TFCBubbleColumnBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/TFCCandleCakeBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/ThinSpikeBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/WattleBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/devices/BarrelBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/devices/BlastFurnaceBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/devices/CharcoalForgeBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/devices/DeviceBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/devices/IngotPileBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/devices/MoldTableBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/devices/PlacedItemBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/devices/PowderkegBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/devices/QuernBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/plant/BranchingCactusBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/plant/CreepingWaterPlantBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/plant/KrummholzBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/plant/RotatableWaterPlantBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/plant/TFCCactusBedBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/plant/TFCCactusBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/plant/TFCPassableCactusBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/plant/fruit/FruitTreeLeavesBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/plant/fruit/SeasonalPlantBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/rock/AqueductBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/soil/ConnectedGrassBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/soil/IMudBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/commands/ClearWorldCommand.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/component/TFCComponents.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/component/food/FoodCapability.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/container/BarrelContainer.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/ai/TFCAvoidEntityGoal.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/ai/pet/TamableAi.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/ai/prey/PestFeastBehavior.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/ai/prey/RamTargetTFC.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/ai/prey/TFCOcelot.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/aquatic/Manatee.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/aquatic/TFCDolphin.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/livestock/DairyAnimal.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/livestock/camel/BactrianCamel.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/livestock/camel/DromedaryCamel.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/livestock/horse/HorseProperties.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/misc/HoldingMinecart.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/misc/TFCFallingBlockEntity.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/misc/TFCMinecartChest.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/fluids/MoltenFluid.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/items/FlowerCuttingItem.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/items/GlassBottleItem.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/items/JugItem.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/items/LampBlockItem.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/items/MoldItem.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/items/PanItem.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/items/TFCBoatItem.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/items/TFCMaceItem.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/items/VesselItem.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/recipes/InstantFluidBarrelRecipe.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/recipes/ingredients/FluidContentIngredient.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/TFCCraftingExtensions.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/transfer/FluidIgnoringRecipeTransferHandler.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/vivecraft/VivecraftIntegration.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/ChannelFlow.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/SyncReloadListener.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/data/KnappingType.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/tooltip/BlockEntityTooltips.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/tooltip/EntityTooltips.java",
+      "errors": 1
+    }
+  ],
+  "changed_source_sha256": {
+    "src/main/java/net/dries007/tfc/client/ClientEventHandler.java": "72ee0786c31e9d4f57d1210824246bd1cb8fb4e37aec9533ef624c8c6329e193",
+    "src/main/java/net/dries007/tfc/client/RenderHelpers.java": "3b090a3d85c7c93d58f2ee13022e365c300828bb24f48d9483b7e7e8032add82",
+    "src/main/java/net/dries007/tfc/client/extensions/FluidRendererExtension.java": "308fed040869434aba88dd6addd11e8e0a1f86535a986a98303a7d6a42856dd2",
+    "src/main/java/net/dries007/tfc/client/model/entity/AnemometerModel.java": "db55e88758e9eaaf18c28501bc5e7192f885e4ec9086134f6ce38c5d495a6876",
+    "src/main/java/net/dries007/tfc/client/model/entity/CalendarClockModel.java": "f61a720dc8a136a0fb6ffc0a01780a77d8d2f128932965e03217b262b3e1dc69",
+    "src/main/java/net/dries007/tfc/client/model/entity/JavelinModel.java": "0045a3f4b2751531815ee29949236d45d3d13aa7d9912473074a9b40daa20942",
+    "src/main/java/net/dries007/tfc/client/model/entity/VaneModel.java": "ce76bdf21b188e9818d7ff5391f26dbe3f5ff3fbb77bf270f9e404622f329595",
+    "src/main/java/net/dries007/tfc/client/render/blockentity/AnemometerBlockEntityRenderer.java": "0bce963e27e5c4996e823f5994c3b166a2301ee0371b27cb456cf5f86423f508",
+    "src/main/java/net/dries007/tfc/client/render/blockentity/CalendarClockBlockEntityRenderer.java": "fdef040c63d1bd4f36dee82bd83fd5c5187a596730d96619b1f334ce0a393ac3",
+    "src/main/java/net/dries007/tfc/client/render/blockentity/VaneBlockEntityRenderer.java": "e13163c9a835f981f0d2d3d48867a8a53c6e633edf164e8dff06e8be99377a12",
+    "src/main/java/net/dries007/tfc/client/render/entity/ThrownJavelinRenderer.java": "c7951e979f861d2b4e2537ffe1f643a1a62d8cfbaf117fd8de1b84d9c9d1d77d",
+    "src/main/java/net/dries007/tfc/common/effect/ExhaustedEffect.java": "220cc7056028bb6bebb1d145884b3220cfc69dc6b33a377011374fd1e2afbdc4",
+    "src/main/java/net/dries007/tfc/common/effect/ThirstEffect.java": "ac399671253116af39b360544c7c75c15bef35a61663650241daaf8265e45002",
+    "src/main/java/net/dries007/tfc/compat/patchouli/component/BarrelComponent.java": "f2df86e0615d0dfb289ec63de841fc38069d233d78fcb3684991c673f8370665",
+    "src/main/java/net/dries007/tfc/compat/patchouli/component/CustomComponent.java": "7c81cf512da928b05fa73a22fb882e4a27d5a91f1fec8bdcdb5a3c793fef56c1",
+    "src/main/java/net/dries007/tfc/compat/patchouli/component/GlassworkingComponent.java": "4af91cbab6106bf53c493ad9a904ead3e96e3df8de122148e90f453e7df3fab2",
+    "src/main/java/net/dries007/tfc/compat/patchouli/component/HeatingComponent.java": "74cfca5ff4ac091f665ad2c32c14dc2d0954b07b5e1759f4323d69bce983765c",
+    "src/main/java/net/dries007/tfc/compat/patchouli/component/InputOutputComponent.java": "813e7438f6e82402c87ba68355994bb026f764c97ff5418f7966b8d87c5d0171",
+    "src/main/java/net/dries007/tfc/compat/patchouli/component/KnappingComponent.java": "4d69f60db5a390630d4b5ca8f2e29d41cc06052f0ba5059f3e738a0c7bfc0eda",
+    "src/main/java/net/dries007/tfc/compat/patchouli/component/LoomComponent.java": "fb4e30c6217eb38e0499e047e1fe3e956d0cd9dde9a74fcc5a1ce61074458400",
+    "src/main/java/net/dries007/tfc/compat/patchouli/component/MultiMultiBlockComponent.java": "a7ffb83922e42544d2e457716ba597687a4cc4d0f52af0b6d01e0a950031de28",
+    "src/main/java/net/dries007/tfc/compat/patchouli/component/RockKnappingComponent.java": "ff0f266f0565077ed75f333c8084974f8fdedec0e2df136f0ee5089344c32f46",
+    "src/main/java/net/dries007/tfc/compat/patchouli/component/SealedBarrelComponent.java": "f8d9e7df240019416bcfb2cdc8f35592a329a2c8f060e20915b9f501fe8d7b35",
+    "src/main/java/net/dries007/tfc/compat/patchouli/component/TableComponent.java": "7445e0d520065843d051852eeb3a55f400ae783f1240b955dd2175165dbfea2e",
+    "src/main/java/net/dries007/tfc/compat/patchouli/component/WeldingComponent.java": "364c2471b1197f63fd89eeb3ce11464eae4a33819a12fbb18d3789c8e630592d",
+    "src/main/java/net/dries007/tfc/client/FluidModelRegistration.java": "0aa8438f263e83dc6aaeba77edaecc85d8fa7f3d3d96d10fbcf0a5015f3fd86a"
+  },
+  "not_verified": [
+    "full successful Gradle build",
+    "stock unmodified NeoForm toolchain",
+    "resource reload and guide appearance",
+    "client/server startup",
+    "world generation and save/reload",
+    "survival gameplay",
+    "held-item javelin renderer",
+    "26.x forward track"
+  ],
+  "gradle_build": {
+    "exit_code": 1,
+    "main_compile_errors": 860,
+    "failed_tasks": [
+      "compileJava",
+      "downloadAssets"
+    ],
+    "license_tasks": "PASS: checkLicenseMain, checkLicenseTest, checkLicenseData",
+    "limitations": "Full build also encountered disk exhaustion during Java 21 asset toolchain provisioning; final failure report was truncated. Compile-only/license rerun is recorded separately. No package, data/test compilation or runtime success."
+  },
+  "gradle_compile_and_licenses": {
+    "command": "compileJava checkLicenseMain checkLicenseTest checkLicenseData --continue",
+    "exit_code": 1,
+    "compile_errors": 860,
+    "license_tasks": "PASS: all three tasks",
+    "duration_seconds": 49,
+    "failure": "compileJava",
+    "complete_log": true
+  }
+}

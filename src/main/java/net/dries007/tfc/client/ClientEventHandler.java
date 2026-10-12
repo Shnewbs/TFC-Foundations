@@ -81,7 +81,6 @@ import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.client.extensions.BlowpipeExtension;
-import net.dries007.tfc.client.extensions.FluidRendererExtension;
 import net.dries007.tfc.client.extensions.ItemRendererExtension;
 import net.dries007.tfc.client.model.BlockModelRegistration;
 import net.dries007.tfc.client.model.ContainedFluidModel;
@@ -321,6 +320,7 @@ public final class ClientEventHandler
         bus.addListener(ClientEventHandler::registerLayerDefinitions);
         bus.addListener(ClientEventHandler::registerPresetEditors);
         bus.addListener(ClientEventHandler::registerExtensions);
+        bus.addListener(FluidModelRegistration::registerModels);
         bus.addListener(ClientEventHandler::registerDimensionEffects);
         bus.addListener(IngameOverlays::registerOverlays);
 
@@ -1047,26 +1047,7 @@ public final class ClientEventHandler
             TFCItems.CERAMIC_BLOWPIPE.get(),
             TFCItems.CERAMIC_BLOWPIPE_WITH_GLASS.get());
 
-        // Fluids
-        TFCFluids.METALS.forEach((metal, holder) -> event.registerFluidType(
-            new FluidRendererExtension(TFCFluids.ALPHA_MASK | metal.getColor(), MOLTEN_STILL, MOLTEN_FLOW, null, null),
-            holder.getType()
-        ));
-        TFCFluids.SIMPLE_FLUIDS.forEach((fluid, holder) -> event.registerFluidType(
-            new FluidRendererExtension(fluid.isTransparent() ? TFCFluids.ALPHA_MASK | fluid.getColor() : fluid.getColor(), WATER_STILL, WATER_FLOW, WATER_OVERLAY, UNDERWATER_LOCATION),
-            holder.getType()
-        ));
-        TFCFluids.COLORED_FLUIDS.forEach((color, holder) -> event.registerFluidType(
-            new FluidRendererExtension(color.getTextureDiffuseColor(), WATER_STILL, WATER_FLOW, WATER_OVERLAY, null),
-            holder.getType()
-        ));
-
-        event.registerFluidType(
-            new FluidRendererExtension(TFCFluids.ALPHA_MASK | 0x3F76E4, (level, pos) -> level.getBlockTint(pos, TFCColors.SALT_WATER) | TFCFluids.ALPHA_MASK, WATER_STILL, WATER_FLOW, WATER_OVERLAY, UNDERWATER_LOCATION),
-            TFCFluids.SALT_WATER.getType());
-        event.registerFluidType(
-            new FluidRendererExtension(TFCFluids.ALPHA_MASK | 0x4ECBD7, WATER_STILL, WATER_FLOW, WATER_OVERLAY, UNDERWATER_LOCATION),
-            TFCFluids.SPRING_WATER.getType());
+        FluidModelRegistration.registerExtensions(event);
     }
 
     @SuppressWarnings("unchecked")

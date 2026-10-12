@@ -1,6 +1,6 @@
 # Continue development in another environment
 
-**Checked:** 2026-10-10. **Repository:** [Shnewbs/TFC-Foundations](https://github.com/Shnewbs/TFC-Foundations).
+**Checked:** 2026-10-12. **Repository:** [Shnewbs/TFC-Foundations](https://github.com/Shnewbs/TFC-Foundations).
 This file is the handoff entry point for another computer, operating system, IDE, or ChatGPT/Codex session. **Always consult the live branch and its latest CI run before treating the checkpoint below as current.** Do not rely on local or chat-only work being available elsewhere.
 
 ## Branches and pinned targets
@@ -12,7 +12,24 @@ This file is the handoff entry point for another computer, operating system, IDE
 
 Both tracks use **Java 25**, Gradle wrapper **9.2.1**, and ModDevGradle **2.0.148**. Branch-specific `gradle.properties` is authoritative if a dependency is changed after this handoff. Current candidate version is `0.0.0`, **not** a tested release. Preserve upstream TFC gameplay, the EUPL notices, credits, identifiers, and full feature set; never hide missing APIs behind dummy implementations or disable subsystems to manufacture a green build.
 
-## Verified public checkpoint (2026-10-10)
+## Current local checkpoint (2026-10-12)
+
+Existing `26.1.2` continued from `c920472d` with native instrument/projectile rendering, Patchouli component extraction, fluid model registration and thirst/exhaustion callback changes. Same-mode diagnostic javac: **957 → 860 errors**, 1,658 final sources, exit 1, no timeout. Four unchanged geometry factories and the instrument/javelin CPU model suite pass. The historical 190-entry checklist is 75 source-addressed / 115 open. These checks do not establish playability. Full details and limitations are in the newest [work-log entry](WORK_LOG.md) and [validation JSON](validation/2026-10-12-render-guide.json).
+
+Actions quota is suspended for this checkpoint: publish reviewed work on the existing branch with `[skip ci]` and use local validation. Do not request a new Actions run merely to rediscover that quota failure. Inspect live source before continuing; older CI remains historical evidence. Prioritize remaining client/world rendering, contained-fluid/trimmed-item models and overlays; held-item javelins and other Patchouli integration code are still unfinished.
+
+### Optional restricted-container NeoForm workaround
+
+Use a normal JDK 25 installation first. Only if NeoForm Runtime **2.0.31** fails because `ProcessHandle.current().info().command()` is empty, the opt-in helper can build a local tool copy with a `java.home/bin/java` fallback. Obtain the exact matching official `neoform-runtime-2.0.31-all.jar` and `neoform-runtime-2.0.31-sources.jar` from NeoForged Maven, plus the resolved JetBrains annotations JAR; keep generated tools outside tracked source.
+
+```sh
+python tools/porting/prepare_neoform_java_fallback.py --runtime /path/to/neoform-runtime-2.0.31-all.jar --sources /path/to/neoform-runtime-2.0.31-sources.jar --annotations /path/to/annotations.jar --output /path/to/local-neoform-fallback
+./gradlew -I /path/to/local-neoform-fallback/neoform-java-fallback.gradle -I tools/porting/diagnostics.gradle writePortClasspath build --continue --no-daemon --no-configuration-cache --console=plain
+```
+
+The helper changes only two host-executable lookups; dependency pins, game patches, source sets and failure gates remain active. Do not commit the generated JAR or describe this as stock-toolchain validation. On this host full `build` also could not provision the separate **Java 21 toolchain requested by `downloadAssets`**; main compilation uses Java 25. A normal environment still needs a full unmodified build and runtime tests.
+
+## Historical public checkpoint (2026-10-10)
 
 - Latest examined `26.1.2` **source** commit: [`659b70ed`](https://github.com/Shnewbs/TFC-Foundations/commit/659b70ed82b0e7fd2ab54914fd37ad20839b53e0). It follows the ported tool-material, recipe, animal/sound, worldgen, model/renderer, registry, and ingredient checkpoints and corrects the tall-grass placement height API.
 - [GitHub validation **38070987803**](https://github.com/Shnewbs/TFC-Foundations/actions/runs/38070987803) **FAILED full compilation**: 1,384 Java diagnostic occurrences, with 1,326 distinct displayed file/line/message entries. Its existing API/standalone inspections and resource-validation steps **PASSED**. These counts are not independent bugs or completion percentages, and later phases can reveal new errors.

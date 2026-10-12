@@ -4,7 +4,7 @@
 **Baseline:** 190 reported Java errors across 96 files. This is a Gradle Problems Report subset, **not** a complete count of compiler diagnostic occurrences or the entire migration backlog.
 
 Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current branch, **not** yet confirmed by a successful fresh Gradle build. `- [ ]` = outstanding. Diagnostics refer to line numbers in the user's older source checkout and may move after patches.
-**Checklist:** 54 source-addressed, 136 still open from these 190 entries. No successful post-fix compilation has been claimed.
+**Checklist:** 75 source-addressed, 115 still open from these 190 entries. Fresh local main javac reports 860 errors overall (957 at starting commit `c920472d`); no full successful compilation is claimed. The count above remains the original report subset.
 
 
 ## Status and release gates
@@ -93,11 +93,11 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [x] ~~Line 20~~ — source-addressed (`efc0830`); pending clean-build verification
 
 **`src/main/java/net/dries007/tfc/client/extensions/FluidRendererExtension.java`**
-- [ ] Line 32 — reported Java compilation error
-- [ ] Line 38 — reported Java compilation error
-- [ ] Line 44 — reported Java compilation error
-- [ ] Line 50 — reported Java compilation error
-- [ ] Line 56 — reported Java compilation error
+- [x] ~~Line 32~~ — 2026-10-12 native rendering/guide migration; no file diagnostics in fresh main javac pass, full build still fails
+- [x] ~~Line 38~~ — 2026-10-12 native rendering/guide migration; no file diagnostics in fresh main javac pass, full build still fails
+- [x] ~~Line 44~~ — 2026-10-12 native rendering/guide migration; no file diagnostics in fresh main javac pass, full build still fails
+- [x] ~~Line 50~~ — 2026-10-12 native rendering/guide migration; no file diagnostics in fresh main javac pass, full build still fails
+- [x] ~~Line 56~~ — 2026-10-12 native rendering/guide migration; no file diagnostics in fresh main javac pass, full build still fails
 
 **`src/main/java/net/dries007/tfc/client/extensions/ItemRendererExtension.java`**
 - [ ] Line 21 — reported Java compilation error
@@ -124,20 +124,20 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [ ] Line 48 — reported Java compilation error
 
 **`src/main/java/net/dries007/tfc/client/model/entity/AnemometerModel.java`**
-- [ ] Line 51 — reported Java compilation error
-- [ ] Line 58 — reported Java compilation error
+- [x] ~~Line 51~~ — 2026-10-12 native rendering/guide migration; no file diagnostics in fresh main javac pass, full build still fails
+- [x] ~~Line 58~~ — 2026-10-12 native rendering/guide migration; no file diagnostics in fresh main javac pass, full build still fails
 
 **`src/main/java/net/dries007/tfc/client/model/entity/CalendarClockModel.java`**
-- [ ] Line 33 — reported Java compilation error
-- [ ] Line 66 — reported Java compilation error
+- [x] ~~Line 33~~ — 2026-10-12 native rendering/guide migration; no file diagnostics in fresh main javac pass, full build still fails
+- [x] ~~Line 66~~ — 2026-10-12 native rendering/guide migration; no file diagnostics in fresh main javac pass, full build still fails
 
 **`src/main/java/net/dries007/tfc/client/model/entity/JavelinModel.java`**
-- [ ] Line 44 — reported Java compilation error
-- [ ] Line 49 — reported Java compilation error
+- [x] ~~Line 44~~ — 2026-10-12 native rendering/guide migration; no file diagnostics in fresh main javac pass, full build still fails
+- [x] ~~Line 49~~ — 2026-10-12 native rendering/guide migration; no file diagnostics in fresh main javac pass, full build still fails
 
 **`src/main/java/net/dries007/tfc/client/model/entity/VaneModel.java`**
-- [ ] Line 27 — reported Java compilation error
-- [ ] Line 60 — reported Java compilation error
+- [x] ~~Line 27~~ — 2026-10-12 native rendering/guide migration; no file diagnostics in fresh main javac pass, full build still fails
+- [x] ~~Line 60~~ — 2026-10-12 native rendering/guide migration; no file diagnostics in fresh main javac pass, full build still fails
 
 **`src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java`**
 - [ ] Line 81 — reported Java compilation error
@@ -148,7 +148,7 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [ ] Line 443 — reported Java compilation error
 
 **`src/main/java/net/dries007/tfc/client/render/blockentity/AnemometerBlockEntityRenderer.java`**
-- [ ] Line 22 — reported Java compilation error
+- [x] ~~Line 22~~ — 2026-10-12 native rendering/guide migration; no file diagnostics in fresh main javac pass, full build still fails
 
 **`src/main/java/net/dries007/tfc/client/render/blockentity/AnvilBlockEntityRenderer.java`**
 - [ ] Line 23 — reported Java compilation error
@@ -163,7 +163,7 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [ ] Line 24 — reported Java compilation error
 
 **`src/main/java/net/dries007/tfc/client/render/blockentity/CalendarClockBlockEntityRenderer.java`**
-- [ ] Line 26 — reported Java compilation error
+- [x] ~~Line 26~~ — 2026-10-12 native rendering/guide migration; no file diagnostics in fresh main javac pass, full build still fails
 
 **`src/main/java/net/dries007/tfc/client/render/blockentity/ChannelBlockEntityRenderer.java`**
 - [ ] Line 26 — reported Java compilation error
@@ -340,22 +340,22 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [ ] Line 32 — reported Java compilation error
 
 **`src/main/java/net/dries007/tfc/compat/patchouli/component/AnvilComponent.java`**
-- [ ] Line 16 — reported Java compilation error
+- [x] ~~Line 16~~ — 2026-10-12 native rendering/guide migration; no file diagnostics in fresh main javac pass, full build still fails
 
 **`src/main/java/net/dries007/tfc/compat/patchouli/component/GlassworkingComponent.java`**
-- [ ] Line 23 — reported Java compilation error
+- [x] ~~Line 23~~ — 2026-10-12 native rendering/guide migration; no file diagnostics in fresh main javac pass, full build still fails
 
 **`src/main/java/net/dries007/tfc/compat/patchouli/component/HeatingComponent.java`**
-- [ ] Line 23 — reported Java compilation error
+- [x] ~~Line 23~~ — 2026-10-12 native rendering/guide migration; no file diagnostics in fresh main javac pass, full build still fails
 
 **`src/main/java/net/dries007/tfc/compat/patchouli/component/InstantBarrelComponent.java`**
-- [ ] Line 14 — reported Java compilation error
+- [x] ~~Line 14~~ — 2026-10-12 native rendering/guide migration; no file diagnostics in fresh main javac pass, full build still fails
 
 **`src/main/java/net/dries007/tfc/compat/patchouli/component/KnappingComponent.java`**
-- [ ] Line 24 — reported Java compilation error
+- [x] ~~Line 24~~ — 2026-10-12 native rendering/guide migration; no file diagnostics in fresh main javac pass, full build still fails
 
 **`src/main/java/net/dries007/tfc/compat/patchouli/component/LoomComponent.java`**
-- [ ] Line 20 — reported Java compilation error
+- [x] ~~Line 20~~ — 2026-10-12 native rendering/guide migration; no file diagnostics in fresh main javac pass, full build still fails
 
 ### Mixins
 

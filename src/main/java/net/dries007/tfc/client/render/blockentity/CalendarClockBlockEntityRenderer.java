@@ -6,24 +6,29 @@
 
 package net.dries007.tfc.client.render.blockentity;
 
-import com.mojang.math.Axis;
-import net.dries007.tfc.common.blocks.devices.CalendarClockBlock;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.rendertype.RenderType;
+import com.mojang.math.Axis;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.client.model.entity.CalendarClockModel;
 import net.dries007.tfc.common.blockentities.CalendarClockBlockEntity;
 import net.dries007.tfc.common.blocks.TFCBlockStateProperties;
+import net.dries007.tfc.common.blocks.devices.CalendarClockBlock;
 import net.dries007.tfc.util.Helpers;
 
-public class CalendarClockBlockEntityRenderer implements BlockEntityRenderer<CalendarClockBlockEntity>
+public class CalendarClockBlockEntityRenderer implements BlockEntityRenderer<CalendarClockBlockEntity, CalendarClockBlockEntityRenderer.RenderState>
 {
     public static final Identifier TEXTURE = Helpers.identifier("textures/entity/calendar_clock.png");
     public static final Identifier TEXTURE_MONTH = Helpers.identifier("textures/entity/calendar_clock_month.png");
@@ -36,9 +41,27 @@ public class CalendarClockBlockEntityRenderer implements BlockEntityRenderer<Cal
     }
 
     @Override
-    public void render(CalendarClockBlockEntity clock, float partialTick, PoseStack stack, MultiBufferSource buffer, int packedLight, int packedOverlay)
+    public RenderState createRenderState()
     {
-        if (clock.getLevel() == null)
+        return new RenderState();
+    }
+
+    @Override
+    public void extractRenderState(CalendarClockBlockEntity clock, RenderState state, float partialTick,
+        Vec3 cameraPosition, @Nullable ModelFeatureRenderer.CrumblingOverlay breakProgress)
+    {
+        BlockEntityRenderer.super.extractRenderState(clock, state, partialTick, cameraPosition, breakProgress);
+        state.hasLevel = clock.getLevel() != null;
+        final float[] angles = clock.getAngles();
+        state.modelState = new CalendarClockModel.State(angles[0], angles[1], angles[2]);
+        state.facing = clock.getBlockState().getValue(BlockStateProperties.FACING);
+        state.monthMode = clock.getBlockState().getValue(TFCBlockStateProperties.CLOCK_MODE) == CalendarClockBlock.Mode.MONTH;
+    }
+
+    @Override
+    public void submit(RenderState state, PoseStack stack, SubmitNodeCollector collector, CameraRenderState camera)
+    {
+        if (!state.hasLevel)
         {
             return;
         }
@@ -49,7 +72,7 @@ public class CalendarClockBlockEntityRenderer implements BlockEntityRenderer<Cal
         stack.translate(0, 1.0625f + 0.4375f, 0);
         stack.scale(-1, -1, 1);
 
-        switch (clock.getBlockState().getValue(BlockStateProperties.FACING))
+        switch (state.facing)
         {
             case NORTH ->
             {
@@ -81,18 +104,17 @@ public class CalendarClockBlockEntityRenderer implements BlockEntityRenderer<Cal
             }
         }
 
-        model.setupAnim(clock, partialTick);
-        //Leaving the rendering side to Aleki
-        CalendarClockBlock.Mode mode = clock.getBlockState().getValue(TFCBlockStateProperties.CLOCK_MODE);
-        if (mode.equals(CalendarClockBlock.Mode.MONTH))
-        {
-            model.renderToBuffer(stack, buffer.getBuffer(RenderType.entityCutoutNoCull(TEXTURE_MONTH)), packedLight, packedOverlay, -1);
-        }
-        else
-        {
-            model.renderToBuffer(stack, buffer.getBuffer(RenderType.entityCutoutNoCull(TEXTURE)), packedLight, packedOverlay, -1);
-        }
+        collector.submitModel(model, state.modelState, stack, state.monthMode ? TEXTURE_MONTH : TEXTURE,
+            state.lightCoords, OverlayTexture.NO_OVERLAY, 0, state.breakProgress);
 
         stack.popPose();
+    }
+
+    public static class RenderState extends BlockEntityRenderState
+    {
+        public boolean hasLevel;
+        public CalendarClockModel.State modelState = new CalendarClockModel.State(0, 0, 0);
+        public Direction facing = Direction.UP;
+        public boolean monthMode;
     }
 }

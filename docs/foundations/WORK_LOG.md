@@ -1,5 +1,43 @@
 # TFC Foundations — Work Log
 
+## 2026-10-12 — Local native renderer/guide/fluid checkpoint
+
+Starting branch HEAD: `c920472da99c7c039f68aaa3b82114824e1a74fa`, existing public `26.1.2`. Resolved the actual TFC-patched Minecraft 26.1.2 / NeoForge 26.1.2.114 artifacts and pinned Patchouli 26.1-94 / JEI 29.43.0.107, using JDK 25 and Gradle 9.2.1. No new branch or Actions run was requested. The older CI diagnostic count is not used as this patch's baseline.
+
+### Changes and preservation
+
+Three instrument models carry immutable pose records; their block-entity renderers read world state during extraction and submit native model work with light/breaking overlay data. Vane visibility resets per pose. Calendar orientation/month texture, instrument offsets, all original geometry factory bodies and texture IDs are retained. Javelin geometry uses native `Model.Simple`; projectile orientation/material/foil are copied into its render state. Held-item javelins remain an independent unfinished renderer.
+
+Patchouli custom components implement current extraction and matrix APIs, explicit GUI texture pipelines, modern text codecs, item/fluid holder ingredients and synchronized recipe lookup. The multiblock wrapper calls Patchouli's extraction method. Empty knapping ingredient lists no longer cause modulo-by-zero. Page layout, tooltips and actual multiblock rendering need live validation; Patchouli event/font integration has separate unresolved errors.
+
+New `FluidModelRegistration` shares appearance definitions with underwater extensions, registers every existing source/flowing holder pair, and separately registers river water with vanilla water tint. `FluidRendererExtension` implements the native fluid tint interface. Salt-water climate tint and all existing texture/overlay identifiers remain; RGB dye colors receive explicit opaque alpha. `RenderHelpers` and guide fluid draws use the model set's material/tint. Thirst/exhaustion adopt the server-level callback parameter without changing their effect bodies.
+
+### Reproducible local checks
+
+The container's NeoForm Runtime failed at two `ProcessHandle.Info.command().orElseThrow()` expressions before compiling TFC. `tools/porting/prepare_neoform_java_fallback.py` creates a separate opt-in local runtime JAR from matching official 2.0.31 binary/source JARs. It requires exactly one replacement in each named class and uses `java.home/bin/java` only if process metadata is absent. It does not overwrite dependency caches, substitute game classes, change dependencies/access transformers, exclude sources or suppress build failures. The normal unmodified toolchain remains the release reference. Full target artifact recompilation then completed.
+
+Commands after resolving the exact classpath (`JAVA_HOME` set to JDK 25):
+
+```sh
+./gradlew -I /path/to/local/neoform-java-fallback.gradle -I tools/porting/diagnostics.gradle writePortClasspath --no-daemon --no-configuration-cache --console=plain
+python tools/porting/compile_main_diagnostics.py
+python tools/porting/run_instrument_model_smoke.py
+./gradlew -I /path/to/local/neoform-java-fallback.gradle -I tools/porting/diagnostics.gradle build --continue --no-daemon --no-configuration-cache --console=plain
+```
+
+Baseline diagnostic compilation used the untouched starting main sources, the same resolved TFC-patched classpath and the runner's javac flags (`--release 25 -parameters -proc:none -Xmaxerrs 10000`). Baseline: 1,657 sources, 957 errors, exit 1, no timeout. Final: 1,658 sources, **860 errors**, exit 1, no timeout. These are displayed compiler diagnostics, including cascades; they do not count independent defects or prove runtime correctness. The new source is fluid model registration.
+
+`run_instrument_model_smoke.py` PASS: three instrument models across 25 pose/visibility scenarios and the javelin model. It compares native root versus previous per-part CPU rendering positions, UVs, normals and vertex multiplicity, including successive vane base toggles. Original `createBodyLayer()` bodies match the starting commit byte-for-byte. The suite is included in `inspect_api.py`; the complete older suite was not rerun for this checkpoint. No replacement Minecraft classes or platform stubs are used by the new test. This is not a GPU or live extraction test.
+
+Machine-readable evidence includes source hashes, unchanged geometry hashes, baseline/final modes and the remaining error counts by file: [2026-10-12-render-guide.json](validation/2026-10-12-render-guide.json). The original user-report checklist advances 21 entries to 75 source-addressed / 115 open, without claiming full compilation.
+
+Full `build --continue` exited 1. Main javac emitted **860 errors**; all three license tasks passed, resource processing was up-to-date and dependency verification ran. `downloadAssets` also failed while provisioning its separate Java 21 toolchain and the temporary disk filled, truncating the final Gradle failure report. An earlier full-build attempt had reached main compilation too but failed to provision Java 21 before these final fluid changes. Only this task's failed download/extraction and temporary problem-report files were removed. The follow-up command is `compileJava checkLicenseMain checkLicenseTest checkLicenseData --continue`, with the same optional local NeoForm init and ordinary failure semantics. That follow-up completes in 49 seconds, exits 1 with 860 compiler errors and passes all three license tasks; its failure report is complete. No build failure is converted to success.
+
+### Remaining gates
+
+No runnable mod JAR, client/server startup, registered resource reload, guide appearance, new-world/save/reload or survival gameplay was verified. The largest remaining diagnostic groups are client registration, world rendering, contained-fluid and trimmed-item models, and overlays. Other block/entity/item renderers, guide event/font code, JEI and common APIs remain. Version `0.0.0`, full gameplay, EUPL notices and branch/dependency policy are unchanged; 26.3 on `26.x` requires separate work.
+
+
 The preceding complete log is retained byte-for-byte in [WORK_LOG_BEFORE_SNAPSHOT_BLOCK_MODELS](history/WORK_LOG_BEFORE_SNAPSHOT_BLOCK_MODELS.md), linking to the seasonal, mechanical, livestock, model, entity, save and common-API checkpoints. Earlier validation limits remain unchanged.
 
 ## 2026-10-09 — Immutable pile, scraping and mold-table models

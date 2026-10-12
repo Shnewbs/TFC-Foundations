@@ -6,8 +6,6 @@
 
 package net.dries007.tfc.client.model.entity;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -16,14 +14,10 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
-import net.dries007.tfc.common.blockentities.AnemometerBlockEntity;
-
-public class AnemometerModel extends Model
+public class AnemometerModel extends Model<AnemometerModel.State>
 {
-    private final ModelPart post;
-    private final ModelPart base;
     private final ModelPart spinny;
 
     public static LayerDefinition createBodyLayer() {
@@ -48,22 +42,18 @@ public class AnemometerModel extends Model
     }
 
     public AnemometerModel(ModelPart root) {
-        super(RenderType::entityCutoutNoCull);
-        this.post = root.getChild("post");
-        this.base = root.getChild("base");
+        super(root, RenderTypes::entityCutout);
         this.spinny = root.getChild("spinny");
     }
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color)
+    public void setupAnim(State state)
     {
-        post.render(poseStack, buffer, packedLight, packedOverlay, color);
-        base.render(poseStack, buffer, packedLight, packedOverlay, color);
-        spinny.render(poseStack, buffer, packedLight, packedOverlay, color);
+        super.setupAnim(state);
+        spinny.yRot = state.angle();
     }
 
-    public void setupAnim(AnemometerBlockEntity anemometer, float partialTick)
+    public record State(float angle)
     {
-        spinny.yRot = anemometer.getAngle(partialTick);
     }
 }

@@ -6,8 +6,6 @@
 
 package net.dries007.tfc.client.model.entity;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -16,9 +14,9 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
-public class JavelinModel extends Model
+public class JavelinModel extends Model.Simple
 {
     public static LayerDefinition createBodyLayer()
     {
@@ -37,17 +35,8 @@ public class JavelinModel extends Model
         return LayerDefinition.create(meshdefinition, 128, 128);
     }
 
-    private final ModelPart root;
-
     public JavelinModel(ModelPart root)
     {
-        super(RenderType::entitySolid);
-        this.root = root;
-    }
-
-    @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color)
-    {
-        this.root.render(poseStack, buffer, packedLight, packedOverlay, color);
+        super(root, RenderTypes::entitySolid);
     }
 }

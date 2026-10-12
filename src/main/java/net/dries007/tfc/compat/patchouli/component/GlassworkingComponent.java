@@ -8,7 +8,7 @@ package net.dries007.tfc.compat.patchouli.component;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
@@ -24,9 +24,9 @@ import net.dries007.tfc.common.recipes.TFCRecipeTypes;
 public class GlassworkingComponent extends InputOutputComponent<GlassworkingRecipe>
 {
     @Override
-    public void render(GuiGraphics graphics, IComponentRenderContext context, float partialTicks, int mouseX, int mouseY)
+    public void extractRenderState(GuiGraphicsExtractor graphics, IComponentRenderContext context, float partialTicks, int mouseX, int mouseY)
     {
-        super.render(graphics, context, partialTicks, mouseX, mouseY);
+        super.extractRenderState(graphics, context, partialTicks, mouseX, mouseY);
 
         if (recipe == null) return;
 
@@ -35,7 +35,7 @@ public class GlassworkingComponent extends InputOutputComponent<GlassworkingReci
         for (GlassOperation operation : recipe.operations())
         {
             final Component text = Component.literal((idx + 1) + ". ").append(Component.translatable(operation.getTranslationId())).withStyle(Style.EMPTY.withFont(new FontDescription.Resource(Minecraft.UNIFORM_FONT)));
-            graphics.drawString(font, text, 14, 30 + (idx * 9), 0x404040, false);
+            graphics.text(font, text, 14, 30 + (idx * 9), 0xFF404040, false);
             idx++;
         }
     }

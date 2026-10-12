@@ -6,9 +6,8 @@
 
 package net.dries007.tfc.compat.patchouli.component;
 
-import java.util.Arrays;
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -23,9 +22,9 @@ import net.dries007.tfc.util.data.KnappingPattern;
 
 public class KnappingComponent extends RecipeComponent<KnappingRecipe>
 {
-    public static void render(GuiGraphics graphics, IComponentRenderContext context, int mouseX, int mouseY, KnappingRecipe recipe, ItemStack resultStack, @Nullable Identifier highTexture, @Nullable Identifier lowTexture, int x0, int y0)
+    public static void render(GuiGraphicsExtractor graphics, IComponentRenderContext context, int mouseX, int mouseY, KnappingRecipe recipe, ItemStack resultStack, @Nullable Identifier highTexture, @Nullable Identifier lowTexture, int x0, int y0)
     {
-        graphics.blit(PatchouliIntegration.TEXTURE, x0, y0, 0, 0, 116, 90, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, PatchouliIntegration.TEXTURE, x0, y0, 0, 0, 116, 90, 256, 256);
 
         final KnappingPattern pattern = recipe.getPattern();
 
@@ -53,12 +52,11 @@ public class KnappingComponent extends RecipeComponent<KnappingRecipe>
         context.renderItemStack(graphics, 95, 37, mouseX, mouseY, resultStack);
     }
 
-    private static void drawSquare(GuiGraphics graphics, @Nullable Identifier texture, int x0, int y0, int x, int y)
+    private static void drawSquare(GuiGraphicsExtractor graphics, @Nullable Identifier texture, int x0, int y0, int x, int y)
     {
         if (texture != null)
         {
-            RenderSystem.setShaderTexture(0, texture);
-            graphics.blit(texture, x0 + 5 + x * 16, y0 + 5 + y * 16, 0, 0, 16, 16, 16, 16);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, texture, x0 + 5 + x * 16, y0 + 5 + y * 16, 0, 0, 16, 16, 16, 16);
         }
     }
 
@@ -71,7 +69,7 @@ public class KnappingComponent extends RecipeComponent<KnappingRecipe>
 
         if (recipe != null)
         {
-            inputs = Arrays.stream(recipe.knappingType().get().inputItem().ingredient().getItems())
+            inputs = recipe.knappingType().get().inputItem().ingredient().items().map(ItemStack::new)
                 .filter(stack -> recipe.matchesItem(stack))
                 .toArray(ItemStack[]::new);
         }
@@ -84,9 +82,9 @@ public class KnappingComponent extends RecipeComponent<KnappingRecipe>
     }
 
     @Override
-    public void render(GuiGraphics graphics, IComponentRenderContext context, float partialTicks, int mouseX, int mouseY)
+    public void extractRenderState(GuiGraphicsExtractor graphics, IComponentRenderContext context, float partialTicks, int mouseX, int mouseY)
     {
-        if (recipe == null || inputs == null) return;
+        if (recipe == null || inputs == null || inputs.length == 0) return;
 
         final ItemStack input = inputs[(context.getTicksInBook() / 20) % inputs.length];
         final Identifier highTexture = KnappingScreen.getHighTexture(input);
@@ -95,6 +93,6 @@ public class KnappingComponent extends RecipeComponent<KnappingRecipe>
 
         renderSetup(graphics);
         render(graphics, context, mouseX, mouseY, recipe, resultStack, highTexture, lowTexture, x, y);
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
     }
 }

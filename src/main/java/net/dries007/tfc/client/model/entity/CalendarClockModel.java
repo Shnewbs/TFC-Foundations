@@ -6,8 +6,6 @@
 
 package net.dries007.tfc.client.model.entity;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -16,22 +14,18 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.util.Mth;
 
-import net.dries007.tfc.common.blockentities.CalendarClockBlockEntity;
-
-public class CalendarClockModel extends Model
+public class CalendarClockModel extends Model<CalendarClockModel.State>
 {
-    private final ModelPart static_parts;
     private final ModelPart month_hand;
     private final ModelPart hour_hand;
     private final ModelPart minute_hand;
 
     public CalendarClockModel(ModelPart root)
     {
-        super(RenderType::entityCutoutNoCull);
-        this.static_parts = root.getChild("static_parts");
+        super(root, RenderTypes::entityCutout);
         this.month_hand = root.getChild("month_hand");
         this.hour_hand = root.getChild("hour_hand");
         this.minute_hand = root.getChild("minute_hand");
@@ -55,19 +49,16 @@ public class CalendarClockModel extends Model
     }
 
 
-    public void setupAnim(CalendarClockBlockEntity clock, float partialTick)
+    @Override
+    public void setupAnim(State state)
     {
-        minute_hand.yRot = clock.getAngles()[0] + Mth.PI;
-        hour_hand.yRot = clock.getAngles()[1] + Mth.PI;
-        month_hand.yRot = clock.getAngles()[2] + Mth.PI;
+        super.setupAnim(state);
+        minute_hand.yRot = state.minuteAngle() + Mth.PI;
+        hour_hand.yRot = state.hourAngle() + Mth.PI;
+        month_hand.yRot = state.monthAngle() + Mth.PI;
     }
 
-    @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color)
+    public record State(float minuteAngle, float hourAngle, float monthAngle)
     {
-        static_parts.render(poseStack, buffer, packedLight, packedOverlay, color);
-        hour_hand.render(poseStack, buffer, packedLight, packedOverlay, color);
-        minute_hand.render(poseStack, buffer, packedLight, packedOverlay, color);
-        month_hand.render(poseStack, buffer, packedLight, packedOverlay, color);
     }
 }

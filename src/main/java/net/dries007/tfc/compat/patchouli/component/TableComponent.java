@@ -16,7 +16,8 @@ import com.google.gson.annotations.SerializedName;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
@@ -84,7 +85,7 @@ public class TableComponent extends CustomComponent
 
         try
         {
-            title = Component.Serializer.fromJson(titleString, provider);
+            title = asTextComponent(titleString).orElse(null);
 
             for (JsonElement element : jsonStrings.getAsJsonArray())
             {
@@ -123,7 +124,7 @@ public class TableComponent extends CustomComponent
     }
 
     @Override
-    public void render(GuiGraphics graphics, IComponentRenderContext context, float partialTicks, int mouseX, int mouseY)
+    public void extractRenderState(GuiGraphicsExtractor graphics, IComponentRenderContext context, float partialTicks, int mouseX, int mouseY)
     {
         if (entries != null && !entries.isEmpty())
         {
@@ -140,7 +141,7 @@ public class TableComponent extends CustomComponent
 
             // Draw over the central book-binding graphic with a small bit of texture
             // (0, 0) is at (15, 18) on the patchouli base book texture
-            graphics.blit(PatchouliIntegration.TEXTURE, 86, -8, 186, 0, 70, 162);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, PatchouliIntegration.TEXTURE, 86, -8, 186, 0, 70, 162, 256, 256);
 
             if (drawBackground)
             {
@@ -148,7 +149,7 @@ public class TableComponent extends CustomComponent
             }
             if (title != null)
             {
-                graphics.drawString(font, title, 122 - (font.width(title) / 2), 2, 0, false);
+                graphics.text(font, title, 122 - (font.width(title) / 2), 2, 0xFF000000, false);
             }
 
             int index = 0;
@@ -158,8 +159,8 @@ public class TableComponent extends CustomComponent
                 if (entry.text != null)
                 {
                     if (!drawBackground)
-                        graphics.renderOutline(xo, yo, width + 1, rowHeight + 1, 0xff343330);
-                    graphics.drawString(font, entry.text, xo + 2, yo, entry.color, false);
+                        graphics.outline(xo, yo, width + 1, rowHeight + 1, 0xff343330);
+                    graphics.text(font, entry.text, xo + 2, yo, entry.color | 0xFF000000, false);
                 }
                 else
                 {
@@ -183,17 +184,17 @@ public class TableComponent extends CustomComponent
             {
                 final int legendX = 130;
                 int legendY = totalHeight + 14 + 2;
-                graphics.drawString(font, Component.translatable("tfc.tooltip.legend").withStyle(Style.EMPTY.withFont(new FontDescription.Resource(Minecraft.UNIFORM_FONT)).withBold(true)), legendX, legendY, 0,  false);
+                graphics.text(font, Component.translatable("tfc.tooltip.legend").withStyle(Style.EMPTY.withFont(new FontDescription.Resource(Minecraft.UNIFORM_FONT)).withBold(true)), legendX, legendY, 0xFF000000, false);
                 legendY += 9;
                 for (TableEntry entry : legend)
                 {
                     graphics.fill(legendX + 1, legendY + 1, legendX + 10, legendY + 8, entry.color);
-                    if (entry.text != null) graphics.drawString(font, entry.text, legendX + 12, legendY, 0,  false);
+                    if (entry.text != null) graphics.text(font, entry.text, legendX + 12, legendY, 0xFF000000, false);
                     legendY += 9;
                 }
             }
 
-            graphics.pose().popPose();
+            graphics.pose().popMatrix();
         }
     }
 

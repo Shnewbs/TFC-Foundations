@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.common.effect;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,7 +22,7 @@ public class ThirstEffect extends MobEffect
     }
 
     @Override
-    public boolean applyEffectTick(LivingEntity entity, int amplitude)
+    public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplitude)
     {
         if (entity instanceof Player player)
         {

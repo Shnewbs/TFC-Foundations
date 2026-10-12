@@ -6,8 +6,6 @@
 
 package net.dries007.tfc.client.model.entity;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -16,17 +14,14 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
-import net.dries007.tfc.common.blockentities.VaneBlockEntity;
-
-public class VaneModel extends Model
+public class VaneModel extends Model<VaneModel.State>
 {
     public VaneModel(ModelPart root)
     {
-        super(RenderType::entityCutoutNoCull);
+        super(root, RenderTypes::entityCutout);
         this.base = root.getChild("base");
-        this.static_parts = root.getChild("static");
         this.spinny = root.getChild("spinny");
     }
 
@@ -53,23 +48,17 @@ public class VaneModel extends Model
     }
 
     private final ModelPart base;
-    private final ModelPart static_parts;
     private final ModelPart spinny;
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color)
+    public void setupAnim(State state)
     {
-        static_parts.render(poseStack, buffer, packedLight, packedOverlay, color);
-        spinny.render(poseStack, buffer, packedLight, packedOverlay, color);
+        super.setupAnim(state);
+        base.visible = state.showBase();
+        spinny.yRot = (float) (state.angle() + Math.PI / 2);
     }
 
-    public void renderBase(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color)
+    public record State(float angle, boolean showBase)
     {
-        base.render(poseStack, buffer, packedLight, packedOverlay, color);
-    }
-
-    public void setupAnim(VaneBlockEntity vane, float partialTick)
-    {
-        spinny.yRot = (float) (vane.getAngle(partialTick) + Math.PI / 2);
     }
 }

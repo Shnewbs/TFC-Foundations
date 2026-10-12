@@ -1,5 +1,22 @@
 # TFC Foundations — Current Project Status
 
+## 2026-10-12 — Instrument, projectile, guide and fluid rendering checkpoint
+
+Continued existing `26.1.2` from `c920472da99c7c039f68aaa3b82114824e1a74fa` using the pinned Java 25 / Minecraft 26.1.2 / NeoForge 26.1.2.114 classpath. A fresh same-mode diagnostic main compilation fell from **957 to 860 errors** (97 fewer displayed diagnostics, not independent bugs or a completion percentage). The final pass covers 1,658 sources, exits 1, and does not time out. The original 190-entry checklist now has **75 source-addressed / 115 open**; it is only a historical report subset.
+
+- Anemometer, calendar clock and vane rendering now extract immutable model values and submit through the native renderer. Calendar facing/month texture, vane attachment offset/base visibility and all four instrument/javelin geometry factories are preserved.
+- Thrown javelins use native render-state extraction, material textures and a separate foil submission. The held-item javelin renderer remains unfinished.
+- Patchouli custom components use `GuiGraphicsExtractor`, explicit textures/tints, current ingredient holders and TFC's synchronized client recipe map. Knapping pages guard empty matching inputs. Other guide integration errors and actual book appearance still need work.
+- Fluid appearance is registered through `RegisterFluidModelsEvent` for source/flowing pairs and river water. Existing underwater overlays and climate-dependent salt-water tint are retained. Dye fluids explicitly gain opaque alpha; fluid GUI helpers now resolve native models.
+- Thirst/exhaustion tick callbacks accept the new `ServerLevel` argument; their effect logic is unchanged.
+
+**Validation:** instrument model probes PASS (25 pose/visibility scenarios plus javelin geometry, against real target libraries); all four geometry factory bodies match the starting commit. Main javac has no diagnostics in the migrated models/renderers, custom guide component package, fluid extension/registration, or effect classes. `ClientEventHandler` and `RenderHelpers` still have unrelated errors. Full Gradle `build --continue` FAILS: main compilation emits 860 errors, while `downloadAssets` also fails during separate Java 21 provisioning/disk exhaustion. Main/data/test license tasks PASS. The subsequent compile/license-only run completes in 49 seconds with the same 860 compiler errors and all three license tasks passing. No successful package or runtime test is claimed.
+
+**Environment qualification:** stock NeoForm Runtime 2.0.31 could not obtain its Java executable from `ProcessHandle.Info.command()` in this container. An explicitly opt-in local helper supplies `java.home/bin/java` at those two tool call sites; target pins, game patches, source sets and build gates stay unchanged. This enables compilation evidence but is not a stock-toolchain release validation. See [continuation instructions](docs/foundations/CONTINUE_BUILDING.md) and [machine-readable evidence](docs/foundations/validation/2026-10-12-render-guide.json).
+
+**Still incomplete:** full main/data/test build, item/contained-fluid models, client event and world rendering APIs, remaining guide/JEI/capability APIs, resource reload, client/server startup, world/save/survival tests. Version stays `0.0.0`. No gameplay system was disabled, dependency pin changed, or `26.x` migration attempted. Publication uses `[skip ci]` while Actions quota is suspended.
+
+
 ## 2026-10-12 — Deferred block loot-table API migration (source only)
 
 On existing `26.1.2`, `ExtendedProperties.dropsLike(Supplier<Block>)` now uses the supplier's `IdHolder.getId()` to construct the same default `<namespace>:blocks/<path>` loot-table key via `Properties.overrideLootTable(Optional<ResourceKey<LootTable>>)`. This replaces removed `Properties.lootFrom(Supplier)` without calling `Supplier.get()` during block registration. Audited call sites: standing/wall torch pairs in `TFCBlocks` and standing/wall wood signs in `Wood`; their suppliers resolve to `TFCBlocks.Id` registry holders. Suppliers without IDs now fail explicitly rather than forcing unsafe early block construction. Full block drops, registrations, resource data and game runtime remain untested. EUPL license and all block/loot identifiers are unchanged.

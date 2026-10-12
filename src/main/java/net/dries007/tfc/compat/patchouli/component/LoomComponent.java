@@ -8,7 +8,8 @@ package net.dries007.tfc.compat.patchouli.component;
 
 import java.util.Collections;
 import java.util.List;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import vazkii.patchouli.api.IComponentRenderContext;
@@ -22,18 +23,18 @@ public class LoomComponent extends RecipeComponent<LoomRecipe>
     private transient List<ItemStack> inputItems = Collections.emptyList();
 
     @Override
-    public void render(GuiGraphics graphics, IComponentRenderContext context, float partialTicks, int mouseX, int mouseY)
+    public void extractRenderState(GuiGraphicsExtractor graphics, IComponentRenderContext context, float partialTicks, int mouseX, int mouseY)
     {
         if (recipe == null) return;
 
         renderSetup(graphics);
 
-        graphics.blit(PatchouliIntegration.TEXTURE, 9, 0, 0, 90, 98, 26, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, PatchouliIntegration.TEXTURE, 9, 0, 0, 90, 98, 26, 256, 256);
 
         renderItemStacks(context, graphics, 14, 5, mouseX, mouseY, inputItems);
         context.renderItemStack(graphics, 86, 5, mouseX, mouseY, recipe.getResultItem(null));
 
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
     }
 
     @Override

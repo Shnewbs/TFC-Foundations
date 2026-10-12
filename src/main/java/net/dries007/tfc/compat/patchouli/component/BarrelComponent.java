@@ -8,7 +8,8 @@ package net.dries007.tfc.compat.patchouli.component;
 
 import java.util.Collections;
 import java.util.List;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 import vazkii.patchouli.api.IComponentRenderContext;
@@ -22,13 +23,13 @@ public abstract class BarrelComponent<T extends BarrelRecipe> extends RecipeComp
     protected transient List<FluidStack> inputFluids = Collections.emptyList();
 
     @Override
-    public void render(GuiGraphics graphics, IComponentRenderContext context, float partialTicks, int mouseX, int mouseY)
+    public void extractRenderState(GuiGraphicsExtractor graphics, IComponentRenderContext context, float partialTicks, int mouseX, int mouseY)
     {
         if (recipe == null) return;
 
         renderSetup(graphics);
 
-        graphics.blit(PatchouliIntegration.TEXTURE, 9, 0, 0, 116, 98, 26, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, PatchouliIntegration.TEXTURE, 9, 0, 0, 116, 98, 26, 256, 256);
 
         renderItemStacks(context, graphics, 14, 5, mouseX, mouseY, inputItems);
         renderFluidStacks(context, graphics, 14 + 28, 5, mouseX, mouseY, inputFluids);
@@ -46,7 +47,7 @@ public abstract class BarrelComponent<T extends BarrelRecipe> extends RecipeComp
 
         renderAdditional(graphics, context, partialTicks, mouseX, mouseY);
 
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
     }
 
     @Override
@@ -60,5 +61,5 @@ public abstract class BarrelComponent<T extends BarrelRecipe> extends RecipeComp
         inputFluids = unpackFluidStackIngredient(recipe.getInputFluid());
     }
 
-    protected void renderAdditional(GuiGraphics poseStack, IComponentRenderContext context, float partialTicks, int mouseX, int mouseY) {}
+    protected void renderAdditional(GuiGraphicsExtractor poseStack, IComponentRenderContext context, float partialTicks, int mouseX, int mouseY) {}
 }

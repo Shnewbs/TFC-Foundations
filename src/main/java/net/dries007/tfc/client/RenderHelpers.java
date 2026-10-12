@@ -58,7 +58,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraft.client.renderer.block.FluidModel;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -549,12 +549,14 @@ public final class RenderHelpers
 
     public static int getFluidColor(FluidStack fluid)
     {
-        return getFluidColor(fluid.getFluid());
+        final var tint = getFluidModel(fluid.getFluid()).fluidTintSource();
+        return tint == null ? -1 : tint.colorAsStack(fluid);
     }
 
     public static int getFluidColor(Fluid fluid)
     {
-        return IClientFluidTypeExtensions.of(fluid).getTintColor();
+        final var tint = getFluidModel(fluid).fluidTintSource();
+        return tint == null ? -1 : tint.color(fluid.defaultFluidState());
     }
 
     public static void renderFluidFace(PoseStack poseStack, FluidStack fluidStack, MultiBufferSource buffer, float minX, float minZ, float maxX, float maxZ, float y, int combinedOverlay, int combinedLight)
@@ -564,8 +566,7 @@ public final class RenderHelpers
 
     public static void renderFluidFace(PoseStack poseStack, FluidStack fluidStack, MultiBufferSource buffers, int color, float minX, float minZ, float maxX, float maxZ, float y, int packedOverlay, int packedLight)
     {
-        final Identifier texture = IClientFluidTypeExtensions.of(fluidStack.getFluid()).getStillTexture(fluidStack);
-        final TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(BLOCKS_ATLAS).getSprite(texture);
+        final TextureAtlasSprite sprite = getFluidSprite(fluidStack);
         final VertexConsumer buffer = buffers.getBuffer(Sheets.translucentBlockSheet());
 
         renderTexturedFace(poseStack.last(), buffer, color, minX, minZ, maxX, maxZ, y, packedOverlay, packedLight, sprite);
@@ -643,10 +644,15 @@ public final class RenderHelpers
         return animal.getAgeType() == Age.OLD ? old : young;
     }
 
+    private static FluidModel getFluidModel(Fluid fluid)
+    {
+        return Minecraft.getInstance().getModelManager().getFluidStateModelSet().get(fluid.defaultFluidState());
+    }
+
     /** Resolves the sprite without changing global render state. Tint is supplied with each GUI draw. */
     public static TextureAtlasSprite getFluidSprite(FluidStack fluid)
     {
-        return blockTexture(IClientFluidTypeExtensions.of(fluid.getFluid()).getStillTexture(fluid));
+        return getFluidModel(fluid.getFluid()).stillMaterial().sprite();
     }
 
     public static void fillAreaWithSprite(GuiGraphicsExtractor graphics, TextureAtlasSprite sprite, int x, int y, int regionWidth, int regionHeight, int spriteWidth, int spriteHeight)

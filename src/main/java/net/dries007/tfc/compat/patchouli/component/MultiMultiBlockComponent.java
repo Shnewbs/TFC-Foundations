@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 import com.google.gson.annotations.SerializedName;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.HolderLookup;
 import org.jetbrains.annotations.Nullable;
 import vazkii.patchouli.api.IComponentRenderContext;
@@ -49,7 +49,7 @@ public class MultiMultiBlockComponent extends CustomComponent
     }
 
     @Override
-    public void render(GuiGraphics graphics, IComponentRenderContext context, float partialTicks, int mouseX, int mouseY)
+    public void extractRenderState(GuiGraphicsExtractor graphics, IComponentRenderContext context, float partialTicks, int mouseX, int mouseY)
     {
         if (renderers != null && !renderers.isEmpty())
         {
