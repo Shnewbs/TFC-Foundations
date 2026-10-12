@@ -71,6 +71,7 @@
     "client.WaterDropParticleMixin",
     "client.WorldSelectionListMixin",
     "client.accessor.BiomeColorsAccessor",
+    "client.accessor.GuiAccessor",
     "client.accessor.LocalPlayerAccessor",
     "client.accessor.SignRendererAccessor",
     "client.compat.patchouli.GuiBookMixin",

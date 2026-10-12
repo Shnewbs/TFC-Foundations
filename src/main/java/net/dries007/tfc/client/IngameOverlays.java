@@ -8,16 +8,16 @@ package net.dries007.tfc.client;
 
 import java.awt.Color;
 import java.util.Locale;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.LayeredDraw;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.contextualbar.LocatorBarRenderer;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
@@ -26,8 +26,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import net.neoforged.neoforge.client.gui.GuiLayer;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3x2fStack;
 
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.effect.TFCEffects;
@@ -40,6 +42,7 @@ import net.dries007.tfc.common.player.PlayerInfo;
 import net.dries007.tfc.config.DisabledExperienceBarStyle;
 import net.dries007.tfc.config.HealthDisplayStyle;
 import net.dries007.tfc.config.TFCConfig;
+import net.dries007.tfc.mixin.client.accessor.GuiAccessor;
 import net.dries007.tfc.util.Helpers;
 
 public enum IngameOverlays
@@ -57,9 +60,9 @@ public enum IngameOverlays
     ;
 
     private final Identifier id;
-    final LayeredDraw.Layer overlay;
+    final GuiLayer overlay;
 
-    IngameOverlays(LayeredDraw.Layer overlay)
+    IngameOverlays(GuiLayer overlay)
     {
         this.id = Helpers.resourceLocation(name().toLowerCase(Locale.ROOT));
         this.overlay = overlay;
@@ -73,9 +76,9 @@ public enum IngameOverlays
     private static final Identifier VANILLA_HEALTH = VanillaGuiLayers.PLAYER_HEALTH;
     private static final Identifier VANILLA_MOUNT_HEALTH = VanillaGuiLayers.VEHICLE_HEALTH;
     private static final Identifier VANILLA_FOOD = VanillaGuiLayers.FOOD_LEVEL;
-    private static final Identifier VANILLA_EXP = VanillaGuiLayers.EXPERIENCE_BAR;
+    private static final Identifier VANILLA_CONTEXT = VanillaGuiLayers.CONTEXTUAL_INFO_BAR;
+    private static final Identifier VANILLA_CONTEXT_BACKGROUND = VanillaGuiLayers.CONTEXTUAL_INFO_BAR_BACKGROUND;
     private static final Identifier VANILLA_EXP_LEVEL = VanillaGuiLayers.EXPERIENCE_LEVEL;
-    private static final Identifier VANILLA_JUMP = VanillaGuiLayers.JUMP_METER;
 
     public static void registerOverlays(RegisterGuiLayersEvent event)
     {
@@ -83,8 +86,8 @@ public enum IngameOverlays
         above(event, VanillaGuiLayers.VEHICLE_HEALTH, MOUNT_HEALTH);
         above(event, VanillaGuiLayers.FOOD_LEVEL, FOOD);
         above(event, VanillaGuiLayers.FOOD_LEVEL, THIRST);
-        above(event, VanillaGuiLayers.EXPERIENCE_BAR, EXPERIENCE);
-        above(event, VanillaGuiLayers.JUMP_METER, JUMP_BAR);
+        above(event, VanillaGuiLayers.CONTEXTUAL_INFO_BAR, EXPERIENCE);
+        above(event, EXPERIENCE.id, JUMP_BAR);
         above(event, VanillaGuiLayers.PLAYER_HEALTH, HUD_MOVER);
         above(event, VanillaGuiLayers.CROSSHAIR, FAMILIARITY);
 
@@ -113,7 +116,12 @@ public enum IngameOverlays
         {
             event.setCanceled(true);
         }
-        if (!TFCConfig.CLIENT.enableExperienceBar.get() && (id.equals(VANILLA_EXP) || id.equals(VANILLA_JUMP) || id.equals(VANILLA_EXP_LEVEL)))
+        // Experience, locator and mount-jump rendering now share these two native layers.
+        // Keep the locator unless a horizontal fishing meter occupies the same space.
+        if ((id.equals(VANILLA_EXP_LEVEL) && !TFCConfig.CLIENT.enableExperienceBar.get())
+            || ((id.equals(VANILLA_CONTEXT) || id.equals(VANILLA_CONTEXT_BACKGROUND))
+                && (usesHorizontalFishingMeter()
+                    || (!TFCConfig.CLIENT.enableExperienceBar.get() && !isLocatorBarActive()))))
         {
             event.setCanceled(true);
         }
@@ -129,7 +137,7 @@ public enum IngameOverlays
         return id.equals(myOverlay) && !config;
     }
 
-    public static void renderHealth(GuiGraphics graphics, DeltaTracker delta)
+    public static void renderHealth(GuiGraphicsExtractor graphics, DeltaTracker delta)
     {
         final Minecraft minecraft = Minecraft.getInstance();
         if (setupForSurvival(graphics, minecraft))
@@ -141,7 +149,7 @@ public enum IngameOverlays
         }
     }
 
-    public static void renderMountHealth(GuiGraphics graphics, DeltaTracker delta)
+    public static void renderMountHealth(GuiGraphicsExtractor graphics, DeltaTracker delta)
     {
         final Minecraft minecraft = Minecraft.getInstance();
         if (setupForSurvival(graphics, minecraft))
@@ -156,10 +164,10 @@ public enum IngameOverlays
         }
     }
 
-    public static void renderFood(GuiGraphics graphics, DeltaTracker delta)
+    public static void renderFood(GuiGraphicsExtractor graphics, DeltaTracker delta)
     {
         final Gui gui = Minecraft.getInstance().gui;
-        final PoseStack stack = graphics.pose();
+        final Matrix3x2fStack stack = graphics.pose();
         final Minecraft minecraft = Minecraft.getInstance();
         if (setupForSurvival(graphics, minecraft))
         {
@@ -170,20 +178,20 @@ public enum IngameOverlays
             int y = graphics.guiHeight() - gui.rightHeight;
             float percentFood = (float) player.getFoodData().getFoodLevel() / PlayerInfo.MAX_HUNGER;
 
-            stack.pushPose();
-            stack.translate(x + 10, y + 4, 0);
-            graphics.blit(TEXTURE, 0, 0, 0, 19, 81, 5);
-            graphics.blit(TEXTURE, 0, 0, 0, 24, (int) (81 * percentFood), 5);
-            stack.popPose();
+            stack.pushMatrix();
+            stack.translate(x + 10, y + 4);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, 0, 0, 0, 19, 81, 5, 256, 256);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, 0, 0, 0, 24, (int) (81 * percentFood), 5, 256, 256);
+            stack.popMatrix();
 
             gui.rightHeight += 6;
         }
     }
 
-    public static void renderThirst(GuiGraphics graphics, DeltaTracker delta)
+    public static void renderThirst(GuiGraphicsExtractor graphics, DeltaTracker delta)
     {
         final Gui gui = Minecraft.getInstance().gui;
-        final PoseStack stack = graphics.pose();
+        final Matrix3x2fStack stack = graphics.pose();
         final Minecraft minecraft = Minecraft.getInstance();
         if (setupForSurvival(graphics, minecraft))
         {
@@ -197,47 +205,46 @@ public enum IngameOverlays
             float percentThirst = info.getThirst() / PlayerInfo.MAX_THIRST;
             float overheat = info.getThirstContributionFromTemperature();
 
-            stack.pushPose();
-            stack.translate(x + 10, y + 4, 0);
-            graphics.blit(TEXTURE, 0, 0, 90, 19, 81, 5);
-            graphics.blit(TEXTURE, 0, 0, 90, 24, (int) (81 * percentThirst), 5);
+            stack.pushMatrix();
+            stack.translate(x + 10, y + 4);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, 0, 0, 90, 19, 81, 5, 256, 256);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, 0, 0, 90, 24, (int) (81 * percentThirst), 5, 256, 256);
             if (overheat > 0)
             {
-                RenderSystem.setShaderColor(1f, 1f, 1f, overheat / PlayerInfo.MAX_TEMPERATURE_THIRST_DECAY);
-                graphics.blit(TEXTURE, 0, 0, 90, 29, 81, 5);
-                RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+                graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, 0, 0, 90, 29, 81, 5, 256, 256,
+                    ARGB.color(Mth.clamp(overheat / PlayerInfo.MAX_TEMPERATURE_THIRST_DECAY, 0F, 1F), 0xFFFFFF));
             }
-            stack.popPose();
+            stack.popMatrix();
 
             gui.rightHeight += 6;
         }
     }
 
-    private static void renderChiselMode(GuiGraphics graphics, DeltaTracker delta)
+    private static void renderChiselMode(GuiGraphicsExtractor graphics, DeltaTracker delta)
     {
-        final PoseStack stack = graphics.pose();
+        final Matrix3x2fStack stack = graphics.pose();
         final Minecraft mc = Minecraft.getInstance();
         if (setup(graphics, mc))
         {
             final Player player = ClientHelpers.getPlayer();
             if (player != null && Helpers.isItem(player.getItemInHand(InteractionHand.MAIN_HAND), TFCTags.Items.TOOLS_CHISEL))
             {
-                stack.pushPose();
+                stack.pushMatrix();
                 if (!Helpers.isItem(player.getItemInHand(InteractionHand.OFF_HAND), TFCTags.Items.TOOLS_HAMMER))
                 {
-                    graphics.blit(TEXTURE, graphics.guiWidth() / 2 + 100, graphics.guiHeight() - 21, 60, 58, 20, 20);
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, graphics.guiWidth() / 2 + 100, graphics.guiHeight() - 21, 60, 58, 20, 20, 256, 256);
                 }
                 else
                 {
                     // Delegate to the chisel mode
-                    IPlayerInfo.get(player).chiselMode().createHotbarIcon((texture, u, v) -> graphics.blit(texture, graphics.guiWidth() / 2 + 100, graphics.guiHeight() - 21, u, v, 20, 20));
+                    IPlayerInfo.get(player).chiselMode().createHotbarIcon((texture, u, v) -> graphics.blit(RenderPipelines.GUI_TEXTURED, texture, graphics.guiWidth() / 2 + 100, graphics.guiHeight() - 21, u, v, 20, 20, 256, 256));
                 }
-                stack.popPose();
+                stack.popMatrix();
             }
         }
     }
 
-    private static void renderExperience(GuiGraphics graphics, DeltaTracker delta)
+    private static void renderExperience(GuiGraphicsExtractor graphics, DeltaTracker delta)
     {
         final Minecraft mc = Minecraft.getInstance();
         final @Nullable LocalPlayer localPlayer = mc.player;
@@ -245,8 +252,6 @@ public enum IngameOverlays
         final boolean isStyleLeftHotbar = (TFCConfig.CLIENT.disabledExperienceBarStyle.get() == DisabledExperienceBarStyle.LEFT_HOTBAR);
         if (localPlayer != null && localPlayer.fishing instanceof TFCFishingHook hook && setup(graphics, mc))
         {
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.disableBlend();
 
             if (!isShowingExperience && isStyleLeftHotbar)
             {
@@ -266,10 +271,10 @@ public enum IngameOverlays
                 final int y = graphics.guiHeight() - barHeight;
                 final int texturePos = 36 + barHeight;
                 final int amount = Mth.ceil(Mth.clampedMap(hook.pullExhaustion, 0, 100, 0, barHeight + 1));
-                graphics.blit(TEXTURE, x, y, uOffset, 36, 5, barHeight);
+                graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x, y, uOffset, 36, 5, barHeight, 256, 256);
                 if (amount > 0)
                 {
-                    graphics.blit(TEXTURE, x, graphics.guiHeight() - amount, uOffset + 5, texturePos - amount, 5, amount);
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x, graphics.guiHeight() - amount, uOffset + 5, texturePos - amount, 5, amount, 256, 256);
                 }
             }
             else
@@ -277,21 +282,18 @@ public enum IngameOverlays
                 final int x = graphics.guiWidth() / 2 - 91;
                 final int y = graphics.guiHeight() - 29;
                 final int amount = Mth.ceil(Mth.clampedMap(hook.pullExhaustion, 0, 100, 0, 183));
-                graphics.blit(TEXTURE, x, y, 0, 111, 182, 5);
+                graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x, y, 0, 111, 182, 5, 256, 256);
                 if (amount > 0)
                 {
-                    graphics.blit(TEXTURE, x, y, 0, 116, amount, 5);
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x, y, 0, 116, amount, 5, 256, 256);
                 }
             }
 
-            RenderSystem.enableBlend();
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         }
     }
 
-    private static void renderJumpBar(GuiGraphics graphics, DeltaTracker delta)
+    private static void renderJumpBar(GuiGraphicsExtractor graphics, DeltaTracker delta)
     {
-        final PoseStack stack = graphics.pose();
         final Minecraft mc = Minecraft.getInstance();
         final LocalPlayer localPlayer = mc.player;
         final boolean isShowingExperience = TFCConfig.CLIENT.enableExperienceBar.get();
@@ -300,8 +302,6 @@ public enum IngameOverlays
             return;
         if (localPlayer != null && localPlayer.jumpableVehicle() != null && setup(graphics, mc))
         {
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.disableBlend();
 
             int barHeight;
             int uOffset;
@@ -319,18 +319,16 @@ public enum IngameOverlays
             final int y = graphics.guiHeight() - barHeight;
             final int texturePos = 36 + barHeight;
             final int charge = (int) (localPlayer.getJumpRidingScale() * (float) (barHeight + 1));
-            graphics.blit(TEXTURE, x, y, uOffset, 36, 5, barHeight);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x, y, uOffset, 36, 5, barHeight, 256, 256);
             if (charge > 0)
             {
-                graphics.blit(TEXTURE, x, graphics.guiHeight() - charge, uOffset + 5, texturePos - charge, 5, charge);
+                graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x, graphics.guiHeight() - charge, uOffset + 5, texturePos - charge, 5, charge, 256, 256);
             }
 
-            RenderSystem.enableBlend();
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         }
     }
 
-    private static void renderInk(GuiGraphics graphics, DeltaTracker delta)
+    private static void renderInk(GuiGraphicsExtractor graphics, DeltaTracker delta)
     {
         if (Minecraft.getInstance().options.getCameraType().isFirstPerson())
         {
@@ -349,18 +347,18 @@ public enum IngameOverlays
         }
     }
 
-    private static void renderHealthBar(LivingEntity entity, Gui gui, GuiGraphics graphics, int width, int height)
+    private static void renderHealthBar(LivingEntity entity, Gui gui, GuiGraphicsExtractor graphics, int width, int height)
     {
-        final PoseStack stack = graphics.pose();
+        final Matrix3x2fStack stack = graphics.pose();
         HealthDisplayStyle style = TFCConfig.CLIENT.healthDisplayStyle.get();
         float maxHealth = entity.getMaxHealth();
 
         int centerX = graphics.guiWidth() / 2;
         int y = height - gui.leftHeight;
 
-        stack.pushPose();
-        stack.translate(centerX - 91, y, 0);
-        graphics.blit(TEXTURE, 0, 0, 0, 0, 81, 9);
+        stack.pushMatrix();
+        stack.translate(centerX - 91, y);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, 0, 0, 0, 0, 81, 9, 256, 256);
 
         float absorption = entity.getAbsorptionAmount();
         absorption = Float.isNaN(absorption) ? 0 : absorption;
@@ -368,13 +366,13 @@ public enum IngameOverlays
         float currentHealth = percentHealth * maxHealth;
         percentHealth = Mth.clamp(percentHealth, 0, 1);
 
-        graphics.blit(TEXTURE, 0, 0, 0, 9, (int) (81 * percentHealth), 9);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, 0, 0, 0, 9, (int) (81 * percentHealth), 9, 256, 256);
 
         boolean isHurt = entity.getHealth() > 0.0F && entity.getHealth() < entity.getMaxHealth();
         boolean playerHasSaturation = entity instanceof Player player && player.getFoodData().getSaturationLevel() > 0;
         if ((playerHasSaturation && isHurt) || entity.hurtTime > 0 || entity.hasEffect(MobEffects.REGENERATION))
         {
-            graphics.blit(TEXTURE, 0, 0, 0, 29, 81, 9);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, 0, 0, 0, 29, 81, 9, 256, 256);
         }
 
         float surplusPercent = Mth.clamp(percentHealth + (absorption / 20f) - 1, 0, 1);
@@ -382,27 +380,27 @@ public enum IngameOverlays
         {
             // fill up the yellow bar until you get a second full bar, then just fill it up
             float percent = Math.min(surplusPercent, 1);
-            graphics.blit(TEXTURE, 0, 0, 90, 9, (int) (81 * percent), 9);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, 0, 0, 90, 9, (int) (81 * percent), 9, 256, 256);
         }
-        stack.popPose();
+        stack.popMatrix();
 
         // Health modifier affects both max and current health equally. All we do is draw different numbers as a result.
         final float healthModifier = entity instanceof Player player ? IPlayerInfo.get(player).getHealthModifier() : 1f;
 
         String text = style.format(currentHealth * healthModifier, maxHealth * healthModifier);
-        stack.pushPose();
-        stack.translate(centerX - 50, y, 0);
-        stack.scale(1f, 1f, 1.0f);
+        stack.pushMatrix();
+        stack.translate(centerX - 50, y);
+        stack.scale(1f, 1f);
 
-        graphics.drawString(gui.getFont(), text, (-1 * gui.getFont().width(text) / 2) + 1, 1, HEALTH_TEXT_SHADOW_COLOR, false);
-        graphics.drawString(gui.getFont(), text, -1 * gui.getFont().width(text) / 2, 1, Color.WHITE.getRGB(), false);
+        graphics.text(gui.getFont(), text, (-1 * gui.getFont().width(text) / 2) + 1, 1, HEALTH_TEXT_SHADOW_COLOR, false);
+        graphics.text(gui.getFont(), text, -1 * gui.getFont().width(text) / 2, 1, Color.WHITE.getRGB(), false);
 
-        stack.popPose();
+        stack.popMatrix();
 
         gui.leftHeight += 10;
     }
 
-    private static void renderFamiliarity(GuiGraphics graphics, DeltaTracker delta)
+    private static void renderFamiliarity(GuiGraphicsExtractor graphics, DeltaTracker delta)
     {
         final Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
@@ -415,11 +413,11 @@ public enum IngameOverlays
             {
                 if (player.closerThan(entity, 5.0F))
                 {
-                    PoseStack stack = graphics.pose();
-                    stack.pushPose();
+                    Matrix3x2fStack stack = graphics.pose();
+                    stack.pushMatrix();
 
-                    stack.translate(graphics.guiWidth() / 2f, graphics.guiHeight() / 2f - 45, 0);
-                    stack.scale(1.5f, 1.5f, 1.5f);
+                    stack.translate(graphics.guiWidth() / 2f, graphics.guiHeight() / 2f - 45);
+                    stack.scale(1.5f, 1.5f);
 
                     float familiarity = Math.max(0.0F, Math.min(1.0F, animal.getFamiliarity()));
                     int u;
@@ -444,69 +442,81 @@ public enum IngameOverlays
                     {
                         String string = String.format("%.2f", familiarity * 100);
 
-                        graphics.drawString(mc.font, string, -mc.font.width(string) / 2, 0, fontColor, false);
+                        graphics.text(mc.font, string, -mc.font.width(string) / 2, 0, fontColor, false);
 
                     }
                     else
                     {
-                        graphics.blit(IngameOverlays.TEXTURE, -8, 0, u, 40, 16, 16);
+                        graphics.blit(RenderPipelines.GUI_TEXTURED, IngameOverlays.TEXTURE, -8, 0, u, 40, 16, 16, 256, 256);
 
-                        stack.translate(0F, 0F, 0.001F);
-                        graphics.blit(IngameOverlays.TEXTURE, -6, 14 - (int) (12 * familiarity), familiarity == 1.0F ? 114 : 94, 74 - (int) (12 * familiarity), 12, (int) (12 * familiarity));
+                        graphics.blit(RenderPipelines.GUI_TEXTURED, IngameOverlays.TEXTURE, -6, 14 - (int) (12 * familiarity), familiarity == 1.0F ? 114 : 94, 74 - (int) (12 * familiarity), 12, (int) (12 * familiarity), 256, 256);
                     }
                     if (animal instanceof MammalProperties mammal && mammal.getPregnantTime() > 0 && mammal.isFertilized())
                     {
-                        stack.translate(0, -15F, 0F);
+                        stack.translate(0, -15F);
                         String string = Component.translatable("tfc.tooltip.animal.pregnant", entity.getName().getString()).getString();
-                        graphics.drawString(mc.font, string, -mc.font.width(string) / 2, 0, Color.WHITE.getRGB(), false);
+                        graphics.text(mc.font, string, -mc.font.width(string) / 2, 0, Color.WHITE.getRGB(), false);
                     }
 
-                    stack.popPose();
+                    stack.popMatrix();
                 }
             }
         }
     }
 
-    private static void renderTextureOverlay(GuiGraphics graphics, Identifier location, float alpha)
+    private static void renderTextureOverlay(GuiGraphicsExtractor graphics, Identifier location, float alpha)
     {
         final Minecraft mc = Minecraft.getInstance();
         final int screenWidth = mc.getWindow().getGuiScaledWidth();
         final int screenHeight = mc.getWindow().getGuiScaledHeight();
 
-        RenderSystem.disableDepthTest();
-        RenderSystem.depthMask(false);
-        graphics.setColor(1.0F, 1.0F, 1.0F, alpha);
-        graphics.blit(location, 0, 0, -90, 0.0F, 0.0F, screenWidth, screenHeight, screenWidth, screenHeight);
-        RenderSystem.depthMask(true);
-        RenderSystem.enableDepthTest();
-        graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, location, 0, 0, 0.0F, 0.0F,
+            screenWidth, screenHeight, screenWidth, screenHeight, ARGB.color(Mth.clamp(alpha, 0F, 1F), 0xFFFFFF));
     }
 
-    private static void moveLeftAndRightHeights(GuiGraphics graphics, DeltaTracker delta)
+    private static void moveLeftAndRightHeights(GuiGraphicsExtractor graphics, DeltaTracker delta)
     {
         final Gui gui = Minecraft.getInstance().gui;
-        gui.rightHeight -= considerExperienceConfigs();
-        gui.leftHeight -= considerExperienceConfigs();
+        final int offset = considerExperienceConfigs();
+        gui.rightHeight -= offset;
+        gui.leftHeight -= offset;
     }
 
-    private static boolean setupForSurvival(GuiGraphics gui, Minecraft minecraft)
+    private static boolean setupForSurvival(GuiGraphicsExtractor gui, Minecraft minecraft)
     {
         final var gm = Minecraft.getInstance().gameMode;
         return gm != null && gm.canHurtPlayer() && setup(gui, minecraft);
     }
 
-    public static boolean setup(GuiGraphics gui, Minecraft minecraft)
+    public static boolean setup(GuiGraphicsExtractor gui, Minecraft minecraft)
     {
         if (!minecraft.options.hideGui && minecraft.getCameraEntity() instanceof Player)
         {
-//            gui.setupOverlayRenderState(true, false);
             return true;
         }
         return false;
     }
 
+    private static boolean isLocatorBarActive()
+    {
+        return ((GuiAccessor) Minecraft.getInstance().gui).accessor$getContextualInfoBar().getRight() instanceof LocatorBarRenderer;
+    }
+
+    private static boolean usesHorizontalFishingMeter()
+    {
+        final Minecraft minecraft = Minecraft.getInstance();
+        return minecraft.player != null && minecraft.player.fishing instanceof TFCFishingHook
+            && !minecraft.options.hideGui && minecraft.getCameraEntity() instanceof Player
+            && (TFCConfig.CLIENT.enableExperienceBar.get()
+                || TFCConfig.CLIENT.disabledExperienceBarStyle.get() != DisabledExperienceBarStyle.LEFT_HOTBAR);
+    }
+
     private static int considerExperienceConfigs()
     {
+        if (TFCConfig.CLIENT.enableExperienceBar.get() || (isLocatorBarActive() && !usesHorizontalFishingMeter()))
+        {
+            return 0;
+        }
         final LocalPlayer player = Minecraft.getInstance().player;
         return switch (TFCConfig.CLIENT.disabledExperienceBarStyle.get())
         {

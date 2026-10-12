@@ -4,7 +4,7 @@
 **Baseline:** 190 reported Java errors across 96 files. This is a Gradle Problems Report subset, **not** a complete count of compiler diagnostic occurrences or the entire migration backlog.
 
 Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current branch, **not** yet confirmed by a successful fresh Gradle build. `- [ ]` = outstanding. Diagnostics refer to line numbers in the user's older source checkout and may move after patches.
-**Checklist:** 75 source-addressed, 115 still open from these 190 entries. Fresh local main javac reports 860 errors overall (957 at starting commit `c920472d`); no full successful compilation is claimed. The count above remains the original report subset.
+**Checklist:** 77 source-addressed, 113 still open from these 190 entries. The last measured main javac at `cdc66669` reported 860 errors overall (957 at starting commit `c920472d`); subsequent guide/HUD source changes are not yet compiled; no full successful compilation is claimed. The count above remains the original report subset.
 
 
 ## Status and release gates
@@ -80,8 +80,8 @@ Legend: `- [x] ~~...~~` = source-level fix committed or verified in the current 
 - [ ] Line 55 — reported Java compilation error
 
 **`src/main/java/net/dries007/tfc/client/IngameOverlays.java`**
-- [ ] Line 60 — reported Java compilation error
-- [ ] Line 62 — reported Java compilation error
+- [x] ~~Line 60~~ — native `GuiLayer` source migration (2026-10-12); syntax/API inspection only, fresh target compile pending
+- [x] ~~Line 62~~ — native `GuiLayer` constructor migration (2026-10-12); syntax/API inspection only, fresh target compile pending
 
 **`src/main/java/net/dries007/tfc/client/RenderHelpers.java`**
 - [ ] Line 513 — reported Java compilation error
