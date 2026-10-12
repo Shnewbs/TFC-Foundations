@@ -8,14 +8,13 @@ package net.dries007.tfc.mixin.client.compat.patchouli;
 
 import java.util.Objects;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -72,15 +71,15 @@ public abstract class GuiBookMixin extends Screen
         }
     }
 
-    @Inject(method = "render", at = @At("HEAD"), cancellable = false)
-    public void injectRenderConsistentBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks, CallbackInfo ci)
+    @Inject(method = "extractRenderState", at = @At("HEAD"), cancellable = false)
+    public void injectExtractConsistentBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks, CallbackInfo ci)
     {
         if (book.id.equals(Helpers.resourceLocation("tfc", "field_guide")))
         {
-            graphics.pose().pushPose();
-            graphics.pose().scale(8, 8, 1);
-            renderTransparentBackground(graphics);
-            graphics.pose().popPose();
+            graphics.pose().pushMatrix();
+            graphics.pose().scale(8, 8);
+            extractTransparentBackground(graphics);
+            graphics.pose().popMatrix();
         }
     }
 }

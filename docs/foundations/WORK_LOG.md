@@ -1,5 +1,11 @@
 # TFC Foundations — Work Log
 
+## 2026-10-12 — Guide quick-lookup and book hook continuation (source-only)
+
+Continued existing `26.1.2` from `cdc6666928155bf3a271da6b24855392f493763f`. The book background mixin now targets Patchouli's `extractRenderState` with `GuiGraphicsExtractor` and the current 2D pose API. Inventory tabs, the field-guide ID and background scale are retained. Quick-lookup tooltips submit their progress fan through Patchouli's native GUI submission bridge, capture the pose/timing values before deferred rendering, and use current item/text/input/platform/network APIs. Screen-edge placement and server-authoritative opening remain; no selected-slot changes were introduced. Missing books and suppressed tooltips reset lookup timing. Progress geometry is bounded to one revolution.
+
+**Validation limits:** Java parser syntax checks passed for both edited sources. Direct `javap` inspection of cached Minecraft 26.1.2 classes confirms the GUI extraction methods and render-state contracts; cached NeoForge 26.1.2.114 source confirms the tooltip event graphics type. Patchouli's published `release-26.1-94-beta` source confirms the mixin target and GUI submission bridge. This is source/API inspection, not compilation against the pinned final Patchouli binary or an in-game test. This session has Java 17, not Java 25; its Gradle wrapper download fails with `Network is unreachable` before compilation. No new compiler total or playable JAR is claimed. The latest recorded full main compile remains **860 errors at the preceding checkpoint**. The historical checklist stays **75 source-addressed / 115 open**, since these two files are outside that report subset. No Actions run, new branch or 26.3 change was made.
+
 ## 2026-10-12 — Local native renderer/guide/fluid checkpoint
 
 Starting branch HEAD: `c920472da99c7c039f68aaa3b82114824e1a74fa`, existing public `26.1.2`. Resolved the actual TFC-patched Minecraft 26.1.2 / NeoForge 26.1.2.114 artifacts and pinned Patchouli 26.1-94 / JEI 29.43.0.107, using JDK 25 and Gradle 9.2.1. No new branch or Actions run was requested. The older CI diagnostic count is not used as this patch's baseline.
