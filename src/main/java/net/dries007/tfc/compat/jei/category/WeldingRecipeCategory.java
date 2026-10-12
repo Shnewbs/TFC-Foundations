@@ -6,16 +6,13 @@
 
 package net.dries007.tfc.compat.jei.category;
 
-import net.dries007.tfc.common.recipes.RecipeHelpers;
-
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
-import net.dries007.tfc.util.tooltip.Tooltips;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -23,8 +20,10 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.items.TFCItems;
+import net.dries007.tfc.common.recipes.RecipeHelpers;
 import net.dries007.tfc.common.recipes.WeldingRecipe;
 import net.dries007.tfc.util.Metal;
+import net.dries007.tfc.util.tooltip.Tooltips;
 
 public class WeldingRecipeCategory extends BaseRecipeCategory<WeldingRecipe>
 {
@@ -60,7 +59,7 @@ public class WeldingRecipeCategory extends BaseRecipeCategory<WeldingRecipe>
     }
 
     @Override
-    public void draw(WeldingRecipe recipe, IRecipeSlotsView recipeSlots, GuiGraphics stack, double mouseX, double mouseY)
+    public void draw(WeldingRecipe recipe, IRecipeSlotsView recipeSlots, GuiGraphicsExtractor stack, double mouseX, double mouseY)
     {
         arrow.draw(stack, 68, 5);
         arrowAnimated.draw(stack, 68, 5);

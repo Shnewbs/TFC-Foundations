@@ -14,13 +14,14 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import net.dries007.tfc.common.recipes.PotRecipe;
+import net.dries007.tfc.common.recipes.RecipeHelpers;
 import net.dries007.tfc.common.recipes.SimplePotRecipe;
 import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
 import net.dries007.tfc.compat.jei.JEIIntegration;
@@ -71,7 +72,7 @@ public class SimplePotRecipeCategory extends PotRecipeCategory<PotRecipe>
             // Pot recipes can operate either with providers that depend on inputs, which must be 1-1 with ingredients
             // Otherwise, we default to assuming they operate on empty stacks. See TerraFirmaCraft#2712
             final List<ItemStack> stacks = provider.dependsOnInput()
-                ? collapse(List.of(ingredients.get(j).getItems()), provider)
+                ? collapse(List.of(RecipeHelpers.stacks(ingredients.get(j))), provider)
                 : collapse(provider);
 
             if (!stacks.isEmpty())
@@ -103,7 +104,7 @@ public class SimplePotRecipeCategory extends PotRecipeCategory<PotRecipe>
      * </pre>
      */
     @Override
-    public void draw(PotRecipe recipe, IRecipeSlotsView recipeSlots, GuiGraphics stack, double mouseX, double mouseY)
+    public void draw(PotRecipe recipe, IRecipeSlotsView recipeSlots, GuiGraphicsExtractor stack, double mouseX, double mouseY)
     {
         // fire
         fire.draw(stack, 47, 45);

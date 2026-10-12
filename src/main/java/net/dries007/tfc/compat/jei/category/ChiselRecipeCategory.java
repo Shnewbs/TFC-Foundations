@@ -6,8 +6,6 @@
 
 package net.dries007.tfc.compat.jei.category;
 
-import net.dries007.tfc.common.recipes.RecipeHelpers;
-
 import java.util.Map;
 import java.util.stream.Collectors;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -17,7 +15,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -26,6 +24,7 @@ import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.items.TFCItems;
 import net.dries007.tfc.common.player.ChiselMode;
 import net.dries007.tfc.common.recipes.ChiselRecipe;
+import net.dries007.tfc.common.recipes.RecipeHelpers;
 import net.dries007.tfc.util.Metal;
 
 public class ChiselRecipeCategory extends BaseRecipeCategory<ChiselRecipe>
@@ -65,7 +64,7 @@ public class ChiselRecipeCategory extends BaseRecipeCategory<ChiselRecipe>
     }
 
     @Override
-    public void draw(ChiselRecipe recipe, IRecipeSlotsView recipeSlots, GuiGraphics stack, double mouseX, double mouseY)
+    public void draw(ChiselRecipe recipe, IRecipeSlotsView recipeSlots, GuiGraphicsExtractor stack, double mouseX, double mouseY)
     {
         modes.get(recipe.getMode()).draw(stack, 48, 3);
     }

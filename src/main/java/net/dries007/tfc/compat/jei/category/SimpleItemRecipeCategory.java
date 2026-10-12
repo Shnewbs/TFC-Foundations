@@ -6,8 +6,6 @@
 
 package net.dries007.tfc.compat.jei.category;
 
-import net.dries007.tfc.common.recipes.RecipeHelpers;
-
 import java.util.List;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
@@ -16,7 +14,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -25,6 +23,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.common.recipes.ItemRecipe;
+import net.dries007.tfc.common.recipes.RecipeHelpers;
 import net.dries007.tfc.compat.jei.JEIIntegration;
 
 public abstract class SimpleItemRecipeCategory<T extends ItemRecipe> extends BaseRecipeCategory<T>
@@ -47,7 +46,7 @@ public abstract class SimpleItemRecipeCategory<T extends ItemRecipe> extends Bas
         IRecipeSlotBuilder outputSlot = builder.addSlot(RecipeIngredientRole.OUTPUT, 76, 5);
 
         final Ingredient ingredient = recipe.getIngredient();
-        final List<ItemStack> inputList = List.of(ingredient.getItems());
+        final List<ItemStack> inputList = List.of(RecipeHelpers.stacks(ingredient));
         inputSlot.addIngredients(JEIIntegration.ITEM_STACK, inputList);
 
         if (toolSlot != null)
@@ -66,7 +65,7 @@ public abstract class SimpleItemRecipeCategory<T extends ItemRecipe> extends Bas
     }
 
     @Override
-    public void draw(T recipe, IRecipeSlotsView recipeSlots, GuiGraphics stack, double mouseX, double mouseY)
+    public void draw(T recipe, IRecipeSlotsView recipeSlots, GuiGraphicsExtractor stack, double mouseX, double mouseY)
     {
         arrow.draw(stack, getToolTag() == null ? 36 : 48, 5);
         arrowAnimated.draw(stack, getToolTag() == null ? 36 : 48, 5);

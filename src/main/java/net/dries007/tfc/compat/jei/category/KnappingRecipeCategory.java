@@ -14,7 +14,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
@@ -41,7 +41,7 @@ public class KnappingRecipeCategory<T extends KnappingRecipe> extends BaseRecipe
     }
 
     @Override
-    public void draw(T recipe, IRecipeSlotsView recipeSlots, GuiGraphics stack, double mouseX, double mouseY)
+    public void draw(T recipe, IRecipeSlotsView recipeSlots, GuiGraphicsExtractor stack, double mouseX, double mouseY)
     {
         arrow.draw(stack, 106, 33);
         arrowAnimated.draw(stack, 106, 33);

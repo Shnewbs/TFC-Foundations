@@ -18,7 +18,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -27,6 +27,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.dries007.tfc.common.blocks.TFCBlocks;
 import net.dries007.tfc.common.component.heat.HeatCapability;
 import net.dries007.tfc.common.recipes.HeatingRecipe;
+import net.dries007.tfc.common.recipes.RecipeHelpers;
 import net.dries007.tfc.compat.jei.JEIIntegration;
 import net.dries007.tfc.config.TFCConfig;
 
@@ -46,7 +47,7 @@ public class HeatingRecipeCategory extends BaseRecipeCategory<HeatingRecipe>
         inputSlot.addIngredients(recipe.getIngredient());
         inputSlot.setBackground(slot, -1, -1);
 
-        final List<ItemStack> outputItems = Arrays.stream(recipe.getIngredient().getItems())
+        final List<ItemStack> outputItems = Arrays.stream(RecipeHelpers.stacks(recipe.getIngredient()))
             .map(stack -> recipe.assembleStacked(stack, Integer.MAX_VALUE, true))
             .toList();
         final FluidStack resultFluid = recipe.getDisplayOutputFluid();
@@ -67,7 +68,7 @@ public class HeatingRecipeCategory extends BaseRecipeCategory<HeatingRecipe>
     }
 
     @Override
-    public void draw(HeatingRecipe recipe, IRecipeSlotsView recipeSlots, GuiGraphics graphics, double mouseX, double mouseY)
+    public void draw(HeatingRecipe recipe, IRecipeSlotsView recipeSlots, GuiGraphicsExtractor graphics, double mouseX, double mouseY)
     {
         fire.draw(graphics, 54, 16);
         fireAnimated.draw(graphics, 54, 16);
@@ -77,7 +78,7 @@ public class HeatingRecipeCategory extends BaseRecipeCategory<HeatingRecipe>
         {
             Minecraft mc = Minecraft.getInstance();
             Font font = mc.font;
-            graphics.drawString(font, color, 60 - font.width(color) / 2, 4, 0xFFFFFF, true);
+            graphics.text(font, color, 60 - font.width(color) / 2, 4, 0xFFFFFFFF, true);
         }
 
         for (IRecipeSlotView view : recipeSlots.getSlotViews())

@@ -16,7 +16,7 @@ import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -62,7 +62,7 @@ public class AlloyRecipeCategory extends BaseRecipeCategory<AlloyRecipe>
     }
 
     @Override
-    public void draw(AlloyRecipe recipe, IRecipeSlotsView recipeSlots, GuiGraphics graphics, double mouseX, double mouseY)
+    public void draw(AlloyRecipe recipe, IRecipeSlotsView recipeSlots, GuiGraphicsExtractor graphics, double mouseX, double mouseY)
     {
         Minecraft mc = Minecraft.getInstance();
         Font font = mc.font;
@@ -74,7 +74,7 @@ public class AlloyRecipeCategory extends BaseRecipeCategory<AlloyRecipe>
             int x = (iteration % 2 == 0 ? FIRST_COLUMN_X : SECOND_COLUMN_X) + slot.getWidth() + 2;
             // Vertically centers the text on the slot
             int y = positions[Math.floorDiv(iteration, 2)] + slot.getHeight() / 2 - Math.floorDiv(font.lineHeight, 2);
-            graphics.drawString(font, Component.literal(formatRange(range)).withStyle(ChatFormatting.BLACK), x, y, 0xFFFFFF, false);
+            graphics.text(font, Component.literal(formatRange(range)).withStyle(ChatFormatting.BLACK), x, y, 0xFFFFFFFF, false);
             iteration++;
         }
         fire.draw(graphics, 130, MAX_HEIGHT / 2 - fire.getHeight() / 2);

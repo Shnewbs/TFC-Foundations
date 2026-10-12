@@ -6,7 +6,6 @@
 
 package net.dries007.tfc.compat.jei.category;
 
-import java.util.Arrays;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -18,11 +17,15 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.AbstractRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
 
 import net.dries007.tfc.common.blocks.TFCBlocks;
+import net.dries007.tfc.common.recipes.RecipeHelpers;
 import net.dries007.tfc.compat.jei.JEIIntegration;
 import net.dries007.tfc.config.TFCConfig;
 import net.dries007.tfc.util.Metal;
@@ -46,7 +49,7 @@ public class LampFuelRecipeCategory extends AbstractRecipeCategory<LampFuel>
     public void setRecipe(IRecipeLayoutBuilder builder, LampFuel recipe, IFocusGroup focuses)
     {
         builder.addSlot(RecipeIngredientRole.INPUT, 3, 11)
-            .addIngredients(JEIIntegration.FLUID_STACK, Arrays.asList(recipe.fluid().getStacks()))
+            .addIngredients(JEIIntegration.FLUID_STACK, RecipeHelpers.stream(recipe.fluid()).map(fluid -> new FluidStack(fluid, FluidType.BUCKET_VOLUME)).toList())
             .setBackground(slot, -1, -1);
 
         builder.addSlot(RecipeIngredientRole.CATALYST, 43, 11)
@@ -55,7 +58,7 @@ public class LampFuelRecipeCategory extends AbstractRecipeCategory<LampFuel>
     }
 
     @Override
-    public void draw(LampFuel recipe, IRecipeSlotsView recipeSlots, GuiGraphics graphics, double mouseX, double mouseY)
+    public void draw(LampFuel recipe, IRecipeSlotsView recipeSlots, GuiGraphicsExtractor graphics, double mouseX, double mouseY)
     {
 
         lampBg.draw(graphics, 22, 11);
@@ -75,7 +78,7 @@ public class LampFuelRecipeCategory extends AbstractRecipeCategory<LampFuel>
                 int burnOffset = 20 - remainingHeight;
 
                 graphics.blit(
-                    BaseRecipeCategory.ICONS,
+                    RenderPipelines.GUI_TEXTURED, BaseRecipeCategory.ICONS,
                     22, 11 + burnOffset,
                     20, 48 + burnOffset,
                     20, remainingHeight,
@@ -89,7 +92,7 @@ public class LampFuelRecipeCategory extends AbstractRecipeCategory<LampFuel>
 
         Component text = Component.translatable("tfc.jei.lamp_fuel.burn_rate", burnTime);
         Font font = Minecraft.getInstance().font;
-        graphics.drawString(font, text, 65, 15, 0xFFFFFF, true);
+        graphics.text(font, text, 65, 15, 0xFFFFFFFF, true);
     }
 
     @Override

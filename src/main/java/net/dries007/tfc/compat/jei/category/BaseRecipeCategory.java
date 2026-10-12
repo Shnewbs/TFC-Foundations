@@ -16,11 +16,12 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.AbstractRecipeCategory;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -31,6 +32,7 @@ import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.client.ClientHelpers;
 import net.dries007.tfc.common.component.food.FoodCapability;
+import net.dries007.tfc.common.recipes.RecipeHelpers;
 import net.dries007.tfc.common.recipes.ingredients.BlockIngredient;
 import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
 import net.dries007.tfc.compat.jei.JEIIntegration;
@@ -52,12 +54,12 @@ public abstract class BaseRecipeCategory<T extends Recipe<?>> extends AbstractRe
     }
 
     @Override
-    public void draw(RecipeHolder<T> holder, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY)
+    public void draw(RecipeHolder<T> holder, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY)
     {
         draw(holder.value(), recipeSlotsView, graphics, mouseX, mouseY);
     }
 
-    public void draw(T recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY)
+    public void draw(T recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY)
     {
 
     }
@@ -75,12 +77,12 @@ public abstract class BaseRecipeCategory<T extends Recipe<?>> extends AbstractRe
     {
         // Setting this to 1000 makes the liquid amount on the tooltip to display incorrectly
         // use IRecipeSlotBuilder.setFluidRenderer(1, false, 16, 16)} to make the liquid display in the whole slot
-        return Arrays.asList(ingredient.getFluids());
+        return RecipeHelpers.stream(ingredient).map(fluid -> new FluidStack(fluid, ingredient.amount())).toList();
     }
 
     public static List<ItemStack> collapse(SizedIngredient input)
     {
-        return Arrays.stream(input.ingredient().getItems())
+        return Arrays.stream(RecipeHelpers.stacks(input.ingredient()))
             .map(stack -> FoodCapability.setTransientNonDecaying(stack.copyWithCount(input.count())))
             .toList();
     }
@@ -104,7 +106,7 @@ public abstract class BaseRecipeCategory<T extends Recipe<?>> extends AbstractRe
 
     public static Ingredient collapse(BlockIngredient ingredient)
     {
-        return Ingredient.of(ingredient.all().map(ItemStack::new).filter(item -> !item.isEmpty()));
+        return Ingredient.of(ingredient.all().map(block -> block.asItem()).filter(item -> item != Items.AIR));
     }
 
     protected final IDrawableStatic slot;

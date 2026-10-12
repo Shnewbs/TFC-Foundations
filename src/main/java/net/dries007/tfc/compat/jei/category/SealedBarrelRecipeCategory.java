@@ -17,7 +17,7 @@ import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -77,7 +77,7 @@ public class SealedBarrelRecipeCategory extends BarrelRecipeCategory<SealedBarre
     }
 
     @Override
-    public void draw(SealedBarrelRecipe recipe, IRecipeSlotsView recipeSlots, GuiGraphics stack, double mouseX, double mouseY)
+    public void draw(SealedBarrelRecipe recipe, IRecipeSlotsView recipeSlots, GuiGraphicsExtractor stack, double mouseX, double mouseY)
     {
         super.draw(recipe, recipeSlots, stack, mouseX, mouseY);
 
@@ -91,7 +91,7 @@ public class SealedBarrelRecipeCategory extends BarrelRecipeCategory<SealedBarre
             Component.translatable("tfc.tooltip.while_sealed") :
             Calendars.CLIENT.getTimeDelta(recipe.getDuration())).withStyle(ChatFormatting.BLACK);
         final Font font = Minecraft.getInstance().font;
-        stack.drawString(font, text, 74 - font.width(text) / 2, 24, 0xFFFFFF, false);
+        stack.text(font, text, 74 - font.width(text) / 2, 24, 0xFFFFFFFF, false);
     }
 
     @Override

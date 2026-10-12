@@ -1,5 +1,15 @@
 # TFC Foundations — Current Project Status
 
+## 2026-10-12 — JEI category extraction and ingredient enumeration (source-only)
+
+Continued existing `26.1.2` from `0c1d87de5fa635cded8bf13eb2d42e5ecbea7b2f`. Twenty recipe-category files now use `GuiGraphicsExtractor`; category and drawable callbacks retain JEI's `draw` name. Text uses `text`/`textWithWordWrap` with opaque white where the previous API accepted RGB. Lamp animation uses an explicit textured pipeline, preserving its crop/position arguments. No recipe IDs, slot coordinates, arrow/fire durations or registration lists were changed.
+
+Shared ingredient helpers enumerate current item/fluid holders through the existing `RecipeHelpers`. Sized fluids retain `ingredient.amount()`; sized items retain their counts and transient non-decaying food copies. Block ingredients map blocks to items and exclude air before constructing the native ingredient. Casting, heating, simple item and pot displays use the same current enumeration. Lamp fuel uses the native bucket-volume constant for representative unsized fluid stacks.
+
+**Checks:** all 20 Java sources pass parser-only syntax checking. Cached Minecraft 26.1.2 and NeoForge 26.1.2.114 class/source inspection confirms holder enumeration and stack constructors. JEI's upstream `26.1` API source confirms `draw(... GuiGraphicsExtractor ...)` in both recipe categories and drawables; that branch currently identifies specification 29.47.0, so it is not a substitute for compiling against this project's pinned 29.43.0.107 binary. No dependency pins were changed.
+
+**Not verified:** full Java 25 compilation, exact pinned JEI binary linkage, visual layout/animation, custom ingredient display behavior, or client/server startup. Casting's legacy fluid capability remains an explicit separate migration task. Workspace maintenance removed the local checkout; source was recovered from GitHub and these edits were published directly to the existing branch. Available runtime is still Java 17. The latest recorded main compile remains **860 errors at `cdc66669`**, before subsequent guide/HUD/JEI source edits. Do not subtract source edits from that number or call this playable. The historical 190-entry checklist stays unchanged at 77 source-addressed / 113 open pending a new diagnostic pass.
+
 ## 2026-10-12 — HUD extraction and contextual-bar source migration
 
 Continued `26.1.2` after `271d84a1`. Migrated health, mounted health, food, thirst/heat, ink, chisel, fishing, mount-jump and familiarity overlays from removed `LayeredDraw.Layer`/`GuiGraphics` and global shader state to NeoForge `GuiLayer`, `GuiGraphicsExtractor`, 2D poses and explicit textured draws. Existing identifiers, sprite placement/crop expressions, text content and survival formulas remain. Heat and ink alpha are submitted per draw.

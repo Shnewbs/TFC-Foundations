@@ -15,7 +15,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
@@ -70,7 +70,7 @@ public class GlassworkingRecipeCategory extends BaseRecipeCategory<GlassworkingR
     }
 
     @Override
-    public void draw(GlassworkingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY)
+    public void draw(GlassworkingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY)
     {
         arrow.draw(graphics, 92, 5);
         arrowAnimated.draw(graphics, 92, 5);
@@ -82,11 +82,11 @@ public class GlassworkingRecipeCategory extends BaseRecipeCategory<GlassworkingR
             final Component text = Component.literal((idx + 1) + ". ").append(Component.translatable(operation.getTranslationId()));
             if (idx + 3 < recipe.operations().size())
             {
-                graphics.drawWordWrap(font, text, (idx < 3 ? 6 : 90) + 20, 25 * ((idx % 3) + 1) + 5, idx < 3 ? 55 : 75, Color.BLACK.getRGB());
+                graphics.textWithWordWrap(font, text, (idx < 3 ? 6 : 90) + 20, 25 * ((idx % 3) + 1) + 5, idx < 3 ? 55 : 75, Color.BLACK.getRGB());
             }
             else
             {
-                graphics.drawString(font, text, (idx < 3 ? 6 : 90) + 20, 25 * ((idx % 3) + 1) + 5, Color.BLACK.getRGB(), false);
+                graphics.text(font, text, (idx < 3 ? 6 : 90) + 20, 25 * ((idx % 3) + 1) + 5, Color.BLACK.getRGB(), false);
             }
             idx += 1;
         }

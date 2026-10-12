@@ -15,7 +15,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -27,6 +27,7 @@ import net.dries007.tfc.common.component.heat.Heat;
 import net.dries007.tfc.common.component.heat.HeatCapability;
 import net.dries007.tfc.common.items.TFCItems;
 import net.dries007.tfc.common.recipes.CastingRecipe;
+import net.dries007.tfc.common.recipes.RecipeHelpers;
 import net.dries007.tfc.compat.jei.JEIIntegration;
 import net.dries007.tfc.util.Metal;
 
@@ -43,9 +44,9 @@ public class CastingRecipeCategory extends BaseRecipeCategory<CastingRecipe>
     public void setRecipe(IRecipeLayoutBuilder builder, CastingRecipe recipe, IFocusGroup focuses)
     {
         final List<ItemStack> inputs = new ArrayList<>();
-        for (ItemStack input : recipe.getIngredient().getItems())
+        for (ItemStack input : RecipeHelpers.stacks(recipe.getIngredient()))
         {
-            for (FluidStack fluid : recipe.getFluidIngredient().getFluids())
+            for (FluidStack fluid : collapse(recipe.getFluidIngredient()))
             {
                 final ItemStack filled = input.copy();
                 final @Nullable IFluidHandler fluidHandler = filled.getCapability(Capabilities.FluidHandler.ITEM);
@@ -73,7 +74,7 @@ public class CastingRecipeCategory extends BaseRecipeCategory<CastingRecipe>
     }
 
     @Override
-    public void draw(CastingRecipe recipe, IRecipeSlotsView recipeSlots, GuiGraphics stack, double mouseX, double mouseY)
+    public void draw(CastingRecipe recipe, IRecipeSlotsView recipeSlots, GuiGraphicsExtractor stack, double mouseX, double mouseY)
     {
         recipeSlots.findSlotByName(INPUT_SLOT)
             .flatMap(IRecipeSlotView::getDisplayedItemStack)
