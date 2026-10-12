@@ -69,3 +69,13 @@ Remaining displayed failures include obsolete rendering/model classes, JEI/Patch
 Earth's existing coordinate/elevation groundwork remains preserved but untouched in this continuation. No Earth preset, dataset integration or complete world generator was added. No playable JAR, client/server startup result, gameplay regression result, performance claim, GitHub release or CurseForge upload is claimed.
 
 Current decision/status is in [PROJECT_STATUS](../../PROJECT_STATUS.md). Continue appending exact commit/run outcomes here; never mark planned work as tested.
+
+## 2026-10-12 — Upstream and version watch
+
+Updated [UPSTREAM.md](UPSTREAM.md#watch-report--2026-10-12) with the six-branch inventory, 17 newly reachable 1.21.x commits, four merged fix investigations, buoys/lobster traps and Chinese guide additions, issue-state changes, source inheritance evidence, and required (not executed) regressions.
+
+The block-entity parent save/load fix is independently equivalent in 26.1.2 through October 9 commit 46401c0; it remains absent in 26.x. JEI compact-grid focus, repeated-cell scraping and freezing-temperature tooltip fixes remain absent from both inspected source snapshots. Equivalent source is not runtime verification.
+
+Official manifest still reports release 26.3 / snapshot 26.4-snapshot-3; NeoForge metadata remains 26.3.0.76 with no 26.4 artifact. Preserve separate 26.1.2 playable priority and 26.x/26.3 track.
+
+Documentation-only watch; no source implementation, upstream merge, dependency pin change, compile/gameplay test or artifact publication. Tracking document commits: 26.x d6d9a47d2dd1a61c03b85e561010289ea5a9d724; 26.1.2 06b8fff7eb0b37db6a0b5808e8716d57bef52a39. Readback of both tracking files matched intended text.
