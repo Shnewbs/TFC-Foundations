@@ -13,6 +13,7 @@ import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.LevelReader;
 
 import java.util.List;
+import java.util.function.Consumer;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.core.BlockPos;
@@ -29,6 +30,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -169,13 +171,13 @@ public class BarrelBlock extends SealableDeviceBlock
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag)
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag)
     {
         final BarrelComponent barrel = stack.getOrDefault(TFCComponents.BARREL, BarrelComponent.EMPTY);
         if (!barrel.isEmpty())
         {
             // Header line
-            tooltip.add(Tooltips.contents());
+            tooltip.accept(Tooltips.contents());
 
             // Excess typically (almost always) will either be empty, or contain identical stacks (beyond the stack size of the original stack)
             // In order to neatly handle this, we bundle everything up first. Object2ArrayMap is useful because we (1) preserve iteration
@@ -192,11 +194,11 @@ public class BarrelBlock extends SealableDeviceBlock
             }
             for (var entry : contents.object2IntEntrySet())
             {
-                tooltip.add(Tooltips.countOfItem(entry.getKey().stack(), entry.getIntValue()));
+                tooltip.accept(Tooltips.countOfItem(entry.getKey().stack(), entry.getIntValue()));
             }
             if (!barrel.fluidContent().isEmpty())
             {
-                tooltip.add(Tooltips.fluidUnitsOf(barrel.fluidContent()));
+                tooltip.accept(Tooltips.fluidUnitsOf(barrel.fluidContent()));
             }
         }
     }
@@ -292,7 +294,7 @@ public class BarrelBlock extends SealableDeviceBlock
     }
 
     @Override
-    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos)
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction)
     {
         if (level.getBlockEntity(pos) instanceof BarrelBlockEntity barrel)
         {

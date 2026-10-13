@@ -9,6 +9,7 @@ package net.dries007.tfc.common.blocks.devices;
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.math.Constants;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -120,7 +121,7 @@ public class QuernBlock extends DeviceBlock implements IHighlightHandler
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity)
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise)
     {
         if (level.getBlockEntity(pos) instanceof QuernBlockEntity quern)
         {

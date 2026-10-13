@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.common.blocks;
 
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.util.RandomSource;
 
 import net.minecraft.world.level.ScheduledTickAccess;
@@ -83,7 +84,7 @@ public class GroundcoverBlock extends ExtendedBlock implements IFluidLoggable
     }
 
     @Override
-    public boolean canPlaceLiquid(@Nullable Player player, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid)
+    public boolean canPlaceLiquid(@Nullable LivingEntity player, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid)
     {
         if (fluid instanceof FlowingFluid && !getFluidProperty().canContain(fluid))
         {

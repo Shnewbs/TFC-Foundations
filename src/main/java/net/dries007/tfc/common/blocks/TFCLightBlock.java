@@ -85,7 +85,7 @@ public class TFCLightBlock extends Block implements IFluidLoggable
     }
 
     @Override
-    public boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos)
+    public boolean propagatesSkylightDown(BlockState state)
     {
         return true;
     }

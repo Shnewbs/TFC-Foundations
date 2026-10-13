@@ -8,6 +8,7 @@ package net.dries007.tfc.common.blocks.plant.fruit;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.core.BlockPos;
@@ -131,7 +132,7 @@ public class FruitTreeLeavesBlock extends SeasonalPlantBlock implements IForgeBl
     }
 
     @Override
-    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity)
+    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise)
     {
         TFCLeavesBlock.onEntityInside(level, entity);
     }
@@ -191,7 +192,7 @@ public class FruitTreeLeavesBlock extends SeasonalPlantBlock implements IForgeBl
     }
 
     @Override
-    protected int getLightBlock(BlockState state, BlockGetter level, BlockPos pos)
+    protected int getLightDampening(BlockState state)
     {
         return 1;
     }

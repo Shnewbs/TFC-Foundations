@@ -7,6 +7,7 @@
 package net.dries007.tfc.common.blocks;
 
 import java.util.function.Supplier;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -39,7 +40,7 @@ public class HotWaterBlock extends LiquidBlock
     }
 
     @Override
-    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity)
+    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise)
     {
         if (level.getRandom().nextInt(10) == 0 && entity instanceof LivingEntity living && living.getHealth() < living.getMaxHealth())
         {

@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.common.blocks.devices;
 
+import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
@@ -91,7 +92,7 @@ public class BlastFurnaceBlock extends DeviceBlock implements IBellowsConsumer
     }
 
     @Override
-    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos)
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction)
     {
         if (level.getBlockEntity(pos) instanceof BlastFurnaceBlockEntity blastFurnace)
         {

@@ -48,9 +48,9 @@ public class ThatchBlock extends Block implements IForgeBlockExtension, IFluidLo
     }
 
     @Override
-    protected int getLightBlock(BlockState state, BlockGetter level, BlockPos pos)
+    protected int getLightDampening(BlockState state)
     {
-        return level.getMaxLightLevel();
+        return 15;
     }
 
     @Override

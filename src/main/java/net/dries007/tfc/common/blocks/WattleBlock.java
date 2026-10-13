@@ -148,7 +148,7 @@ public class WattleBlock extends StainedWattleBlock implements IGhostBlockHandle
     }
 
     @Override
-    public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float distance)
+    public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, double distance)
     {
         super.fallOn(level, state, pos, entity, distance);
         if (distance > 3f)

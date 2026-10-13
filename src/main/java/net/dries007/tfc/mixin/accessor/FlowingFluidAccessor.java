@@ -12,6 +12,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
@@ -20,8 +21,15 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface FlowingFluidAccessor
 {
     @Invoker("canPassThroughWall")
-    boolean invoke$canPassThroughWall(Direction face, BlockGetter world, BlockPos pos, BlockState state, BlockPos fromPos, BlockState fromState);
+    static boolean invoke$canPassThroughWall(Direction face, BlockGetter world, BlockPos pos, BlockState state, BlockPos fromPos, BlockState fromState)
+    {
+        throw new AssertionError("Mixin invoker has not been transformed");
+    }
 
     @Invoker("isWaterHole")
-    boolean invoke$isWaterHole(BlockGetter world, Fluid fluid, BlockPos pos, BlockState state, BlockPos fromPos, BlockState fromState);
+    boolean invoke$isWaterHole(BlockGetter world, BlockPos pos, BlockState state, BlockPos fromPos, BlockState fromState);
+
+    @Invoker("canPassThrough")
+    boolean invoke$canPassThrough(BlockGetter world, Fluid fluid, BlockPos sourcePos, BlockState sourceState, Direction direction,
+        BlockPos targetPos, BlockState targetState, FluidState targetFluid);
 }

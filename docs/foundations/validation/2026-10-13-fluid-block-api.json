@@ -1,0 +1,102 @@
+{
+  "source_parent": "9caa884b6df3b538d1b983d321ac49828048a6ed",
+  "branch": "26.1.2",
+  "targets": {
+    "minecraft": "26.1.2",
+    "neoforge": "26.1.2.114",
+    "java": "25.0.4.1",
+    "gradle": "9.2.1",
+    "jei": "29.43.0.107",
+    "patchouli": "26.1-94"
+  },
+  "baseline": {
+    "gradle_errors": 713,
+    "diagnostic_errors": 713,
+    "source_count": 1660
+  },
+  "final": {
+    "source_count": 1661,
+    "exit_code": 1,
+    "displayed_errors": 650,
+    "timed_out": false,
+    "annotation_processing": false,
+    "note": "Diagnostic main compilation only. Error counts can hide cascading or later failures; no gameplay or full Gradle success is implied.",
+    "gradle_errors": 650,
+    "gradle_build_exit_code": 1,
+    "data_test_compilation": "blocked by main compile failure"
+  },
+  "passed": {
+    "api_inspection_exit_code": 0,
+    "standalone_probe_runners": [
+      "run_loot_smoke.py",
+      "run_common_smoke.py",
+      "run_visual_save_smoke.py",
+      "run_entity_smoke.py",
+      "run_attachment_smoke.py",
+      "run_player_food_smoke.py",
+      "run_shared_runtime_smoke.py",
+      "run_snow_ice_smoke.py",
+      "run_thatch_bed_smoke.py",
+      "run_model_render_smoke.py",
+      "run_instrument_model_smoke.py",
+      "run_livestock_render_smoke.py",
+      "run_mechanical_boat_smoke.py",
+      "run_seasonal_block_smoke.py",
+      "run_snapshot_block_smoke.py",
+      "run_worldgen_api_smoke.py",
+      "run_item_registration_smoke.py",
+      "run_predator_sound_smoke.py",
+      "run_item_selector_smoke.py",
+      "run_recipe_serializer_smoke.py",
+      "run_selected_slot_smoke.py",
+      "run_sound_event_holder_smoke.py",
+      "run_tool_material_smoke.py",
+      "run_recipe_helper_smoke.py",
+      "run_flat_ingredient_smoke.py",
+      "run_interaction_api_smoke.py",
+      "run_neighbor_shape_smoke.py",
+      "run_deferred_shape_smoke.py",
+      "run_tag_ingredient_smoke.py",
+      "run_fluid_explosion_api_smoke.py"
+    ],
+    "new_fluid_explosion_block_api_contracts": 19,
+    "nbt_valueio_checks": 49,
+    "standalone_common_utility_api_checks": 51,
+    "flat_ingredient_checks": 16,
+    "license_main": true,
+    "license_test": true,
+    "license_data": true,
+    "pinned_dependencies": true,
+    "resource_validation_exit_code": 0,
+    "asset_download": true,
+    "mixin_json_and_registered_source_presence": true,
+    "git_diff_check": true
+  },
+  "host_setup": {
+    "optional_local_neoform_java_fallback": true,
+    "trusted_proxy_ca_imported_in_local_java_25_and_asset_tool_java_21": true,
+    "initial_asset_download_ssl_failure_resolved": true
+  },
+  "playable": false,
+  "jar_produced": false,
+  "runtime_tests_run": false,
+  "runtime_regressions_to_check": [
+    "Mixin transformation and startup",
+    "Powder keg natural-only/cannot-break tags, chain reaction, drops, damage and player knockback",
+    "Water/river/saltwater mixing, source formation and lava random ticks",
+    "Bucket interactions and underwater crop protections",
+    "Collisions, comparator signals, light propagation and wattle fall damage",
+    "Barrel/crucible text and inventory-image tooltip settings"
+  ],
+  "remaining_branch_names": [
+    "26.1.2",
+    "26.x"
+  ],
+  "notes": [
+    "Displayed diagnostic reductions are not counts of independent bugs.",
+    "API reflection does not apply Mixins or construct a game world.",
+    "Existing CPU, source and asset probe passes do not establish complete rendering or gameplay.",
+    "No feature exclusions, dependency pin changes or gameplay stubs were added.",
+    "26.x was not changed."
+  ]
+}

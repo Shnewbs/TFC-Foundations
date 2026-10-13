@@ -111,7 +111,7 @@ public class TFCCandleCakeBlock extends AbstractCandleBlock implements IForgeBlo
 
     @Override
     @SuppressWarnings("deprecation")
-    public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos)
+    public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction)
     {
         return CakeBlock.FULL_CAKE_SIGNAL;
     }

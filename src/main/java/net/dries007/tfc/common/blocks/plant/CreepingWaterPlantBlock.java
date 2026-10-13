@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.common.blocks.plant;
 
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.level.ScheduledTickAccess;
 
 import net.minecraft.core.BlockPos;
@@ -169,7 +170,7 @@ public abstract class CreepingWaterPlantBlock extends CreepingPlantBlock impleme
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity)
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise)
     {
         if (!level.isClientSide() && state.getValue(OPEN))
         {

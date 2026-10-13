@@ -8,8 +8,13 @@ package net.dries007.tfc.common.blocks;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import net.dries007.tfc.common.items.TooltipBlockItem;
 import net.dries007.tfc.util.Helpers;
@@ -34,6 +39,9 @@ public interface TooltipBlock
             ? Optional.empty()
             : Optional.of(new Instance(inventory, width, height));
     }
+
+    /** Item-level text callback; Minecraft no longer dispatches tooltips to Block. */
+    default void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag) {}
 
     default Optional<TooltipComponent> getTooltipImage(ItemStack stack)
     {

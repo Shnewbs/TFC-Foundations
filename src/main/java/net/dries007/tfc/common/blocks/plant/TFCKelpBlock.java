@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.common.blocks.plant;
 
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.util.RandomSource;
 
 import net.minecraft.world.level.ScheduledTickAccess;
@@ -88,7 +89,7 @@ public abstract class TFCKelpBlock extends BodyPlantBlock implements IFluidLogga
     }
 
     @Override
-    public boolean canPlaceLiquid(@Nullable Player player, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid)
+    public boolean canPlaceLiquid(@Nullable LivingEntity player, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid)
     {
         return false;
     }
@@ -115,7 +116,7 @@ public abstract class TFCKelpBlock extends BodyPlantBlock implements IFluidLogga
     }
 
     @Override
-    public ItemStack pickupBlock(@Nullable Player player, LevelAccessor level, BlockPos pos, BlockState state)
+    public ItemStack pickupBlock(@Nullable LivingEntity player, LevelAccessor level, BlockPos pos, BlockState state)
     {
         return ItemStack.EMPTY; // Don't allow taking the fluid
     }

@@ -1,5 +1,21 @@
 # TFC Foundations — Current Project Status
 
+## 2026-10-13 UTC — Explosion, fluid and block callback repair checkpoint
+
+Continued directly on `26.1.2` from `9caa884b6df3b538d1b983d321ac49828048a6ed`. No branches were created; the live refs remain `26.1.2` and `26.x`, and `26.x` source was not changed. Dependency pins and candidate version `0.0.0` are unchanged.
+
+Both pinned Gradle `compileJava` and same-mode diagnostic javac reproduce **713 → 650 errors** (63 fewer displayed diagnostics). The final diagnostic pass covers 1,661 sources, exits 1, and does not time out. The full `compileJava compileDataJava compileTestJava build --continue` attempt **fails main compilation with 650 errors**; data/test compilation and packaging remain blocked. All three license tasks, pinned-dependency verification and asset download pass. Java 25.0.4.1 and Gradle 9.2.1 were used with the existing opt-in, untracked NeoForm 2.0.31 host Java-path fallback. The separate asset-download Java 21 trust-store issue was corrected using this host's trusted proxy CA; no TLS checks were disabled. This is not stock-toolchain or release validation.
+
+Changes:
+- Powder-keg explosions extend native `ServerExplosion`. Two registered private-method invokers retain native blast-ray calculation, entity damage, knockback and the NeoForge detonation hook while keeping TFC's separate filtered block/drop phase. Natural-only/cannot-break tags, igniter loot context, drop merging and the 64-block player notification radius are retained. Both block and minecart callers require `ServerLevel`; chain-reaction callbacks and explosion packets use the current API.
+- Mixing fluids use native server tick/spread/get-new-liquid signatures. The fluid mixin handler matches them. Wall passability uses a static invoker, and water-hole/pass-through invokers match the current native signatures. Existing mixing calculations, source thresholds, tick scheduling and molten-fluid lava random ticks remain.
+- Block collision, comparator, bucket pickup/fluid placement, harvesting, fall-distance and cached light callbacks use the inspected target signatures. Banana/fruit-leaf subclasses were updated alongside their parents so their specialized collision behavior still overrides the native callback. Thatch retains full light attenuation (15); leaf attenuation remains 1.
+- Native `Block` no longer receives text tooltip callbacks. `TooltipBlockItem` now delegates to `TooltipBlock` through the native item callback, retaining sealed-device inventory summaries and barrel/crucible item counts, fluid text and image-tooltip settings.
+
+**Validation:** `inspect_api.py` passes all 30 standalone probe runners and its diagnostic-report tests. The new runner compiles the two real accessor interfaces and verifies **19 private bridge/native callback contracts**, including staticness. Existing checks include 49 real NBT/ValueIO checks, 51 common utility/API checks, 16 flat-ingredient codec checks and CPU model/asset suites. `python resources validate` passes with zero language/model-parent/texture/blockstate/unused-model errors, including generated-texture comparison. Mixin JSON and registered source presence validate; `git diff --check` passes. Exact summary and remaining diagnostics are in `docs/foundations/validation/2026-10-13-fluid-block-api.json` and `2026-10-13-fluid-block-errors.json`.
+
+**Still open:** 650 main compiler errors, principally client registration, block/item/world rendering and resource-handler capability migration. No JAR, transformed-mixin startup, client/server launch, world save/reload, powder-keg/fluid/comparator regression or survival test passed. API/source/CPU checks are not live gameplay validation; 26.1.2 is not yet playable.
+
 ## 2026-10-13 UTC — Branch cleanup and verified common API repairs
 
 Continued the existing `26.1.2` branch at `558427da0a32ee416d6f0e5d26e127b567bd288f`. Sixteen historical `port/` refs were removed after source comparison and history consolidation (`67c57fe3`). GitHub now has only `26.1.2` and `26.x`; all deleted tips remain reachable from `26.1.2`. Both targets have an `AGENTS.md` rule prohibiting task/repair/validation/transport branches. The 26.1.2 workflow no longer names deleted branches.

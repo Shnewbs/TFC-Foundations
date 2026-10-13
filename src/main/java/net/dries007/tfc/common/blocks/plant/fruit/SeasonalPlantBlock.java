@@ -9,6 +9,7 @@ package net.dries007.tfc.common.blocks.plant.fruit;
 import java.util.function.Supplier;
 import com.google.common.base.Preconditions;
 import com.mojang.serialization.MapCodec;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -217,7 +218,7 @@ public abstract class SeasonalPlantBlock extends BushBlock implements IForgeBloc
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity)
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise)
     {
         if (entity.getType() != EntityType.ITEM && Helpers.isBlock(this, TFCTags.Blocks.THORNY_BUSHES))
         {

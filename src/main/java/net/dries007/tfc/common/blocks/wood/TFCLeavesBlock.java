@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.common.blocks.wood;
 
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.level.ScheduledTickAccess;
 
 import net.minecraft.world.level.LevelReader;
@@ -142,7 +143,7 @@ public class TFCLeavesBlock extends Block implements ILeavesBlock, IForgeBlockEx
     }
 
     @Override
-    protected int getLightBlock(BlockState state, BlockGetter level, BlockPos pos)
+    protected int getLightDampening(BlockState state)
     {
         return 1;
     }
@@ -282,7 +283,7 @@ public class TFCLeavesBlock extends Block implements ILeavesBlock, IForgeBlockEx
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity)
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise)
     {
         onEntityInside(level, entity);
     }

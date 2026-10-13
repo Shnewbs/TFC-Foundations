@@ -52,6 +52,7 @@
     "accessor.PoiSectionAccessor",
     "accessor.RecipeManagerAccessor",
     "accessor.SectionStorageAccessor",
+    "accessor.ServerExplosionAccessor",
     "accessor.SquidAccessor",
     "accessor.StructureTemplateAccessor"
   ],

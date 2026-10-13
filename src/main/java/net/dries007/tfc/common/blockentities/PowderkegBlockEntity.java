@@ -9,6 +9,7 @@ package net.dries007.tfc.common.blockentities;
 import java.util.List;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
@@ -93,12 +94,12 @@ public class PowderkegBlockEntity extends TickableInventoryBlockEntity<Powderkeg
 
     private static void explode(PowderkegBlockEntity powderkeg)
     {
-        assert powderkeg.level != null;
+        if (!(powderkeg.level instanceof ServerLevel serverLevel)) return;
         final int x = powderkeg.worldPosition.getX();
         final int y = powderkeg.worldPosition.getY();
         final int z = powderkeg.worldPosition.getZ();
         final int strength = getStrength(powderkeg);
-        PowderKegExplosion explosion = new PowderKegExplosion(powderkeg.level, powderkeg.igniter, x, y, z, strength);
+        PowderKegExplosion explosion = new PowderKegExplosion(serverLevel, powderkeg.igniter, x, y, z, strength);
         explosion.explode();
         explosion.finalizeExplosion(true);
         explosion.sendExplosionPacketToClients();

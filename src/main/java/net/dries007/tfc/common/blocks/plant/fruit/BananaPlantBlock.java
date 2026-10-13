@@ -8,6 +8,7 @@ package net.dries007.tfc.common.blocks.plant.fruit;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -246,7 +247,7 @@ public class BananaPlantBlock extends SeasonalPlantBlock implements HoeOverlayBl
     }
 
     @Override
-    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity)
+    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise)
     {
         // no op the superclass
     }

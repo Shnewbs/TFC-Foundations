@@ -39,12 +39,9 @@ public abstract class MoltenFluid extends BaseFlowingFluid
     }
 
     @Override
-    protected void randomTick(Level worldIn, BlockPos pos, FluidState state, RandomSource random)
+    protected void randomTick(ServerLevel worldIn, BlockPos pos, FluidState state, RandomSource random)
     {
-        if (worldIn instanceof ServerLevel serverLevel)
-        {
-            lava.randomTick(serverLevel, pos, state, random);
-        }
+        lava.randomTick(worldIn, pos, state, random);
     }
 
     @Nullable

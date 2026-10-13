@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.common.blocks;
 
+import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
@@ -108,7 +109,7 @@ public class CrateBlock extends DeviceBlock
     }
 
     @Override
-    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos)
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction)
     {
         return level.getBlockEntity(pos) instanceof CrateBlockEntity crate ? ItemHandlerHelper.calcRedstoneFromInventory(crate.getInventory()) : 0;
     }

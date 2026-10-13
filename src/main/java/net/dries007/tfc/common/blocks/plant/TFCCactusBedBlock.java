@@ -7,6 +7,7 @@
 package net.dries007.tfc.common.blocks.plant;
 
 import javax.annotation.Nullable;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -67,7 +68,7 @@ public abstract class TFCCactusBedBlock extends PlantBlock
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity)
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise)
     {
         entity.hurt(entity.damageSources().cactus(), 1f);
     }

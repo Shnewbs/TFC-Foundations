@@ -143,7 +143,7 @@ public class KrummholzBlock extends ExtendedBlock
     }
 
     @Override
-    public boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos)
+    public boolean propagatesSkylightDown(BlockState state)
     {
         return true;
     }

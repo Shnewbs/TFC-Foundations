@@ -640,7 +640,7 @@ public final class FluidHelpers
 
             // Look for adjacent fluids that are the same, for purposes of flow into this fluid
             // canPassThroughWall detects if a fluid state has a barrier - e.g. via a stair edge - that would prevent it from connecting to the current block.
-            if (offsetFluid.getType() instanceof FlowingFluid && ((FlowingFluidAccessor) self).invoke$canPassThroughWall(direction, level, pos, blockStateIn, offsetPos, offsetState))
+            if (offsetFluid.getType() instanceof FlowingFluid && FlowingFluidAccessor.invoke$canPassThroughWall(direction, level, pos, blockStateIn, offsetPos, offsetState))
             {
                 if (offsetFluid.isSource() && level instanceof ServerLevel serverLevel && EventHooks.canCreateFluidSource(serverLevel, offsetPos, offsetState))
                 {
@@ -696,7 +696,7 @@ public final class FluidHelpers
         BlockPos abovePos = pos.above();
         BlockState aboveState = level.getBlockState(abovePos);
         FluidState aboveFluid = aboveState.getFluidState();
-        if (!aboveFluid.isEmpty() && aboveFluid.getType() instanceof FlowingFluid && ((FlowingFluidAccessor) self).invoke$canPassThroughWall(Direction.UP, level, pos, blockStateIn, abovePos, aboveState))
+        if (!aboveFluid.isEmpty() && aboveFluid.getType() instanceof FlowingFluid && FlowingFluidAccessor.invoke$canPassThroughWall(Direction.UP, level, pos, blockStateIn, abovePos, aboveState))
         {
             return ((FlowingFluid) aboveFluid.getType()).getFlowing(8, true);
         }

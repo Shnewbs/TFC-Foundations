@@ -98,7 +98,7 @@ public class FireboxBlock extends DeviceBlock implements IBellowsConsumer
     }
 
     @Override
-    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos)
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction)
     {
         if (level.getBlockEntity(pos) instanceof FireboxBlockEntity firebox)
         {

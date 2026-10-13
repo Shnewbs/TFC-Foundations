@@ -14,6 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -76,9 +77,9 @@ public abstract class MixingFluid extends BaseFlowingFluid
     }
 
     /**
-     * @see net.minecraft.world.level.material.FlowingFluid#spreadToSides(Level, BlockPos, FluidState, BlockState)
+     * @see net.minecraft.world.level.material.FlowingFluid#spreadToSides(ServerLevel, BlockPos, FluidState, BlockState)
      */
-    public void spreadToSides(Level level, BlockPos pos, FluidState sourceFluid, BlockState sourceState)
+    public void spreadToSides(ServerLevel level, BlockPos pos, FluidState sourceFluid, BlockState sourceState)
     {
         int adjacentAmount = sourceFluid.getAmount() - getDropOff(level);
         if (sourceFluid.getValue(FALLING))
@@ -105,7 +106,7 @@ public abstract class MixingFluid extends BaseFlowingFluid
     }
 
     @Override
-    protected void spread(Level level, BlockPos pos, FluidState stateIn)
+    protected void spread(ServerLevel level, BlockPos pos, BlockState stateAtPos, FluidState stateIn)
     {
         // Only spread if the current state has actual fluid
         if (!stateIn.isEmpty())
@@ -131,7 +132,7 @@ public abstract class MixingFluid extends BaseFlowingFluid
                     spreadToSides(level, pos, stateIn, blockStateAt);
                 }
             }
-            else if (stateIn.isSource() || !((FlowingFluidAccessor) this).invoke$isWaterHole(level, fluidstate.getType(), pos, blockStateAt, posBelow, blockStateBelow))
+            else if (stateIn.isSource() || !((FlowingFluidAccessor) this).invoke$isWaterHole(level, pos, blockStateAt, posBelow, blockStateBelow))
             {
                 // Source blocks, if they can't spread downwards, will always spread sideways (this happens one tick after they spread downwards)
                 // Flowing blocks will only spread sideways if they can't fall downwards, either to a water hole, or directly falling down (the above if chain)
@@ -144,13 +145,13 @@ public abstract class MixingFluid extends BaseFlowingFluid
      * Modified to use mixing mechanics, in such a way that can be exposed to other subclasses
      */
     @Override
-    protected FluidState getNewLiquid(Level level, BlockPos pos, BlockState blockStateIn)
+    protected FluidState getNewLiquid(ServerLevel level, BlockPos pos, BlockState blockStateIn)
     {
         return FluidHelpers.getNewFluidWithMixing(this, level, pos, blockStateIn, getDropOff(level));
     }
 
     @Override
-    public void tick(Level level, BlockPos pos, FluidState state)
+    public void tick(ServerLevel level, BlockPos pos, BlockState stateAtPos, FluidState state)
     {
         if (!state.isSource())
         {
@@ -175,7 +176,14 @@ public abstract class MixingFluid extends BaseFlowingFluid
                 level.updateNeighborsAt(pos, blockstate.getBlock());
             }
         }
-        spread(level, pos, state);
+        spread(level, pos, level.getBlockState(pos), state);
+    }
+
+    private boolean canSpreadTo(Level level, BlockPos sourcePos, BlockState sourceState, Direction direction,
+        BlockPos targetPos, BlockState targetState, FluidState targetFluid, Fluid fluid)
+    {
+        return ((FlowingFluidAccessor) this).invoke$canPassThrough(level, fluid, sourcePos, sourceState, direction, targetPos, targetState, targetFluid)
+            && targetFluid.canBeReplacedWith(level, targetPos, fluid, direction);
     }
 
     /**

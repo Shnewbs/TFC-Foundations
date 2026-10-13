@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.common.blocks;
 
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ScheduledTickAccess;
 
 import java.util.Map;
@@ -189,7 +190,7 @@ public class TFCBubbleColumnBlock extends BubbleColumnBlock
     }
 
     @Override
-    public ItemStack pickupBlock(@Nullable Player player, LevelAccessor level, BlockPos pos, BlockState state)
+    public ItemStack pickupBlock(@Nullable LivingEntity player, LevelAccessor level, BlockPos pos, BlockState state)
     {
         level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL_IMMEDIATE);
         return new ItemStack(getFluid().getBucket());

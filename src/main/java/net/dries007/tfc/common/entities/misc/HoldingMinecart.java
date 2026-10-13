@@ -264,9 +264,9 @@ public class HoldingMinecart extends AbstractMinecart
 
     protected void explode(int strength)
     {
-        if (!this.level().isClientSide())
+        if (this.level() instanceof ServerLevel serverLevel)
         {
-            final PowderKegExplosion explosion = new PowderKegExplosion(level(), null, getX(), getY(), getZ(), strength);
+            final PowderKegExplosion explosion = new PowderKegExplosion(serverLevel, null, getX(), getY(), getZ(), strength);
             explosion.explode();
             explosion.finalizeExplosion(true);
             explosion.sendExplosionPacketToClients();

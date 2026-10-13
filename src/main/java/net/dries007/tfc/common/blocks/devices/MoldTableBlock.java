@@ -128,7 +128,7 @@ public class MoldTableBlock extends ExtendedBlock implements EntityBlockExtensio
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos)
+    public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction)
     {
         return level.getBlockEntity(pos, TFCBlockEntities.MOLD_TABLE.get()).map(
             mold -> {

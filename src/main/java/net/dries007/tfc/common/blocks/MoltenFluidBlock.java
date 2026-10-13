@@ -7,6 +7,7 @@
 package net.dries007.tfc.common.blocks;
 
 import java.util.function.Supplier;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -22,7 +23,7 @@ public class MoltenFluidBlock extends LiquidBlock
     }
 
     @Override
-    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity)
+    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise)
     {
         if (entity.getY() < (pos.getY() + state.getFluidState().getHeight(level, pos)))
         {

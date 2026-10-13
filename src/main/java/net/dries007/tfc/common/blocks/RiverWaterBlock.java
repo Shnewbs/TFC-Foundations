@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.common.blocks;
 
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
@@ -74,7 +75,7 @@ public class RiverWaterBlock extends LiquidBlock implements BucketPickupExtensio
     }
 
     @Override
-    public ItemStack pickupBlock(@Nullable Player player, LevelAccessor level, BlockPos pos, BlockState state)
+    public ItemStack pickupBlock(@Nullable LivingEntity player, LevelAccessor level, BlockPos pos, BlockState state)
     {
         return new ItemStack(pickupBlock(level, pos, state, IFluidHandler.FluidAction.EXECUTE).getFluid().getBucket());
     }

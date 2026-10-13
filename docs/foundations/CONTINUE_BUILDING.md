@@ -1,6 +1,6 @@
 # Continue development in another environment
 
-**Checked:** 2026-10-12. **Repository:** [Shnewbs/TFC-Foundations](https://github.com/Shnewbs/TFC-Foundations).
+**Checked:** 2026-10-13. **Repository:** [Shnewbs/TFC-Foundations](https://github.com/Shnewbs/TFC-Foundations).
 This file is the handoff entry point for another computer, operating system, IDE, or ChatGPT/Codex session. **Always consult the live branch and its latest CI run before treating the checkpoint below as current.** Do not rely on local or chat-only work being available elsewhere.
 
 ## Branches and pinned targets
@@ -14,7 +14,7 @@ Both tracks use **Java 25**, Gradle wrapper **9.2.1**, and ModDevGradle **2.0.14
 
 ## Latest verified continuation — 2026-10-13 UTC
 
-Only `26.1.2` and `26.x` remain on GitHub. Do not recreate task branches. The latest source/API repair checkpoint reproduces **759 → 713** errors in both target Gradle compilation and same-mode diagnostic javac; it is not a successful build. Final traversal covers 1,660 sources without a timeout. All three license tasks, 16 flat-ingredient checks and 49 NBT/ValueIO checks pass. See the latest project status, work log and `validation/2026-10-13-common-api.json`. Rendering and native capability registration/transactions remain the largest groups. No JAR or live game test passed.
+Only `26.1.2` and `26.x` remain on GitHub. Do not recreate task branches. The latest explosion/fluid/block callback checkpoint reproduces **713 → 650 errors** in both pinned Gradle and same-mode diagnostic main compilation; it is not a successful build. Diagnostic traversal covers 1,661 sources without a timeout. The full build fails main compilation, blocking data/test compilation and packaging. All three license tasks, dependency verification, asset download, resource validation, all 30 `inspect_api.py` probe runners and the new 19 mixin/native API contracts pass. See the latest project status, work log, `validation/2026-10-13-fluid-block-api.json` and `validation/2026-10-13-fluid-block-errors.json`. Rendering and native resource-handler registration/transactions remain the largest groups. No JAR or live game test passed.
 
 ## Current local checkpoint (2026-10-12)
 
@@ -31,7 +31,7 @@ python tools/porting/prepare_neoform_java_fallback.py --runtime /path/to/neoform
 ./gradlew -I /path/to/local-neoform-fallback/neoform-java-fallback.gradle -I tools/porting/diagnostics.gradle writePortClasspath build --continue --no-daemon --no-configuration-cache --console=plain
 ```
 
-The helper changes only two host-executable lookups; dependency pins, game patches, source sets and failure gates remain active. Do not commit the generated JAR or describe this as stock-toolchain validation. On this host full `build` also could not provision the separate **Java 21 toolchain requested by `downloadAssets`**; main compilation uses Java 25. A normal environment still needs a full unmodified build and runtime tests.
+The helper changes only two host-executable lookups; dependency pins, game patches, source sets and failure gates remain active. Do not commit the generated JAR or describe this as stock-toolchain validation. Earlier host attempts could not provision the separate **Java 21 toolchain requested by `downloadAssets`**. The latest attempt provisions it and completes asset download after installing the host's trusted proxy CA in the local build JDKs; main compilation still uses Java 25 and fails with 650 errors. A normal environment still needs a full unmodified build and runtime tests.
 
 ## Historical public checkpoint (2026-10-10)
 

@@ -133,7 +133,7 @@ public class IngotPileBlock extends ExtendedBlock implements EntityBlockExtensio
     }
 
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid)
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, ItemStack tool, boolean willHarvest, FluidState fluid)
     {
         final boolean canActuallyHarvest = state.canHarvestBlock(level, pos, player);
 

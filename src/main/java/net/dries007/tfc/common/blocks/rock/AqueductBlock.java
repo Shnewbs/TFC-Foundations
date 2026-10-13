@@ -222,7 +222,7 @@ public class AqueductBlock extends HorizontalDirectionalBlock implements IFluidL
     }
 
     @Override
-    public ItemStack pickupBlock(@Nullable Player player, LevelAccessor level, BlockPos pos, BlockState state)
+    public ItemStack pickupBlock(@Nullable LivingEntity player, LevelAccessor level, BlockPos pos, BlockState state)
     {
         final Fluid containedFluid = state.getValue(getFluidProperty()).getFluid();
         if (containedFluid == Fluids.LAVA)

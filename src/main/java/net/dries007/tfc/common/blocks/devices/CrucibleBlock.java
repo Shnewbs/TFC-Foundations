@@ -12,7 +12,9 @@ import net.minecraft.world.level.ScheduledTickAccess;
 
 import net.minecraft.world.level.LevelReader;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -27,6 +29,7 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -180,7 +183,7 @@ public class CrucibleBlock extends DeviceBlock implements EntityBlockExtension, 
     }
 
     @Override
-    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos)
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction)
     {
         if (level.getBlockEntity(pos) instanceof CrucibleBlockEntity crucible)
         {
@@ -194,21 +197,23 @@ public class CrucibleBlock extends DeviceBlock implements EntityBlockExtension, 
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag tooltipFlag)
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag tooltipFlag)
     {
         final CrucibleComponent component = stack.getOrDefault(TFCComponents.CRUCIBLE, CrucibleComponent.EMPTY);
         if (!component.isEmpty())
         {
             if (!TFCConfig.CLIENT.displayItemContentsAsImages.get())
             {
-                tooltip.add(Component.translatable("tfc.tooltip.small_vessel.contents").withStyle(ChatFormatting.DARK_GREEN));
-                Helpers.addInventoryTooltipInfo(component.itemContent(), tooltip);
+                tooltip.accept(Component.translatable("tfc.tooltip.small_vessel.contents").withStyle(ChatFormatting.DARK_GREEN));
+                final List<Component> lines = new ArrayList<>();
+                Helpers.addInventoryTooltipInfo(component.itemContent(), lines);
+                lines.forEach(tooltip);
             }
 
             final FluidStack fluid = component.fluidContent().getResult();
             if (!fluid.isEmpty())
             {
-                tooltip.add(Tooltips.fluidUnitsOf(fluid));
+                tooltip.accept(Tooltips.fluidUnitsOf(fluid));
             }
         }
     }

@@ -10,6 +10,7 @@ package net.dries007.tfc.common.blocks.devices;
 import java.util.Optional;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -118,7 +119,7 @@ public class PowderkegBlock extends SealableDeviceBlock
     }
 
     @Override
-    public void onBlockExploded(BlockState state, Level level, BlockPos pos, Explosion explosion)
+    public void onBlockExploded(BlockState state, ServerLevel level, BlockPos pos, Explosion explosion)
     {
         if (!state.getValue(LIT))
         {
