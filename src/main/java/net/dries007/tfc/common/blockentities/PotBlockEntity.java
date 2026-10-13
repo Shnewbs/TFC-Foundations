@@ -160,7 +160,7 @@ public class PotBlockEntity extends AbstractFirepitBlockEntity<PotBlockEntity.Po
                 for (int slot = inventory.inputStart(); slot <= inventory.inputEnd(); slot++)
                 {
                     // Consume items, but set container items if they exist
-                    inventory.setStackInSlot(slot, inventory.getStackInSlot(slot).getCraftingRemainingItem());
+                    inventory.setStackInSlot(slot, craftingRemainder(inventory.getStackInSlot(slot)));
                 }
 
                 output.onFinish(inventory); // Let the output handle filling into the empty pot
@@ -237,10 +237,17 @@ public class PotBlockEntity extends AbstractFirepitBlockEntity<PotBlockEntity.Po
     protected void updateCachedRecipe()
     {
         assert level != null;
-        cachedRecipe = level.getRecipeManager()
-            .getRecipeFor(TFCRecipeTypes.POT.get(), inventory, level)
+        cachedRecipe = RecipeHelpers.getRecipes(level, TFCRecipeTypes.POT).stream()
+            .filter(holder -> holder.value().matches(inventory, level))
             .map(RecipeHolder::value)
+            .findFirst()
             .orElse(null);
+    }
+
+    private static ItemStack craftingRemainder(ItemStack input)
+    {
+        final var remainder = input.getItem().getCraftingRemainder(input);
+        return remainder == null ? ItemStack.EMPTY : remainder.create();
     }
 
     public boolean isBoiling()

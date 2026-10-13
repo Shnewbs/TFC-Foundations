@@ -118,10 +118,12 @@ public interface HorseProperties extends MammalProperties
         EntityHelpers.setNullableAttribute(baby, Attributes.MAX_HEALTH, maxHealth);
     }
 
+    SoundEvent getEatingSound();
+
     @Override
     default SoundEvent eatingSound(ItemStack stack)
     {
-        return getEntity().getEatingSound();
+        return getEatingSound();
     }
 
     @Override

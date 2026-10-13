@@ -12,6 +12,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemInstance;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -108,15 +110,9 @@ public class BarrelBlockItem extends TooltipBlockItem implements Rackable
     }
 
     @Override
-    public boolean hasCraftingRemainingItem(ItemStack stack)
+    public ItemStackTemplate getCraftingRemainder(ItemInstance instance)
     {
-        return true;
-    }
-
-    @Override
-    public ItemStack getCraftingRemainingItem(ItemStack itemStack)
-    {
-        return getDefaultInstance();
+        return new ItemStackTemplate(this);
     }
 
     public BlockState getStateForPlacement(LevelAccessor level, BlockPos pos)

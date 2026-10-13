@@ -229,8 +229,9 @@ public class PlacedItemBlock extends DeviceBlock implements IForgeBlockExtension
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult result, LevelReader level, BlockPos pos, Player player)
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player)
     {
+        final HitResult result = player.pick(player.blockInteractionRange(), 1F, false);
         final ItemStack backup = asItem() == Items.AIR ? ItemStack.EMPTY : new ItemStack(asItem());
         if (result instanceof BlockHitResult blockResult)
         {

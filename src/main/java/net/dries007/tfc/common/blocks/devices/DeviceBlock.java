@@ -12,7 +12,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.HitResult;
 
 import net.dries007.tfc.common.blockentities.InventoryBlockEntity;
 import net.dries007.tfc.common.blocks.EntityBlockExtension;
@@ -50,15 +49,14 @@ public class DeviceBlock extends ExtendedBlock implements IForgeBlockExtension, 
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player)
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player)
     {
-        final ItemStack stack = super.getCloneItemStack(state, target, level, pos, player);
+        final ItemStack stack = super.getCloneItemStack(level, pos, state, includeData, player);
         if (removeBehavior == InventoryRemoveBehavior.SAVE)
         {
             final BlockEntity entity = level.getBlockEntity(pos);
             if (entity instanceof InventoryBlockEntity<?> inv)
             {
-                // todo: I don't think this should use saveToItem() if we're saving only via components
                 inv.saveToItem(stack, level.registryAccess());
                 if (this instanceof IItemSize size)
                 {

@@ -119,9 +119,9 @@ public class DryingBricksBlock extends BottomSupportedDeviceBlock
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player)
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player)
     {
-        return state.getValue(DRIED) ? dryItem.get().getDefaultInstance() : super.getCloneItemStack(state, target, level, pos, player);
+        return state.getValue(DRIED) ? dryItem.get().getDefaultInstance() : super.getCloneItemStack(level, pos, state, includeData, player);
     }
 
     @Override

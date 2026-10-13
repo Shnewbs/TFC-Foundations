@@ -6,7 +6,7 @@
 
 package net.dries007.tfc.common.items;
 
-import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import net.minecraft.network.chat.Component;
@@ -22,6 +22,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -217,12 +218,12 @@ public class MoldItem extends Item
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag tooltipFlag)
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag tooltipFlag)
     {
         final FluidStack fluid = FluidHelpers.getContainedFluidInTank(stack);
         if (!fluid.isEmpty())
         {
-            tooltip.add(Tooltips.fluidUnitsAndCapacityOf(fluid, containerInfo.fluidCapacity()));
+            tooltip.accept(Tooltips.fluidUnitsAndCapacityOf(fluid, containerInfo.fluidCapacity()));
         }
     }
 }

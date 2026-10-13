@@ -6,13 +6,14 @@
 
 package net.dries007.tfc.common.items;
 
-import java.util.List;
+import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -73,12 +74,12 @@ public class LampBlockItem extends BlockItem
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag tooltipFlag)
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag tooltipFlag)
     {
         final FluidStack fluid = FluidHelpers.getContainedFluid(stack);
         if (!fluid.isEmpty())
         {
-            tooltip.add(Tooltips.fluidUnitsOf(fluid));
+            tooltip.accept(Tooltips.fluidUnitsOf(fluid));
         }
     }
 }

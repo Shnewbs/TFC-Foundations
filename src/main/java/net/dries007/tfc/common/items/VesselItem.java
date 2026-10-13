@@ -6,7 +6,9 @@
 
 package net.dries007.tfc.common.items;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.Optional;
 
 import net.minecraft.ChatFormatting;
@@ -22,6 +24,7 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.Nullable;
@@ -207,7 +210,7 @@ public class VesselItem extends Item
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag tooltipFlag)
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag tooltipFlag)
     {
         final @Nullable Vessel vessel = Vessel.get(stack);
         if (vessel != null && !vessel.isEmpty()) // Only show the 'contents' label if we actually have contents
@@ -216,18 +219,20 @@ public class VesselItem extends Item
             {
                 if (!TFCConfig.CLIENT.displayItemContentsAsImages.get())
                 {
-                    tooltip.add(Component.translatable("tfc.tooltip.small_vessel.contents").withStyle(ChatFormatting.DARK_GREEN));
-                    Helpers.addInventoryTooltipInfo(vessel.contents(), tooltip);
+                    tooltip.accept(Component.translatable("tfc.tooltip.small_vessel.contents").withStyle(ChatFormatting.DARK_GREEN));
+                    final List<Component> contents = new ArrayList<>();
+                    Helpers.addInventoryTooltipInfo(vessel.contents(), contents);
+                    contents.forEach(tooltip);
                 }
             }
             else
             {
-                tooltip.add(Component.translatable("tfc.tooltip.small_vessel.contents").withStyle(ChatFormatting.DARK_GREEN));
-                tooltip.add(Tooltips.fluidUnitsAndCapacityOf(vessel.getFluidInTank(0).getHoverName(), vessel.getFluidInTank(0).getAmount(), containerInfo.fluidCapacity())
+                tooltip.accept(Component.translatable("tfc.tooltip.small_vessel.contents").withStyle(ChatFormatting.DARK_GREEN));
+                tooltip.accept(Tooltips.fluidUnitsAndCapacityOf(vessel.getFluidInTank(0).getHoverName(), vessel.getFluidInTank(0).getAmount(), containerInfo.fluidCapacity())
                     .append(Tooltips.moltenOrSolid(vessel.isMolten())));
                 if (!Helpers.isEmpty(vessel.contents()))
                 {
-                    tooltip.add(Component.translatable("tfc.tooltip.small_vessel.still_has_unmelted_items").withStyle(ChatFormatting.RED));
+                    tooltip.accept(Component.translatable("tfc.tooltip.small_vessel.still_has_unmelted_items").withStyle(ChatFormatting.RED));
                 }
             }
         }

@@ -293,7 +293,7 @@ public abstract class TFCChestedHorse extends AbstractChestedHorse implements Ho
     }
 
     @Override
-    protected SoundEvent getEatingSound()
+    public SoundEvent getEatingSound()
     {
         super.getEatingSound();
         return eat.get();

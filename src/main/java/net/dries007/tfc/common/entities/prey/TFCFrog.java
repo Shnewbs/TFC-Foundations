@@ -10,7 +10,8 @@ import java.util.Optional;
 
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -29,7 +30,7 @@ import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.frog.Frog;
-import net.minecraft.world.entity.animal.frog.FrogVariant;
+import net.minecraft.world.entity.animal.frog.FrogVariants;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -156,7 +157,7 @@ public class TFCFrog extends Frog implements Temptable, BrainAnimalBehavior
         final ChunkData data = ChunkData.get(level, pos);
         final float temp = data.getAverageSeaLevelTemp(pos);
 
-        setVariant(BuiltInRegistries.FROG_VARIANT.getHolderOrThrow(temp < 0 ? FrogVariant.COLD : temp > 18 ? FrogVariant.WARM : FrogVariant.TEMPERATE));
+        applyImplicitComponent(DataComponents.FROG_VARIANT, level.registryAccess().lookupOrThrow(Registries.FROG_VARIANT).getOrThrow(temp < 0 ? FrogVariants.COLD : temp > 18 ? FrogVariants.WARM : FrogVariants.TEMPERATE));
         setIsMale(random.nextBoolean());
         return spawnData;
     }

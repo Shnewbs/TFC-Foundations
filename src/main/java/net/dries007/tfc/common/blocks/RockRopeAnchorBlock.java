@@ -13,7 +13,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.HitResult;
 
 import net.dries007.tfc.common.blocks.rock.RockSpikeBlock;
 
@@ -43,7 +42,7 @@ public class RockRopeAnchorBlock extends RopeAnchorBlock
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player)
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player)
     {
         return spike.get().getCloneItemStack(level, pos, getStateAfterRemoval(state), false, player);
     }

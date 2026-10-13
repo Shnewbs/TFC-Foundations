@@ -105,13 +105,13 @@ public class BowlBlock extends BottomSupportedDeviceBlock
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player)
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player)
     {
 
         if (this == TFCBlocks.WOODEN_BOWL.get())
         {
             return new ItemStack(Items.BOWL);
         }
-        return super.getCloneItemStack(state, target, level, pos, player);
+        return super.getCloneItemStack(level, pos, state, includeData, player);
     }
 }

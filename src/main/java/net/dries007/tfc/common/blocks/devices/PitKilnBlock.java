@@ -212,8 +212,9 @@ public class PitKilnBlock extends DeviceBlock
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult result, LevelReader level, BlockPos pos, Player player)
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player)
     {
+        final HitResult result = player.pick(player.blockInteractionRange(), 1F, false);
         if (result instanceof BlockHitResult blockResult && level.getBlockEntity(pos) instanceof PitKilnBlockEntity placedItem)
         {
             return placedItem.getCloneItemStack(state, blockResult);

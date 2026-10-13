@@ -14,7 +14,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.MilkBucketItem;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,18 +24,13 @@ import net.dries007.tfc.common.component.food.FoodData;
 import net.dries007.tfc.common.player.IPlayerInfo;
 import net.dries007.tfc.config.TFCConfig;
 
-@Mixin(MilkBucketItem.class)
-public abstract class MilkBucketItemMixin extends Item
+@Mixin(Item.class)
+public abstract class MilkBucketItemMixin
 {
-    private MilkBucketItemMixin(Properties properties)
-    {
-        super(properties);
-    }
-
     @Inject(method = "finishUsingItem", at = @At("HEAD"), cancellable = true)
     private void changeBehaviorOfDrinkingMilk(ItemStack stack, Level level, LivingEntity entity, CallbackInfoReturnable<ItemStack> cir)
     {
-        if (!TFCConfig.SERVER.enableVanillaDrinkingMilkClearsPotionEffects.get())
+        if (stack.is(Items.MILK_BUCKET) && !TFCConfig.SERVER.enableVanillaDrinkingMilkClearsPotionEffects.get())
         {
             if (entity instanceof Player player)
             {
@@ -45,7 +39,7 @@ public abstract class MilkBucketItemMixin extends Item
             if (entity instanceof ServerPlayer player)
             {
                 CriteriaTriggers.CONSUME_ITEM.trigger(player, stack);
-                player.awardStat(Stats.ITEM_USED.get(this));
+                player.awardStat(Stats.ITEM_USED.get((Item) (Object) this));
             }
 
             if (entity instanceof Player player && !player.getAbilities().instabuild)

@@ -38,6 +38,7 @@ import org.jetbrains.annotations.Nullable;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.effect.TFCEffects;
 import net.dries007.tfc.util.Helpers;
+import net.dries007.tfc.mixin.accessor.SquidAccessor;
 
 
 public class TFCSquid extends Squid implements AquaticMob
@@ -48,6 +49,11 @@ public class TFCSquid extends Squid implements AquaticMob
     public TFCSquid(EntityType<? extends Squid> type, Level level)
     {
         super(type, level);
+    }
+
+    public void setMovementVector(float x, float y, float z)
+    {
+        ((SquidAccessor) this).tfc$setMovementVector(new Vec3(x, y, z));
     }
 
     @Override

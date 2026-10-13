@@ -267,7 +267,7 @@ public class TFCHorse extends Horse implements HorseProperties
     }
 
     @Override
-    protected SoundEvent getEatingSound()
+    public SoundEvent getEatingSound()
     {
         super.getEatingSound();
         return eat.get();

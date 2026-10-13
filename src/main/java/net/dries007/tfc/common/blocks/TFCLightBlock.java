@@ -124,7 +124,7 @@ public class TFCLightBlock extends Block implements IFluidLoggable
 
     @Override
     @SuppressWarnings("deprecation")
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player)
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player)
     {
         return LightBlock.setLightOnStack(super.getCloneItemStack(level, pos, state, false), state.getValue(LEVEL));
     }

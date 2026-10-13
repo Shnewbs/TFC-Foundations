@@ -10,6 +10,7 @@ import java.util.Objects;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
@@ -22,6 +23,9 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -71,6 +75,19 @@ public abstract class InventoryBlockEntity<C extends IItemHandlerModifiable & Va
         this.inventory = inventoryFactory.create(this);
         this.sidedInventory = new SidedHandler<>(InventoryBlockEntity.this.inventory);
         this.defaultName = Component.translatable(modId + ".block_entity." + Objects.requireNonNull(BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(type)).getPath());
+    }
+
+    /** Captures custom data and components using the native typed block-entity item format. */
+    public void saveToItem(ItemStack stack, HolderLookup.Provider registries)
+    {
+        try (ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(problemPath(), TerraFirmaCraft.LOGGER))
+        {
+            final TagValueOutput output = TagValueOutput.createWithContext(reporter, registries);
+            saveCustomOnly(output);
+            removeComponentsFromTag(output);
+            BlockItem.setBlockEntityData(stack, getType(), output);
+            stack.applyComponents(collectComponents());
+        }
     }
 
     /**

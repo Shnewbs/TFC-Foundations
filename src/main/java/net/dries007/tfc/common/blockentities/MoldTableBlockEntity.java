@@ -46,6 +46,7 @@ import net.dries007.tfc.common.component.heat.IHeatView;
 import net.dries007.tfc.common.component.mold.IMold;
 import net.dries007.tfc.common.recipes.CastingRecipe;
 import net.dries007.tfc.common.recipes.InstantBarrelRecipe;
+import net.dries007.tfc.common.recipes.RecipeHelpers;
 import net.dries007.tfc.common.recipes.TFCRecipeTypes;
 import net.dries007.tfc.util.ChannelFlow;
 import net.dries007.tfc.util.FluidAlloy;
@@ -558,14 +559,10 @@ public class MoldTableBlockEntity extends TickableInventoryBlockEntity<MoldTable
 
             if (!stack.isEmpty() && level != null)
             {
-                final RecipeManager recipeManager = level.getRecipeManager();
-
                 // If there is an instant barrel recipe with the mold stack
                 // and the filled liquid, then this returns a Pair with the
                 // result ItemStack and the amount of fluid that would be consumed
-                Optional<Pair<ItemStack, Integer>> recipeResult = recipeManager
-                    .getAllRecipesFor(
-                        TFCRecipeTypes.BARREL_INSTANT.get())
+                Optional<Pair<ItemStack, Integer>> recipeResult = RecipeHelpers.getRecipes(level, TFCRecipeTypes.BARREL_INSTANT)
                     .stream()
                     .filter(
                         recipeHolder -> recipeHolder.value().getInputItem().test(stack)

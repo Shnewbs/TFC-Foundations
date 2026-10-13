@@ -6,7 +6,7 @@
 
 package net.dries007.tfc.common.items;
 
-import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.TagKey;
@@ -15,7 +15,10 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemInstance;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
@@ -111,25 +114,20 @@ public class FluidContainerItem extends Item
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag tooltipFlag)
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag tooltipFlag)
     {
         final FluidStack fluid = FluidHelpers.getContainedFluid(stack);
         if (!fluid.isEmpty())
         {
-            tooltip.add(Tooltips.fluidUnitsAndCapacityOf(fluid, containerInfo.fluidCapacity()));
+            tooltip.accept(Tooltips.fluidUnitsAndCapacityOf(fluid, containerInfo.fluidCapacity()));
         }
     }
 
     @Override
-    public ItemStack getCraftingRemainingItem(ItemStack stack)
+    public @Nullable ItemStackTemplate getCraftingRemainder(ItemInstance instance)
     {
-        return new ItemStack(this);
-    }
-
-    @Override
-    public boolean hasCraftingRemainingItem(ItemStack stack)
-    {
-        return !FluidHelpers.getContainedFluid(stack).isEmpty();
+        return instance.getOrDefault(TFCComponents.FLUID, FluidComponent.EMPTY).content().isEmpty()
+            ? null : new ItemStackTemplate(this);
     }
 
     public boolean canPlaceSourceBlocks()

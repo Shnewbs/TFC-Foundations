@@ -26,7 +26,6 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
@@ -163,7 +162,7 @@ public class SpreadingCaneBlock extends SpreadingBushBlock
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState oldState, HitResult target, LevelReader level, BlockPos pos, Player player)
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState oldState, boolean includeData, Player player)
     {
         return new ItemStack(companion.get());
     }

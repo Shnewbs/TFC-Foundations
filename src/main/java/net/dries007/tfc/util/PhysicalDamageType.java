@@ -16,7 +16,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,6 +34,8 @@ public enum PhysicalDamageType implements StringRepresentable
     CRUSHING,
     SLASHING,
     PIERCING;
+
+    private static final List<EquipmentSlot> ARMOR_SLOTS = List.of(EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD);
 
     public static final TagKey<DamageType> BYPASSES_DAMAGE_RESISTANCES = TagKey.create(Registries.DAMAGE_TYPE, Helpers.identifier("bypasses_damage_resistances"));
     public static final TagKey<DamageType> IS_PIERCING = TagKey.create(Registries.DAMAGE_TYPE, Helpers.identifier("is_piercing"));
@@ -74,8 +76,9 @@ public enum PhysicalDamageType implements StringRepresentable
 
         if (entityUnderAttack instanceof LivingEntity livingEntity)
         {
-            for (ItemStack stack : livingEntity.getArmorSlots())
+            for (EquipmentSlot slot : ARMOR_SLOTS)
             {
+                final ItemStack stack = livingEntity.getItemBySlot(slot);
                 final PhysicalDamageType.Multiplier armorMultiplier = getResistanceForItem(stack);
                 if (armorMultiplier != null)
                 {
@@ -195,7 +198,7 @@ public enum PhysicalDamageType implements StringRepresentable
 
     /**
      * A set of defensive multipliers for damage type specific resistances.
-     * This is applied when on the {@link net.minecraft.world.item.equipment.ArmorMaterial} used by a {@link ArmorItem}, and when defined via a {@link EntityDamageResistance}.
+     * This is applied when on the {@link net.minecraft.world.item.equipment.ArmorMaterial} used by an armor item, and when defined via a {@link EntityDamageResistance}.
      */
     public interface Multiplier
     {

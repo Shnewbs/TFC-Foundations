@@ -233,7 +233,7 @@ public class LogPileBlock extends DeviceBlock implements IForgeBlockExtension, E
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player)
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player)
     {
         return level.getBlockEntity(pos, TFCBlockEntities.LOG_PILE.get())
             .map(pile -> {

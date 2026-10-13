@@ -7,12 +7,15 @@
 package net.dries007.tfc.common.blocks.devices;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.function.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -23,7 +26,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -78,15 +80,17 @@ public class SealableDeviceBlock extends DeviceBlock implements IItemSize, Toolt
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag)
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag)
     {
         if (!TFCConfig.CLIENT.displayItemContentsAsImages.get())
         {
             final List<ItemStack> contents = stack.getOrDefault(TFCComponents.CONTENTS, ItemListComponent.EMPTY).contents();
             if (!Helpers.isEmpty(contents))
             {
-                tooltip.add(Tooltips.contents());
-                Helpers.addInventoryTooltipInfo(contents, tooltip);
+                tooltip.accept(Tooltips.contents());
+                final List<Component> lines = new ArrayList<>();
+                Helpers.addInventoryTooltipInfo(contents, lines);
+                lines.forEach(tooltip);
             }
         }
     }
@@ -110,9 +114,9 @@ public class SealableDeviceBlock extends DeviceBlock implements IItemSize, Toolt
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player)
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player)
     {
-        final ItemStack stack = super.getCloneItemStack(state, target, level, pos, player);
+        final ItemStack stack = super.getCloneItemStack(level, pos, state, includeData, player);
         if (state.getValue(SEALED))
         {
             final BlockEntity entity = level.getBlockEntity(pos);

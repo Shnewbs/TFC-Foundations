@@ -12,6 +12,10 @@ This file is the handoff entry point for another computer, operating system, IDE
 
 Both tracks use **Java 25**, Gradle wrapper **9.2.1**, and ModDevGradle **2.0.148**. Branch-specific `gradle.properties` is authoritative if a dependency is changed after this handoff. Current candidate version is `0.0.0`, **not** a tested release. Preserve upstream TFC gameplay, the EUPL notices, credits, identifiers, and full feature set; never hide missing APIs behind dummy implementations or disable subsystems to manufacture a green build.
 
+## Latest verified continuation — 2026-10-13 UTC
+
+Only `26.1.2` and `26.x` remain on GitHub. Do not recreate task branches. The latest source/API repair checkpoint reproduces **759 → 713** errors in both target Gradle compilation and same-mode diagnostic javac; it is not a successful build. Final traversal covers 1,660 sources without a timeout. All three license tasks, 16 flat-ingredient checks and 49 NBT/ValueIO checks pass. See the latest project status, work log and `validation/2026-10-13-common-api.json`. Rendering and native capability registration/transactions remain the largest groups. No JAR or live game test passed.
+
 ## Current local checkpoint (2026-10-12)
 
 Existing `26.1.2` continued from `c920472d` with native instrument/projectile rendering, Patchouli component extraction, fluid model registration and thirst/exhaustion callback changes. Same-mode diagnostic javac: **957 → 860 errors**, 1,658 final sources, exit 1, no timeout. Four unchanged geometry factories and the instrument/javelin CPU model suite pass. The historical 190-entry checklist is 75 source-addressed / 115 open. These checks do not establish playability. Full details and limitations are in the newest [work-log entry](WORK_LOG.md) and [validation JSON](validation/2026-10-12-render-guide.json).

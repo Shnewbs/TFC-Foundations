@@ -482,9 +482,9 @@ public enum Plant implements RegistryPlant
         CACTUS((plant, type) -> TFCCactusBlock.create(plant, fire(solid().strength(0.25F).sound(SoundType.WOOL)).pathType(PathType.DAMAGING))),
         PASSABLE_CACTUS((plant, type) -> TFCPassableCactusBlock.create(plant, fire(nonSolid(plant).strength(0.25F).sound(SoundType.WOOL)).pathType(PathType.DAMAGING))),
         DRY((plant, type) -> PlantBlock.createDry(plant, fire(nonSolid(plant).offsetType(BlockBehaviour.OffsetType.XZ)))),
-        CREEPING((plant, type) -> CreepingPlantBlock.create(plant, fire(nonSolid(plant).hasPostProcess(TFCBlocks::always)))), // Post process ensures shape is updated after world gen
-        CREEPING_STONE((plant, type) -> CreepingPlantBlock.createStone(plant, fire(nonSolid(plant).hasPostProcess(TFCBlocks::always)))),
-        EPIPHYTE((plant, type) -> EpiphytePlantBlock.create(plant, fire(nonSolid(plant).hasPostProcess(TFCBlocks::always)))),
+        CREEPING((plant, type) -> CreepingPlantBlock.create(plant, fire(nonSolid(plant)).hasPostProcess(TFCBlocks::always))), // Post process ensures shape is updated after world gen
+        CREEPING_STONE((plant, type) -> CreepingPlantBlock.createStone(plant, fire(nonSolid(plant)).hasPostProcess(TFCBlocks::always))),
+        EPIPHYTE((plant, type) -> EpiphytePlantBlock.create(plant, fire(nonSolid(plant)).hasPostProcess(TFCBlocks::always))),
         PERCHED_EPIPHYTE((plant, type) -> PlantBlock.createPerchedEpiphyte(plant, fire(nonSolid(plant)).offsetType(BlockBehaviour.OffsetType.XZ))),
         SHORT_GRASS((plant, type) -> ShortGrassBlock.create(plant, fire(nonSolid(plant)).offsetType(BlockBehaviour.OffsetType.XZ))),
         BEACH_GRASS((plant, type) -> ShortGrassBlock.createBeachGrass(plant, fire(nonSolid(plant)).offsetType(BlockBehaviour.OffsetType.XZ))),

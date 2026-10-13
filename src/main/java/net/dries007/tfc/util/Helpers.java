@@ -38,6 +38,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
@@ -748,7 +749,7 @@ public final class Helpers
         final ListTag list = new ListTag();
         for (final ItemStack stack : stacks)
         {
-            list.add(stack.saveOptional(provider));
+            list.add(ItemStack.OPTIONAL_CODEC.encodeStart(provider.createSerializationContext(NbtOps.INSTANCE), stack).getOrThrow());
         }
         return list;
     }
@@ -758,7 +759,8 @@ public final class Helpers
         stacks.clear();
         for (int i = 0; i < list.size(); i++)
         {
-            stacks.add(ItemStack.parseOptional(provider, list.getCompoundOrEmpty(i)));
+            stacks.add(ItemStack.OPTIONAL_CODEC.parse(provider.createSerializationContext(NbtOps.INSTANCE), list.getCompoundOrEmpty(i))
+                .resultOrPartial(message -> LOGGER.error("Failed to load inventory item: {}", message)).orElse(ItemStack.EMPTY));
         }
     }
 
@@ -766,7 +768,8 @@ public final class Helpers
     {
         for (int i = 0; i < list.size(); i++)
         {
-            stacks.set(i, ItemStack.parseOptional(provider, list.getCompoundOrEmpty(i)));
+            stacks.set(i, ItemStack.OPTIONAL_CODEC.parse(provider.createSerializationContext(NbtOps.INSTANCE), list.getCompoundOrEmpty(i))
+                .resultOrPartial(message -> LOGGER.error("Failed to load inventory item: {}", message)).orElse(ItemStack.EMPTY));
         }
     }
 

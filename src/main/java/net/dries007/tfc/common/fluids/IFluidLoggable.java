@@ -7,7 +7,7 @@
 package net.dries007.tfc.common.fluids;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 public interface IFluidLoggable extends SimpleWaterloggedBlock, LiquidBlockContainer, BucketPickup
 {
     @Override
-    default boolean canPlaceLiquid(@Nullable Player player, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid)
+    default boolean canPlaceLiquid(@Nullable LivingEntity player, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid)
     {
         final Fluid containedFluid = state.getValue(getFluidProperty()).getFluid();
         if (containedFluid == Fluids.EMPTY)
@@ -61,7 +61,7 @@ public interface IFluidLoggable extends SimpleWaterloggedBlock, LiquidBlockConta
     }
 
     @Override
-    default ItemStack pickupBlock(@Nullable Player player, LevelAccessor level, BlockPos pos, BlockState state)
+    default ItemStack pickupBlock(@Nullable LivingEntity player, LevelAccessor level, BlockPos pos, BlockState state)
     {
         final Fluid containedFluid = state.getValue(getFluidProperty()).getFluid();
         if (containedFluid != Fluids.EMPTY)

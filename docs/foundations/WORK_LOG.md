@@ -1,5 +1,24 @@
 # TFC Foundations — Work Log
 
+## 2026-10-13 UTC — Branch cleanup and verified common API repairs
+
+Continued the existing `26.1.2` branch at `558427da0a32ee416d6f0e5d26e127b567bd288f`. Sixteen historical `port/` refs were removed after source comparison and history consolidation (`67c57fe3`). GitHub now has only `26.1.2` and `26.x`; all deleted tips remain reachable from `26.1.2`. Both targets have an `AGENTS.md` rule prohibiting task/repair/validation/transport branches. The 26.1.2 workflow no longer names deleted branches.
+
+Restored JDK 25.0.4.1, Gradle 9.2.1 and the exact 84-file compile classpath with unchanged Minecraft 26.1.2 / NeoForge 26.1.2.114 / JEI 29.43.0.107 / Patchouli 26.1-94 pins. Both Gradle `compileJava` and diagnostic javac reproduce **759 errors** before source changes and **713 errors** afterward (46 fewer displayed diagnostics, not 46 independent bugs). Final diagnostic traversal: 1,660 sources, exit 1, no timeout, annotation processing disabled. Gradle compilation separately fails with the same 713 errors. Main, test and data license tasks pass. The opt-in, untracked NeoForm 2.0.31 host Java-path workaround was required; this is not stock-toolchain release validation.
+
+Source changes:
+- Seven tooltip hooks use the native display/consumer API. Contents, capacities and molten/solid text are retained; temporary lists are allocated only for legacy inventory-summary helpers.
+- Block picking uses the current native callback, including inventory snapshots and sealed-device contents. Placed-item and pit-kiln selection reconstruct their hit from the player's authoritative raycast. Typed block-entity data and collected components replace the removed native item-save helper.
+- Fox variants use vanilla's component/synchronization/save path; frog variants use the dynamic registry and component hook. Climate thresholds remain unchanged. Squid movement writes the native movement vector through a registered accessor; horse eating sounds keep their existing sound providers.
+- Calendar storage uses a `SavedDataType` and codec while preserving the `calendar` compound, always-dirty behavior, and legacy identifier path `tfc_calendar` under the native default namespace. The native engine now resolves namespaced saved-data paths; conversion of older worlds is not verified.
+- Pot and mold-table recipes use the existing synchronized recipe-map helpers. Crafting remainders use nullable native templates, preserving filled-container and barrel behavior. Knapping retains the legacy flat ingredient schema. Optional item-stack NBT uses the current registry-aware codec, preserving list positions and empty defaults.
+- Reload callbacks and the ChunkMap constructor mixin match the inspected target signatures. Milk's config-controlled replacement hooks native `Item.finishUsingItem` only for `minecraft:milk_bucket`, preserving other items' consumption behavior.
+
+Focused existing suites pass: **16 flat ingredient codec checks** and **49 real NBT/ValueIO checks**, seven standalone particle classes/base block entity compilation, four superclass save/sync bytecode delegations and the native tank serializer contract. These suites do not test the newly migrated calendar in a world, registry-backed inventories, actual mixin application, block picking, milk use, variants, guide appearance or gameplay. No new source exclusions, missing-system stubs, dependency changes, JAR or runtime success.
+
+Remaining: 713 main Java errors, dominated by client registration, block/item/world rendering and resource-handler capability migration. Data/test compilation, full packaging and client/server/world/survival verification remain open. Candidate version stays `0.0.0`; the independent 26.3 source was not given these gameplay changes.
+
+
 ## 2026-10-12 — JEI category extraction and ingredient enumeration (source-only)
 
 Continued existing `26.1.2` from `0c1d87de5fa635cded8bf13eb2d42e5ecbea7b2f`. Twenty recipe-category files now use `GuiGraphicsExtractor`; category and drawable callbacks retain JEI's `draw` name. Text uses `text`/`textWithWordWrap` with opaque white where the previous API accepted RGB. Lamp animation uses an explicit textured pipeline, preserving its crop/position arguments. No recipe IDs, slot coordinates, arrow/fire durations or registration lists were changed.

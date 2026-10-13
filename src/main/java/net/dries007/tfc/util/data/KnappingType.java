@@ -20,6 +20,7 @@ import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.common.recipes.IRecipePredicate;
+import net.dries007.tfc.common.recipes.LegacySizedIngredientCodecs;
 import net.dries007.tfc.common.recipes.RecipeHelpers;
 import net.dries007.tfc.network.StreamCodecs;
 import net.dries007.tfc.util.Helpers;
@@ -47,7 +48,7 @@ public record KnappingType(
 ) implements IRecipePredicate<ItemStack>
 {
     public static final Codec<KnappingType> CODEC = RecordCodecBuilder.create(i -> i.group(
-        SizedIngredient.FLAT_CODEC.fieldOf("input").forGetter(c -> c.inputItem),
+        LegacySizedIngredientCodecs.FLAT_ITEM.fieldOf("input").forGetter(c -> c.inputItem),
         Codec.INT.optionalFieldOf("amount_to_consume").forGetter(c -> c.amountToConsume == c.inputItem.count() ? Optional.empty() : Optional.of(c.amountToConsume)),
         SoundEvent.CODEC.fieldOf("click_sound").forGetter(c -> c.clickSound),
         Codec.BOOL.fieldOf("consume_after_complete").forGetter(c -> c.consumeAfterComplete),

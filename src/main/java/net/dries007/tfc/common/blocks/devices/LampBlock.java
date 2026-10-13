@@ -132,9 +132,9 @@ public class LampBlock extends ExtendedBlock implements EntityBlockExtension
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player)
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player)
     {
-        ItemStack stack = super.getCloneItemStack(state, target, level, pos, player);
+        ItemStack stack = super.getCloneItemStack(level, pos, state, includeData, player);
         CopyFluidFunction.copyToItem(stack, level.getBlockEntity(pos));
         return stack;
     }

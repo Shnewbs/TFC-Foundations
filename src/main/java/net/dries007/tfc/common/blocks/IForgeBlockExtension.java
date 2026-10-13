@@ -17,7 +17,6 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathType;
-import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.common.extensions.IBlockExtension;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,13 +48,13 @@ public interface IForgeBlockExtension extends IBlockExtension
     }
 
     @Override
-    default float getEnchantPowerBonus(BlockState state, LevelReader level, BlockPos pos)
+    default float getEnchantPowerBonus(BlockState state, BlockGetter level, BlockPos pos)
     {
         return getExtendedProperties().getEnchantmentPower(state);
     }
 
     @Override
-    default ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player)
+    default ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player)
     {
         return getExtendedProperties().getCloneItemStack(state.getBlock());
     }

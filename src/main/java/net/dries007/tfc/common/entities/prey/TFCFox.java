@@ -7,9 +7,7 @@
 package net.dries007.tfc.common.entities.prey;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
@@ -40,8 +38,6 @@ import net.dries007.tfc.world.chunkdata.ChunkData;
 
 public class TFCFox extends Fox
 {
-    private static final EntityDataAccessor<Integer> DATA_TYPE_ID_TFC = SynchedEntityData.defineId(TFCFox.class, EntityDataSerializers.INT);
-
     public TFCFox(EntityType<? extends Fox> type, Level level)
     {
         super(type, level);
@@ -56,23 +52,10 @@ public class TFCFox extends Fox
         }
     }
 
-    @Override
-    public Type getVariant()
+    public void setVariant(Fox.Variant variant)
     {
-        return Fox.Type.byId(entityData.get(DATA_TYPE_ID_TFC)); // overloads vanilla entity data so we can set it
-    }
-
-    @Override
-    public void setVariant(Fox.Type id)
-    {
-        entityData.set(DATA_TYPE_ID_TFC, id.getId());
-    }
-
-    @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder)
-    {
-        super.defineSynchedData(builder);
-        builder.define(DATA_TYPE_ID_TFC, 0);
+        // Use vanilla's component hook so climate-selected variants also survive saving.
+        super.applyImplicitComponent(DataComponents.FOX_VARIANT, variant);
     }
 
     @Override
@@ -92,7 +75,7 @@ public class TFCFox extends Fox
         spawnData = super.finalizeSpawn(level, difficulty, spawnType, spawnData);
         BlockPos pos = blockPosition();
         final ChunkData chunkData = ChunkData.get(level, pos);
-        setVariant(chunkData.getAverageSeaLevelTemp(blockPosition()) < 0 ? Type.SNOW : Type.RED);
+        setVariant(chunkData.getAverageSeaLevelTemp(blockPosition()) < 0 ? Variant.SNOW : Variant.RED);
         return spawnData;
     }
 

@@ -1,0 +1,39 @@
+{
+  "source_parent": "558427da0a32ee416d6f0e5d26e127b567bd288f",
+  "targets": {
+    "minecraft": "26.1.2",
+    "neoforge": "26.1.2.114",
+    "java": "25.0.4.1",
+    "gradle": "9.2.1",
+    "jei": "29.43.0.107",
+    "patchouli": "26.1-94"
+  },
+  "baseline": {
+    "diagnostic_errors": 759,
+    "gradle_errors": 759,
+    "source_count": 1659
+  },
+  "final": {
+    "source_count": 1660,
+    "exit_code": 1,
+    "displayed_errors": 713,
+    "timed_out": false,
+    "annotation_processing": false,
+    "note": "Diagnostic main compilation only. Error counts can hide cascading or later failures; no gameplay or full Gradle success is implied.",
+    "gradle_errors": 713,
+    "gradle_compile_exit_code": 1
+  },
+  "license_main": "pass",
+  "license_test": "pass",
+  "license_data": "pass",
+  "flat_ingredient_checks": 16,
+  "nbt_valueio_checks": 49,
+  "optional_local_neoform_java_fallback": true,
+  "playable": false,
+  "jar_produced": false,
+  "runtime_tests_run": false,
+  "remaining_branch_names": [
+    "26.1.2",
+    "26.x"
+  ]
+}

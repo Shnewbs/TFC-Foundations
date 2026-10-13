@@ -6,11 +6,12 @@
 
 package net.dries007.tfc.common.items;
 
-import java.util.List;
+import java.util.function.Consumer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import net.dries007.tfc.common.component.TFCComponents;
 import net.dries007.tfc.common.component.item.ItemComponent;
@@ -30,12 +31,12 @@ public class FlowerCuttingItem extends Item
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag)
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flag)
     {
         final ItemStack plant = stack.getOrDefault(TFCComponents.PLANT, ItemComponent.EMPTY).stack();
         if (!plant.isEmpty())
         {
-            tooltip.add(Component.translatable("tfc.tooltip.flower_cutting", plant.getHoverName()));
+            tooltip.accept(Component.translatable("tfc.tooltip.flower_cutting", plant.getHoverName()));
         }
     }
 }
