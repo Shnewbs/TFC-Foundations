@@ -582,16 +582,16 @@ public final class ClientEventHandler
         event.registerBlockEntityRenderer(TFCBlockEntities.TOOL_RACK.get(), ToolRackBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.SIGN.get(), TFCSignBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.HANGING_SIGN.get(), TFCHangingSignBlockEntityRenderer::new);
-        event.registerBlockEntityRenderer(TFCBlockEntities.BARREL.get(), ctx -> new BarrelBlockEntityRenderer());
-        event.registerBlockEntityRenderer(TFCBlockEntities.CRUCIBLE.get(), ctx -> new CrucibleBlockEntityRenderer());
+        event.registerBlockEntityRenderer(TFCBlockEntities.BARREL.get(), BarrelBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(TFCBlockEntities.CRUCIBLE.get(), CrucibleBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.LECTERN.get(), LecternRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.ANVIL.get(), AnvilBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.CHARCOAL_FORGE.get(), CharcoalForgeBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.NEST_BOX.get(), NestBoxBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.BELL.get(), TFCBellBlockEntityRenderer::new);
-        event.registerBlockEntityRenderer(TFCBlockEntities.BOWL.get(), ctx -> new BowlBlockEntityRenderer());
+        event.registerBlockEntityRenderer(TFCBlockEntities.BOWL.get(), BowlBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.HOT_POURED_GLASS.get(), ctx -> new HotPouredGlassBlockEntityRenderer());
-        event.registerBlockEntityRenderer(TFCBlockEntities.GLASS_BASIN.get(), ctx -> new GlassBasinBlockEntityRenderer());
+        event.registerBlockEntityRenderer(TFCBlockEntities.GLASS_BASIN.get(), GlassBasinBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.AXLE.get(), AxleBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.BLADED_AXLE.get(), BladedAxleBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.TRIP_HAMMER.get(), ctx -> new TripHammerBlockEntityRenderer());
@@ -604,7 +604,7 @@ public final class ClientEventHandler
         event.registerBlockEntityRenderer(TFCBlockEntities.CHANNEL.get(), ctx -> new ChannelBlockEntityRenderer());
         event.registerBlockEntityRenderer(TFCBlockEntities.MOLD_TABLE.get(), ctx -> new MoldBlockEntityRenderer());
         event.registerBlockEntityRenderer(TFCBlockEntities.CALENDAR_CLOCK.get(), CalendarClockBlockEntityRenderer::new);
-        event.registerBlockEntityRenderer(TFCBlockEntities.POWDERKEG.get(), ctx -> new PowderkegBlockEntityRenderer());
+        event.registerBlockEntityRenderer(TFCBlockEntities.POWDERKEG.get(), PowderkegBlockEntityRenderer::new);
     }
 
     public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event)

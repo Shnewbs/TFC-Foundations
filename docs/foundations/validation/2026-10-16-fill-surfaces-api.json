@@ -1,0 +1,51 @@
+{
+  "source_parent": "a53d28c949e2445334c26e4744bf9f06dd4e7d36",
+  "branch": "26.1.2",
+  "targets": {
+    "minecraft": "26.1.2",
+    "neoforge": "26.1.2.114",
+    "jei": "29.43.0.107",
+    "patchouli": "26.1-94",
+    "java": "25.0.4.1",
+    "gradle": "9.2.1"
+  },
+  "baseline": {
+    "displayed_errors": 507,
+    "source_count": 1662,
+    "gradle_compileJava_errors": 507
+  },
+  "final": {
+    "source_count": 1663,
+    "exit_code": 1,
+    "displayed_errors": 491,
+    "timed_out": false,
+    "annotation_processing": false,
+    "note": "Diagnostic main compilation only. Error counts can hide cascading or later failures; no gameplay or full Gradle success is implied."
+  },
+  "gradle_compileJava_errors": 491,
+  "gradle_build_exit_code": 1,
+  "passed": {
+    "standalone_probe_runners": 31,
+    "display_and_surface_cpu_checks": 138,
+    "license_main": true,
+    "license_data": true,
+    "license_test": true,
+    "pinned_dependency_verification": true,
+    "asset_download": true,
+    "resource_validation_from_preceding_checkpoint": true,
+    "git_diff_check": true
+  },
+  "host_workaround": "Existing opt-in untracked NeoForm Runtime 2.0.31 Java executable fallback and host proxy CA in local Java 25/21; not stock-toolchain validation.",
+  "playable": false,
+  "jar_produced": false,
+  "runtime_tests_run": false,
+  "notes": [
+    "Native item states, world/atlas resolution and fluid tint are captured only during extraction.",
+    "Surface records retain local transform, UV bounds, vertex winding, packed light/overlay and ARGB tint; submitted callbacks retain no block entities, levels or fluid stacks.",
+    "The five original visible-content/fill-height/animation formulas and barrel item transform are preserved.",
+    "Solid white texture faces receive explicit opaque alpha. Fluid alpha is preserved.",
+    "The CPU fixture subclasses native ItemStackRenderState and implements native VertexConsumer. It does not bake an atlas, resolve items or draw on the GPU.",
+    "Both same-mode diagnostic javac and Gradle report 491 errors. Full build fails main compilation; data/test compilation and packaging stay blocked.",
+    "No gameplay exclusions, dependency pins or branches changed. 26.x unchanged."
+  ]
+}

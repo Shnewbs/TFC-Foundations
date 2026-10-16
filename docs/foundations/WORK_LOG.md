@@ -1,5 +1,15 @@
 # TFC Foundations — Work Log
 
+## 2026-10-16 UTC — Native fill-surface render states
+
+Continued directly on `26.1.2` from `a53d28c949e2445334c26e4744bf9f06dd4e7d36`, the published 507-error checkpoint. Native render-state extraction now covers barrel contents, crucible alloy, bowl powder, powder-keg contents and the glass-basin fill animation. Their original sealed/facing visibility conditions, fill heights, barrel low-fill inset, amount/capacity math and barrel item transforms remain. Fluid sprites/tints are resolved during extraction; immutable surface records carry geometry/UV/color/light data to submission without retaining a block entity, inventory, level or FluidStack. Solid white texture faces use explicit opaque alpha; fluid alpha remains intact.
+
+Both diagnostic javac and Gradle `compileJava` now report **491 main errors**, down from 507 and the restored 650 baseline. Diagnostic pass: 1,663 sources, exit 1, no timeout, annotation processing disabled. Full pinned `compileJava compileDataJava compileTestJava build --continue` exits 1 at main compilation; downstream compilation/packaging remain blocked. License checks for main/data/test, dependency verification and the restored asset-download gate pass. The previous resource validation passed with zero errors and no resources changed in this continuation.
+
+All **31 API probe runners pass again**. The display suite now executes **138 CPU checks**, covering the native item snapshot list plus surface winding, transforms, atlas UV coordinates, normals, ARGB alpha, packed light and overlay across six fill levels. It uses native PoseStack/VertexConsumer APIs and a recording ItemStackRenderState subclass fixture. It does not resolve actual item models, bake/reload an atlas, submit on a GPU or construct game block entities. Source/API success is not visual or gameplay success.
+
+Exact results: `validation/2026-10-16-fill-surfaces-api.json` and `2026-10-16-fill-surfaces-errors.json`. Existing local NeoForm Java-path fallback remains in use; the Java 21 asset trust issue was corrected and all 4,750 asset files downloaded successfully. No dependencies, gameplay exclusions or branches changed; `26.x` is unchanged. **No playable JAR, Mixin startup, client/server/world or survival test passed.** Remaining errors are largest in sky/weather, native item models, client registration and transfer capabilities.
+
 ## 2026-10-16 UTC — Verified display, foliage and entity API repairs
 
 Continued directly on `26.1.2` from `e6f527060b68f676bf736a7a34ff029e6f6819ca`. Rebuilt the cleared host toolchain and dependencies. An isolated archive of that exact source reproduces **650 diagnostic errors**. Current source reports **507 errors** in both Java 25 diagnostic javac and Gradle `compileJava`; main compilation still fails. Diagnostic traversal covers 1,662 sources, exit 1, no timeout. Dependency pins and candidate `0.0.0` are unchanged. No new branches; `26.x` remains separate.
