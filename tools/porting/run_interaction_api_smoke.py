@@ -10,7 +10,8 @@ from pathlib import Path
 
 SOURCE = Path('src/main/java/net/dries007/tfc/util/InteractionManager.java')
 RECIPE_HELPERS = Path('src/main/java/net/dries007/tfc/common/recipes/RecipeHelpers.java')
-BEFORE_HASH = '17247f8f058d2a4e75f4448032ad0e8511559a8f9274707f847b8f02489f5e64'
+# Accepted upstream 08bda4bd: shelf rollback and failed pot placement result.
+BEFORE_HASH = '13f5d915883421fc41e3589b9b9090807cb8baaa4dd071fbbc18ac5e2359ee51'
 TAGS = (
     'TFCTags.Items.THATCH_BED_HIDES', 'TFCTags.Items.LOG_PILE_LOGS',
     'Tags.Items.INGOTS', 'TFCTags.Items.DOUBLE_INGOTS',
@@ -45,7 +46,7 @@ class InteractionApiContracts(unittest.TestCase):
         self.assertEqual(self.source.count('stack.hurtAndBreak(1, player, context.getHand().asEquipmentSlot())'), 2)
         self.assertNotIn('LivingEntity.getSlotForHand', self.source)
 
-    def test_original_survival_interaction_body_is_byte_identical_under_api_renames(self):
+    def test_reviewed_upstream_survival_interaction_body_under_api_renames(self):
         # Restore precisely the eleven removed symbols and a now-unused import.
         # This freezes inventory splitting, recipe action order, placement flags,
         # sounds and client/server action results, not just the method names.

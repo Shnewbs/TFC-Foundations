@@ -25,6 +25,7 @@ import net.minecraft.world.level.material.FluidState;
 import org.jetbrains.annotations.NotNull;
 
 import net.dries007.tfc.common.fluids.FluidHelpers;
+import net.dries007.tfc.util.Helpers;
 
 public class RivuletFeature extends Feature<BlockStateMapConfig>
 {

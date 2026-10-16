@@ -19,6 +19,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
 import net.dries007.tfc.mixin.accessor.StructureTemplateAccessor;
+import net.dries007.tfc.util.Helpers;
 
 public class RandomTreeFeature extends Feature<RandomTreeConfig>
 {

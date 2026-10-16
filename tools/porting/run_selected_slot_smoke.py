@@ -39,11 +39,15 @@ class InventorySlotContracts(unittest.TestCase):
         self.assertNotIn('player.getInventory().selected', src)
         self.assertIn('inventory.extractItem(OUTPUT_SLOT, 99, false)', src)
 
-    def test_tool_rack_uses_public_slot_accessor(self):
-        src = (SRC / 'common/blockentities/ToolRackBlockEntity.java').read_text()
-        self.assertEqual(src.count('player.getInventory().getSelectedSlot()'), 2)
+    def test_tool_rack_preserves_the_interacting_hand(self):
+        # Upstream 08bda4bd moved this interaction from the BE into the block,
+        # fixing offhand use; returned tools now go to that hand or inventory.
+        src = (SRC / 'common/blocks/wood/ToolRackBlock.java').read_text()
+        self.assertIn('player.setItemInHand(hand, extracted)', src)
+        self.assertIn('inventory.insertItem(slot, stack.split(1), false)', src)
+        self.assertIn('ItemHandlerHelper.giveItemToPlayer(player, extracted)', src)
+        self.assertNotIn('InteractionHand.MAIN_HAND', src)
         self.assertNotIn('player.getInventory().selected', src)
-        self.assertIn('insertItem(slot, heldItem.split(1))', src)
 
 
 if __name__ == '__main__':

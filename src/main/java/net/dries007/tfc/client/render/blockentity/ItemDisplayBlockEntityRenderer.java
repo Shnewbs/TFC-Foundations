@@ -112,16 +112,31 @@ public abstract class ItemDisplayBlockEntityRenderer<T extends BlockEntity> impl
         PoseStack poses, @Nullable Level level, int seed)
     {
         if (stack.isEmpty()) return;
+        addResolvedItem(state, resolveItem(stack, context, level, seed), poses, light, overlay);
+    }
+
+    protected final ItemStackRenderState resolveItem(ItemStack stack, ItemDisplayContext context, @Nullable Level level, int seed)
+    {
         final ItemStackRenderState item = new ItemStackRenderState();
         items.updateForTopItem(item, stack, context, level, null, seed);
+        return item;
+    }
+
+    protected final void addResolvedItem(State state, ItemStackRenderState item, PoseStack poses, int light, int overlay)
+    {
         state.displays.add(item, poses, light, overlay);
     }
 
     protected final void addBlockModel(State state, PoseStack poses, Identifier id, Level level, BlockPos pos, BlockState block)
     {
+        addBlockModel(state, poses, id, level, pos, block, Sheets.cutoutBlockSheet());
+    }
+
+    protected final void addBlockModel(State state, PoseStack poses, Identifier id, Level level, BlockPos pos, BlockState block, RenderType type)
+    {
         final Minecraft minecraft = Minecraft.getInstance();
         final var model = minecraft.getModelManager().getStandaloneModel(StandaloneBlockModels.key(id));
-        final VertexConsumer out = captureGeometry(state, Sheets.cutoutBlockSheet());
+        final VertexConsumer out = captureGeometry(state, type);
         final ModelBlockRenderer renderer = new ModelBlockRenderer(true, true, minecraft.getBlockColors());
         renderer.tesselateBlock((x, y, z, quad, lighting) -> {
             final PoseStack.Pose local = poses.last().copy();

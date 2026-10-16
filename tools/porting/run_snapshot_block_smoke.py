@@ -158,7 +158,7 @@ def validate_contracts(contracts):
         if 'BlockEntityModelData.refresh(this);' not in method(pile, signature):
             raise AssertionError('Pile mutation does not refresh snapshot: ' + signature)
     scraping = (BLOCK_ENTITIES / 'ScrapingBlockEntity.java').read_text()
-    if 'if (level.isClientSide()) requestModelDataUpdate();' not in method(scraping, '    public void onClicked('):
+    if 'if (level.isClientSide()) requestModelDataUpdate();' not in method(scraping, '    public boolean onClicked('):
         raise AssertionError('Scraping click does not refresh snapshot')
     if method(scraping, '    public boolean dye(').count('BlockEntityModelData.refresh(this);') != 2:
         raise AssertionError('Scraping dye does not refresh both colors')

@@ -21,6 +21,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 
 import net.dries007.tfc.common.entities.misc.TFCFallingBlockEntity;
 import net.dries007.tfc.common.recipes.LandslideRecipe;
+import net.dries007.tfc.util.Helpers;
 import net.dries007.tfc.world.ChunkGeneratorExtension;
 import net.dries007.tfc.world.MutableDensityFunctionContext;
 import net.dries007.tfc.world.chunkdata.ChunkData;

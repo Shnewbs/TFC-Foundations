@@ -27,6 +27,11 @@ import static net.dries007.tfc.TerraFirmaCraft.*;
 
 public class ScrapingBlockEntity extends InventoryBlockEntity<ItemStackHandler>
 {
+    public static boolean checkPosition(short data, int x, int z, int value)
+    {
+        return ((data >> (x + 4 * z)) & 1) == value;
+    }
+
     @Nullable private Identifier inputTexture = null;
     @Nullable private Identifier outputTexture = null;
     private short positions = 0; // essentially a boolean[16]
@@ -55,10 +60,13 @@ public class ScrapingBlockEntity extends InventoryBlockEntity<ItemStackHandler>
         return positions;
     }
 
-    public void onClicked(float hitX, float hitZ)
+    public boolean onClicked(float hitX, float hitZ)
     {
         int xPos = (int) (hitX * 4);
         int zPos = (int) (hitZ * 4);
+        if (checkPosition(positions, xPos, zPos, 1))
+            return false;
+
         positions |= 1 << (xPos + zPos * 4);
 
         assert level != null;
@@ -83,6 +91,7 @@ public class ScrapingBlockEntity extends InventoryBlockEntity<ItemStackHandler>
         // The existing notification dirties the mesh; refresh its snapshot first.
         if (level.isClientSide()) requestModelDataUpdate();
         level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
+        return true;
     }
 
     public boolean dye(DyeColor color)
@@ -125,8 +134,8 @@ public class ScrapingBlockEntity extends InventoryBlockEntity<ItemStackHandler>
     {
         super.loadAdditional(nbt);
         positions = (short) nbt.getShortOr("positions", (short) 0);
-        inputTexture = NbtHelpers.hasTag(nbt, "inputTexture", Tag.TAG_STRING) ? Helpers.resourceLocation(nbt.getStringOr("inputTexture", "")) : null;
-        outputTexture = NbtHelpers.hasTag(nbt, "outputTexture", Tag.TAG_STRING) ? Helpers.resourceLocation(nbt.getStringOr("outputTexture", "")) : null;
+        inputTexture = NbtHelpers.hasTag(nbt, "inputTexture", Tag.TAG_STRING) ? Identifier.parse(nbt.getStringOr("inputTexture", "")) : null;
+        outputTexture = NbtHelpers.hasTag(nbt, "outputTexture", Tag.TAG_STRING) ? Identifier.parse(nbt.getStringOr("outputTexture", "")) : null;
         color1 = NbtHelpers.hasTag(nbt, "color1", Tag.TAG_INT) ? DyeColor.byId(nbt.getIntOr("color1", 0)) : null;
         color2 = NbtHelpers.hasTag(nbt, "color2", Tag.TAG_INT) ? DyeColor.byId(nbt.getIntOr("color2", 0)) : null;
         BlockEntityModelData.refresh(this);
@@ -153,6 +162,13 @@ public class ScrapingBlockEntity extends InventoryBlockEntity<ItemStackHandler>
     public Identifier getOutputTexture()
     {
         return outputTexture;
+    }
+
+    @Override
+    public void setAndUpdateSlots(int slot)
+    {
+        updateDisplayCache();
+        super.setAndUpdateSlots(slot);
     }
 
     public void updateDisplayCache()

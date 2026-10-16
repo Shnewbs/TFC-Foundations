@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.common.blockentities;
 
+import java.util.Comparator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
@@ -193,7 +194,8 @@ public class PotBlockEntity extends AbstractFirepitBlockEntity<PotBlockEntity.Po
         {
             return;
         }
-        if (level.getBlockState(worldPosition).getValue(FirepitBlock.LIT))
+        final BlockState state = level.getBlockState(worldPosition);
+        if (state.hasProperty(FirepitBlock.LIT) && state.getValue(FirepitBlock.LIT))
         {
             final HeatCapability.Remainder remainder = HeatCapability.consumeFuelForTicks(ticks, inventory, burnTicks, burnTemperature, SLOT_FUEL_CONSUME, SLOT_FUEL_INPUT);
 
@@ -212,7 +214,7 @@ public class PotBlockEntity extends AbstractFirepitBlockEntity<PotBlockEntity.Po
                         handleCooking();
                     }
                 }
-                extinguish(level.getBlockState(worldPosition));
+                extinguish(state);
                 coolInstantly();
             }
             else
@@ -238,9 +240,9 @@ public class PotBlockEntity extends AbstractFirepitBlockEntity<PotBlockEntity.Po
     {
         assert level != null;
         cachedRecipe = RecipeHelpers.getRecipes(level, TFCRecipeTypes.POT).stream()
-            .filter(holder -> holder.value().matches(inventory, level))
             .map(RecipeHolder::value)
-            .findFirst()
+            .filter(recipe -> recipe.matches(inventory, level))
+            .min(Comparator.comparing(PotRecipe::isFallback))
             .orElse(null);
     }
 

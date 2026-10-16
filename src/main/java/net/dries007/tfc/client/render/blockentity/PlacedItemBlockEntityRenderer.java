@@ -8,14 +8,10 @@ package net.dries007.tfc.client.render.blockentity;
 
 import java.util.Map;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.block.ModelBlockRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
@@ -24,7 +20,6 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.item.TridentItem;
-import net.neoforged.neoforge.model.data.ModelData;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,7 +28,7 @@ import net.dries007.tfc.common.blockentities.PlacedItemBlockEntity;
 import net.dries007.tfc.common.items.JavelinItem;
 import net.dries007.tfc.common.items.TFCItems;
 
-public class PlacedItemBlockEntityRenderer<T extends PlacedItemBlockEntity> implements BlockEntityRenderer<T>
+public class PlacedItemBlockEntityRenderer<T extends PlacedItemBlockEntity> extends ItemDisplayBlockEntityRenderer<T>
 {
     /**
      * Custom models, on a per-item basis, when rendered in a placed item. If an item is not present here, it will be rendered using
@@ -57,17 +52,19 @@ public class PlacedItemBlockEntityRenderer<T extends PlacedItemBlockEntity> impl
 
     private static Provider translucent(String model)
     {
-        return new Provider(RenderHelpers.modelId(model), RenderType.translucent());
+        return new Provider(RenderHelpers.modelId(model), Sheets.translucentBlockSheet());
     }
 
     private static Provider cutout(String model)
     {
-        return new Provider(RenderHelpers.modelId(model), RenderType.cutout());
+        return new Provider(RenderHelpers.modelId(model), Sheets.cutoutBlockSheet());
     }
 
 
+    public PlacedItemBlockEntityRenderer(BlockEntityRendererProvider.Context context) { super(context); }
+
     @Override
-    public void render(T placedItem, float partialTicks, PoseStack pose, MultiBufferSource buffers, int packedLight, int packedOverlay)
+    protected void extractItems(T placedItem, float partialTicks, PoseStack pose, State outputState, int packedLight, int packedOverlay)
     {
         if (!placedItem.hasLevel()) return;
 
@@ -76,18 +73,18 @@ public class PlacedItemBlockEntityRenderer<T extends PlacedItemBlockEntity> impl
 
         if (placedItem.holdingLargeItem())
         {
-            renderContent(placedItem, pose, buffers, packedLight, packedOverlay, random, PlacedItemBlockEntity.SLOT_LARGE_ITEM);
+            renderContent(placedItem, pose, outputState, packedLight, packedOverlay, random, PlacedItemBlockEntity.SLOT_LARGE_ITEM);
         }
         else
         {
             for (int slot = 0; slot < inventory.getSlots(); slot++)
             {
-                renderContent(placedItem, pose, buffers, packedLight, packedOverlay, random, slot);
+                renderContent(placedItem, pose, outputState, packedLight, packedOverlay, random, slot);
             }
         }
     }
 
-    private void renderContent(T entity, PoseStack pose, MultiBufferSource buffers, int packedLight, int packedOverlay, RandomSource random, int slot)
+    private void renderContent(T entity, PoseStack pose, State outputState, int packedLight, int packedOverlay, RandomSource random, int slot)
     {
         assert entity.getLevel() != null;
 
@@ -98,7 +95,6 @@ public class PlacedItemBlockEntityRenderer<T extends PlacedItemBlockEntity> impl
         }
 
         final boolean isLarge = entity.holdingLargeItem();
-        final Minecraft mc = Minecraft.getInstance();
         final @Nullable Provider custom = MODELS.get(stack.getItem());
         final int slotX = slot % 2 == 0 ? 1 : 0;
         final int slotZ = slot < 2 ? 1 : 0;
@@ -107,10 +103,6 @@ public class PlacedItemBlockEntityRenderer<T extends PlacedItemBlockEntity> impl
 
         if (custom != null)
         {
-            final BakedModel baked = mc.getModelManager().getModel(custom.model);
-            final VertexConsumer buffer = buffers.getBuffer(custom.renderType);
-            final ModelBlockRenderer blockRenderer = mc.getBlockRenderer().getModelRenderer();
-
             // Rendering block models is relative to the (0, 0) position, so we translate to the corner of where we want to render
             // We don't scale or rotate for block models. We don't lift them (beyond a slight amount to prevent z fighting in pit kilns), because we assume block models are positioned correctly
             if (!isLarge)
@@ -119,9 +111,7 @@ public class PlacedItemBlockEntityRenderer<T extends PlacedItemBlockEntity> impl
             }
             pose.translate(0, -0.0001, 0);
 
-            baked.applyTransform(RenderHelpers.PLACED_ITEM_CONTEXT, pose, false);
-
-            blockRenderer.tesselateWithAO(entity.getLevel(), baked, entity.getBlockState(), entity.getBlockPos(), pose, buffer, true, random, packedLight, packedOverlay, ModelData.EMPTY, RenderType.translucent());
+            addBlockModel(outputState, pose, custom.model(), entity.getLevel(), entity.getBlockPos(), entity.getBlockState(), custom.renderType());
         }
         else
         {
@@ -129,13 +119,13 @@ public class PlacedItemBlockEntityRenderer<T extends PlacedItemBlockEntity> impl
             // Flat models, we translate slightly up, and rotate to place flat on the surface. 3D models, we place directly
             // on the surface, and don't rotate them into a 'laying down' position, but, we need to translate upwards so the
             // model is properly 'sitting' on the surface
-            final BakedModel model = mc.getItemRenderer().getModel(stack, entity.getLevel(), null, 0);
+            final var model = resolveItem(stack, RenderHelpers.PLACED_ITEM_CONTEXT, entity.getLevel(), slot);
 
             // Tridents (which javelins borrow code from) and shields have special handling in the vanilla code, since they have custom rendering behavior when held.
             // They are hardcoded to behave differently, such as in Neo's ItemRenderer#render and BlockEntityWithoutLevelRenderer#renderByItem methods,
             // so we have to hardcode them to be rendered as items here as well.
             final Item item = stack.getItem();
-            final boolean renderAsBlock = model.isGui3d() && !(item instanceof TridentItem || item instanceof JavelinItem || item instanceof ShieldItem);
+            final boolean renderAsBlock = model.usesBlockLight() && !(item instanceof TridentItem || item instanceof JavelinItem || item instanceof ShieldItem);
 
             if (isLarge)
             {
@@ -172,11 +162,7 @@ public class PlacedItemBlockEntityRenderer<T extends PlacedItemBlockEntity> impl
                 pose.mulPose(Axis.ZP.rotationDegrees(entity.getRotations(slot)));
             }
 
-            model.applyTransform(RenderHelpers.PLACED_ITEM_CONTEXT, pose, false);
-
-            // Then render the model
-            // This is copying what renderStatic() would've done
-            mc.getItemRenderer().render(stack, ItemDisplayContext.FIXED, false, pose, buffers, packedLight, packedOverlay, model);
+            addResolvedItem(outputState, model, pose, packedLight, packedOverlay);
         }
 
         pose.popPose();

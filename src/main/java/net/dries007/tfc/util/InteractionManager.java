@@ -122,7 +122,7 @@ public final class InteractionManager
         registerBlock(RecipeHelpers.ingredient(TFCTags.Items.THATCH_BED_HIDES), (stack, context) -> {
             final Level level = context.getLevel();
             final Player player = context.getPlayer();
-            if (!level.isClientSide() && player != null)
+            if (!level.isClientSide() && player != null && player.mayBuild())
             {
                 final BlockPos basePos = context.getClickedPos();
                 final BlockState baseState = level.getBlockState(basePos);
@@ -135,7 +135,7 @@ public final class InteractionManager
                     if (Helpers.isBlock(baseState, TFCTags.Blocks.THATCH_BED_THATCH) && Helpers.isBlock(headState, TFCTags.Blocks.THATCH_BED_THATCH))
                     {
                         final BlockPos playerPos = player.blockPosition();
-                        if (playerPos != headPos && playerPos != basePos)
+                        if (!playerPos.equals(headPos) && !playerPos.equals(basePos))
                         {
                             level.setBlock(basePos, bed.setValue(ThatchBedBlock.PART, BedPart.FOOT).setValue(ThatchBedBlock.FACING, direction), 18);
                             level.setBlock(headPos, bed.setValue(ThatchBedBlock.PART, BedPart.HEAD).setValue(ThatchBedBlock.FACING, direction), 18);
@@ -483,8 +483,9 @@ public final class InteractionManager
                             // Shrinking is already handled by the placement onItemUse() call, we just need to insert the stack
                             stackBefore.setCount(1);
                             level.getBlockEntity(topPos, TFCBlockEntities.INGOT_PILE.get()).ifPresent(topPile -> topPile.addIngot(stackBefore));
+                            return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                         }
-                        return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
+                        return InteractionResult.FAIL;
                     }
                     return InteractionResult.FAIL;
                 }

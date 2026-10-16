@@ -171,6 +171,7 @@ import net.dries007.tfc.client.render.blockentity.BarrelBlockEntityRenderer;
 import net.dries007.tfc.client.render.blockentity.BellowsBlockEntityRenderer;
 import net.dries007.tfc.client.render.blockentity.BladedAxleBlockEntityRenderer;
 import net.dries007.tfc.client.render.blockentity.BowlBlockEntityRenderer;
+import net.dries007.tfc.client.render.blockentity.BuoyBlockEntityRenderer;
 import net.dries007.tfc.client.render.blockentity.CalendarClockBlockEntityRenderer;
 import net.dries007.tfc.client.render.blockentity.ChannelBlockEntityRenderer;
 import net.dries007.tfc.client.render.blockentity.CharcoalForgeBlockEntityRenderer;
@@ -182,6 +183,7 @@ import net.dries007.tfc.client.render.blockentity.GlassBasinBlockEntityRenderer;
 import net.dries007.tfc.client.render.blockentity.GrillBlockEntityRenderer;
 import net.dries007.tfc.client.render.blockentity.HotPouredGlassBlockEntityRenderer;
 import net.dries007.tfc.client.render.blockentity.JavelinItemRenderer;
+import net.dries007.tfc.client.render.blockentity.LobsterTrapBlockEntityRenderer;
 import net.dries007.tfc.client.render.blockentity.LoomBlockEntityRenderer;
 import net.dries007.tfc.client.render.blockentity.MoldBlockEntityRenderer;
 import net.dries007.tfc.client.render.blockentity.NestBoxBlockEntityRenderer;
@@ -562,9 +564,9 @@ public final class ClientEventHandler
         event.registerBlockEntityRenderer(TFCBlockEntities.FIREPIT.get(), FirepitBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.POT.get(), PotBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.GRILL.get(), GrillBlockEntityRenderer::new);
-        event.registerBlockEntityRenderer(TFCBlockEntities.PLACED_ITEM.get(), ctx -> new PlacedItemBlockEntityRenderer<>());
-        event.registerBlockEntityRenderer(TFCBlockEntities.PIT_KILN.get(), ctx -> new PitKilnBlockEntityRenderer());
-        event.registerBlockEntityRenderer(TFCBlockEntities.SHELF.get(), ctx -> new PlacedItemBlockEntityRenderer<>());
+        event.registerBlockEntityRenderer(TFCBlockEntities.PLACED_ITEM.get(), PlacedItemBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(TFCBlockEntities.PIT_KILN.get(), PitKilnBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(TFCBlockEntities.SHELF.get(), PlacedItemBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.QUERN.get(), QuernBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.CHEST.get(), TFCChestBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.TRAPPED_CHEST.get(), TFCChestBlockEntityRenderer::new);
@@ -598,6 +600,8 @@ public final class ClientEventHandler
         event.registerBlockEntityRenderer(TFCBlockEntities.MOLD_TABLE.get(), MoldBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.CALENDAR_CLOCK.get(), CalendarClockBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.POWDERKEG.get(), PowderkegBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(TFCBlockEntities.BUOY.get(), BuoyBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(TFCBlockEntities.LOBSTER_TRAP.get(), LobsterTrapBlockEntityRenderer::new);
     }
 
     public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event)
@@ -718,8 +722,9 @@ public final class ClientEventHandler
         FirepitBlockEntityRenderer.BURN_STAGE_MODELS.values().forEach(list -> list.forEach(id -> register(event, id)));
 
         register(event, CrankshaftBlockEntityRenderer.WHEEL_MODEL);
+        TFCBlocks.BUOYS.values().forEach(buoy -> register(event, BuiltInRegistries.BLOCK.getKey(buoy.get()).withPrefix("block/")));
 
-        TFCConfig.CLIENT.additionalSpecialModels.get().forEach(s -> register(event, Helpers.resourceLocation(s)));
+        TFCConfig.CLIENT.additionalSpecialModels.get().forEach(s -> register(event, Identifier.parse(s)));
     }
 
     private static void register(ModelEvent.RegisterStandalone event, Identifier id)

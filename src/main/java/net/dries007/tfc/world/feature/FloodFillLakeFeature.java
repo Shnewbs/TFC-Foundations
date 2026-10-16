@@ -23,6 +23,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.soil.IGrassBlock;
 import net.dries007.tfc.common.blocks.wood.ILeavesBlock;
+import net.dries007.tfc.util.Helpers;
 
 /**
  * This fills in natural depressions using a localized flood fill.

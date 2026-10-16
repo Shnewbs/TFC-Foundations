@@ -17,6 +17,8 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
+import net.dries007.tfc.util.Helpers;
+
 public class OverlayTreeFeature extends Feature<OverlayTreeConfig>
 {
     public OverlayTreeFeature(Codec<OverlayTreeConfig> codec)

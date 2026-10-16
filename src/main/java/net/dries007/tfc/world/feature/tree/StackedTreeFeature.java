@@ -18,6 +18,8 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
+import net.dries007.tfc.util.Helpers;
+
 public class StackedTreeFeature extends Feature<StackedTreeConfig>
 {
     public StackedTreeFeature(Codec<StackedTreeConfig> codec)

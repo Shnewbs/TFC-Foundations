@@ -134,12 +134,14 @@ public class PitKilnBlock extends DeviceBlock
                     level.setBlock(pos, state.setValue(STAGE, stage + strawValue), 10);
                     kiln.addStraw(held.split(1), stage + strawValue);
                     Helpers.playPlaceSound(null, level, pos, SoundType.GRASS);
+                    return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                 }
                 else if (stage >= STRAW_END && stage < LIT - 1 && Helpers.isItem(item, TFCTags.Items.PIT_KILN_LOGS))
                 {
                     level.setBlock(pos, state.setValue(STAGE, stage + 1), 10);
                     kiln.addLog(held.split(1), stage - LOG_START + 1);
                     Helpers.playPlaceSound(null, level, pos, SoundType.WOOD);
+                    return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                 }
                 else if (held.isEmpty())
                 {
@@ -173,11 +175,12 @@ public class PitKilnBlock extends DeviceBlock
                         {
                             level.setBlock(pos, state.setValue(STAGE, stage - stagesToRemove), 10);
                         }
+                        return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
                     }
                 }
             }
         }
-        return (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME);
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override

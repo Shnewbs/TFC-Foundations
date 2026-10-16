@@ -2,7 +2,7 @@
 
 Upstream: https://github.com/TerraFirmaCraft/TerraFirmaCraft
 
-Observed 2026-10-12. Rediscover branches each scan. Previous observations: 2026-10-08 through 2026-10-11; initial 1.21.x baseline remains e9d9a88a187d5a33064e2d86b2803f54238cadd6.
+Observed 2026-10-16. Rediscover branches each scan. Previous observations: 2026-10-08 through 2026-10-11; initial 1.21.x baseline remains e9d9a88a187d5a33064e2d86b2803f54238cadd6.
 
 | Branch | Observed tip |
 | --- | --- |
@@ -10,8 +10,8 @@ Observed 2026-10-12. Rediscover branches each scan. Previous observations: 2026-
 | 1.16.x | 1280317be9164bbf370312e34f0ede7e676973b0 |
 | 1.17.x | afddbb2f477b0a7c6dee2f3f98e9fc81851f1f9e |
 | 1.18.x | caf1ec2f527d79d15bda64871014b690b6484a59 |
-| 1.20.x | 8bcb23fc2afb30fc9c111ae45c57f401007de253 |
-| 1.21.x | 5e15971edbf03c82c1bfb32fae590f4b5c443009 |
+| 1.20.x | e39a6531face4df89ed2b08bcff4abfabbb8f299 |
+| 1.21.x | c3b4d9536b82e5a9746dd793c586720a74108057 |
 
 These are observation cursors, not claims of integrated historical fixes. Daily upstream/version monitoring is active.
 
@@ -159,3 +159,19 @@ Official metadata fetched directly on 2026-10-12:
 - 26.4 migration remains unavailable. The 26.x branch still targets Minecraft 26.3 / NeoForge 26.3.0.58-beta; 26.1.2 remains a separate playable-build priority. No target/pin changed.
 
 Only documentation/observation cursors were updated by this watch. No upstream code merge, fix implementation, compile/runtime verification or artifact publication occurred. Integration and verified-release status do not advance.
+
+## 2026-10-16 UTC — Upstream integration through c3b4d953
+
+Ported the complete 42-commit `TerraFirmaCraft/TerraFirmaCraft` 1.21.x delta from initial base `e9d9a88a` through `c3b4d9536b82e5a9746dd793c586720a74108057` onto **both existing branches**, preserving upstream EUPL notices and authors. Ten commits became reachable since the October 12 observation. This is a source port with explicit per-file audit, not a Git ancestry merge. `validation/2026-10-16-upstream-integration.json` records all 348 diff paths, SHA/author/subject provenance and native equivalents. Upstream AGENTS.md/.gitignore do not replace our project controls. No dependency pin, version candidate or public branch changed.
+
+Included: buoy/lobster-trap content, all 16 colors and their recipes/textures/loot/tags/guide pages; kiln catch-up heating and stale-device guards; banana and berry corrections; squid spawn cancellation; scraping progress/durability and texture safety; default soup ordering; rope-anchor orientation; fluid-loggable tool racks and offhand interactions; pet home/sitting AI; ten vanilla armor trim palettes, thatch spawn prevention, soda ash from beach seaweed and translations. The newly observed 1.20.x tip `e39a6531` adds five reachable commits affecting scraping/farmland; their behavior is covered by the newer 1.21.x changes. Legacy branch-specific architecture is not blindly merged.
+
+Both branches pass resource/generated-texture validation and the new upstream regression runner: **2,097,152 production scraping-mask CPU checks**, source guards/fallback ordering, all JSON parsing, buoy resources, thatch tag and trim palettes. These are not world/AI/rendering tests.
+
+On **26.1.2**, continued from `f49876a1`: main diagnostics **220 → 203**, independently confirmed by full pinned Gradle and diagnostic javac (1,677 sources, exit 1, no timeout). New fishing renderers use native extraction/captured geometry/items; new block entities use ValueInput/ValueOutput and native removal. Rope lighting/bounds, buoy wind animation and catch placements remain. Existing reload-local mold and null-safe scraping snapshot implementations provide the upstream equivalents. Also migrated placed-item/shelf/pit-kiln rendering to the native snapshot framework and supplied JEI's required native ingredient displays. Custom placed models retain cutout/translucent sheets, original slot transforms/rotations and pit-kiln stage cutoff; native usesBlockLight identifies ordinary three-dimensional item placement, with the existing shield/javelin/trident exceptions. Actual appearance still needs client verification.
+
+All **34 registered API runners pass individually** after updating four upstream-sensitive source/fixture contracts (new item count, tool-rack hand handling, accepted interaction body and boolean scraping callback). The aggregate rerun had one stale scraping-signature failure; that runner subsequently passed after correction; no production change was needed. Existing 9,074 display/surface and 584 item-layer CPU assertions remain passing. Native selectors now cover 5,386 static + 66 fixed-fluid + 60 TFC fluid/trim definitions; 102 special models remain pending. All three license checks, dependency verification and resource/asset preparation pass in the pinned full Gradle attempt. Host NeoForm Java-path fallback and local proxy trust remain in use.
+
+**No playable JAR.** Main compilation blocks data/test compilation and packaging. Remaining largest clusters include sky/weather (82), client registration (29), pan special rendering (9), other special item renderers and transfer capabilities. No transformed Mixin, GPU, resource reload, client/server launch, world/save/reload, multiplayer, survival, trap movement/drops, pet AI or kiln loaded/unloaded runtime verification. Exact main errors are in `validation/2026-10-16-upstream-errors.json`. `26.x` independently remains an incomplete 26.3 port.
+
+**Integration cursor:** source changes through `c3b4d9536b82e5a9746dd793c586720a74108057` are ported to 26.1.2 and 26.x in the commit containing this entry. Git ancestry remains based on the initial e9d9a88a fork; future integration should compare from this explicit source cursor. Four legacy branch tips remain unchanged. Do not treat source coverage as gameplay verification. Daily observation remains separate from this integration cursor.

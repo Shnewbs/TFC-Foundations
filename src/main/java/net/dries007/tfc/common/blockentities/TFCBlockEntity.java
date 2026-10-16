@@ -19,6 +19,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
+import net.dries007.tfc.util.Helpers;
+
 public abstract class TFCBlockEntity extends BlockEntity
 {
     protected TFCBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state)

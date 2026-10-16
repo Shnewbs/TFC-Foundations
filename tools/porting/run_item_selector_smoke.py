@@ -21,9 +21,9 @@ class ItemSelectorGenerationTests(unittest.TestCase):
             out = Path(tmp) / 'resources'
             report = Path(tmp) / 'report.json'
             s = generate(LEGACY, out, (), report)
-            self.assertEqual(s['source_count'], 5597)
-            self.assertEqual(s['generated_count'], 5495)
-            self.assertEqual(s['generated_static_count'], 5369)
+            self.assertEqual(s['source_count'], 5614)
+            self.assertEqual(s['generated_count'], 5512)
+            self.assertEqual(s['generated_static_count'], 5386)
             self.assertEqual(s['generated_fixed_fluid_count'], 66)
             self.assertEqual(s['generated_layered_count'], 60)
             self.assertEqual(s['manual_migration_count'], 102)

@@ -87,6 +87,7 @@ public class TFCBlockStateProperties
     public static final EnumProperty<BranchDirection> BRANCH_DIRECTION = EnumProperty.create("branch_direction", BranchDirection.class);
     public static final EnumProperty<CalendarClockBlock.Mode> CLOCK_MODE = EnumProperty.create("clock_mode", CalendarClockBlock.Mode.class);
     public static final EnumProperty<Direction> FACING_NOT_DOWN = EnumProperty.create("facing", Direction.class, s -> s != Direction.DOWN);
+    public static final EnumProperty<LobsterTrapBlock.TrapState> TRAP = EnumProperty.create("trap", LobsterTrapBlock.TrapState.class);
 
     public static final BooleanProperty TIP = BooleanProperty.create("tip");
     public static final BooleanProperty UPPER = BooleanProperty.create("upper");
