@@ -1,5 +1,19 @@
 # TFC Foundations — Work Log
 
+## 2026-10-16 UTC — Verified display, foliage and entity API repairs
+
+Continued directly on `26.1.2` from `e6f527060b68f676bf736a7a34ff029e6f6819ca`. Rebuilt the cleared host toolchain and dependencies. An isolated archive of that exact source reproduces **650 diagnostic errors**. Current source reports **507 errors** in both Java 25 diagnostic javac and Gradle `compileJava`; main compilation still fails. Diagnostic traversal covers 1,662 sources, exit 1, no timeout. Dependency pins and candidate `0.0.0` are unchanged. No new branches; `26.x` remains separate.
+
+Changes:
+- Anvil, charcoal-forge, nest-box and tool-rack displays extract native item render states and immutable local transforms. Original placement, rotation, slot selection and heated-item light values are retained. Submission reads no live inventory or level.
+- Removed obsolete render-layer registrations: 26.1.2 classifies baked quads by texture transparency. Fluids continue through the existing native fluid-model registry. Replaced the removed `ItemBlockRenderTypes` mixin with `ModelBlockRenderer.forceOpaque`, retaining fast/fancy opacity for TFC leaf interfaces, fallen leaves and krummholz in chunks and moving blocks.
+- Migrated egg entity serialization/hatching and falling-block block-entity restoration to registry-aware ValueIO. Camel ownership uses entity references, native eating-sound visibility is widened, feeding sounds use consumable components, dolphin boat following uses the native replacement goal, avoidance uses the native server entity lookup and tame-fight callbacks accept the server context. Manatee flops and the existing movement-sync reset use `needsSync`.
+- Ram shield knockback uses the native blocking result, retaining TFC's damage and force multipliers. Minecart display-state rendering uses the retained native override without the removed flag. Grass light attenuation/postprocess, coral deferred loot-table selection, projectile interaction context, configured-feature lookup, bonus-chest options, crate text extraction and the pan loot-list import use target APIs.
+
+Validation: **all 31 `inspect_api.py` probe runners pass**, including the new **12 CPU item-display snapshot/pose/light/reuse checks**. Resource validation reports zero errors; all three license tasks and pinned-dependency verification pass. `git diff --check` passes. Exact summaries and remaining diagnostics are in `validation/2026-10-16-display-entity-api.json` and `2026-10-16-display-entity-errors.json`. The existing opt-in local NeoForm Java-path fallback was needed in this container; this is not an unmodified-toolchain release test. The first full-build attempt also failed Java 21 asset HTTPS trust; its local trust store was corrected for a retry.
+
+**Not playable:** full build remains blocked by the 507 main errors; data/test compilation and packaging cannot complete. No JAR, actual Mixin application, client/server launch, model/atlas reload, egg hatch, entity save/reload, grass spread, coral drop, shield-ram gameplay, multiplayer or survival test passed. Display tests use native classes with a recording item-state fixture, not actual model resolution/GPU rendering. Remaining failures center on native capability/transaction migration and client/item/world rendering.
+
 ## 2026-10-13 UTC — Explosion, fluid and block callback repair checkpoint
 
 Continued directly on `26.1.2` from `9caa884b6df3b538d1b983d321ac49828048a6ed`. No branches were created; the live refs remain `26.1.2` and `26.x`, and `26.x` source was not changed. Dependency pins and candidate version `0.0.0` are unchanged.

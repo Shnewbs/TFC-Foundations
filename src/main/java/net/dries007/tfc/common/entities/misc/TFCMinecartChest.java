@@ -142,12 +142,6 @@ public class TFCMinecartChest extends MinecartChest
     }
 
     @Override
-    public boolean hasCustomDisplay()
-    {
-        return true; // tells vanilla to render getDisplayBlockState
-    }
-
-    @Override
     protected Item getDropItem()
     {
         return getPickResult().getItem();

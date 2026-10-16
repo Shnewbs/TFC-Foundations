@@ -1,6 +1,6 @@
 # Continue development in another environment
 
-**Checked:** 2026-10-13. **Repository:** [Shnewbs/TFC-Foundations](https://github.com/Shnewbs/TFC-Foundations).
+**Checked:** 2026-10-16. **Repository:** [Shnewbs/TFC-Foundations](https://github.com/Shnewbs/TFC-Foundations).
 This file is the handoff entry point for another computer, operating system, IDE, or ChatGPT/Codex session. **Always consult the live branch and its latest CI run before treating the checkpoint below as current.** Do not rely on local or chat-only work being available elsewhere.
 
 ## Branches and pinned targets
@@ -12,9 +12,11 @@ This file is the handoff entry point for another computer, operating system, IDE
 
 Both tracks use **Java 25**, Gradle wrapper **9.2.1**, and ModDevGradle **2.0.148**. Branch-specific `gradle.properties` is authoritative if a dependency is changed after this handoff. Current candidate version is `0.0.0`, **not** a tested release. Preserve upstream TFC gameplay, the EUPL notices, credits, identifiers, and full feature set; never hide missing APIs behind dummy implementations or disable subsystems to manufacture a green build.
 
-## Latest verified continuation — 2026-10-13 UTC
+## Latest verified continuation — 2026-10-16 UTC
 
-Only `26.1.2` and `26.x` remain on GitHub. Do not recreate task branches. The latest explosion/fluid/block callback checkpoint reproduces **713 → 650 errors** in both pinned Gradle and same-mode diagnostic main compilation; it is not a successful build. Diagnostic traversal covers 1,661 sources without a timeout. The full build fails main compilation, blocking data/test compilation and packaging. All three license tasks, dependency verification, asset download, resource validation, all 30 `inspect_api.py` probe runners and the new 19 mixin/native API contracts pass. See the latest project status, work log, `validation/2026-10-13-fluid-block-api.json` and `validation/2026-10-13-fluid-block-errors.json`. Rendering and native resource-handler registration/transactions remain the largest groups. No JAR or live game test passed.
+Work directly on `26.1.2`; no task branches. Source parent `e6f5270` was restored and independently reproduced at **650 errors**. The current display/foliage/entity repair checkpoint reports **507 main errors** in both diagnostic javac and Gradle. Final diagnostic pass covers 1,662 sources, exit 1, no timeout. All 31 standalone API runners, resource checks, all three license tasks and dependency verification pass. See `validation/2026-10-16-display-entity-api.json` and `2026-10-16-display-entity-errors.json` plus the first project-status/work-log entry. No JAR or runtime success. Main failures still block data/test compilation and packaging.
+
+The new item-display render-state base serves anvils, forges, nests and tool racks. Native texture transparency replaces removed layer-registration calls; `ModelBlockRendererMixin` preserves fast/fancy TFC foliage opacity. ValueIO egg/falling-block save paths and several native AI, movement, grass, coral and GUI APIs are migrated. Do not confuse passing CPU/source probes with live gameplay. The untracked host NeoForm fallback remains necessary here; the first Java 21 asset TLS trust failure was corrected for a retry. `26.x` was not changed.
 
 ## Current local checkpoint (2026-10-12)
 

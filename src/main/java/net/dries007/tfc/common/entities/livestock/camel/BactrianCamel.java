@@ -17,6 +17,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -82,6 +83,12 @@ public class BactrianCamel extends AbstractCamel implements HorseProperties, ISh
         this.producingMammalConfig = config;
         this.produceTicks = config.produceTicks();
         this.produceFamiliarity = config.produceFamiliarity();
+    }
+
+    @Override
+    public SoundEvent getEatingSound()
+    {
+        return super.getEatingSound();
     }
 
     @Override
@@ -240,7 +247,7 @@ public class BactrianCamel extends AbstractCamel implements HorseProperties, ISh
             }
             else
             {
-                if (isTamed() && getOwnerUUID() == null)
+                if (isTamed() && getOwnerReference() == null)
                 {
                     tameWithName(player);
                 }

@@ -63,7 +63,7 @@ public class ConnectedGrassBlock extends Block implements IGrassBlock
 
     public ConnectedGrassBlock(Properties properties, Supplier<? extends Block> dirt, @Nullable Supplier<? extends Block> path, @Nullable Supplier<? extends Block> farmland)
     {
-        super(properties.hasPostProcess(TFCBlocks::always));
+        super(properties.postProcess((state, level, pos) -> pos));
 
         this.dirt = dirt;
         this.path = path;

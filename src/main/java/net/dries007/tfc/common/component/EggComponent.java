@@ -17,9 +17,14 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
+import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.common.component.food.FoodCapability;
 import net.dries007.tfc.common.entities.livestock.OviparousAnimal;
 import net.dries007.tfc.util.calendar.Calendars;
@@ -54,9 +59,12 @@ public record EggComponent(
 
     public static EggComponent of(OviparousAnimal entity, long hatchDay)
     {
-        final CompoundTag entityTag = new CompoundTag();
-        entity.save(entityTag);
-        return new EggComponent(true, hatchDay, Optional.of(entityTag));
+        try (ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(entity.problemPath(), TerraFirmaCraft.LOGGER))
+        {
+            final TagValueOutput output = TagValueOutput.createWithContext(reporter, entity.registryAccess());
+            entity.save(output);
+            return new EggComponent(true, hatchDay, Optional.of(output.buildResult()));
+        }
     }
 
     public void addTooltipInfo(Consumer<Component> text)
@@ -92,6 +100,9 @@ public record EggComponent(
      */
     public Optional<Entity> hatch(Level level)
     {
-        return entity.flatMap(e -> EntityType.create(e, level));
+        try (ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(TerraFirmaCraft.LOGGER))
+        {
+            return entity.flatMap(e -> EntityType.create(TagValueInput.create(reporter, level.registryAccess(), e), level, EntitySpawnReason.LOAD));
+        }
     }
 }

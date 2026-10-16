@@ -112,7 +112,7 @@ public final class ClearWorldCommand
             return state -> blocks.contains(state.getBlock());
         }),
         NOT_ORE(server -> {
-            final Registry<ConfiguredFeature<?, ?>> registry = server.registryAccess().registryOrThrow(Registries.CONFIGURED_FEATURE);
+            final Registry<ConfiguredFeature<?, ?>> registry = server.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE);
             Set<Block> blocks = registry.stream()
                 .filter(feature -> feature.feature() instanceof VeinFeature<?, ?>)
                 .flatMap(feature -> ((IVeinConfig) feature.config()).config()

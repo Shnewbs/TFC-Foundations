@@ -124,7 +124,7 @@ public class TFCOcelot extends Ocelot
                     ((OcelotAccessor) this).invoke$setTrusting(true);
                     nextFeedTime = ticks + ICalendar.TICKS_IN_DAY;
                     if (!player.isCreative()) held.shrink(1);
-                    playSound(getEatingSound(held), getSoundVolume(), getVoicePitch());
+                    playSound(held.getOrDefault(net.minecraft.core.component.DataComponents.CONSUMABLE, net.minecraft.world.item.component.Consumables.DEFAULT_FOOD).sound().value(), getSoundVolume(), getVoicePitch());
                     if (getFamiliarity() > 0.99f)
                     {
                         final boolean wasBaby = isBaby();

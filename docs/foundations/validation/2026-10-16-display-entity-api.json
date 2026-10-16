@@ -1,0 +1,62 @@
+{
+  "source_parent": "e6f527060b68f676bf736a7a34ff029e6f6819ca",
+  "branch": "26.1.2",
+  "targets": {
+    "minecraft": "26.1.2",
+    "neoforge": "26.1.2.114",
+    "jei": "29.43.0.107",
+    "patchouli": "26.1-94",
+    "java": "25.0.4.1",
+    "gradle": "9.2.1"
+  },
+  "baseline": {
+    "source_count": 1661,
+    "exit_code": 1,
+    "displayed_errors": 650,
+    "timed_out": false,
+    "annotation_processing": false,
+    "note": "Diagnostic main compilation only. Error counts can hide cascading or later failures; no gameplay or full Gradle success is implied."
+  },
+  "final": {
+    "source_count": 1662,
+    "exit_code": 1,
+    "displayed_errors": 507,
+    "timed_out": false,
+    "annotation_processing": false,
+    "note": "Diagnostic main compilation only. Error counts can hide cascading or later failures; no gameplay or full Gradle success is implied."
+  },
+  "gradle_compileJava_errors": 507,
+  "passed": {
+    "standalone_probe_runners": 31,
+    "api_inspection_exit_code": 0,
+    "item_display_cpu_checks": 12,
+    "resource_validation_exit_code": 0,
+    "license_main": true,
+    "license_data": true,
+    "license_test": true,
+    "pinned_dependency_verification": true,
+    "git_diff_check": true
+  },
+  "host_workaround": "Existing opt-in NeoForm Runtime 2.0.31 Java executable fallback; trusted proxy CA imported into local Java 25 and downloaded asset Java 21.",
+  "failed_attempts": [
+    "Unmodified NeoForm tool could not obtain ProcessHandle command in this container.",
+    "First full build failed main compilation and Java 21 asset HTTPS trust; trust store corrected for retry."
+  ],
+  "playable": false,
+  "jar_produced": false,
+  "runtime_tests_run": false,
+  "remaining": [
+    "Block/item/sky rendering and native item tint/model registration",
+    "Native item/fluid resource-handler capability migration",
+    "Remaining main-source failures, then data/test compilation",
+    "Mixin startup, client/server worlds and survival tests"
+  ],
+  "notes": [
+    "Baseline and final diagnostic javac ran to completion without timeouts, annotation processing disabled.",
+    "Gradle separately confirms the same 507 main errors. Full build remains blocked by main compilation.",
+    "Counts include cascading diagnostics, not independent bugs or percentages.",
+    "Item-display tests use native PoseStack and a native ItemStackRenderState subclass fixture; no GPU or actual inventory/model resolution.",
+    "Fast leaves mixin targets inspected native static ModelBlockRenderer.forceOpaque(boolean, BlockState). Actual transformation and visual validation remain pending.",
+    "No branch, dependency pin, source-set exclusion or gameplay stub was added; 26.x unchanged."
+  ]
+}

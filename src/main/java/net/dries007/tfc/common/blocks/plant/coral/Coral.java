@@ -21,6 +21,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 
 import net.dries007.tfc.common.blocks.TFCBlocks;
+import net.dries007.tfc.common.blocks.ExtendedProperties;
 
 public enum Coral
 {
@@ -43,8 +44,8 @@ public enum Coral
         CORAL((color, type) -> new LivingCoralPlantBlock(TFCCoralPlantBlock.BIG_SHAPE, TFCBlocks.CORAL.get(color).get(DEAD_CORAL), BlockBehaviour.Properties.of().mapColor(color.color).noCollision().instabreak().sound(SoundType.WET_GRASS))),
         DEAD_CORAL_FAN((color, type) -> new TFCCoralPlantBlock(TFCCoralPlantBlock.SMALL_SHAPE, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).requiresCorrectToolForDrops().noCollision().instabreak())),
         CORAL_FAN((color, type) -> new LivingCoralPlantBlock(TFCCoralPlantBlock.SMALL_SHAPE, TFCBlocks.CORAL.get(color).get(DEAD_CORAL_FAN), BlockBehaviour.Properties.of().mapColor(color.color).noCollision().instabreak().sound(SoundType.WET_GRASS))),
-        DEAD_CORAL_WALL_FAN((color, type) -> new CoralWallFanBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).requiresCorrectToolForDrops().noCollision().instabreak().lootFrom(TFCBlocks.CORAL.get(color).get(DEAD_CORAL_FAN)))),
-        CORAL_WALL_FAN((color, type) -> new LivingCoralWallFanBlock(TFCBlocks.CORAL.get(color).get(DEAD_CORAL_WALL_FAN), BlockBehaviour.Properties.of().mapColor(color.color).noCollision().instabreak().sound(SoundType.WET_GRASS).lootFrom(TFCBlocks.CORAL.get(color).get(CORAL_FAN))));
+        DEAD_CORAL_WALL_FAN((color, type) -> new CoralWallFanBlock(ExtendedProperties.of(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).requiresCorrectToolForDrops().noCollision().instabreak()).dropsLike(TFCBlocks.CORAL.get(color).get(DEAD_CORAL_FAN)).properties())),
+        CORAL_WALL_FAN((color, type) -> new LivingCoralWallFanBlock(TFCBlocks.CORAL.get(color).get(DEAD_CORAL_WALL_FAN), ExtendedProperties.of(BlockBehaviour.Properties.of().mapColor(color.color).noCollision().instabreak().sound(SoundType.WET_GRASS)).dropsLike(TFCBlocks.CORAL.get(color).get(CORAL_FAN)).properties()));
 
         private final BiFunction<Coral, Coral.BlockType, ? extends Block> factory;
         private final BiFunction<Block, Item.Properties, ? extends BlockItem> blockItemFactory;

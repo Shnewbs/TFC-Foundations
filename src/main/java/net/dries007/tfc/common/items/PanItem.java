@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.common.items;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import net.minecraft.network.chat.Component;

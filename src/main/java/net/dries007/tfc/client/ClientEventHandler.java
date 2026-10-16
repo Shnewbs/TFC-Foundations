@@ -32,7 +32,6 @@ import net.minecraft.client.model.animal.squid.SquidModel;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BellRenderer;
@@ -400,127 +399,8 @@ public final class ClientEventHandler
             });
         });
 
-        // Render Types
-        final RenderType solid = RenderType.solid();
-        final RenderType cutout = RenderType.cutout();
-        final RenderType cutoutMipped = RenderType.cutoutMipped();
-        final RenderType translucent = RenderType.translucent();
-
-        // todo this is non-functional
-        final Predicate<RenderType> ghostBlock = rt -> rt == cutoutMipped || rt == Sheets.translucentCullBlockSheet();
-
-        // Rock blocks
-        TFCBlocks.ROCK_BLOCKS.values().forEach(map -> {
-            ItemBlockRenderTypes.setRenderLayer(map.get(Rock.BlockType.SPIKE).get(), cutout);
-            ItemBlockRenderTypes.setRenderLayer(map.get(Rock.BlockType.ROPE_ANCHOR).get(), cutout);
-            ItemBlockRenderTypes.setRenderLayer(map.get(Rock.BlockType.AQUEDUCT).get(), cutout);
-        });
-        TFCBlocks.ORES.values().forEach(map -> map.values().forEach(reg -> ItemBlockRenderTypes.setRenderLayer(reg.get(), cutout)));
-        TFCBlocks.GRADED_ORES.values().forEach(map -> map.values().forEach(inner -> inner.values().forEach(reg -> ItemBlockRenderTypes.setRenderLayer(reg.get(), cutout))));
-        TFCBlocks.ORE_DEPOSITS.values().forEach(map -> map.values().forEach(reg -> ItemBlockRenderTypes.setRenderLayer(reg.get(), cutout)));
-
-        // Wood blocks
-        TFCBlocks.WOODS.values().forEach(map -> {
-            Stream.of(SAPLING, DOOR, TRAPDOOR, FENCE, FENCE_GATE, BUTTON, PRESSURE_PLATE, SLAB, STAIRS, TWIG, BARREL, SCRIBING_TABLE, SEWING_TABLE, SHELF, POTTED_SAPLING, ENCASED_AXLE, CLUTCH, GEAR_BOX).forEach(type -> ItemBlockRenderTypes.setRenderLayer(map.get(type).get(), cutout));
-
-        });
-
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.TREE_ROOTS.get(), cutoutMipped);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.POTTED_PINE_KRUMMHOLZ.get(), cutoutMipped);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.POTTED_DOUGLAS_FIR_KRUMMHOLZ.get(), cutoutMipped);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.POTTED_SPRUCE_KRUMMHOLZ.get(), cutoutMipped);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.POTTED_WHITE_CEDAR_KRUMMHOLZ.get(), cutoutMipped);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.POTTED_ASPEN_KRUMMHOLZ.get(), cutoutMipped);
-
-        // Grass
-        TFCBlocks.SOIL.get(SoilBlockType.GRASS).values().forEach(reg -> ItemBlockRenderTypes.setRenderLayer(reg.get(), cutoutMipped));
-        TFCBlocks.SOIL.get(SoilBlockType.CLAY_GRASS).values().forEach(reg -> ItemBlockRenderTypes.setRenderLayer(reg.get(), cutoutMipped));
-        TFCBlocks.SOIL.get(SoilBlockType.DUFF).values().forEach(reg -> ItemBlockRenderTypes.setRenderLayer(reg.get(), cutoutMipped));
-        TFCBlocks.SOIL.get(SoilBlockType.CLAY_DUFF).values().forEach(reg -> ItemBlockRenderTypes.setRenderLayer(reg.get(), cutoutMipped));
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.PEAT_GRASS.get(), cutoutMipped);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.KAOLIN_CLAY_GRASS.get(), cutoutMipped);
-
-        // Metal blocks
-        TFCBlocks.METALS.values().forEach(map -> map.values().forEach(reg -> ItemBlockRenderTypes.setRenderLayer(reg.get(), cutout)));
-
-        // Groundcover
-        TFCBlocks.GROUNDCOVER.values().forEach(reg -> ItemBlockRenderTypes.setRenderLayer(reg.get(), cutout));
-        TFCBlocks.SMALL_ORES.values().forEach(reg -> ItemBlockRenderTypes.setRenderLayer(reg.get(), cutout));
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.CALCITE.get(), cutout);
-
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.ICICLE.get(), translucent);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.SEA_ICE.get(), cutout);
-        TFCBlocks.COLORED_POURED_GLASS.values().forEach(reg -> ItemBlockRenderTypes.setRenderLayer(reg.get(), translucent));
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.POURED_GLASS.get(), translucent);
-
-        // Plants
-        TFCBlocks.CROPS.values().forEach(reg -> {
-            if (reg.get() instanceof IGhostBlockHandler)
-            {
-                ItemBlockRenderTypes.setRenderLayer(reg.get(), ghostBlock);
-            }
-            else
-            {
-                ItemBlockRenderTypes.setRenderLayer(reg.get(), cutout);
-            }
-        });
-        TFCBlocks.DEAD_CROPS.values().forEach(reg -> ItemBlockRenderTypes.setRenderLayer(reg.get(), cutout));
-        TFCBlocks.WILD_CROPS.values().forEach(reg -> ItemBlockRenderTypes.setRenderLayer(reg.get(), cutout));
-
-        TFCBlocks.PLANTS.values().forEach(reg -> ItemBlockRenderTypes.setRenderLayer(reg.get(), cutout));
-        TFCBlocks.POTTED_PLANTS.values().forEach(reg -> ItemBlockRenderTypes.setRenderLayer(reg.get(), cutout));
-        TFCBlocks.CORAL.values().forEach(map -> map.values().forEach(reg -> ItemBlockRenderTypes.setRenderLayer(reg.get(), cutout)));
-        TFCBlocks.SPREADING_BUSHES.values().forEach(bush -> ItemBlockRenderTypes.setRenderLayer(bush.get(), cutoutMipped));
-        TFCBlocks.SPREADING_CANES.values().forEach(bush -> ItemBlockRenderTypes.setRenderLayer(bush.get(), cutoutMipped));
-        TFCBlocks.STATIONARY_BUSHES.values().forEach(bush -> ItemBlockRenderTypes.setRenderLayer(bush.get(), cutoutMipped));
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.CRANBERRY_BUSH.get(), cutoutMipped);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.DEAD_BERRY_BUSH.get(), cutout);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.DEAD_CANE.get(), cutout);
-        TFCBlocks.FRUIT_TREE_SAPLINGS.values().forEach(leaves -> ItemBlockRenderTypes.setRenderLayer(leaves.get(), cutout));
-        TFCBlocks.FRUIT_TREE_POTTED_SAPLINGS.values().forEach(leaves -> ItemBlockRenderTypes.setRenderLayer(leaves.get(), cutout));
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.BANANA_PLANT.get(), cutout);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.DEAD_BANANA_PLANT.get(), cutout);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.BANANA_SAPLING.get(), cutout);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.BANANA_POTTED_SAPLING.get(), cutout);
-
-        // Other
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.FIREPIT.get(), ghostBlock);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.GRILL.get(), ghostBlock);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.POT.get(), ghostBlock);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.STOVE.get(), cutout);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.STOVE_POT.get(), cutout);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.CERAMIC_BOWL.get(), cutout);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.TORCH.get(), cutout);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.WALL_TORCH.get(), cutout);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.DEAD_TORCH.get(), cutout);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.DEAD_WALL_TORCH.get(), cutout);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.WATTLE.get(), ghostBlock);
-        TFCBlocks.STAINED_WATTLE.values().forEach(wattle -> ItemBlockRenderTypes.setRenderLayer(wattle.get(), ghostBlock));
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.UNSTAINED_WATTLE.get(), cutout);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.INGOT_PILE.get(), cutout);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.DOUBLE_INGOT_PILE.get(), cutout);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.SCRAPING.get(), cutout);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.STEEL_PIPE.get(), cutout);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.STEEL_PUMP.get(), cutout);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.ROPE.get(), cutout);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.HANGING_ROPE.get(), cutout);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.STEEL_ROPE_ANCHOR.get(), cutout);
-
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.COMPOSTER.get(), cutout);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.BLOOMERY.get(), cutout);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.FIRE_BRICK_SHELF.get(), cutout);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.FIREPROOF_DOOR.get(), cutout);
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.ICE_PILE.get(), translucent);
-
-        ItemBlockRenderTypes.setRenderLayer(TFCBlocks.LARGE_VESSEL.get(), cutout);
-        TFCBlocks.GLAZED_LARGE_VESSELS.values().forEach(vessel -> ItemBlockRenderTypes.setRenderLayer(vessel.get(), cutout));
-
-        // Fluids
-        ItemBlockRenderTypes.setRenderLayer(TFCFluids.SALT_WATER.getFlowing(), translucent);
-        ItemBlockRenderTypes.setRenderLayer(TFCFluids.SALT_WATER.getSource(), translucent);
-        ItemBlockRenderTypes.setRenderLayer(TFCFluids.SPRING_WATER.getFlowing(), translucent);
-        ItemBlockRenderTypes.setRenderLayer(TFCFluids.SPRING_WATER.getSource(), translucent);
-        ItemBlockRenderTypes.setRenderLayer(TFCFluids.RIVER_WATER.get(), translucent);
+        // 26.1 classifies baked quads from texture transparency. Fluids use
+        // FluidModelRegistration, and the ModelBlockRenderer mixin retains fast leaves.
 
         // Misc
         BiomeColorsAccessor.accessor$setWaterColorsResolver(TFCColors.FRESH_WATER);
@@ -699,15 +579,15 @@ public final class ClientEventHandler
         event.registerBlockEntityRenderer(TFCBlockEntities.POWER_LOOM.get(), ctx -> new PowerLoomBlockEntityRenderer());
         event.registerBlockEntityRenderer(TFCBlockEntities.SLUICE.get(), ctx -> new SluiceBlockEntityRenderer());
         event.registerBlockEntityRenderer(TFCBlockEntities.BELLOWS.get(), ctx -> new BellowsBlockEntityRenderer());
-        event.registerBlockEntityRenderer(TFCBlockEntities.TOOL_RACK.get(), ctx -> new ToolRackBlockEntityRenderer());
+        event.registerBlockEntityRenderer(TFCBlockEntities.TOOL_RACK.get(), ToolRackBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.SIGN.get(), TFCSignBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.HANGING_SIGN.get(), TFCHangingSignBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.BARREL.get(), ctx -> new BarrelBlockEntityRenderer());
         event.registerBlockEntityRenderer(TFCBlockEntities.CRUCIBLE.get(), ctx -> new CrucibleBlockEntityRenderer());
         event.registerBlockEntityRenderer(TFCBlockEntities.LECTERN.get(), LecternRenderer::new);
-        event.registerBlockEntityRenderer(TFCBlockEntities.ANVIL.get(), ctx -> new AnvilBlockEntityRenderer());
-        event.registerBlockEntityRenderer(TFCBlockEntities.CHARCOAL_FORGE.get(), ctx -> new CharcoalForgeBlockEntityRenderer());
-        event.registerBlockEntityRenderer(TFCBlockEntities.NEST_BOX.get(), ctx -> new NestBoxBlockEntityRenderer());
+        event.registerBlockEntityRenderer(TFCBlockEntities.ANVIL.get(), AnvilBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(TFCBlockEntities.CHARCOAL_FORGE.get(), CharcoalForgeBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(TFCBlockEntities.NEST_BOX.get(), NestBoxBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.BELL.get(), TFCBellBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.BOWL.get(), ctx -> new BowlBlockEntityRenderer());
         event.registerBlockEntityRenderer(TFCBlockEntities.HOT_POURED_GLASS.get(), ctx -> new HotPouredGlassBlockEntityRenderer());

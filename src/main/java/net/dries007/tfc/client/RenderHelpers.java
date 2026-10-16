@@ -33,7 +33,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.ItemInHandRenderer;
-import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -544,7 +544,7 @@ public final class RenderHelpers
     public static int getHeatedBrightness(ItemStack stack, int combinedLight)
     {
         final float heat = Math.min(HeatCapability.getTemperature(stack) / 400f, 1f);
-        return Math.max(combinedLight, (int) (heat * LightTexture.FULL_BRIGHT));
+        return Math.max(combinedLight, (int) (heat * LightCoordsUtil.FULL_BRIGHT));
     }
 
     public static int getFluidColor(FluidStack fluid)

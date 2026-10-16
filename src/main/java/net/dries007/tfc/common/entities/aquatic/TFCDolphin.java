@@ -44,7 +44,7 @@ public class TFCDolphin extends Dolphin implements AquaticMob
         goalSelector.addGoal(4, new RandomLookAroundGoal(this));
         goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 6.0F));
         goalSelector.addGoal(5, new DolphinJumpGoal(this, 10));
-        goalSelector.addGoal(8, new FollowBoatGoal(this));
+        goalSelector.addGoal(8, new FollowPlayerRiddenEntityGoal(this, net.minecraft.world.entity.vehicle.boat.AbstractBoat.class));
 
         targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 1000, true, false, (e, serverLevel) -> Helpers.isEntity(e, TFCTags.Entities.HUNTED_BY_OCEAN_PREDATORS)));
     }

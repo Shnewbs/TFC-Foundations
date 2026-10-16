@@ -8,17 +8,20 @@ package net.dries007.tfc.client.render.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 import net.dries007.tfc.common.blockentities.ToolRackBlockEntity;
 import net.dries007.tfc.common.blocks.wood.ToolRackBlock;
 
-public class ToolRackBlockEntityRenderer implements BlockEntityRenderer<ToolRackBlockEntity>
+public class ToolRackBlockEntityRenderer extends ItemDisplayBlockEntityRenderer<ToolRackBlockEntity>
 {
+    public ToolRackBlockEntityRenderer(BlockEntityRendererProvider.Context context)
+    {
+        super(context);
+    }
+
     //direction, slot, axis, that's the order.
     private static final float[][][] ITEM_LOCATION = new float[4][4][3];
     private static final float[] META_TO_ANGLE = new float[] {180f, 90f, 0f, 270f};
@@ -81,7 +84,7 @@ public class ToolRackBlockEntityRenderer implements BlockEntityRenderer<ToolRack
     }
 
     @Override
-    public void render(ToolRackBlockEntity toolRack, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay)
+    protected void extractItems(ToolRackBlockEntity toolRack, float partialTicks, PoseStack poseStack, State output, int combinedLight, int combinedOverlay)
     {
         if (toolRack.getLevel() == null) return;
         int meta = toolRack.getBlockState().getValue(ToolRackBlock.FACING).get2DDataValue();
@@ -95,7 +98,7 @@ public class ToolRackBlockEntityRenderer implements BlockEntityRenderer<ToolRack
                 poseStack.translate(ITEM_LOCATION[meta][i][0], ITEM_LOCATION[meta][i][1], ITEM_LOCATION[meta][i][2]);
                 poseStack.mulPose(Axis.YP.rotationDegrees(META_TO_ANGLE[meta]));
                 poseStack.scale(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
-                Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, combinedLight, combinedOverlay, poseStack, buffer, toolRack.getLevel(), 0);
+                addItem(output, stack, ItemDisplayContext.FIXED, combinedLight, combinedOverlay, poseStack, toolRack.getLevel(), 0);
                 poseStack.popPose();
             }
         }

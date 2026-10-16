@@ -80,12 +80,13 @@ public class RamTargetTFC extends Behavior<RammingPrey>
         if (!list.isEmpty())
         {
             LivingEntity livingentity = list.get(0);
-            livingentity.hurt(level.damageSources().noAggroMobAttack(rammingPrey), ((float) rammingPrey.getAttributeValue(Attributes.ATTACK_DAMAGE)) * rammingPrey.getAttackDamageMultiplier());
+            final float damage = ((float) rammingPrey.getAttributeValue(Attributes.ATTACK_DAMAGE)) * rammingPrey.getAttackDamageMultiplier();
+            livingentity.hurt(level.damageSources().noAggroMobAttack(rammingPrey), damage);
             int i = rammingPrey.hasEffect(MobEffects.SPEED) ? rammingPrey.getEffect(MobEffects.SPEED).getAmplifier() + 1 : 0;
             int j = rammingPrey.hasEffect(MobEffects.SLOWNESS) ? rammingPrey.getEffect(MobEffects.SLOWNESS).getAmplifier() + 1 : 0;
             float f = 0.25F * (float) (i - j);
             float f1 = Mth.clamp(rammingPrey.getSpeed() * 1.65F, 0.2F, 3.0F) + f;
-            float f2 = livingentity.isDamageSourceBlocked(level.damageSources().mobAttack(rammingPrey)) ? 0.5F : 1.0F;
+            float f2 = livingentity.applyItemBlocking(level, level.damageSources().mobAttack(rammingPrey), damage) > 0f ? 0.5F : 1.0F;
             float f3 = rammingPrey.getAttackDamageMultiplier() * 0.6f;
             livingentity.knockback((double) (f1 * f2 * f3) * this.getKnockbackForce.applyAsDouble(rammingPrey), this.ramDirection.x(), this.ramDirection.z());
             this.finishRam(level, rammingPrey);

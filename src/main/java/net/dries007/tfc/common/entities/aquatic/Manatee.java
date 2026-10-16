@@ -71,7 +71,7 @@ public class Manatee extends WaterAnimal implements AquaticMob
         {
             setDeltaMovement(getDeltaMovement().add((random.nextFloat() * 2.0F - 1.0F) * 0.05F, 0.4F, (random.nextFloat() * 2.0F - 1.0F) * 0.05F));
             setOnGround(false);
-            hasImpulse = true;
+            needsSync = true;
             playSound(getFlopSound(), getSoundVolume(), getVoicePitch());
         }
         super.aiStep();

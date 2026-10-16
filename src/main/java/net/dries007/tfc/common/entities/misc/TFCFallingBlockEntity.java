@@ -298,7 +298,10 @@ public class TFCFallingBlockEntity extends FallingBlockEntity
                 {
                     blockEntityData.put(key, blockData.get(key).copy());
                 }
-                blockEntity.loadWithComponents(blockEntityData, level().registryAccess());
+                try (net.minecraft.util.ProblemReporter.ScopedCollector reporter = new net.minecraft.util.ProblemReporter.ScopedCollector(blockEntity.problemPath(), net.dries007.tfc.TerraFirmaCraft.LOGGER))
+                {
+                    blockEntity.loadWithComponents(net.minecraft.world.level.storage.TagValueInput.create(reporter, level().registryAccess(), blockEntityData));
+                }
                 blockEntity.setChanged();
             }
         }

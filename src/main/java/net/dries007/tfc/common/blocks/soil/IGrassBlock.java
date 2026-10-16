@@ -40,7 +40,7 @@ public interface IGrassBlock extends ISoilBlock
         }
         else
         {
-            return LightEngine.getLightBlockInto(world, state, pos, stateUp, posUp, Direction.UP, stateUp.getLightBlock(world, posUp)) < world.getMaxLightLevel();
+            return LightEngine.getLightBlockInto(state, stateUp, Direction.UP, stateUp.getLightDampening()) < 15;
         }
     }
 

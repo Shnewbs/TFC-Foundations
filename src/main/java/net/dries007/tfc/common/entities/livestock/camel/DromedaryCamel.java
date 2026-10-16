@@ -12,6 +12,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -70,6 +71,12 @@ public class DromedaryCamel extends AbstractCamel implements HorseProperties
         super(type, level);
         this.config = config.inner();
         this.mammalConfig = config;
+    }
+
+    @Override
+    public SoundEvent getEatingSound()
+    {
+        return super.getEatingSound();
     }
 
     @Override
@@ -162,7 +169,7 @@ public class DromedaryCamel extends AbstractCamel implements HorseProperties
             }
             else
             {
-                if (isTamed() && getOwnerUUID() == null)
+                if (isTamed() && getOwnerReference() == null)
                 {
                     tameWithName(player);
                 }

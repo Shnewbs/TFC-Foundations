@@ -7,7 +7,7 @@
 package net.dries007.tfc.client;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -20,7 +20,7 @@ import net.dries007.tfc.util.tooltip.Tooltips;
 
 public class CrateOverlays
 {
-    public static boolean render(Minecraft minecraft, GuiGraphics graphics)
+    public static boolean render(Minecraft minecraft, GuiGraphicsExtractor graphics)
     {
         final Level level = minecraft.level;
         final BlockPos targetedPos = ClientHelpers.getTargetedPos();
@@ -61,9 +61,9 @@ public class CrateOverlays
         return false;
     }
 
-    private static void drawCenteredText(Minecraft minecraft, GuiGraphics graphics, Component text, int x, int y)
+    private static void drawCenteredText(Minecraft minecraft, GuiGraphicsExtractor graphics, Component text, int x, int y)
     {
         final int textWidth = minecraft.font.width(text) / 2;
-        graphics.drawString(minecraft.font, text, x - textWidth, y, 0xFFFFFF, true);
+        graphics.text(minecraft.font, text, x - textWidth, y, 0xFFFFFFFF, true);
     }
 }

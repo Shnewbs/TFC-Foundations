@@ -305,7 +305,7 @@ public final class ForgeEventHandler
                 LOGGER.warn("Unable to find a suitable spawn location!");
             }
 
-            if (level.getServer().getWorldData().worldGenOptions().generateBonusChest())
+            if (level.getServer().getWorldGenSettings().options().generateBonusChest())
             {
                 LOGGER.warn("No bonus chest for you, you cheaty cheater!");
             }
@@ -795,7 +795,7 @@ public final class ForgeEventHandler
         if (entity.hasEffect(TFCEffects.OVERBURDENED.holder()))
         {
             entity.setDeltaMovement(0, 0, 0);
-            entity.hasImpulse = false;
+            entity.needsSync = false;
         }
     }
 
