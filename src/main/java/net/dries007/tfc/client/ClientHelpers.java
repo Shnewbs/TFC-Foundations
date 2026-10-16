@@ -9,7 +9,6 @@ package net.dries007.tfc.client;
 import java.util.Objects;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
@@ -76,7 +75,7 @@ public final class ClientHelpers
 
     public static boolean useFancyGraphics()
     {
-        return Minecraft.useFancyGraphics();
+        return Minecraft.getInstance().options.cutoutLeaves().get();
     }
 
     @Nullable
@@ -102,7 +101,7 @@ public final class ClientHelpers
 
     public static boolean hasShiftDown()
     {
-        return Screen.hasShiftDown();
+        return Minecraft.getInstance().hasShiftDown();
     }
 
     public static void openPetScreen(TamableMammal mammal)

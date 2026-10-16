@@ -6,7 +6,7 @@
 
 package net.dries007.tfc.mixin.client;
 
-import net.minecraft.client.renderer.block.LiquidBlockRenderer;
+import net.minecraft.client.renderer.block.FluidRenderer;
 import net.minecraft.world.level.material.Fluid;
 
 import net.dries007.tfc.common.fluids.FluidHelpers;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(LiquidBlockRenderer.class)
+@Mixin(FluidRenderer.class)
 public abstract class LiquidBlockRendererMixin
 {
     /**

@@ -6,55 +6,36 @@
 
 package net.dries007.tfc.mixin.client;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.monster.skeleton.SkeletonModel;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.world.InteractionHand;
+import net.minecraft.client.renderer.entity.state.SkeletonRenderState;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.monster.RangedAttackMob;
-import net.minecraft.world.item.ItemStack;
-
-import net.dries007.tfc.common.items.JavelinItem;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/**
- * For some reason mobs do not intelligently select arm poses like players do. Should probably be a forge PR someday.
- */
+import net.dries007.tfc.common.items.JavelinItem;
+
+/** Arm poses live in extracted state; preserve the humanoid spear pose through the skeleton melee override. */
 @Mixin(SkeletonModel.class)
-public abstract class SkeletonModelMixin<T extends Mob & RangedAttackMob> extends HumanoidModel<T>
+public abstract class SkeletonModelMixin
 {
-    public SkeletonModelMixin(ModelPart part)
+    @Inject(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/SkeletonRenderState;)V", at = @At("HEAD"))
+    private void poseJavelin(SkeletonRenderState state, CallbackInfo ci)
     {
-        super(part);
-    }
-
-    @Inject(method = "prepareMobModel(Lnet/minecraft/world/entity/Mob;FFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Mob;getItemInHand(Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/item/ItemStack;"))
-    private void inject$prepareMobModel(T entity, float ageInTicks, float limbSwing, float limbSwingAmount, CallbackInfo ci)
-    {
-        ItemStack itemstack = entity.getItemInHand(InteractionHand.MAIN_HAND);
-        if (itemstack.getItem() instanceof JavelinItem && entity.isAggressive())
+        if (state.isAggressive && state.getMainHandItemStack().getItem() instanceof JavelinItem)
         {
-            if (entity.getMainArm() == HumanoidArm.RIGHT)
-            {
-                this.rightArmPose = ArmPose.THROW_SPEAR;
-            }
-            else
-            {
-                this.leftArmPose = ArmPose.THROW_SPEAR;
-            }
+            if (state.mainArm == HumanoidArm.RIGHT) state.rightArmPose = HumanoidModel.ArmPose.THROW_TRIDENT;
+            else state.leftArmPose = HumanoidModel.ArmPose.THROW_TRIDENT;
         }
     }
 
-    @Inject(method = "setupAnim(Lnet/minecraft/world/entity/Mob;FFFFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Mob;getMainHandItem()Lnet/minecraft/world/item/ItemStack;"), cancellable = true)
-    private void inject$setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float headYaw, float headPitch, CallbackInfo ci)
+    @ModifyExpressionValue(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/SkeletonRenderState;)V",
+        at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/state/SkeletonRenderState;isHoldingBow:Z"))
+    private boolean preserveJavelinPose(boolean holdingBow, SkeletonRenderState state)
     {
-        if (entity.getMainHandItem().getItem() instanceof JavelinItem)
-        {
-            ci.cancel();
-        }
+        return holdingBow || state.getMainHandItemStack().getItem() instanceof JavelinItem;
     }
 }

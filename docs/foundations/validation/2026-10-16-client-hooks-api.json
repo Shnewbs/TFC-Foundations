@@ -1,0 +1,66 @@
+{
+  "source_parent": "7a63ac8a86b13ff19c0c52c7d3f8f61b5b5ad8f2",
+  "branch": "26.1.2",
+  "date": "2026-10-16",
+  "targets": {
+    "minecraft": "26.1.2",
+    "neoforge": "26.1.2.114",
+    "jei": "29.43.0.107",
+    "patchouli": "26.1-94",
+    "java": "25.0.4.1",
+    "gradle": "9.2.1",
+    "moddevgradle": "2.0.148",
+    "candidate": "0.0.0"
+  },
+  "baseline": {
+    "source_count": 1667,
+    "exit_code": 1,
+    "displayed_errors": 261,
+    "timed_out": false,
+    "annotation_processing": false,
+    "note": "Diagnostic main compilation only. Error counts can hide cascading or later failures; no gameplay or full Gradle success is implied."
+  },
+  "final": {
+    "source_count": 1669,
+    "exit_code": 1,
+    "displayed_errors": 220,
+    "timed_out": false,
+    "annotation_processing": false,
+    "note": "Diagnostic main compilation only. Error counts can hide cascading or later failures; no gameplay or full Gradle success is implied."
+  },
+  "final_validated_from_isolated_staged_tree_archive": true,
+  "gradle_compileJava_errors": 220,
+  "gradle_build_exit_code": 1,
+  "passed": {
+    "standalone_probe_runners": 33,
+    "tint_layer_cpu_assertions": 78,
+    "native_method_and_anchor_contracts": 10,
+    "item_layer_cpu_assertions": 584,
+    "display_cpu_assertions": 9074,
+    "native_accessor_field_descriptors": true,
+    "registered_mixin_sources": true,
+    "license_main": true,
+    "license_data": true,
+    "license_test": true,
+    "pinned_dependency_verification": true,
+    "asset_gate": true,
+    "resource_validation": true,
+    "generated_texture_comparison": true,
+    "git_diff_check": true
+  },
+  "host_workaround": "Opt-in untracked NeoForm Runtime 2.0.31 Java executable fallback and trusted host proxy CA in local Java 25/21 stores. TLS checks stay enabled; not stock-toolchain validation.",
+  "playable": false,
+  "jar_produced": false,
+  "runtime_tests_run": false,
+  "notes": [
+    "Displayed error counts include cascading errors, not independent bug counts or completion percentages.",
+    "Exact public parent independently reproduced at 261 errors. Final archived intended source, including obsolete Sodium hook deletion, reports 220 in javac and Gradle; intermediate working compilations reported 227/225.",
+    "Native tint fixtures exercise empty, reused, multi-layer and explicitly colored states, preserving first color, non-overwrite rules and model cache identity.",
+    "The native private fields for the actual compiled accessor are reflected. Current particle factory, rain collision invocation, fluid sameness/height methods, avatar extraction, player held-item method, skeleton branch, cuboid item update and hand submission signatures/anchors are verified.",
+    "The core native item layer path replaces the removed ItemColors and Sodium color-provider endpoints. No gameplay color feature is intentionally disabled; optional Sodium runtime behavior remains untested.",
+    "Bait state is cleared before resolving current contents and submitted with its original transform. Pan sifting/head-clamp/blowpipe offsets remain; current native avatar root/skin/sleeve submission is used.",
+    "No transformed Mixin test, live food/particle tint, bait/pan/blowpipe/javelin rendering, GPU draw, actual input/quality option, atlas reload, capability transfer, optional-Sodium, client/server/world/save/reload or survival success.",
+    "Full build fails main compilation; data/test compilation and packaging remain blocked. The separate pan/special-item renderer and selector migrations are not completed by the hand callback repair.",
+    "No new branches, dependency changes, gameplay exclusions or Actions runs. 26.x unchanged."
+  ]
+}

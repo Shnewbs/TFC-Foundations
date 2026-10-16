@@ -618,7 +618,7 @@ public class ClientForgeEventHandler
             {
                 final PoseStack poseStack = event.getPoseStack();
                 poseStack.pushPose();
-                RenderHelpers.renderTwoHandedItem(poseStack, event.getMultiBufferSource(), event.getPackedLight(), event.getInterpolatedPitch(), event.getEquipProgress(), event.getSwingProgress(), mainHand);
+                RenderHelpers.renderTwoHandedItem(poseStack, event.getSubmitNodeCollector(), event.getPackedLight(), event.getInterpolatedPitch(), event.getEquipProgress(), event.getSwingProgress(), mainHand);
                 poseStack.popPose();
             }
             event.setCanceled(true);

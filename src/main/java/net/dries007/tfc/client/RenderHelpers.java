@@ -38,8 +38,11 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
-import net.minecraft.client.renderer.entity.layers.PlayerItemInHandLayer;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.renderer.entity.player.AvatarRenderer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -49,7 +52,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -473,7 +475,7 @@ public final class RenderHelpers
     /**
      * This is the map code in {@link net.minecraft.client.renderer.ItemInHandRenderer}
      */
-    public static void renderTwoHandedItem(PoseStack poseStack, MultiBufferSource source, int combinedLight, float pitch, float equipProgress, float swingProgress, ItemStack stack)
+    public static void renderTwoHandedItem(PoseStack poseStack, SubmitNodeCollector source, int combinedLight, float pitch, float equipProgress, float swingProgress, ItemStack stack)
     {
         final Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
@@ -503,23 +505,23 @@ public final class RenderHelpers
         final boolean right = mc.player.getMainArm() == HumanoidArm.RIGHT;
         mc.getEntityRenderDispatcher().getItemInHandRenderer().renderItem(mc.player, stack,
             right ? ItemDisplayContext.FIRST_PERSON_RIGHT_HAND : ItemDisplayContext.FIRST_PERSON_LEFT_HAND,
-            !right, poseStack, source, combinedLight);
+            poseStack, source, combinedLight);
 
     }
 
-    public static void renderArmWithBlowpipe(PlayerItemInHandLayer<?, ?> layer, ItemInHandRenderer handRenderer, LivingEntity entity, ItemStack stack, HumanoidArm arm, PoseStack poseStack, MultiBufferSource buffers, int light)
+    public static void renderArmWithBlowpipe(ModelPart root, ModelPart head, ItemStackRenderState item,
+        HumanoidArm arm, PoseStack poses, SubmitNodeCollector collector, int light, int outline)
     {
-        poseStack.pushPose();
-        final ModelPart modelpart = layer.getParentModel().getHead();
-        float f = modelpart.xRot;
-        modelpart.xRot = Mth.clamp(modelpart.xRot, (-Mth.PI / 6F), (Mth.PI / 2F));
-        modelpart.translateAndRotate(poseStack);
-        modelpart.xRot = f;
-        CustomHeadLayer.translateToHead(poseStack, false);
-        final boolean lefty = arm == HumanoidArm.LEFT;
-        poseStack.translate((lefty ? -2.3F : 2.3F) / 16.0F, -0.1625F, 0.0F);
-        handRenderer.renderItem(entity, stack, ItemDisplayContext.HEAD, false, poseStack, buffers, light);
-        poseStack.popPose();
+        poses.pushPose();
+        root.translateAndRotate(poses);
+        final float rotation = head.xRot;
+        head.xRot = Mth.clamp(rotation, -Mth.PI / 6, Mth.PI / 2);
+        head.translateAndRotate(poses);
+        head.xRot = rotation;
+        CustomHeadLayer.translateToHead(poses, CustomHeadLayer.Transforms.DEFAULT);
+        poses.translate((arm == HumanoidArm.LEFT ? -2.3f : 2.3f) / 16, -0.1625f, 0);
+        item.submit(poses, collector, light, OverlayTexture.NO_OVERLAY, outline);
+        poses.popPose();
     }
 
     public static ModelPart bakeSimple(EntityRendererProvider.Context context, String layerName)
@@ -693,11 +695,11 @@ public final class RenderHelpers
         return -Mth.cos(deg) * 0.5F + 0.5F;
     }
 
-    private static void renderMapHand(Minecraft mc, PoseStack poseStack, MultiBufferSource source, int combinedLight, HumanoidArm arm)
+    private static void renderMapHand(Minecraft mc, PoseStack poseStack, SubmitNodeCollector source, int combinedLight, HumanoidArm arm)
     {
         assert mc.player != null;
 
-        final PlayerRenderer playerRenderer = (PlayerRenderer) mc.getEntityRenderDispatcher().<AbstractClientPlayer>getRenderer(mc.player);
+        final AvatarRenderer<AbstractClientPlayer> playerRenderer = mc.getEntityRenderDispatcher().getPlayerRenderer(mc.player);
         poseStack.pushPose();
         final float side = arm == HumanoidArm.RIGHT ? 1.0F : -1.0F;
         poseStack.mulPose(Axis.YP.rotationDegrees(92.0F));
@@ -707,11 +709,11 @@ public final class RenderHelpers
         poseStack.translate(side * 0.3D, -1.1D, 0.45D);
         if (arm == HumanoidArm.RIGHT)
         {
-            playerRenderer.renderRightHand(poseStack, source, combinedLight, mc.player);
+            playerRenderer.renderRightHand(poseStack, source, combinedLight, mc.player.getSkin().body().texturePath(), mc.player.isModelPartShown(PlayerModelPart.RIGHT_SLEEVE), mc.player);
         }
         else
         {
-            playerRenderer.renderLeftHand(poseStack, source, combinedLight, mc.player);
+            playerRenderer.renderLeftHand(poseStack, source, combinedLight, mc.player.getSkin().body().texturePath(), mc.player.isModelPartShown(PlayerModelPart.LEFT_SLEEVE), mc.player);
         }
         poseStack.popPose();
     }

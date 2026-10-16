@@ -57,6 +57,7 @@
     "accessor.StructureTemplateAccessor"
   ],
   "client": [
+    "client.AvatarRendererMixin",
     "client.BreakingItemParticleMixin",
     "client.CameraMixin",
     "client.ClientLevelMixin",
@@ -76,9 +77,9 @@
     "client.accessor.GuiAccessor",
     "client.accessor.LocalPlayerAccessor",
     "client.accessor.AbstractSignRendererAccessor",
+    "client.accessor.ItemStackRenderStateAccessor",
     "client.compat.patchouli.GuiBookMixin",
-    "client.compat.sodium.DefaultFluidRendererMixin",
-    "client.compat.sodium.ItemColorsMixin"
+    "client.compat.sodium.DefaultFluidRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

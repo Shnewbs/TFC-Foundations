@@ -10,19 +10,16 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HeadedModel;
-import net.minecraft.client.renderer.ItemInHandRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.entity.layers.PlayerItemInHandLayer;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -31,25 +28,21 @@ import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.common.items.GlassBlowpipeItem;
 
 @Mixin(PlayerItemInHandLayer.class)
-public abstract class PlayerItemInHandLayerMixin<T extends Player, M extends EntityModel<T> & ArmedModel & HeadedModel> extends ItemInHandLayer<T, M>
+public abstract class PlayerItemInHandLayerMixin<S extends AvatarRenderState, M extends EntityModel<S> & ArmedModel<S> & HeadedModel> extends ItemInHandLayer<S, M>
 {
-    @Final @Shadow
-    private ItemInHandRenderer itemInHandRenderer;
+    protected PlayerItemInHandLayerMixin(RenderLayerParent<S, M> parent) { super(parent); }
 
-    public PlayerItemInHandLayerMixin(RenderLayerParent<T, M> parent, ItemInHandRenderer renderer)
+    @Inject(method = "submitArmWithItem(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;Lnet/minecraft/client/renderer/item/ItemStackRenderState;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/HumanoidArm;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V", at = @At("HEAD"), cancellable = true)
+    private void submitBlowpipe(S state, ItemStackRenderState item, ItemStack stack, HumanoidArm arm,
+        PoseStack poses, SubmitNodeCollector collector, int light, CallbackInfo ci)
     {
-        super(parent, renderer);
-    }
-
-    @Inject(method = "renderArmWithItem", at = @At("HEAD"), cancellable = true)
-    private void inject$renderArmWithItem(LivingEntity entity, ItemStack stack, ItemDisplayContext ctx, HumanoidArm arm, PoseStack poseStack, MultiBufferSource buffers, int light, CallbackInfo ci)
-    {
-        if (stack.getItem() instanceof GlassBlowpipeItem && entity.getUseItem() == stack && entity.swingTime == 0)
+        final InteractionHand hand = arm == state.mainArm ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+        if (stack.getItem() instanceof GlassBlowpipeItem && state.isUsingItem && state.useItemHand == hand
+            && state.attackTime < 1.0E-5f && !state.heldOnHead.isEmpty())
         {
-            RenderHelpers.renderArmWithBlowpipe((PlayerItemInHandLayer<?, ?>) (Object) this, itemInHandRenderer, entity, stack, arm, poseStack, buffers, light);
+            RenderHelpers.renderArmWithBlowpipe(getParentModel().root(), getParentModel().getHead(), state.heldOnHead,
+                arm, poses, collector, light, state.outlineColor);
             ci.cancel();
         }
     }
-
-
 }

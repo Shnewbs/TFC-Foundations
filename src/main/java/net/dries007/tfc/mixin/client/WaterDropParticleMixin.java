@@ -8,8 +8,6 @@ package net.dries007.tfc.mixin.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.client.particle.WaterDropParticle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
@@ -22,13 +20,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import net.dries007.tfc.common.blocks.IBlockRain;
 
 @Mixin(WaterDropParticle.class)
-public abstract class WaterDropParticleMixin extends TextureSheetParticle
+public abstract class WaterDropParticleMixin
 {
-    protected WaterDropParticleMixin(ClientLevel level, double x, double y, double z)
-    {
-        super(level, x, y, z);
-    }
-
     @WrapOperation(
         method = "tick",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getCollisionShape(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/phys/shapes/VoxelShape;")
