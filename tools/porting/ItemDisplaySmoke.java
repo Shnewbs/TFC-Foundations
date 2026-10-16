@@ -96,7 +96,56 @@ public final class ItemDisplaySmoke
         }
     }
 
-    public static void main(String[] args)
+    private static void captureReplay()
+    {
+        for (var axis : net.minecraft.core.Direction.Axis.values())
+        {
+            for (int angle = 0; angle < 360; angle += 15)
+            {
+                final PoseStack local = new PoseStack();
+                AxleRenderGeometry.applyRotation(local, axis, (float) Math.toRadians(angle));
+                final AxleRenderGeometry.Texture uv = new AxleRenderGeometry.Texture(0.125f, 0.25f, 0.375f, 0.5f);
+                final CapturedGeometry captured = new CapturedGeometry();
+                AxleRenderGeometry.drawAxle(local.last(), captured, uv, 0x00A00070, 0x123456);
+                final var frozen = captured.snapshot();
+                check(frozen.vertices().size() == 24);
+                try { frozen.vertices().clear(); throw new AssertionError("Mutable geometry snapshot"); }
+                catch (UnsupportedOperationException expected) { checks++; }
+
+                final PoseStack parent = new PoseStack();
+                parent.translate(12, -4, 9);
+                parent.mulPose(Axis.YP.rotationDegrees(30));
+                final RecordingVertices replayed = new RecordingVertices();
+                frozen.draw(parent.last(), replayed);
+                parent.mulPose(local.last().pose());
+                final RecordingVertices direct = new RecordingVertices();
+                AxleRenderGeometry.drawAxle(parent.last(), direct, uv, 0x00A00070, 0x123456);
+                for (int i = 0; i < 24; i++)
+                {
+                    check(new Vector3f(direct.positions.get(i)).equals(new Vector3f(replayed.positions.get(i)), 0.00001f));
+                    check(direct.normals.get(i).equals(replayed.normals.get(i), 0.00001f));
+                    check(java.util.Arrays.equals(direct.uv.get(i), replayed.uv.get(i)));
+                    check(direct.colors.get(i).equals(replayed.colors.get(i)));
+                    check(direct.lights.get(i).equals(replayed.lights.get(i)) && direct.overlays.get(i).equals(replayed.overlays.get(i)));
+                }
+                // Appending to the extraction builder must not change an already submitted snapshot.
+                captured.addVertex(0, 0, 0).setColor(0x7F010203).setUv(0.1f, 0.2f).setOverlay(5).setLight(6).setNormal(0, 1, 0);
+                check(captured.snapshot().vertices().size() == 25 && frozen.vertices().size() == 24);
+                check(captured.snapshot().vertices().getLast().color() == 0x7F010203);
+            }
+        }
+        final var id = net.minecraft.resources.Identifier.fromNamespaceAndPath("tfc", "block/crankshaft_wheel");
+        check(net.dries007.tfc.client.model.StandaloneBlockModels.key(id) == net.dries007.tfc.client.model.StandaloneBlockModels.key(id));
+        final java.util.Map<net.neoforged.neoforge.client.model.standalone.StandaloneModelKey<?>, net.neoforged.neoforge.client.model.standalone.UnbakedStandaloneModel<?>> models = new java.util.HashMap<>();
+        final var event = new net.neoforged.neoforge.client.event.ModelEvent.RegisterStandalone(models);
+        net.dries007.tfc.client.model.StandaloneBlockModels.register(event, id);
+        check(models.size() == 1 && models.containsKey(net.dries007.tfc.client.model.StandaloneBlockModels.key(id)));
+        final java.util.List<net.minecraft.resources.Identifier> dependencies = new java.util.ArrayList<>();
+        models.values().iterator().next().resolveDependencies(dependencies::add);
+        check(dependencies.equals(java.util.List.of(id)));
+    }
+
+    public static void main(String[] args) throws Exception
     {
         final SubmitNodeCollector collector = (SubmitNodeCollector) Proxy.newProxyInstance(
             ItemDisplaySmoke.class.getClassLoader(), new Class<?>[] {SubmitNodeCollector.class},
@@ -137,6 +186,15 @@ public final class ItemDisplaySmoke
         check(hammer.count == 1 && input.count == 1 && nextFrame.count == 1);
         check(nextFrame.pose.equals(parent, 0.00001f));
         surfaces();
+        captureReplay();
+        final var bridge = net.dries007.tfc.mixin.client.accessor.AbstractSignRendererAccessor.class.getDeclaredMethods()[0];
+        final var invoker = bridge.getAnnotation(org.spongepowered.asm.mixin.gen.Invoker.class);
+        final var target = net.minecraft.client.renderer.blockentity.AbstractSignRenderer.class.getDeclaredMethod(invoker.value(), bridge.getParameterTypes());
+        check(target.getReturnType() == bridge.getReturnType());
+        check(!java.lang.reflect.Modifier.isStatic(target.getModifiers()));
+        check(java.lang.reflect.Modifier.isPrivate(target.getModifiers()));
+        check(net.minecraft.client.gui.screens.inventory.HangingSignEditScreen.class.getDeclaredField("texture").getType() == net.minecraft.resources.Identifier.class);
+        check(net.minecraft.client.gui.screens.inventory.HangingSignEditScreen.class.getConstructor(net.minecraft.world.level.block.entity.SignBlockEntity.class, boolean.class, boolean.class) != null);
         System.out.println("PASS " + checks + " display/surface transform, UV, tint, light and reuse checks (CPU only)");
     }
 }

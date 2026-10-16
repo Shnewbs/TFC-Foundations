@@ -13,7 +13,9 @@ def main():
     classes.mkdir(parents=True)
     empty = out / 'item-display-empty-sourcepath'
     empty.mkdir(exist_ok=True)
-    sources = [Path('src/main/java/net/dries007/tfc/client/render/blockentity/ItemDisplayBlockEntityRenderer.java'), Path('src/main/java/net/dries007/tfc/client/render/blockentity/SurfaceGeometry.java'), Path('tools/porting/ItemDisplaySmoke.java')]
+    sources = [Path('src/main/java/net/dries007/tfc/client/render/blockentity') / name for name in
+               ('ItemDisplayBlockEntityRenderer.java', 'SurfaceGeometry.java', 'CapturedGeometry.java', 'BlockModelRenderView.java', 'AxleRenderGeometry.java')]
+    sources += [Path('src/main/java/net/dries007/tfc/client/model/StandaloneBlockModels.java'), Path('src/main/java/net/dries007/tfc/mixin/client/accessor/AbstractSignRendererAccessor.java'), Path('tools/porting/ItemDisplaySmoke.java')]
     java_bin = Path(os.environ['JAVA_HOME']) / 'bin' if os.environ.get('JAVA_HOME') else Path('')
     commands = [
         [str(java_bin / 'javac'), '--release', '25', '-proc:none', '-classpath', cp,

@@ -43,7 +43,6 @@ import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
@@ -87,18 +86,10 @@ public final class RenderHelpers
         return map;
     }
 
-    /**
-     * Creates a default {@link ModelResourceLocation} with the TFC namespace using the {@link ModelResourceLocation#STANDALONE_VARIANT}.
-     */
-    public static ModelResourceLocation modelId(String id)
-    {
-        return ModelResourceLocation.standalone(Helpers.identifier(id));
-    }
+    /** Identifies a standalone model without changing its namespace or resource path. */
+    public static Identifier modelId(String id) { return Helpers.identifier(id); }
 
-    public static ModelResourceLocation modelId(Identifier id)
-    {
-        return ModelResourceLocation.standalone(id);
-    }
+    public static Identifier modelId(Identifier id) { return id; }
 
     public static ModelLayerLocation layerId(String name)
     {
@@ -652,7 +643,12 @@ public final class RenderHelpers
     /** Resolves the sprite without changing global render state. Tint is supplied with each GUI draw. */
     public static TextureAtlasSprite getFluidSprite(FluidStack fluid)
     {
-        return getFluidModel(fluid.getFluid()).stillMaterial().sprite();
+        return getFluidSprite(fluid.getFluid());
+    }
+
+    public static TextureAtlasSprite getFluidSprite(Fluid fluid)
+    {
+        return getFluidModel(fluid).stillMaterial().sprite();
     }
 
     public static void fillAreaWithSprite(GuiGraphicsExtractor graphics, TextureAtlasSprite sprite, int x, int y, int regionWidth, int regionHeight, int spriteWidth, int spriteHeight)

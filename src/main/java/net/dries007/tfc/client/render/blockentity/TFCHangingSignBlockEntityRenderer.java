@@ -7,94 +7,95 @@
 package net.dries007.tfc.client.render.blockentity;
 
 import java.util.Map;
-import java.util.function.Function;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.model.Model;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.HangingSignRenderer;
-import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.client.renderer.blockentity.state.HangingSignRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.sprite.SpriteGetter;
+import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Unit;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SignBlock;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
 import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.common.blocks.TFCBlocks;
-import net.dries007.tfc.mixin.client.accessor.SignRendererAccessor;
+import net.dries007.tfc.mixin.client.accessor.AbstractSignRendererAccessor;
 import net.dries007.tfc.util.Helpers;
 
 public class TFCHangingSignBlockEntityRenderer extends HangingSignRenderer
 {
-    public static final Map<Block, Provider<Function<BlockEntityRendererProvider.Context, HangingSignModel>>> MODELS = RenderHelpers.mapOf(map -> {
-        TFCBlocks.CEILING_HANGING_SIGNS.forEach((wood, m) -> m.forEach((metal, block) -> {
-            final var model = new Provider<Function<BlockEntityRendererProvider.Context, HangingSignModel>>(
-                new Material(
-                    Sheets.SIGN_SHEET,
-                    Helpers.identifier("entity/signs/hanging/" + metal.getSerializedName() + "/" + wood.getSerializedName())
-                ),
-                Helpers.identifier(wood.getSerializedName() + ".png").withPrefix("textures/gui/hanging_signs/" + metal.getSerializedName() + "/"),
-                context -> new HangingSignModel(context.bakeLayer(RenderHelpers.layerId("hanging_sign/" + wood.getSerializedName())))
-            );
+    public record Provider(SpriteId modelMaterial, Identifier textureLocation) {}
 
-            map.accept(block, model);
-            map.accept(TFCBlocks.WALL_HANGING_SIGNS.get(wood).get(metal), model);
+    public static final Map<Block, Provider> MODELS = RenderHelpers.mapOf(map -> {
+        TFCBlocks.CEILING_HANGING_SIGNS.forEach((wood, metals) -> metals.forEach((metal, block) -> {
+            final Provider provider = new Provider(
+                new SpriteId(Sheets.SIGN_SHEET, Helpers.identifier("entity/signs/hanging/" + metal.getSerializedName() + "/" + wood.getSerializedName())),
+                Helpers.identifier(wood.getSerializedName() + ".png").withPrefix("textures/gui/hanging_signs/" + metal.getSerializedName() + "/"));
+            map.accept(block, provider);
+            map.accept(TFCBlocks.WALL_HANGING_SIGNS.get(wood).get(metal), provider);
         }));
     });
 
-    private final Map<Block, Provider<HangingSignModel>> hangingSignModels;
+    public static class State extends HangingSignRenderState
+    {
+        public @Nullable SpriteId sprite;
+    }
+
+    private final SpriteGetter sprites;
 
     public TFCHangingSignBlockEntityRenderer(BlockEntityRendererProvider.Context context)
     {
         super(context);
-        hangingSignModels = Helpers.mapValue(MODELS, v -> new Provider<>(v.modelMaterial, v.textureLocation, v.model.apply(context)));
+        sprites = context.sprites();
+    }
+
+    @Override public State createRenderState() { return new State(); }
+
+    @Override
+    public void extractRenderState(SignBlockEntity sign, HangingSignRenderState state, float partialTicks, Vec3 camera,
+        ModelFeatureRenderer.@Nullable CrumblingOverlay breaking)
+    {
+        super.extractRenderState(sign, state, partialTicks, camera, breaking);
+        final Provider provider = MODELS.get(sign.getBlockState().getBlock());
+        ((State) state).sprite = provider == null ? null : provider.modelMaterial();
     }
 
     @Override
-    public void render(SignBlockEntity sign, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay)
+    public void submit(HangingSignRenderState state, PoseStack poses, SubmitNodeCollector collector, CameraRenderState camera)
     {
-        final BlockState state = sign.getBlockState();
-        final SignBlock signBlock = (SignBlock) state.getBlock();
-        final @Nullable Provider<HangingSignModel> model = hangingSignModels.get(state.getBlock());
-        if (model == null)
+        final SpriteId sprite = ((State) state).sprite;
+        if (sprite == null)
         {
+            super.submit(state, poses, collector, camera);
             return;
         }
-
-        model.model.evaluateVisibleParts(state);
-        renderSignWithText(sign, poseStack, buffer, light, overlay, state, signBlock, model.modelMaterial(), model.model);
+        // Use the native attachment-specific model and text transforms; only the metal/wood sprite differs.
+        poses.pushPose();
+        poses.mulPose(state.transformations.body());
+        collector.submitModel(getSignModel(state), Unit.INSTANCE, poses, state.lightCoords, OverlayTexture.NO_OVERLAY,
+            -1, sprite, sprites, 0, state.breakProgress);
+        poses.popPose();
+        if (state.frontText != null)
+        {
+            poses.pushPose();
+            poses.mulPose(state.transformations.frontText());
+            ((AbstractSignRendererAccessor) this).invoke$submitSignText(state, poses, collector, state.frontText);
+            poses.popPose();
+        }
+        if (state.backText != null)
+        {
+            poses.pushPose();
+            poses.mulPose(state.transformations.backText());
+            ((AbstractSignRendererAccessor) this).invoke$submitSignText(state, poses, collector, state.backText);
+            poses.popPose();
+        }
     }
-
-    // behavior copied from SignRenderer#renderSignWithText
-    void renderSignWithText(SignBlockEntity sign, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay, BlockState blockstate, SignBlock signblock, Material modelMaterial, Model model)
-    {
-        poseStack.pushPose();
-        ((SignRendererAccessor) this).invoke$translateSign(poseStack, -signblock.getYRotationDegrees(blockstate), blockstate);
-        this.renderSign(poseStack, buffer, light, overlay, modelMaterial, model);
-        ((SignRendererAccessor) this).invoke$renderSignText(sign.getBlockPos(), sign.getFrontText(), poseStack, buffer, light, sign.getTextLineHeight(), sign.getMaxTextLineWidth(), true);
-        ((SignRendererAccessor) this).invoke$renderSignText(sign.getBlockPos(), sign.getBackText(), poseStack, buffer, light, sign.getTextLineHeight(), sign.getMaxTextLineWidth(), false);
-        poseStack.popPose();
-    }
-
-    // behavior copied from SignRenderer#renderSign
-    void renderSign(PoseStack poseStack, MultiBufferSource buffer, int light, int overlay, Material modelMaterial, Model model)
-    {
-        poseStack.pushPose();
-        float f = this.getSignModelRenderScale();
-        poseStack.scale(f, -f, -f);
-
-        VertexConsumer vertexconsumer = modelMaterial.buffer(buffer, model::renderType);
-        ((SignRendererAccessor) this).invoke$renderSignModel(poseStack, light, overlay, model, vertexconsumer);
-        poseStack.popPose();
-    }
-
-    public record Provider<T>(
-        Material modelMaterial,
-        Identifier textureLocation,
-        T model
-    ) {}
 }

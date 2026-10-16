@@ -75,7 +75,7 @@
     "client.accessor.BiomeColorsAccessor",
     "client.accessor.GuiAccessor",
     "client.accessor.LocalPlayerAccessor",
-    "client.accessor.SignRendererAccessor",
+    "client.accessor.AbstractSignRendererAccessor",
     "client.compat.patchouli.GuiBookMixin",
     "client.compat.sodium.DefaultFluidRendererMixin",
     "client.compat.sodium.ItemColorsMixin"

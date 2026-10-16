@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
@@ -188,5 +188,5 @@ public class PlacedItemBlockEntityRenderer<T extends PlacedItemBlockEntity> impl
         return 24;
     }
 
-    public record Provider(ModelResourceLocation model, RenderType renderType) {}
+    public record Provider(Identifier model, RenderType renderType) {}
 }

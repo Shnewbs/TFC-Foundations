@@ -9,22 +9,16 @@ package net.dries007.tfc.client.render.blockentity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.fluids.FluidType;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
@@ -35,15 +29,17 @@ import net.dries007.tfc.common.blockentities.SluiceBlockEntity;
 import net.dries007.tfc.common.blocks.devices.SluiceBlock;
 import net.dries007.tfc.util.Helpers;
 
-public class SluiceBlockEntityRenderer implements BlockEntityRenderer<SluiceBlockEntity>
+public class SluiceBlockEntityRenderer extends ItemDisplayBlockEntityRenderer<SluiceBlockEntity>
 {
-    private static void drawItem(ItemStack stack, float x, float y, float z, float rotation, ItemRenderer renderer, PoseStack poseStack, int combinedLight, int combinedOverlay, MultiBufferSource buffer, @Nullable Level level)
+    public SluiceBlockEntityRenderer(BlockEntityRendererProvider.Context context) { super(context); }
+
+    private void drawItem(ItemStack stack, float x, float y, float z, float rotation, PoseStack poseStack, int combinedLight, int combinedOverlay, State outputState, @Nullable Level level)
     {
         poseStack.pushPose();
         poseStack.translate(x, y, z);
         poseStack.scale(0.3F, 0.3F, 0.3F);
         poseStack.mulPose(Axis.YP.rotationDegrees(rotation));
-        renderer.renderStatic(stack, ItemDisplayContext.FIXED, combinedLight, combinedOverlay, poseStack, buffer, level, 0);
+        addItem(outputState, stack, ItemDisplayContext.FIXED, combinedLight, combinedOverlay, poseStack, level, 0);
         poseStack.popPose();
     }
 
@@ -58,7 +54,7 @@ public class SluiceBlockEntityRenderer implements BlockEntityRenderer<SluiceBloc
     }
 
     @Override
-    public void render(SluiceBlockEntity sluice, float partialTicks, PoseStack poseStack, MultiBufferSource buffers, int packedLight, int packedOverlay)
+    protected void extractItems(SluiceBlockEntity sluice, float partialTicks, PoseStack poseStack, State outputState, int packedLight, int packedOverlay)
     {
         if (sluice.getLevel() == null) return;
         final BlockState state = sluice.getBlockState();
@@ -83,7 +79,6 @@ public class SluiceBlockEntityRenderer implements BlockEntityRenderer<SluiceBloc
         poseStack.mulPose(Axis.YP.rotationDegrees(state.getValue(SluiceBlock.FACING).get2DDataValue() * 90F));
 
         final float rotation = RenderHelpers.itemTimeRotation();
-        ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         for (int i = 0; i < sluice.getInventory().getSlots(); i++)
         {
             ItemStack stack = sluice.getInventory().getStackInSlot(i);
@@ -94,7 +89,7 @@ public class SluiceBlockEntityRenderer implements BlockEntityRenderer<SluiceBloc
                 final float x = 0.125F + (0.25F * across);
                 final float y = 0.96875F - 0.0125F - (0.125F * step);
                 final float z = 0.15625F - 0.0125F + (0.25F * step);
-                drawItem(stack, x, y, z, rotation, itemRenderer, poseStack, packedLight, packedOverlay, buffers, sluice.getLevel());
+                drawItem(stack, x, y, z, rotation, poseStack, packedLight, packedOverlay, outputState, sluice.getLevel());
             }
         }
 
@@ -105,13 +100,10 @@ public class SluiceBlockEntityRenderer implements BlockEntityRenderer<SluiceBloc
             return;
         }
 
-        FluidType attributes = fluid.getFluidType();
-        IClientFluidTypeExtensions extension = IClientFluidTypeExtensions.of(attributes);
-        Identifier texture = extension.getStillTexture();
-        TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(RenderHelpers.BLOCKS_ATLAS).apply(texture);
+        final TextureAtlasSprite sprite = RenderHelpers.getFluidSprite(fluid);
         final int color = Helpers.isFluid(fluid, TFCTags.Fluids.ANY_INFINITE_WATER) ? TFCColors.getWaterColor(sluice.getBlockPos()) : RenderHelpers.getFluidColor(fluid);
 
-        final VertexConsumer buffer = buffers.getBuffer(RenderType.entityTranslucentCull(RenderHelpers.BLOCKS_ATLAS));
+        final VertexConsumer buffer = captureGeometry(outputState, Sheets.translucentBlockSheet());
         final Matrix4f pose = poseStack.last().pose();
 
         final QuadRenderInfo info = new QuadRenderInfo(buffer, pose, packedOverlay, packedLight);

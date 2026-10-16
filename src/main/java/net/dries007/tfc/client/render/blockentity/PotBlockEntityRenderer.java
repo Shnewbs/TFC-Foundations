@@ -8,8 +8,7 @@ package net.dries007.tfc.client.render.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -26,10 +25,12 @@ import static net.dries007.tfc.common.blockentities.PotBlockEntity.*;
 
 public class PotBlockEntityRenderer extends FirepitBlockEntityRenderer<PotBlockEntity>
 {
+    public PotBlockEntityRenderer(BlockEntityRendererProvider.Context context) { super(context); }
+
     @Override
-    public void render(PotBlockEntity pot, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay)
+    protected void extractItems(PotBlockEntity pot, float partialTicks, PoseStack poseStack, State outputState, int combinedLight, int combinedOverlay)
     {
-        super.render(pot, partialTicks, poseStack, buffer, combinedLight, combinedOverlay);
+        super.extractItems(pot, partialTicks, poseStack, outputState, combinedLight, combinedOverlay);
         if (pot.getLevel() == null) return;
 
         if (pot.getBlockState().is(TFCBlocks.STOVE_POT.get()))
@@ -47,7 +48,7 @@ public class PotBlockEntityRenderer extends FirepitBlockEntityRenderer<PotBlockE
         final PotOutput output = pot.getOutput();
         if (output != null && output.getRenderTexture() != null)
         {
-            RenderHelpers.renderTexturedFace(poseStack, buffer, 0xFFFFFF, 0.3125F, 0.3125F, 0.6875F, 0.6875F, output.getFluidYLevel(), combinedOverlay, combinedLight, output.getRenderTexture());
+            addTexturedSurface(outputState, poseStack, 0xFFFFFF, 0.3125F, 0.3125F, 0.6875F, 0.6875F, output.getFluidYLevel(), combinedOverlay, combinedLight, output.getRenderTexture());
         }
         else
         {
@@ -60,7 +61,7 @@ public class PotBlockEntityRenderer extends FirepitBlockEntityRenderer<PotBlockE
             if (!fluidStack.isEmpty())
             {
                 final int color = useDefaultFluid ? output.getFluidColor() : RenderHelpers.getFluidColor(fluidStack);
-                RenderHelpers.renderFluidFace(poseStack, fluidStack, buffer, color, 0.3125F, 0.3125F, 0.6875F, 0.6875F, output == null ? 0.625F : output.getFluidYLevel(), combinedOverlay, combinedLight);
+                addFluidSurface(outputState, poseStack, fluidStack, color, 0.3125F, 0.3125F, 0.6875F, 0.6875F, output == null ? 0.625F : output.getFluidYLevel(), combinedOverlay, combinedLight);
             }
         }
 
@@ -80,7 +81,7 @@ public class PotBlockEntityRenderer extends FirepitBlockEntityRenderer<PotBlockE
                 ordinal++;
                 poseStack.translate(0, 0, -0.12F * ordinal);
 
-                Minecraft.getInstance().getItemRenderer().renderStatic(item, ItemDisplayContext.FIXED, combinedLight, combinedOverlay, poseStack, buffer, pot.getLevel(), 0);
+                addItem(outputState, item, ItemDisplayContext.FIXED, combinedLight, combinedOverlay, poseStack, pot.getLevel(), 0);
                 poseStack.popPose();
             }
         }

@@ -9,24 +9,17 @@ package net.dries007.tfc.client.render.blockentity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.block.ModelBlockRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.model.data.ModelData;
 
 import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.common.blockentities.rotation.CrankshaftBlockEntity;
@@ -37,14 +30,16 @@ import net.dries007.tfc.common.blocks.rotation.FluidPumpBlock;
 import net.dries007.tfc.util.Helpers;
 
 
-public class CrankshaftBlockEntityRenderer implements BlockEntityRenderer<CrankshaftBlockEntity>
+public class CrankshaftBlockEntityRenderer extends ItemDisplayBlockEntityRenderer<CrankshaftBlockEntity>
 {
-    public static final ModelResourceLocation WHEEL_MODEL = RenderHelpers.modelId("block/crankshaft_wheel");
+    public CrankshaftBlockEntityRenderer(BlockEntityRendererProvider.Context context) { super(context); }
+
+    public static final Identifier WHEEL_MODEL = RenderHelpers.modelId("block/crankshaft_wheel");
     public static final Identifier ROD_TEXTURE = Helpers.identifier("block/metal/block/steel");
     public static final Identifier PUMP_TEXTURE = Helpers.identifier("block/metal/smooth/brass");
 
     @Override
-    public void render(CrankshaftBlockEntity crankshaft, float partialTick, PoseStack stack, MultiBufferSource bufferSource, int packedLight, int packedOverlay)
+    protected void extractItems(CrankshaftBlockEntity crankshaft, float partialTick, PoseStack stack, State outputState, int packedLight, int packedOverlay)
     {
         final Level level = crankshaft.getLevel();
         final BlockPos pos = crankshaft.getBlockPos();
@@ -72,9 +67,8 @@ public class CrankshaftBlockEntityRenderer implements BlockEntityRenderer<Cranks
         }
 
 
-        final VertexConsumer buffer = bufferSource.getBuffer(RenderType.cutout());
+        final VertexConsumer buffer = captureGeometry(outputState, Sheets.cutoutBlockSheet());
         final float rotationAngle = CrankshaftBlockEntity.calculateRealRotationAngle(crankshaft, face, partialTick);
-        final RandomSource random = RandomSource.create();
 
         stack.pushPose();
         stack.translate(0.5f, 0.5f, 0.5f);
@@ -86,10 +80,7 @@ public class CrankshaftBlockEntityRenderer implements BlockEntityRenderer<Cranks
             stack.translate(-0.5f, -0.5f, -0.5f);
 
             // Render the attached wheel, rotating with the axle
-            final ModelBlockRenderer modelRenderer = Minecraft.getInstance().getBlockRenderer().getModelRenderer();
-            final BakedModel baked = Minecraft.getInstance().getModelManager().getModel(WHEEL_MODEL);
-
-            modelRenderer.tesselateWithAO(level, baked, crankshaft.getBlockState(), crankshaft.getBlockPos(), stack, buffer, true, random, packedLight, packedOverlay, ModelData.EMPTY, RenderType.cutout());
+            addBlockModel(outputState, stack, WHEEL_MODEL, level, crankshaft.getBlockPos(), crankshaft.getBlockState());
 
             // Render an extension of the axle
             final BlockState adjacentAxleState = level.getBlockState(crankshaft.getBlockPos().relative(face.getCounterClockWise()));
@@ -143,7 +134,7 @@ public class CrankshaftBlockEntityRenderer implements BlockEntityRenderer<Cranks
     }
 
     @Override
-    public boolean shouldRenderOffScreen(CrankshaftBlockEntity entity)
+    public boolean shouldRenderOffScreen()
     {
         return true;
     }

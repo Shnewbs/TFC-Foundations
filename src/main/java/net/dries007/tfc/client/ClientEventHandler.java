@@ -8,15 +8,12 @@ package net.dries007.tfc.client;
 
 import net.dries007.tfc.common.entities.prey.WingedPrey;
 
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
@@ -32,9 +29,7 @@ import net.minecraft.client.model.animal.squid.SquidModel;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.blockentity.BellRenderer;
 import net.minecraft.client.renderer.blockentity.LecternRenderer;
 import net.minecraft.client.renderer.entity.ArmadilloRenderer;
 import net.minecraft.client.renderer.entity.DolphinRenderer;
@@ -48,7 +43,7 @@ import net.minecraft.client.renderer.entity.OcelotRenderer;
 import net.minecraft.client.renderer.entity.PandaRenderer;
 import net.minecraft.client.renderer.entity.RabbitRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.dries007.tfc.client.model.StandaloneBlockModels;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -271,7 +266,6 @@ import net.dries007.tfc.common.component.heat.HeatCapability;
 import net.dries007.tfc.common.container.TFCContainerTypes;
 import net.dries007.tfc.common.entities.TFCEntities;
 import net.dries007.tfc.common.entities.aquatic.Fish;
-import net.dries007.tfc.common.fluids.TFCFluids;
 import net.dries007.tfc.common.items.TFCFishingRodItem;
 import net.dries007.tfc.common.items.TFCItems;
 import net.dries007.tfc.config.TFCConfig;
@@ -566,19 +560,19 @@ public final class ClientEventHandler
         event.registerEntityRenderer(TFCEntities.ARMADILLO.get(), ArmadilloRenderer::new);
 
         // BEs
-        event.registerBlockEntityRenderer(TFCBlockEntities.FIREPIT.get(), ctx -> new FirepitBlockEntityRenderer<>());
-        event.registerBlockEntityRenderer(TFCBlockEntities.POT.get(), ctx -> new PotBlockEntityRenderer());
-        event.registerBlockEntityRenderer(TFCBlockEntities.GRILL.get(), ctx -> new GrillBlockEntityRenderer());
+        event.registerBlockEntityRenderer(TFCBlockEntities.FIREPIT.get(), FirepitBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(TFCBlockEntities.POT.get(), PotBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(TFCBlockEntities.GRILL.get(), GrillBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.PLACED_ITEM.get(), ctx -> new PlacedItemBlockEntityRenderer<>());
         event.registerBlockEntityRenderer(TFCBlockEntities.PIT_KILN.get(), ctx -> new PitKilnBlockEntityRenderer());
         event.registerBlockEntityRenderer(TFCBlockEntities.SHELF.get(), ctx -> new PlacedItemBlockEntityRenderer<>());
-        event.registerBlockEntityRenderer(TFCBlockEntities.QUERN.get(), ctx -> new QuernBlockEntityRenderer());
+        event.registerBlockEntityRenderer(TFCBlockEntities.QUERN.get(), QuernBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.CHEST.get(), TFCChestBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.TRAPPED_CHEST.get(), TFCChestBlockEntityRenderer::new);
-        event.registerBlockEntityRenderer(TFCBlockEntities.LOOM.get(), ctx -> new LoomBlockEntityRenderer());
-        event.registerBlockEntityRenderer(TFCBlockEntities.POWER_LOOM.get(), ctx -> new PowerLoomBlockEntityRenderer());
-        event.registerBlockEntityRenderer(TFCBlockEntities.SLUICE.get(), ctx -> new SluiceBlockEntityRenderer());
-        event.registerBlockEntityRenderer(TFCBlockEntities.BELLOWS.get(), ctx -> new BellowsBlockEntityRenderer());
+        event.registerBlockEntityRenderer(TFCBlockEntities.LOOM.get(), LoomBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(TFCBlockEntities.POWER_LOOM.get(), PowerLoomBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(TFCBlockEntities.SLUICE.get(), SluiceBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(TFCBlockEntities.BELLOWS.get(), BellowsBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.TOOL_RACK.get(), ToolRackBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.SIGN.get(), TFCSignBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.HANGING_SIGN.get(), TFCHangingSignBlockEntityRenderer::new);
@@ -590,19 +584,19 @@ public final class ClientEventHandler
         event.registerBlockEntityRenderer(TFCBlockEntities.NEST_BOX.get(), NestBoxBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.BELL.get(), TFCBellBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.BOWL.get(), BowlBlockEntityRenderer::new);
-        event.registerBlockEntityRenderer(TFCBlockEntities.HOT_POURED_GLASS.get(), ctx -> new HotPouredGlassBlockEntityRenderer());
+        event.registerBlockEntityRenderer(TFCBlockEntities.HOT_POURED_GLASS.get(), HotPouredGlassBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.GLASS_BASIN.get(), GlassBasinBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.AXLE.get(), AxleBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.BLADED_AXLE.get(), BladedAxleBlockEntityRenderer::new);
-        event.registerBlockEntityRenderer(TFCBlockEntities.TRIP_HAMMER.get(), ctx -> new TripHammerBlockEntityRenderer());
+        event.registerBlockEntityRenderer(TFCBlockEntities.TRIP_HAMMER.get(), TripHammerBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.WATER_WHEEL.get(), WaterWheelBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.WINDMILL.get(), WindmillBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.VANE.get(), VaneBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.ANEMOMETER.get(), AnemometerBlockEntityRenderer::new);
-        event.registerBlockEntityRenderer(TFCBlockEntities.CRANKSHAFT.get(), ctx -> new CrankshaftBlockEntityRenderer());
+        event.registerBlockEntityRenderer(TFCBlockEntities.CRANKSHAFT.get(), CrankshaftBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.BELL.get(), TFCBellBlockEntityRenderer::new);
-        event.registerBlockEntityRenderer(TFCBlockEntities.CHANNEL.get(), ctx -> new ChannelBlockEntityRenderer());
-        event.registerBlockEntityRenderer(TFCBlockEntities.MOLD_TABLE.get(), ctx -> new MoldBlockEntityRenderer());
+        event.registerBlockEntityRenderer(TFCBlockEntities.CHANNEL.get(), ChannelBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(TFCBlockEntities.MOLD_TABLE.get(), MoldBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.CALENDAR_CLOCK.get(), CalendarClockBlockEntityRenderer::new);
         event.registerBlockEntityRenderer(TFCBlockEntities.POWDERKEG.get(), PowderkegBlockEntityRenderer::new);
     }
@@ -689,7 +683,7 @@ public final class ClientEventHandler
         event.registerLayerDefinition(RenderHelpers.layerId("javelin"), JavelinModel::createBodyLayer);
         event.registerLayerDefinition(RenderHelpers.layerId("chest_minecart"), MinecartModel::createBodyLayer);
         event.registerLayerDefinition(RenderHelpers.layerId("holding_minecart"), MinecartModel::createBodyLayer);
-        event.registerLayerDefinition(RenderHelpers.layerId("bell_body"), BellRenderer::createBodyLayer);
+        event.registerLayerDefinition(RenderHelpers.layerId("bell_body"), net.minecraft.client.model.object.bell.BellModel::createBodyLayer);
         event.registerLayerDefinition(RenderHelpers.layerId("water_wheel"), WaterWheelModel::createBodyLayer);
         event.registerLayerDefinition(RenderHelpers.layerId("windmill_blade"), WindmillBladeModel::createBodyLayer);
         event.registerLayerDefinition(RenderHelpers.layerId("windmill_blade_lattice"), WindmillBladeLatticeModel::createBodyLayer);
@@ -708,7 +702,7 @@ public final class ClientEventHandler
     }
 
 
-    public static void registerSpecialModels(ModelEvent.RegisterAdditional event)
+    public static void registerSpecialModels(ModelEvent.RegisterStandalone event)
     {
         for (String metal : new String[] {"native_copper", "native_silver", "native_gold", "cassiterite"})
         {
@@ -721,17 +715,17 @@ public final class ClientEventHandler
             }
         }
 
-        PlacedItemBlockEntityRenderer.MODELS.forEach((item, model) -> event.register(model.model()));
-        FirepitBlockEntityRenderer.BURN_STAGE_MODELS.values().forEach(list -> list.forEach(event::register));
+        PlacedItemBlockEntityRenderer.MODELS.forEach((item, model) -> register(event, model.model()));
+        FirepitBlockEntityRenderer.BURN_STAGE_MODELS.values().forEach(list -> list.forEach(id -> register(event, id)));
 
-        event.register(CrankshaftBlockEntityRenderer.WHEEL_MODEL);
+        register(event, CrankshaftBlockEntityRenderer.WHEEL_MODEL);
 
         TFCConfig.CLIENT.additionalSpecialModels.get().forEach(s -> register(event, Helpers.resourceLocation(s)));
     }
 
-    private static void register(ModelEvent.RegisterAdditional event, Identifier id)
+    private static void register(ModelEvent.RegisterStandalone event, Identifier id)
     {
-        event.register(ModelResourceLocation.standalone(id)); // This event will assert this is the case, piss poor API design here
+        StandaloneBlockModels.register(event, id);
     }
 
     public static void registerModelLoaders(ModelEvent.RegisterGeometryLoaders event)

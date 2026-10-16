@@ -9,10 +9,8 @@ package net.dries007.tfc.client.render.blockentity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -22,10 +20,15 @@ import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.common.blockentities.QuernBlockEntity;
 import net.dries007.tfc.common.blocks.rotation.ConnectedAxleBlock;
 
-public class QuernBlockEntityRenderer implements BlockEntityRenderer<QuernBlockEntity>
+public class QuernBlockEntityRenderer extends ItemDisplayBlockEntityRenderer<QuernBlockEntity>
 {
+    public QuernBlockEntityRenderer(BlockEntityRendererProvider.Context context)
+    {
+        super(context);
+    }
+
     @Override
-    public void render(QuernBlockEntity quern, float partialTicks, PoseStack stack, MultiBufferSource bufferSource, int packedLight, int packedOverlay)
+    protected void extractItems(QuernBlockEntity quern, float partialTicks, PoseStack stack, State outputState, int packedLight, int packedOverlay)
     {
         final Level level = quern.getLevel();
 
@@ -78,7 +81,7 @@ public class QuernBlockEntityRenderer implements BlockEntityRenderer<QuernBlockE
                 }
 
                 stack.scale(0.125F, 0.125F, 0.125F);
-                Minecraft.getInstance().getItemRenderer().renderStatic(output, ItemDisplayContext.FIXED, packedLight, packedOverlay, stack, bufferSource, quern.getLevel(), 0);
+                addItem(outputState, output, ItemDisplayContext.FIXED, packedLight, packedOverlay, stack, quern.getLevel(), 0);
 
                 stack.popPose();
             }
@@ -90,7 +93,7 @@ public class QuernBlockEntityRenderer implements BlockEntityRenderer<QuernBlockE
         // If connected to the network, with a connected axle above, then render the axle connection to the quern
         if (isConnectedToNetwork && getBlockAboveQuern(level, quern) instanceof ConnectedAxleBlock axleBlock)
         {
-            final VertexConsumer buffer = bufferSource.getBuffer(RenderType.cutout());
+            final VertexConsumer buffer = captureGeometry(outputState, Sheets.cutoutBlockSheet());
             final TextureAtlasSprite sprite = RenderHelpers.blockTexture(axleBlock.getAxleTextureLocation());
 
             stack.pushPose();
@@ -115,7 +118,7 @@ public class QuernBlockEntityRenderer implements BlockEntityRenderer<QuernBlockE
 
 
             stack.scale(1.25F, 1.25F, 1.25F);
-            Minecraft.getInstance().getItemRenderer().renderStatic(handstone, ItemDisplayContext.FIXED, packedLight, packedOverlay, stack, bufferSource, quern.getLevel(), 0);
+            addItem(outputState, handstone, ItemDisplayContext.FIXED, packedLight, packedOverlay, stack, quern.getLevel(), 0);
             stack.popPose();
         }
 
@@ -135,7 +138,7 @@ public class QuernBlockEntityRenderer implements BlockEntityRenderer<QuernBlockE
                 stack.mulPose(Axis.YP.rotationDegrees(45F));
                 stack.scale(0.5F, 0.5F, 0.5F);
             }
-            Minecraft.getInstance().getItemRenderer().renderStatic(input, ItemDisplayContext.FIXED, packedLight, packedOverlay, stack, bufferSource, quern.getLevel(), 0);
+            addItem(outputState, input, ItemDisplayContext.FIXED, packedLight, packedOverlay, stack, quern.getLevel(), 0);
 
             stack.popPose();
         }

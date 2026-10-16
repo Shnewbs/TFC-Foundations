@@ -6,12 +6,11 @@
 
 package net.dries007.tfc.client.render.blockentity;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.ChestRenderer;
-import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.client.resources.model.sprite.SpriteId;
+import net.minecraft.client.renderer.blockentity.state.ChestRenderState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.ChestType;
 
@@ -38,27 +37,16 @@ public class TFCChestBlockEntityRenderer extends ChestRenderer<TFCChestBlockEnti
             };
     }
 
-    private String wood;
-
     public TFCChestBlockEntityRenderer(BlockEntityRendererProvider.Context context)
     {
         super(context);
-        wood = "oak";
     }
 
     @Override
-    public void render(TFCChestBlockEntity be, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay)
+    protected SpriteId getCustomSprite(TFCChestBlockEntity blockEntity, ChestRenderState state)
     {
-        if (be.getBlockState().getBlock() instanceof TFCChestBlock chestBlock)
-        {
-            wood = chestBlock.getTextureLocation();
-        }
-        super.render(be, partialTicks, poseStack, buffer, combinedLight, combinedOverlay);
-    }
-
-    @Override
-    protected Material getMaterial(TFCChestBlockEntity blockEntity, ChestType chestType)
-    {
-        return new Material(Sheets.CHEST_SHEET, Helpers.identifier("entity/chest/" + getFolder(blockEntity, chestType) + "/" + wood));
+        final String wood = blockEntity.getBlockState().getBlock() instanceof TFCChestBlock chest
+            ? chest.getTextureLocation() : "oak";
+        return new SpriteId(Sheets.CHEST_SHEET, Helpers.identifier("entity/chest/" + getFolder(blockEntity, state.type) + "/" + wood));
     }
 }

@@ -25,9 +25,9 @@ import com.google.common.collect.ImmutableSet;
 import com.mojang.logging.LogUtils;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.BlockModelShaper;
+import net.minecraft.client.renderer.block.BlockStateModelSet;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.client.sounds.WeighedSoundEvents;
 import net.minecraft.core.BlockPos;
@@ -199,11 +199,13 @@ public final class SelfTests
     {
         final Collection<Identifier> lootTables = server
             .reloadableRegistries()
-            .get()
-            .registryOrThrow(Registries.LOOT_TABLE)
-            .keySet();
+            .lookup()
+            .lookupOrThrow(Registries.LOOT_TABLE)
+            .listElementIds()
+            .map(net.minecraft.resources.ResourceKey::identifier)
+            .toList();
         final List<Block> missingLootTables = blocks.stream()
-            .filter(b -> !lootTables.contains(b.getLootTable().location()))
+            .filter(b -> b.getLootTable().map(key -> !lootTables.contains(key.identifier())).orElse(true))
             .filter(b -> !b.defaultBlockState().isAir())
             .toList();
 
@@ -291,17 +293,17 @@ public final class SelfTests
     @SuppressWarnings("deprecation")
     private static boolean validateModels()
     {
-        final BlockModelShaper shaper = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper();
-        final BakedModel missingModel = shaper.getModelManager().getMissingModel();
-        final TextureAtlasSprite missingParticle = missingModel.getParticleIcon();
+        final BlockStateModelSet shaper = Minecraft.getInstance().getModelManager().getBlockStateModelSet();
+        final BlockStateModel missingModel = shaper.missingModel();
+        final TextureAtlasSprite missingParticle = missingModel.particleMaterial().sprite();
 
         final List<BlockState> missingModelErrors = TFCBlocks.BLOCKS.getEntries()
             .stream()
-            .flatMap(states(s -> s.getRenderShape() == RenderShape.MODEL && shaper.getBlockModel(s) == missingModel))
+            .flatMap(states(s -> s.getRenderShape() == RenderShape.MODEL && shaper.get(s) == missingModel))
             .toList();
         final List<BlockState> missingParticleErrors = TFCBlocks.BLOCKS.getEntries()
             .stream()
-            .flatMap(states(s -> !s.isAir() && !(s.getBlock() instanceof IngotPileBlock) && !(s.getBlock() instanceof PlantBlock) && !(s.getBlock() instanceof BodyPlantBlock) && !(s.getBlock() instanceof TopPlantBlock) && !(s.getBlock() instanceof TFCLeavesBlock) && !(s.getBlock() instanceof ScrapingBlock) && !(s.getBlock() instanceof MoldTableBlock) && shaper.getParticleIcon(s) == missingParticle))
+            .flatMap(states(s -> !s.isAir() && !(s.getBlock() instanceof IngotPileBlock) && !(s.getBlock() instanceof PlantBlock) && !(s.getBlock() instanceof BodyPlantBlock) && !(s.getBlock() instanceof TopPlantBlock) && !(s.getBlock() instanceof TFCLeavesBlock) && !(s.getBlock() instanceof ScrapingBlock) && !(s.getBlock() instanceof MoldTableBlock) && shaper.getParticleMaterial(s).sprite() == missingParticle))
             .toList();
 
         return logErrors("{} block states with missing models:", missingModelErrors, LOGGER)
@@ -355,7 +357,7 @@ public final class SelfTests
         }
 
         final SoundManager soundManager = Minecraft.getInstance().getSoundManager();
-        BuiltInRegistries.SOUND_EVENT.forEach(sound -> Optional.ofNullable(soundManager.getSoundEvent(sound.getLocation()))
+        BuiltInRegistries.SOUND_EVENT.forEach(sound -> Optional.ofNullable(soundManager.getSoundEvent(sound.location()))
             .map(WeighedSoundEvents::getSubtitle)
             .ifPresent(subtitle -> validateTranslation(LOGGER, missingTranslations, subtitle)));
 
@@ -458,11 +460,11 @@ public final class SelfTests
         final List<String> errors = manager.byType(TFCRecipeTypes.CASTING.get())
             .stream()
             .map(holder -> {
-                for (ItemStack stack : holder.value().getIngredient().getItems())
+                for (ItemStack stack : RecipeHelpers.stacks(holder.value().getIngredient()))
                 {
                     final IMold mold = IMold.get(stack);
                     if (mold == null) return "Item is not a mold: " + stack;
-                    for (FluidStack fluid : holder.value().getFluidIngredient().getFluids())
+                    for (FluidStack fluid : RecipeHelpers.stream(holder.value().getFluidIngredient()).map(fluid -> new FluidStack(fluid, holder.value().getFluidIngredient().amount())).toList())
                         if (!mold.isFluidValid(0, fluid))
                             return "Mold " + stack + " cannot contain " + fluid;
                 }

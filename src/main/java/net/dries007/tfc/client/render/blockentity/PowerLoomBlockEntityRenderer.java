@@ -9,10 +9,8 @@ package net.dries007.tfc.client.render.blockentity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
@@ -24,22 +22,27 @@ import net.dries007.tfc.common.blocks.wood.TFCLoomBlock;
 import net.dries007.tfc.common.recipes.LoomRecipe;
 import net.dries007.tfc.util.Helpers;
 
-public class PowerLoomBlockEntityRenderer implements BlockEntityRenderer<PowerLoomBlockEntity>
+public class PowerLoomBlockEntityRenderer extends ItemDisplayBlockEntityRenderer<PowerLoomBlockEntity>
 {
+    public PowerLoomBlockEntityRenderer(BlockEntityRendererProvider.Context context)
+    {
+        super(context);
+    }
+
     private static final Identifier STEEL = Helpers.identifier("block/metal/block/steel");
     private static final Identifier BAR = Helpers.identifier("block/devices/power_loom/bar");
     private static final float ANIM_SPEED_MULTIPLIER = 16f;
 
     @Override
-    public void render(PowerLoomBlockEntity loom, float partialTick, PoseStack stack, MultiBufferSource buffer, int packedLight, int packedOverlay)
+    protected void extractItems(PowerLoomBlockEntity loom, float partialTick, PoseStack stack, State outputState, int packedLight, int packedOverlay)
     {
         if (loom.getLevel() == null)
             return;
 
         final Direction facing = loom.getBlockState().getValue(TFCLoomBlock.FACING);
         final int meta = facing.get2DDataValue();
-        final var atlas = Minecraft.getInstance().getTextureAtlas(RenderHelpers.BLOCKS_ATLAS);
-        final VertexConsumer cutout = buffer.getBuffer(RenderType.cutout());
+        final java.util.function.Function<Identifier, TextureAtlasSprite> atlas = RenderHelpers::blockTexture;
+        final VertexConsumer cutout = captureGeometry(outputState, Sheets.cutoutBlockSheet());
         final TextureAtlasSprite steel = atlas.apply(STEEL);
         final TextureAtlasSprite barSprite = atlas.apply(BAR);
 

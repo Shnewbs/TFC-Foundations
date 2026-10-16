@@ -10,10 +10,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import javax.annotation.Nullable;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
@@ -23,10 +21,15 @@ import net.dries007.tfc.common.blockentities.LoomBlockEntity;
 import net.dries007.tfc.common.blocks.wood.TFCLoomBlock;
 import net.dries007.tfc.common.recipes.LoomRecipe;
 
-public class LoomBlockEntityRenderer implements BlockEntityRenderer<LoomBlockEntity>
+public class LoomBlockEntityRenderer extends ItemDisplayBlockEntityRenderer<LoomBlockEntity>
 {
+    public LoomBlockEntityRenderer(BlockEntityRendererProvider.Context context)
+    {
+        super(context);
+    }
+
     @Override
-    public void render(LoomBlockEntity loom, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay)
+    protected void extractItems(LoomBlockEntity loom, float partialTicks, PoseStack poseStack, State outputState, int combinedLight, int combinedOverlay)
     {
         Block block = loom.getBlockState().getBlock();
         assert block instanceof TFCLoomBlock;
@@ -42,7 +45,7 @@ public class LoomBlockEntityRenderer implements BlockEntityRenderer<LoomBlockEnt
         poseStack.mulPose(Axis.YP.rotationDegrees((float) meta));
         poseStack.popPose();
 
-        final TextureAtlasSprite planksSprite = Minecraft.getInstance().getTextureAtlas(RenderHelpers.BLOCKS_ATLAS).apply(texture);
+        final TextureAtlasSprite planksSprite = RenderHelpers.blockTexture(texture);
 
         float tileZ = (float) loom.getAnimPos();
 
@@ -51,7 +54,7 @@ public class LoomBlockEntityRenderer implements BlockEntityRenderer<LoomBlockEnt
         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - 90.0F * meta));
         poseStack.translate(-0.5D, 0.0D, -0.5D);
 
-        VertexConsumer builder = buffer.getBuffer(RenderType.cutout());
+        VertexConsumer builder = captureGeometry(outputState, Sheets.cutoutBlockSheet());
         float z = loom.currentBoolean() ? tileZ : 0;
         RenderHelpers.renderTexturedCuboid(poseStack, builder, planksSprite, combinedLight, combinedOverlay, 0.0625F, 0.3125F, 0.5626F - z, 0.9375F, 0.375F, 0.625F - z);
         float z1 = loom.currentBoolean() ? 0 : tileZ;
@@ -68,14 +71,14 @@ public class LoomBlockEntityRenderer implements BlockEntityRenderer<LoomBlockEnt
             poseStack.translate(-0.5D, 0.0D, -0.5D);
             if (recipe != null)
             {
-                final TextureAtlasSprite progressSprite = Minecraft.getInstance().getTextureAtlas(RenderHelpers.BLOCKS_ATLAS).apply(recipe.getInProgressTexture());
+                final TextureAtlasSprite progressSprite = RenderHelpers.blockTexture(recipe.getInProgressTexture());
 
                 drawMaterial(builder, poseStack, progressSprite, loom, recipe, tileZ * 2F / 3F, combinedOverlay, combinedLight);
                 drawProduct(builder, poseStack, progressSprite, loom, recipe, combinedOverlay, combinedLight);
             }
             else
             {
-                final TextureAtlasSprite progressSprite = Minecraft.getInstance().getTextureAtlas(RenderHelpers.BLOCKS_ATLAS).apply(lastTex);
+                final TextureAtlasSprite progressSprite = RenderHelpers.blockTexture(lastTex);
                 drawProduct(builder, poseStack, progressSprite, 1f, combinedOverlay, combinedLight);
             }
 

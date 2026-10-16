@@ -10,10 +10,8 @@ import java.util.function.Function;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
@@ -24,8 +22,10 @@ import net.dries007.tfc.common.blockentities.BellowsBlockEntity;
 import net.dries007.tfc.common.blocks.devices.BellowsBlock;
 import net.dries007.tfc.util.Helpers;
 
-public class BellowsBlockEntityRenderer implements BlockEntityRenderer<BellowsBlockEntity>
+public class BellowsBlockEntityRenderer extends ItemDisplayBlockEntityRenderer<BellowsBlockEntity>
 {
+    public BellowsBlockEntityRenderer(BlockEntityRendererProvider.Context context) { super(context); }
+
     private static final Identifier BACK_TEXTURE = Helpers.identifier("block/devices/bellows/back");
     private static final Identifier SIDE_TEXTURE = Helpers.identifier("block/devices/bellows/side");
     // The number of planes each side of the bellows has
@@ -73,19 +73,19 @@ public class BellowsBlockEntityRenderer implements BlockEntityRenderer<BellowsBl
     }
 
     @Override
-    public void render(BellowsBlockEntity bellows, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay)
+    protected void extractItems(BellowsBlockEntity bellows, float partialTicks, PoseStack poseStack, State outputState, int packedLight, int packedOverlay)
     {
         final Direction facing = bellows.getBlockState().getValue(BellowsBlock.FACING);
         final int meta = facing.get2DDataValue();
 
         poseStack.pushPose();
 
-        final Function<Identifier, TextureAtlasSprite> atlas = Minecraft.getInstance().getTextureAtlas(RenderHelpers.BLOCKS_ATLAS);
+        final Function<Identifier, TextureAtlasSprite> atlas = RenderHelpers::blockTexture;
 
         final TextureAtlasSprite endSprite = atlas.apply(BACK_TEXTURE);
         final TextureAtlasSprite sideSprite = atlas.apply(SIDE_TEXTURE);
 
-        final VertexConsumer buffer = bufferSource.getBuffer(RenderType.cutout());
+        final VertexConsumer buffer = captureGeometry(outputState, Sheets.cutoutBlockSheet());
         final float width = 1 - bellows.getExtensionLength(partialTicks);
 
         poseStack.translate(0.5d, 0, 0.5d);

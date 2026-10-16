@@ -10,18 +10,14 @@ import java.util.HashMap;
 import java.util.Map;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import net.dries007.tfc.client.RenderHelpers;
@@ -34,23 +30,22 @@ import net.dries007.tfc.common.recipes.CastingRecipe;
 import net.dries007.tfc.common.recipes.HeatingRecipe;
 import net.dries007.tfc.util.MetalItem;
 
-public class MoldBlockEntityRenderer implements BlockEntityRenderer<MoldTableBlockEntity>
+public class MoldBlockEntityRenderer extends ItemDisplayBlockEntityRenderer<MoldTableBlockEntity>
 {
+    public MoldBlockEntityRenderer(BlockEntityRendererProvider.Context context) { super(context); }
+
 
     @Override
-    public void render(MoldTableBlockEntity mold, float partialTicks, PoseStack poseStack, MultiBufferSource buffer,
+    protected void extractItems(MoldTableBlockEntity mold, float partialTicks, PoseStack poseStack, State outputState,
                        int combinedLight, int combinedOverlay)
     {
-        VertexConsumer builder = buffer.getBuffer(RenderType.cutout());
+        VertexConsumer builder = captureGeometry(outputState, Sheets.cutoutBlockSheet());
 
         // Render flow into the mold
         if (mold.hasSource())
         {
-            Identifier texture = IClientFluidTypeExtensions.of(mold.getFluidToRender().getFluidType())
-                .getStillTexture();
             int color = RenderHelpers.getFluidColor(mold.getFluidToRender());
-            TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(RenderHelpers.BLOCKS_ATLAS)
-                .apply(texture);
+            TextureAtlasSprite sprite = RenderHelpers.getFluidSprite(mold.getFluidToRender());
 
             RenderHelpers.renderChannelFlow(poseStack, builder, sprite, color, combinedLight, combinedOverlay,
                 mold.getFlowSource(), true);
@@ -115,7 +110,7 @@ public class MoldBlockEntityRenderer implements BlockEntityRenderer<MoldTableBlo
                 }
                 else
                 {
-                    RenderHelpers.renderFluidFace(poseStack, fluidInTank, buffer, 2f / 16, 2f / 16, 14f / 16, 14f / 16,
+                    addFluidSurface(outputState, poseStack, fluidInTank, 2f / 16, 2f / 16, 14f / 16, 14f / 16,
                         (1 + fillPercent * 0.95f) / 16, combinedOverlay, combinedLight);
                 }
             }

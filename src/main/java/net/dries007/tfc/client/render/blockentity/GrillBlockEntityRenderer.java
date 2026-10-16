@@ -8,8 +8,7 @@ package net.dries007.tfc.client.render.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -21,10 +20,12 @@ import static net.dries007.tfc.common.blockentities.GrillBlockEntity.*;
 
 public class GrillBlockEntityRenderer extends FirepitBlockEntityRenderer<GrillBlockEntity>
 {
+    public GrillBlockEntityRenderer(BlockEntityRendererProvider.Context context) { super(context); }
+
     @Override
-    public void render(GrillBlockEntity grill, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay)
+    protected void extractItems(GrillBlockEntity grill, float partialTicks, PoseStack poseStack, State outputState, int combinedLight, int combinedOverlay)
     {
-        super.render(grill, partialTicks, poseStack, buffer, combinedLight, combinedOverlay);
+        super.extractItems(grill, partialTicks, poseStack, outputState, combinedLight, combinedOverlay);
 
         for (int i = SLOT_EXTRA_INPUT_START; i <= SLOT_EXTRA_INPUT_END; i++)
         {
@@ -38,7 +39,7 @@ public class GrillBlockEntityRenderer extends FirepitBlockEntityRenderer<GrillBl
                 poseStack.mulPose(Axis.XP.rotationDegrees(90F));
                 poseStack.mulPose(Axis.ZP.rotationDegrees(180F));
 
-                Minecraft.getInstance().getItemRenderer().renderStatic(item, ItemDisplayContext.FIXED, combinedLight, combinedOverlay, poseStack, buffer, grill.getLevel(), 0);
+                addItem(outputState, item, ItemDisplayContext.FIXED, combinedLight, combinedOverlay, poseStack, grill.getLevel(), 0);
                 poseStack.popPose();
             }
         }

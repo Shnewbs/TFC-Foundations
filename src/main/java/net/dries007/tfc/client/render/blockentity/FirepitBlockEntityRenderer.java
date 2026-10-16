@@ -10,18 +10,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.Direction;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.model.data.ModelData;
 
 import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.common.blockentities.AbstractFirepitBlockEntity;
@@ -29,9 +22,11 @@ import net.dries007.tfc.common.blocks.TFCBlocks;
 import net.dries007.tfc.common.blocks.devices.FirepitBlock;
 import net.dries007.tfc.util.Helpers;
 
-public class FirepitBlockEntityRenderer<T extends AbstractFirepitBlockEntity<?>> implements BlockEntityRenderer<T>
+public class FirepitBlockEntityRenderer<T extends AbstractFirepitBlockEntity<?>> extends ItemDisplayBlockEntityRenderer<T>
 {
-    public static final Map<AbstractFirepitBlockEntity.BurnStage, List<ModelResourceLocation>> BURN_STAGE_MODELS = Helpers.mapOf(AbstractFirepitBlockEntity.BurnStage.class, e -> {
+    public FirepitBlockEntityRenderer(BlockEntityRendererProvider.Context context) { super(context); }
+
+    public static final Map<AbstractFirepitBlockEntity.BurnStage, List<Identifier>> BURN_STAGE_MODELS = Helpers.mapOf(AbstractFirepitBlockEntity.BurnStage.class, e -> {
         final String name = e.name().toLowerCase(Locale.ROOT);
         return List.of(
             RenderHelpers.modelId("block/firepit_log_1_" + name),
@@ -42,15 +37,13 @@ public class FirepitBlockEntityRenderer<T extends AbstractFirepitBlockEntity<?>>
     });
 
     @Override
-    public void render(T firepit, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay)
+    protected void extractItems(T firepit, float partialTick, PoseStack poseStack, State outputState, int combinedLight, int combinedOverlay)
     {
         if (firepit.getLevel() == null)
         {
             return;
         }
 
-        final Minecraft mc = Minecraft.getInstance();
-        final RandomSource random = RandomSource.create();
         for (int i = AbstractFirepitBlockEntity.SLOT_FUEL_CONSUME; i <= AbstractFirepitBlockEntity.SLOT_FUEL_INPUT; i++)
         {
             final ItemStack stack = firepit.getInventory().getStackInSlot(i);
@@ -70,10 +63,7 @@ public class FirepitBlockEntityRenderer<T extends AbstractFirepitBlockEntity<?>>
                 }
 
                 AbstractFirepitBlockEntity.BurnStage stage = firepit.getBurnStage(i);
-                final BakedModel baked = mc.getModelManager().getModel(BURN_STAGE_MODELS.get(stage).get(i));
-                final VertexConsumer buffer = bufferSource.getBuffer(RenderType.solid());
-
-                mc.getBlockRenderer().getModelRenderer().tesselateWithAO(firepit.getLevel(), baked, firepit.getBlockState(), firepit.getBlockPos(), poseStack, buffer, true, random, combinedLight, combinedOverlay, ModelData.EMPTY, RenderType.solid());
+                addBlockModel(outputState, poseStack, BURN_STAGE_MODELS.get(stage).get(i), firepit.getLevel(), firepit.getBlockPos(), firepit.getBlockState());
                 poseStack.popPose();
             }
         }

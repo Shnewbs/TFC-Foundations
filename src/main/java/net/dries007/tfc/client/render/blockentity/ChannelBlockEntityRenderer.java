@@ -11,22 +11,21 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.common.blockentities.ChannelBlockEntity;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 
-public class ChannelBlockEntityRenderer implements BlockEntityRenderer<ChannelBlockEntity>
+public class ChannelBlockEntityRenderer extends ItemDisplayBlockEntityRenderer<ChannelBlockEntity>
 {
+    public ChannelBlockEntityRenderer(BlockEntityRendererProvider.Context context) { super(context); }
+
     @Override
-    public void render(ChannelBlockEntity channel, float partialTicks, PoseStack poseStack, MultiBufferSource buffer,
+    protected void extractItems(ChannelBlockEntity channel, float partialTicks, PoseStack poseStack, State outputState,
             int combinedLight, int combinedOverlay)
     {
         if (!channel.hasFlow())
@@ -35,11 +34,10 @@ public class ChannelBlockEntityRenderer implements BlockEntityRenderer<ChannelBl
         }
 
         Fluid fluid = BuiltInRegistries.FLUID.getValue(channel.getFluid());
-        var texture = IClientFluidTypeExtensions.of(fluid.getFluidType()).getStillTexture();
         int color = RenderHelpers.getFluidColor(fluid);
-        TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(RenderHelpers.BLOCKS_ATLAS).apply(texture);
+        TextureAtlasSprite sprite = RenderHelpers.getFluidSprite(fluid);
 
-        VertexConsumer builder = buffer.getBuffer(RenderType.cutout());
+        VertexConsumer builder = captureGeometry(outputState, Sheets.cutoutBlockSheet());
 
         RenderHelpers.renderChannelFlowCenter(poseStack, builder, sprite, color, combinedLight, combinedOverlay);
         RenderHelpers.renderChannelFlow(poseStack, builder, sprite, color, combinedLight, combinedOverlay,

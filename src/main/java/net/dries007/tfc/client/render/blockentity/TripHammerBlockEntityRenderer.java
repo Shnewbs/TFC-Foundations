@@ -10,9 +10,8 @@ import java.util.Map;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
@@ -28,8 +27,13 @@ import net.dries007.tfc.util.Helpers;
 import net.dries007.tfc.util.Metal;
 import net.dries007.tfc.util.rotation.Rotation;
 
-public class TripHammerBlockEntityRenderer implements BlockEntityRenderer<TripHammerBlockEntity>
+public class TripHammerBlockEntityRenderer extends ItemDisplayBlockEntityRenderer<TripHammerBlockEntity>
 {
+    public TripHammerBlockEntityRenderer(BlockEntityRendererProvider.Context context)
+    {
+        super(context);
+    }
+
     public static final Identifier ROD_TEXTURE = Helpers.identifier("block/wood/planks/oak");
     public static final Map<Item, Identifier> HAMMER_TEXTURES = RenderHelpers.mapOf(map -> TFCItems.METAL_ITEMS.entrySet()
         .stream()
@@ -37,7 +41,7 @@ public class TripHammerBlockEntityRenderer implements BlockEntityRenderer<TripHa
         .forEach(e -> map.accept(e.getValue().get(Metal.ItemType.HAMMER), Helpers.identifier("block/metal/smooth/" + e.getKey().getSerializedName()))));
 
     @Override
-    public void render(TripHammerBlockEntity hammer, float partialTick, PoseStack stack, MultiBufferSource buffers, int packedLight, int packedOverlay)
+    protected void extractItems(TripHammerBlockEntity hammer, float partialTick, PoseStack stack, State outputState, int packedLight, int packedOverlay)
     {
         final BlockState state = hammer.getBlockState();
         final Level level = hammer.getLevel();
@@ -53,7 +57,7 @@ public class TripHammerBlockEntityRenderer implements BlockEntityRenderer<TripHa
             return;
         }
 
-        final VertexConsumer buffer = buffers.getBuffer(RenderType.cutout());
+        final VertexConsumer buffer = captureGeometry(outputState, Sheets.cutoutBlockSheet());
         final float px = 1f / 16f;
 
         stack.pushPose();

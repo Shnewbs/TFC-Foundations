@@ -1,0 +1,77 @@
+{
+  "source_parent": "d50d6fa5d98d714374175eaad6fd86e9834f2152",
+  "branch": "26.1.2",
+  "date": "2026-10-16",
+  "targets": {
+    "minecraft": "26.1.2",
+    "neoforge": "26.1.2.114",
+    "jei": "29.43.0.107",
+    "patchouli": "26.1-94",
+    "java": "25.0.4.1",
+    "gradle": "9.2.1",
+    "moddevgradle": "2.0.148",
+    "candidate": "0.0.0"
+  },
+  "baseline": {
+    "source_count": 1663,
+    "exit_code": 1,
+    "displayed_errors": 491,
+    "timed_out": false,
+    "annotation_processing": false,
+    "note": "Diagnostic main compilation only. Error counts can hide cascading or later failures; no gameplay or full Gradle success is implied."
+  },
+  "final": {
+    "source_count": 1666,
+    "exit_code": 1,
+    "displayed_errors": 359,
+    "timed_out": false,
+    "annotation_processing": false,
+    "note": "Diagnostic main compilation only. Error counts can hide cascading or later failures; no gameplay or full Gradle success is implied."
+  },
+  "gradle_compileJava_errors": 359,
+  "gradle_build_exit_code": 1,
+  "commands": {
+    "diagnostic": "python3 tools/porting/compile_main_diagnostics.py",
+    "api_probes": "python3 tools/porting/inspect_api.py",
+    "gradle": "./gradlew -I /external/neoform-java-fallback.gradle -I tools/porting/diagnostics.gradle writePortClasspath compileJava compileDataJava compileTestJava build --continue --no-daemon --no-configuration-cache --console=plain",
+    "resources": "python3 resources validate"
+  },
+  "passed": {
+    "standalone_probe_runners": 31,
+    "display_mesh_surface_cpu_assertions": 9074,
+    "license_main": true,
+    "license_data": true,
+    "license_test": true,
+    "pinned_dependency_verification": true,
+    "asset_download": true,
+    "resource_validation": true,
+    "generated_texture_comparison": true,
+    "mixin_json_and_registered_source_presence": true,
+    "git_diff_check": true
+  },
+  "resource_validation": {
+    "language_errors": 0,
+    "model_parent_errors": 0,
+    "texture_errors": 0,
+    "blockstate_errors": 0,
+    "unused_model_errors": 0,
+    "generated_texture_changes": 0
+  },
+  "host_workaround": "Opt-in untracked NeoForm Runtime 2.0.31 Java executable fallback. Trusted host proxy CA imported into local Java 25 and separate Java 21 asset toolchain; TLS validation remains enabled. Not stock-toolchain release validation.",
+  "playable": false,
+  "jar_produced": false,
+  "runtime_tests_run": false,
+  "notes": [
+    "Error counts include cascading diagnostics and are not independent bug counts or completion percentages.",
+    "Exact published parent independently reproduced at 491 diagnostic errors over 1663 sources; final javac and Gradle agree at 359 errors.",
+    "Meshes, items and fill surfaces are captured during extraction. Immutable submitted geometry retains values rather than a world, block entity or mutable vertex builder.",
+    "Standalone model keys retain identity across reloads. Baked models remain native ModelManager reload-owned; native model extraction preserves ambient lighting, tint and neighbor culling.",
+    "The guide Level adapter delegates original block, fluid, entity and light queries; cardinal lighting follows the native client dimension when available.",
+    "Existing renderer coordinates, fill/animation calculations, item transforms, visibility conditions and texture/resource IDs are retained. Standing and hanging sign attachment geometry now uses native models.",
+    "The CPU suite compares real production axle geometry through native PoseStack/VertexConsumer APIs across 3 axes and 24 angles, tests snapshot immutability/reuse, verifies standalone registration/dependencies and native sign bridge/editor signatures.",
+    "CPU fixtures do not bake or reload models/atlases, resolve real item models, construct live block entities, start Mixins, submit a GPU draw or exercise sign text and gameplay.",
+    "First full-build attempt encountered Java 21 asset HTTPS trust failure; after trusting the host CA all 4750 files downloaded successfully. Final build passes the asset task.",
+    "Full build exits 1 at main compilation. Data/test compilation and JAR packaging remain blocked; no client/server/world/save/reload/survival success.",
+    "No dependency changes, gameplay exclusions, new branches or Actions runs. Independent 26.x branch unchanged."
+  ]
+}
