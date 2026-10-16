@@ -1,0 +1,70 @@
+{
+  "source_parent": "f994598fcdb3551e64da826c5bbf66ad14cd84ec",
+  "branch": "26.1.2",
+  "date": "2026-10-16",
+  "targets": {
+    "minecraft": "26.1.2",
+    "neoforge": "26.1.2.114",
+    "jei": "29.43.0.107",
+    "patchouli": "26.1-94",
+    "java": "25.0.4.1",
+    "gradle": "9.2.1",
+    "moddevgradle": "2.0.148",
+    "candidate": "0.0.0"
+  },
+  "baseline": {
+    "source_count": 1666,
+    "exit_code": 1,
+    "displayed_errors": 359,
+    "timed_out": false,
+    "annotation_processing": false,
+    "note": "Diagnostic main compilation only. Error counts can hide cascading or later failures; no gameplay or full Gradle success is implied."
+  },
+  "final": {
+    "source_count": 1667,
+    "exit_code": 1,
+    "displayed_errors": 261,
+    "timed_out": false,
+    "annotation_processing": false,
+    "note": "Diagnostic main compilation only. Error counts can hide cascading or later failures; no gameplay or full Gradle success is implied."
+  },
+  "gradle_compileJava_errors": 261,
+  "gradle_build_exit_code": 1,
+  "passed": {
+    "standalone_probe_runners": 32,
+    "native_item_layer_cpu_assertions": 584,
+    "existing_display_cpu_assertions": 9074,
+    "license_main": true,
+    "license_data": true,
+    "license_test": true,
+    "pinned_dependency_verification": true,
+    "asset_gate": true,
+    "resource_validation": true,
+    "generated_texture_comparison": true,
+    "git_diff_check": true
+  },
+  "selectors": {
+    "static": 5369,
+    "fixed_fluid": 66,
+    "native_tfc_fluid_and_trim": 60,
+    "pending": 102,
+    "vanilla_armor_overrides": 8
+  },
+  "host_workaround": "Existing opt-in untracked NeoForm Runtime 2.0.31 Java executable fallback and host proxy CA in local Java 25/21 stores; TLS checks remain enabled. Not stock-toolchain release validation.",
+  "playable": false,
+  "jar_produced": false,
+  "runtime_tests_run": false,
+  "notes": [
+    "Error counts include cascading diagnostics; they are not independent bug counts or completion percentages.",
+    "Both rewritten production item models and ItemLayerGeometry compile in isolation against native target classes.",
+    "Native codecs parse all 24 variable-fluid and 44 trim schemas (36 TFC plus 8 vanilla). Parent dependencies, original texture slots, offsets and material suffixes are checked.",
+    "Actual native images/sprites/quads exercise all six face directions with normal/emissive material flags, cross-atlas UV remapping, retained tint indices, immutable source quads and unchanged depth transforms.",
+    "The CPU remapper fixture supplies null RenderTypes to avoid game bootstrap. Pipeline selection is compiled only; no atlas/model bake/reload, live item resolution, GPU draw or fluid capability access is exercised.",
+    "Initial direct pipeline CPU fixture reached the real Sheets initialization and failed because game registries were not bootstrapped. The final fixture tests the production pure remap boundary and does not claim that startup succeeded.",
+    "Native FluidUtil content inspection and FluidContentsTint replace simulated drain queries and old fluid-only item-color registration. Native transfer capability providers elsewhere in the mod are still unported.",
+    "Unknown model fields/loaders/predicates remain pending. Legacy assets are not rewritten. New native selectors retain original namespaces and item IDs.",
+    "Leather dye affects only the armor base; overlay and trim remain neutral. Trim visuals can now resolve without a client world; appearance has not been tested.",
+    "Full pinned build exits 1 at main compilation; data/test compilation and packaging remain blocked. No playable JAR, client/server/world/save/reload/survival success.",
+    "No new branches, dependency changes, gameplay exclusions or Actions runs. Independent 26.x branch unchanged."
+  ]
+}

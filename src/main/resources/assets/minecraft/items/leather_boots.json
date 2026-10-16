@@ -1,0 +1,17 @@
+{
+  "model": {
+    "type": "tfc:trim",
+    "parent": "neoforge:item/default",
+    "textures": {
+      "armor": "minecraft:item/leather_boots",
+      "trim": "tfc:item/boots_trim",
+      "overlay": "minecraft:item/leather_boots_overlay"
+    },
+    "tints": [
+      {
+        "type": "minecraft:dye",
+        "default": 10511680
+      }
+    ]
+  }
+}

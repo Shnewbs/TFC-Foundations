@@ -1,0 +1,1560 @@
+{
+  "total": 261,
+  "files": [
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "errors": 82
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "errors": 32
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PlacedItemBlockEntityRenderer.java",
+      "errors": 13
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PanItemRenderer.java",
+      "errors": 9
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/RenderHelpers.java",
+      "errors": 6
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/commands/AddTrimCommand.java",
+      "errors": 6
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/fluids/FluidHelpers.java",
+      "errors": 6
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/BreakingItemParticleMixin.java",
+      "errors": 6
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/extensions/ItemRendererExtension.java",
+      "errors": 5
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/JavelinItemRenderer.java",
+      "errors": 5
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/SkeletonModelMixin.java",
+      "errors": 5
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/compat/sodium/ItemColorsMixin.java",
+      "errors": 5
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/ChestItemRenderer.java",
+      "errors": 4
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/entity/TFCFishingHookRenderer.java",
+      "errors": 4
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/ClientLevelMixin.java",
+      "errors": 4
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/ItemColorsMixin.java",
+      "errors": 4
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/PlayerItemInHandLayerMixin.java",
+      "errors": 4
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/loot/CopyFluidFunction.java",
+      "errors": 4
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/TFCColors.java",
+      "errors": 3
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientHelpers.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blockentities/BarrelBlockEntity.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/capabilities/BlockCapabilities.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/capabilities/ItemCapabilities.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/container/MoldLikeAlloyContainer.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/container/ScribingTableContainer.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/JEIIntegration.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/transfer/AnvilRecipeTransferHandler.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/LiquidBlockRendererMixin.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/WaterDropParticleMixin.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/WorldSelectionListMixin.java",
+      "errors": 2
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientForgeEventHandler.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/screen/MoldLikeAlloyScreen.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blockentities/BlastFurnaceBlockEntity.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blockentities/CharcoalForgeBlockEntity.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blockentities/CrucibleBlockEntity.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/devices/PlacedItemBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/rock/AqueductBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/soil/IMudBlock.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/component/TFCComponents.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/component/food/FoodCapability.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/container/BarrelContainer.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/ai/predator/PackPredator.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/ai/prey/PestFeastBehavior.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/livestock/DairyAnimal.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/items/BarrelBlockItem.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/items/FluidContainerItem.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/items/GlassBottleItem.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/items/JugItem.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/recipes/InstantFluidBarrelRecipe.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/recipes/ingredients/FluidContentIngredient.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/TFCCraftingExtensions.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/CastingRecipeCategory.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/GlassworkingRecipeCategory.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/LampFuelRecipeCategory.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/SimpleItemRecipeCategory.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/transfer/FluidIgnoringRecipeTransferHandler.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/vivecraft/VivecraftIntegration.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/ChunkMapMixin.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/ChannelFlow.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/Helpers.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/tooltip/BlockEntityTooltips.java",
+      "errors": 1
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/tooltip/EntityTooltips.java",
+      "errors": 1
+    }
+  ],
+  "errors": [
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 17,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 18,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 31,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 45,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 65,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 736,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 795,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 806,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 905,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 910,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/RenderHelpers.java",
+      "line": 42,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/extensions/ItemRendererExtension.java",
+      "line": 11,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/extensions/ItemRendererExtension.java",
+      "line": 14,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/extensions/ItemRendererExtension.java",
+      "line": 16,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/extensions/ItemRendererExtension.java",
+      "line": 22,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 14,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 17,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 22,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 36,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 40,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 41,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 81,
+      "message": "package DimensionSpecialEffects does not exist"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 106,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 119,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 120,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 121,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 401,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/ChestItemRenderer.java",
+      "line": 12,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/ChestItemRenderer.java",
+      "line": 24,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/JavelinItemRenderer.java",
+      "line": 13,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/JavelinItemRenderer.java",
+      "line": 15,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/JavelinItemRenderer.java",
+      "line": 24,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PanItemRenderer.java",
+      "line": 14,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PanItemRenderer.java",
+      "line": 17,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PanItemRenderer.java",
+      "line": 31,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PlacedItemBlockEntityRenderer.java",
+      "line": 18,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PlacedItemBlockEntityRenderer.java",
+      "line": 36,
+      "message": "wrong number of type arguments; required 2"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/BreakingItemParticleMixin.java",
+      "line": 12,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/BreakingItemParticleMixin.java",
+      "line": 20,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/ClientLevelMixin.java",
+      "line": 14,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/ClientLevelMixin.java",
+      "line": 42,
+      "message": "package CubicSampler does not exist"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/ClientLevelMixin.java",
+      "line": 42,
+      "message": "package CubicSampler does not exist"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/ItemColorsMixin.java",
+      "line": 11,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/ItemColorsMixin.java",
+      "line": 12,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/ItemColorsMixin.java",
+      "line": 29,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/LiquidBlockRendererMixin.java",
+      "line": 9,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/WaterDropParticleMixin.java",
+      "line": 12,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/WaterDropParticleMixin.java",
+      "line": 25,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/WorldSelectionListMixin.java",
+      "line": 11,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/WorldSelectionListMixin.java",
+      "line": 22,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/compat/sodium/ItemColorsMixin.java",
+      "line": 9,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/compat/sodium/ItemColorsMixin.java",
+      "line": 10,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/compat/sodium/ItemColorsMixin.java",
+      "line": 42,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/ItemColorsMixin.java",
+      "line": 26,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/LiquidBlockRendererMixin.java",
+      "line": 17,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/compat/sodium/ItemColorsMixin.java",
+      "line": 29,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/compat/sodium/ItemColorsMixin.java",
+      "line": 36,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 332,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 344,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 356,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 364,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 369,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 385,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 386,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 416,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 470,
+      "message": "cannot infer type arguments for MinecartRenderer"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 471,
+      "message": "cannot infer type arguments for MinecartRenderer"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 547,
+      "message": "cannot infer type arguments for Builder<>"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 565,
+      "message": "incompatible types: cannot infer type-variable(s) T#1,S"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 566,
+      "message": "incompatible types: cannot infer type-variable(s) T,S"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 567,
+      "message": "incompatible types: cannot infer type-variable(s) T#1,S"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 738,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 739,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 740,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 741,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 742,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 808,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 809,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "line": 912,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientForgeEventHandler.java",
+      "line": 621,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientHelpers.java",
+      "line": 79,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/ClientHelpers.java",
+      "line": 105,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/RenderHelpers.java",
+      "line": 504,
+      "message": "method renderItem in class ItemInHandRenderer cannot be applied to given types;"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/RenderHelpers.java",
+      "line": 518,
+      "message": "incompatible types: boolean cannot be converted to Transforms"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/RenderHelpers.java",
+      "line": 521,
+      "message": "method renderItem in class ItemInHandRenderer cannot be applied to given types;"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/RenderHelpers.java",
+      "line": 700,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/RenderHelpers.java",
+      "line": 700,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/TFCColors.java",
+      "line": 111,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/TFCColors.java",
+      "line": 116,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/TFCColors.java",
+      "line": 126,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/extensions/ItemRendererExtension.java",
+      "line": 21,
+      "message": "method does not override or implement a method from a supertype"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 108,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 108,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 108,
+      "message": "package VertexBuffer does not exist"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 111,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 146,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 146,
+      "message": "package VertexBuffer does not exist"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 149,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 157,
+      "message": "invalid method reference"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 193,
+      "message": "method does not override or implement a method from a supertype"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 208,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 213,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 215,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 216,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 217,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 217,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 221,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 222,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 228,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 228,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 231,
+      "message": "invalid method reference"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 232,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 249,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 252,
+      "message": "package GlStateManager does not exist"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 252,
+      "message": "package GlStateManager does not exist"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 252,
+      "message": "package GlStateManager does not exist"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 252,
+      "message": "package GlStateManager does not exist"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 256,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 264,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 265,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 268,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 268,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 272,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 276,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 277,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 279,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 286,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 311,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 312,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 314,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 315,
+      "message": "invalid method reference"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 321,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 328,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 330,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 334,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 335,
+      "message": "invalid method reference"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 336,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 342,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 354,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 355,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 361,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 363,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 364,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 365,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 400,
+      "message": "method does not override or implement a method from a supertype"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 430,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 431,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 432,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 442,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 443,
+      "message": "invalid method reference"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 498,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 505,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 540,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 580,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 585,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 602,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 654,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 657,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 658,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 673,
+      "message": "method does not override or implement a method from a supertype"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java",
+      "line": 782,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blockentities/BarrelBlockEntity.java",
+      "line": 253,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blockentities/BarrelBlockEntity.java",
+      "line": 441,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blockentities/CharcoalForgeBlockEntity.java",
+      "line": 318,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/ChestItemRenderer.java",
+      "line": 39,
+      "message": "method does not override or implement a method from a supertype"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/ChestItemRenderer.java",
+      "line": 42,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blockentities/CrucibleBlockEntity.java",
+      "line": 250,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/JavelinItemRenderer.java",
+      "line": 36,
+      "message": "method does not override or implement a method from a supertype"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/JavelinItemRenderer.java",
+      "line": 41,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/capabilities/ItemCapabilities.java",
+      "line": 60,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PanItemRenderer.java",
+      "line": 38,
+      "message": "method does not override or implement a method from a supertype"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PanItemRenderer.java",
+      "line": 59,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PanItemRenderer.java",
+      "line": 59,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PanItemRenderer.java",
+      "line": 62,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PanItemRenderer.java",
+      "line": 62,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PanItemRenderer.java",
+      "line": 62,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PlacedItemBlockEntityRenderer.java",
+      "line": 60,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PlacedItemBlockEntityRenderer.java",
+      "line": 65,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PlacedItemBlockEntityRenderer.java",
+      "line": 69,
+      "message": "method does not override or implement a method from a supertype"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PlacedItemBlockEntityRenderer.java",
+      "line": 110,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PlacedItemBlockEntityRenderer.java",
+      "line": 110,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PlacedItemBlockEntityRenderer.java",
+      "line": 112,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PlacedItemBlockEntityRenderer.java",
+      "line": 124,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PlacedItemBlockEntityRenderer.java",
+      "line": 132,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PlacedItemBlockEntityRenderer.java",
+      "line": 132,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PlacedItemBlockEntityRenderer.java",
+      "line": 179,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/blockentity/PlacedItemBlockEntityRenderer.java",
+      "line": 185,
+      "message": "method does not override or implement a method from a supertype"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/entity/TFCFishingHookRenderer.java",
+      "line": 29,
+      "message": "method does not override or implement a method from a supertype"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/entity/TFCFishingHookRenderer.java",
+      "line": 41,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/entity/TFCFishingHookRenderer.java",
+      "line": 44,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/render/entity/TFCFishingHookRenderer.java",
+      "line": 49,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/container/BarrelContainer.java",
+      "line": 74,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blockentities/BlastFurnaceBlockEntity.java",
+      "line": 198,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/screen/MoldLikeAlloyScreen.java",
+      "line": 58,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/container/MoldLikeAlloyContainer.java",
+      "line": 54,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/container/MoldLikeAlloyContainer.java",
+      "line": 128,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/container/ScribingTableContainer.java",
+      "line": 49,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/container/ScribingTableContainer.java",
+      "line": 99,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/devices/PlacedItemBlock.java",
+      "line": 167,
+      "message": "method does not override or implement a method from a supertype"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/rock/AqueductBlock.java",
+      "line": 173,
+      "message": "method does not override or implement a method from a supertype"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/fluids/FluidHelpers.java",
+      "line": 120,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/fluids/FluidHelpers.java",
+      "line": 173,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/fluids/FluidHelpers.java",
+      "line": 182,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/fluids/FluidHelpers.java",
+      "line": 355,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/fluids/FluidHelpers.java",
+      "line": 568,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/fluids/FluidHelpers.java",
+      "line": 578,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/soil/IMudBlock.java",
+      "line": 51,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/capabilities/BlockCapabilities.java",
+      "line": 33,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/capabilities/BlockCapabilities.java",
+      "line": 34,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/capabilities/ItemCapabilities.java",
+      "line": 61,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/commands/AddTrimCommand.java",
+      "line": 45,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/commands/AddTrimCommand.java",
+      "line": 45,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/commands/AddTrimCommand.java",
+      "line": 47,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/commands/AddTrimCommand.java",
+      "line": 47,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/commands/AddTrimCommand.java",
+      "line": 75,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/commands/AddTrimCommand.java",
+      "line": 76,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/component/TFCComponents.java",
+      "line": 157,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/component/food/FoodCapability.java",
+      "line": 259,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/ai/predator/PackPredator.java",
+      "line": 185,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/livestock/DairyAnimal.java",
+      "line": 46,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/ai/prey/PestFeastBehavior.java",
+      "line": 38,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/items/BarrelBlockItem.java",
+      "line": 98,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/items/FluidContainerItem.java",
+      "line": 82,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/items/GlassBottleItem.java",
+      "line": 51,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/items/JugItem.java",
+      "line": 44,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/recipes/InstantFluidBarrelRecipe.java",
+      "line": 97,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/recipes/ingredients/FluidContentIngredient.java",
+      "line": 64,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/JEIIntegration.java",
+      "line": 164,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/JEIIntegration.java",
+      "line": 299,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/TFCCraftingExtensions.java",
+      "line": 47,
+      "message": "<anonymous net.dries007.tfc.compat.jei.TFCCraftingExtensions$1> is not abstract and does not override abstract method getIngredients(RecipeHolder<AdvancedShapelessRecipe>) in ICraftingCategoryExtension"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/CastingRecipeCategory.java",
+      "line": 52,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/GlassworkingRecipeCategory.java",
+      "line": 61,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/LampFuelRecipeCategory.java",
+      "line": 55,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/SimpleItemRecipeCategory.java",
+      "line": 44,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/transfer/AnvilRecipeTransferHandler.java",
+      "line": 33,
+      "message": "incompatible types: IRecipeType<RecipeHolder<AnvilRecipe>> cannot be converted to RecipeType<RecipeHolder<AnvilRecipe>>"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/transfer/AnvilRecipeTransferHandler.java",
+      "line": 54,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/transfer/FluidIgnoringRecipeTransferHandler.java",
+      "line": 34,
+      "message": "incompatible types: IRecipeType<R> cannot be converted to RecipeType<R>"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/vivecraft/VivecraftIntegration.java",
+      "line": 17,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/ChunkMapMixin.java",
+      "line": 57,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/BreakingItemParticleMixin.java",
+      "line": 30,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/BreakingItemParticleMixin.java",
+      "line": 31,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/BreakingItemParticleMixin.java",
+      "line": 32,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/BreakingItemParticleMixin.java",
+      "line": 33,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/ClientLevelMixin.java",
+      "line": 34,
+      "message": "constructor Level in class Level cannot be applied to given types;"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/PlayerItemInHandLayerMixin.java",
+      "line": 34,
+      "message": "type argument T#1 is not within bounds of type-variable T#2"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/PlayerItemInHandLayerMixin.java",
+      "line": 34,
+      "message": "type argument T is not within bounds of type-variable S"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/PlayerItemInHandLayerMixin.java",
+      "line": 39,
+      "message": "type argument T is not within bounds of type-variable S"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/PlayerItemInHandLayerMixin.java",
+      "line": 41,
+      "message": "constructor ItemInHandLayer in class ItemInHandLayer<S,M#2> cannot be applied to given types;"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/SkeletonModelMixin.java",
+      "line": 28,
+      "message": "type argument T#1 is not within bounds of type-variable T#2"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/SkeletonModelMixin.java",
+      "line": 43,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/SkeletonModelMixin.java",
+      "line": 43,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/SkeletonModelMixin.java",
+      "line": 47,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/mixin/client/SkeletonModelMixin.java",
+      "line": 47,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/ChannelFlow.java",
+      "line": 351,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/Helpers.java",
+      "line": 1187,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/loot/CopyFluidFunction.java",
+      "line": 37,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/loot/CopyFluidFunction.java",
+      "line": 38,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/loot/CopyFluidFunction.java",
+      "line": 55,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/loot/CopyFluidFunction.java",
+      "line": 56,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/tooltip/BlockEntityTooltips.java",
+      "line": 507,
+      "message": "cannot find symbol"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/tooltip/EntityTooltips.java",
+      "line": 163,
+      "message": "cannot find symbol"
+    }
+  ]
+}

@@ -6,123 +6,104 @@
 
 package net.dries007.tfc.client.model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import com.google.common.collect.Maps;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.mojang.math.Transformation;
+import java.util.Optional;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.color.item.ItemTintSource;
+import net.minecraft.client.color.item.ItemTintSources;
 import net.minecraft.client.renderer.block.dispatch.BlockModelRotation;
-import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.client.renderer.item.CompositeModel;
+import net.minecraft.client.renderer.item.CuboidItemModelWrapper;
+import net.minecraft.client.renderer.item.ItemModel;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraft.client.renderer.block.dispatch.ModelState;
+import net.minecraft.client.resources.model.cuboid.ItemModelGenerator;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ItemOwner;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.equipment.trim.ArmorTrim;
-import net.neoforged.neoforge.client.NeoForgeRenderTypes;
-import net.neoforged.neoforge.client.RenderTypeGroup;
-import net.neoforged.neoforge.client.model.CompositeModel;
-import net.neoforged.neoforge.client.model.SimpleModelState;
-import net.neoforged.neoforge.client.model.geometry.IGeometryBakingContext;
-import net.neoforged.neoforge.client.model.geometry.IGeometryLoader;
-import net.neoforged.neoforge.client.model.geometry.IUnbakedGeometry;
-import net.neoforged.neoforge.client.model.geometry.StandaloneGeometryBakingContext;
-import net.neoforged.neoforge.client.model.geometry.UnbakedGeometryHelper;
-import org.jetbrains.annotations.Nullable;
+import net.neoforged.neoforge.client.model.ComposedModelState;
+import org.joml.Matrix4fc;
+import org.jspecify.annotations.Nullable;
 
-import net.dries007.tfc.client.RenderHelpers;
-import net.dries007.tfc.util.Helpers;
-
-
-public record TrimmedItemModel(@Nullable ArmorTrim trim) implements IUnbakedGeometry<TrimmedItemModel>
+/** Armor, optional overlay and material-colored trim, baked and cached within one native resource reload. */
+public final class TrimmedItemModel implements ItemModel
 {
+    private final Unbaked definition;
+    private final BakingContext context;
+    private final Matrix4fc transformation;
+    private final Map<String, ItemModel> cache = new HashMap<>();
+
+    private TrimmedItemModel(Unbaked definition, BakingContext context, Matrix4fc transformation)
+    {
+        this.definition = definition;
+        this.context = context;
+        this.transformation = transformation;
+    }
+
+    public static String materialSuffix(@Nullable ArmorTrim trim)
+    {
+        return trim == null ? "" : trim.material().value().assets().base().suffix();
+    }
+
+    private ItemModel bakeTrim(String suffix)
+    {
+        final ModelBaker baker = context.blockModelBaker();
+        final Textures textures = definition.textures();
+        final Material.Baked armor = baker.materials().get(textures.armor(), () -> "tfc:trim");
+        final ModelRenderProperties properties = new ModelRenderProperties(false, armor, baker.getModel(definition.parent()).getTopTransforms());
+        final List<Material.Baked> materials = new ArrayList<>();
+        materials.add(armor);
+        textures.overlay().ifPresent(m -> materials.add(baker.materials().get(m, () -> "tfc:trim")));
+        if (!suffix.isEmpty()) materials.add(baker.materials().get(new Material(textures.trim().sprite().withSuffix("_" + suffix)), () -> "tfc:trim"));
+        final List<ItemModel> layers = new ArrayList<>();
+        for (int index = 0; index < materials.size(); index++)
+        {
+            final boolean trim = !suffix.isEmpty() && index == materials.size() - 1;
+            final var state = new ComposedModelState(BlockModelRotation.IDENTITY, trim ? ContainedFluidModel.COVER_TRANSFORM : ContainedFluidModel.FLUID_TRANSFORM);
+            layers.add(new CuboidItemModelWrapper(index == 0 ? definition.tints() : List.of(), ItemLayerGeometry.translucent(baker.compute(new ItemModelGenerator.ItemLayerKey(materials.get(index), state, 0)), null, false), properties, transformation));
+        }
+        return new CompositeModel(layers);
+    }
 
     @Override
-    public BakedModel bake(IGeometryBakingContext context, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ItemOverrides overrides)
+    public void update(ItemStackRenderState output, ItemStack stack, ItemModelResolver resolver, ItemDisplayContext displayContext,
+        @Nullable ClientLevel level, @Nullable ItemOwner owner, int seed)
     {
-        final TextureAtlasSprite baseSprite = spriteGetter.apply(context.getMaterial("armor"));
-        final TextureAtlasSprite overlaySprite = context.hasMaterial("overlay") ? spriteGetter.apply(context.getMaterial("overlay")) : null;
-        final Identifier trimLocation = context.getMaterial("trim").texture();
-        final String color = trim != null ? trim.material().value().assetName() : null;
-        final TextureAtlasSprite trimSprite = trim != null ? spriteGetter.apply(new Material(RenderHelpers.BLOCKS_ATLAS, trimLocation.withSuffix("_" + color))) : null;
-
-        final var itemContext = StandaloneGeometryBakingContext.builder(context).withGui3d(false).withUseBlockLight(false).build(Helpers.resourceLocation("trim_override"));
-        final var builder = CompositeModel.Baked.builder(itemContext, baseSprite, new TrimOverrideHandler(overrides, baker, itemContext), context.getTransforms());
-        final var normalRenderTypes = new RenderTypeGroup(RenderType.translucent(), NeoForgeRenderTypes.ITEM_UNSORTED_TRANSLUCENT.get());
-
-        addQuads(modelState, baseSprite, builder, normalRenderTypes, ContainedFluidModel.FLUID_TRANSFORM);
-
-        if (overlaySprite != null)
-        {
-            addQuads(modelState, overlaySprite, builder, normalRenderTypes, ContainedFluidModel.FLUID_TRANSFORM);
-        }
-
-        if (trimSprite != null)
-        {
-            addQuads(modelState, trimSprite, builder, normalRenderTypes, ContainedFluidModel.COVER_TRANSFORM);
-        }
-
-        builder.setParticle(baseSprite);
-        return builder.build();
+        cache.computeIfAbsent(materialSuffix(stack.get(DataComponents.TRIM)), this::bakeTrim)
+            .update(output, stack, resolver, displayContext, level, owner, seed);
     }
 
-    private static void addQuads(ModelState modelState, TextureAtlasSprite trimSprite, CompositeModel.Baked.Builder builder, RenderTypeGroup normalRenderTypes, @Nullable Transformation transformation)
+    public record Textures(Material armor, Optional<Material> overlay, Material trim)
     {
-        var transformedState = transformation == null ? modelState : new SimpleModelState(modelState.getRotation().compose(transformation), modelState.isUvLocked());
-        var unbaked = UnbakedGeometryHelper.createUnbakedItemElements(0, trimSprite);
-        var quads = UnbakedGeometryHelper.bakeElements(unbaked, material -> trimSprite, transformedState);
-        builder.addQuads(normalRenderTypes, quads);
+        public static final Codec<Textures> CODEC = RecordCodecBuilder.create(i -> i.group(
+            Material.CODEC.fieldOf("armor").forGetter(Textures::armor),
+            Material.CODEC.optionalFieldOf("overlay").forGetter(Textures::overlay),
+            Material.CODEC.fieldOf("trim").forGetter(Textures::trim)
+        ).apply(i, Textures::new));
     }
 
-    public static class Loader implements IGeometryLoader<TrimmedItemModel>
+    public record Unbaked(Textures textures, Identifier parent, List<ItemTintSource> tints) implements ItemModel.Unbaked
     {
-        @Override
-        public TrimmedItemModel read(JsonObject jsonObject, JsonDeserializationContext deserializationContext) throws JsonParseException
-        {
-            return new TrimmedItemModel(null);
-        }
+        public static final MapCodec<Unbaked> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
+            Textures.CODEC.fieldOf("textures").forGetter(Unbaked::textures),
+            Identifier.CODEC.optionalFieldOf("parent", ContainedFluidModel.DEFAULT_PARENT).forGetter(Unbaked::parent),
+            ItemTintSources.CODEC.listOf().optionalFieldOf("tints", List.of()).forGetter(Unbaked::tints)
+        ).apply(i, Unbaked::new));
+
+        @Override public MapCodec<Unbaked> type() { return CODEC; }
+        @Override public ItemModel bake(BakingContext context, Matrix4fc transformation) { return new TrimmedItemModel(this, context, transformation); }
+        @Override public void resolveDependencies(Resolver resolver) { resolver.markDependency(parent); }
     }
-
-    private static final class TrimOverrideHandler extends ItemOverrides
-    {
-        private final Map<String, BakedModel> cache = Maps.newHashMap(); // contains all the baked models since they'll never change
-        private final ItemOverrides nested;
-        private final ModelBaker baker;
-        private final IGeometryBakingContext owner;
-
-        private TrimOverrideHandler(ItemOverrides nested, ModelBaker baker, IGeometryBakingContext owner)
-        {
-            this.nested = nested;
-            this.baker = baker;
-            this.owner = owner;
-        }
-
-        @Override
-        public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed)
-        {
-            BakedModel overridden = nested.resolve(originalModel, stack, level, entity, seed);
-            if (overridden != originalModel || level == null) return overridden;
-            final ArmorTrim trim = stack.get(DataComponents.TRIM);
-            if (trim == null)
-                return originalModel;
-            final String name = trim.material().value().assetName();
-            if (!cache.containsKey(name))
-            {
-                TrimmedItemModel unbaked = new TrimmedItemModel(trim);
-                BakedModel bakedModel = unbaked.bake(owner, baker, Material::sprite, BlockModelRotation.X0_Y0, this);
-                cache.put(name, bakedModel);
-                return bakedModel;
-            }
-            return cache.get(name);
-        }
-    }
-
 }

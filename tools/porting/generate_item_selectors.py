@@ -1,4 +1,4 @@
-"""Generate MC 26.1.2 item model selectors for unambiguous, static TFC models.
+"""Generate MC 26.1.2 selectors for static models and reviewed native item adapters.
 
 The 26.x client loads assets/tfc/items/<item>.json, not the old model
 file directly. Never guess a mapping for custom loaders, predicates or tints:
@@ -38,6 +38,24 @@ def native_fixed_fluid_container(model: dict) -> dict | None:
     }}
 
 
+def native_layered_item(model: dict) -> dict | None:
+    """Preserve reviewed TFC fluid/trim texture slots in native ItemModel codecs."""
+    loader = model.get('loader')
+    if loader not in ('tfc:fluid_container', 'tfc:trim'):
+        return None
+    if model.get('parent') != 'neoforge:item/default' or not set(model).issubset(
+            {'__comment__', 'loader', 'parent', 'textures'}):
+        return None
+    textures = model.get('textures')
+    allowed = {'particle', 'base', 'fluid', 'cover'} if loader == 'tfc:fluid_container' else {'armor', 'overlay', 'trim'}
+    required = {'base', 'fluid'} if loader == 'tfc:fluid_container' else {'armor', 'trim'}
+    if not isinstance(textures, dict) or not required.issubset(textures) or not set(textures).issubset(allowed):
+        return None
+    if any(not isinstance(value, str) or ':' not in value or value.startswith('#') for value in textures.values()):
+        return None
+    return {'model': {'type': loader, 'parent': model['parent'], 'textures': textures}}
+
+
 def has_legacy_tint(model: object) -> bool:
     """Older built-in model face tint-index cannot be inferred from an item key."""
     if isinstance(model, dict):
@@ -53,6 +71,7 @@ def scan_models(source: Path, authored_roots: tuple[Path, ...]):
     desired: dict[Path, str] = {}
     skipped: dict[str, list[str]] = {}
     generated_fluid_count = 0
+    generated_layered_count = 0
     for original in sorted(source.rglob('*.json')):
         if original.is_symlink():
             raise ValueError(f'Unexpected symlink in legacy item models: {original}')
@@ -65,7 +84,8 @@ def scan_models(source: Path, authored_roots: tuple[Path, ...]):
         if any((root / relative).is_file() for root in authored_roots):
             reasons.append('existing_selector')
         fluid_definition = native_fixed_fluid_container(model)
-        if fluid_definition is None:
+        layered_definition = native_layered_item(model)
+        if fluid_definition is None and layered_definition is None:
             reasons.extend(sorted(MODEL_KEYS_REQUIRING_MIGRATION.intersection(model)))
         if has_legacy_tint(model):
             reasons.append('tintindex')
@@ -75,14 +95,17 @@ def scan_models(source: Path, authored_roots: tuple[Path, ...]):
         if fluid_definition is not None:
             definition = fluid_definition
             generated_fluid_count += 1
+        elif layered_definition is not None:
+            definition = layered_definition
+            generated_layered_count += 1
         else:
             definition = {'model': {'type': 'minecraft:model', 'model': f'tfc:item/{item_id}'}}
         desired[relative] = json.dumps(definition, indent=2) + '\n'
-    return desired, skipped, generated_fluid_count
+    return desired, skipped, generated_fluid_count, generated_layered_count
 
 
 def generate(source: Path, output: Path, authored_roots: tuple[Path, ...], report: Path | None):
-    desired, skipped, generated_fluid_count = scan_models(source, authored_roots)
+    desired, skipped, generated_fluid_count, generated_layered_count = scan_models(source, authored_roots)
     items_root = output / 'assets' / 'tfc' / 'items'
     if output.resolve() == source.resolve() or source.resolve().is_relative_to(output.resolve()):
         raise ValueError('Output must not overwrite the source model directory')
@@ -104,17 +127,18 @@ def generate(source: Path, output: Path, authored_roots: tuple[Path, ...], repor
     summary = {
         'source_count': len(desired) + len(skipped),
         'generated_count': len(desired),
-        'generated_static_count': len(desired) - generated_fluid_count,
+        'generated_static_count': len(desired) - generated_fluid_count - generated_layered_count,
         'generated_fixed_fluid_count': generated_fluid_count,
+        'generated_layered_count': generated_layered_count,
         'manual_migration_count': len(skipped),
         'manual_migrations': dict(sorted(skipped.items())),
     }
     if report is not None:
         report.parent.mkdir(parents=True, exist_ok=True)
         report.write_text(json.dumps(summary, indent=2, sort_keys=True) + '\n', encoding='utf-8')
-    print(f"Generated {len(desired) - generated_fluid_count} static and "
+    print(f"Generated {len(desired) - generated_fluid_count - generated_layered_count} static and "
           f"{generated_fluid_count} native fixed-fluid TFC item definitions; "
-          f"{len(skipped)} models still need 26.x adapters.")
+          f"{generated_layered_count} native TFC fluid/trim definitions; {len(skipped)} models still need 26.x adapters.")
     return summary
 
 

@@ -70,7 +70,6 @@ import net.neoforged.neoforge.client.event.RegisterPresetEditorsEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
-import net.neoforged.neoforge.client.model.DynamicFluidContainerModel;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.TerraFirmaCraft;
@@ -728,10 +727,10 @@ public final class ClientEventHandler
         StandaloneBlockModels.register(event, id);
     }
 
-    public static void registerModelLoaders(ModelEvent.RegisterGeometryLoaders event)
+    public static void registerModelLoaders(net.neoforged.neoforge.client.event.RegisterItemModelsEvent event)
     {
-        event.register(Helpers.identifier("fluid_container"), new ContainedFluidModel.Loader());
-        event.register(Helpers.identifier("trim"), new TrimmedItemModel.Loader());
+        event.register(Helpers.identifier("fluid_container"), ContainedFluidModel.Unbaked.CODEC);
+        event.register(Helpers.identifier("trim"), TrimmedItemModel.Unbaked.CODEC);
     }
 
     public static void registerColorHandlerBlocks(RegisterColorHandlersEvent.Block event)
@@ -821,28 +820,6 @@ public final class ClientEventHandler
         event.register(seasonalFoliageColor, TFCBlocks.SPRUCE_KRUMMHOLZ.get().asItem());
         event.register(seasonalFoliageColor, TFCBlocks.ASPEN_KRUMMHOLZ.get().asItem());
 
-        for (Fluid fluid : BuiltInRegistries.FLUID)
-        {
-            if (Objects.requireNonNull(BuiltInRegistries.FLUID.getKey(fluid)).getNamespace().equals(TerraFirmaCraft.MOD_ID))
-            {
-                event.register(new DynamicFluidContainerModel.Colors(), fluid.getBucket());
-            }
-        }
-
-        TFCItems.MOLDS.values().forEach(reg -> event.register(ContainedFluidModel.COLOR, reg.get()));
-        event.register(
-            ContainedFluidModel.COLOR,
-            TFCItems.WOODEN_BUCKET.get(),
-            TFCItems.RED_STEEL_BUCKET.get(),
-            TFCItems.BLUE_STEEL_BUCKET.get(),
-            TFCItems.BELL_MOLD.get(),
-            TFCItems.FIRE_INGOT_MOLD.get(),
-            TFCItems.JUG.get(),
-            TFCItems.SILICA_GLASS_BOTTLE.get(),
-            TFCItems.HEMATITIC_GLASS_BOTTLE.get(),
-            TFCItems.VOLCANIC_GLASS_BOTTLE.get(),
-            TFCItems.OLIVINE_GLASS_BOTTLE.get()
-        );
     }
 
     public static void registerClientReloadListeners(AddClientReloadListenersEvent event)

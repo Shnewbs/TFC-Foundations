@@ -9,7 +9,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from generate_item_selectors import generate, has_legacy_tint, scan_models
+from generate_item_selectors import generate, has_legacy_tint, scan_models, native_layered_item
 
 PROJECT = Path(__file__).resolve().parents[2]
 LEGACY = PROJECT / 'src/main/resources/assets/tfc/models/item'
@@ -22,10 +22,11 @@ class ItemSelectorGenerationTests(unittest.TestCase):
             report = Path(tmp) / 'report.json'
             s = generate(LEGACY, out, (), report)
             self.assertEqual(s['source_count'], 5597)
-            self.assertEqual(s['generated_count'], 5435)
+            self.assertEqual(s['generated_count'], 5495)
             self.assertEqual(s['generated_static_count'], 5369)
             self.assertEqual(s['generated_fixed_fluid_count'], 66)
-            self.assertEqual(s['manual_migration_count'], 162)
+            self.assertEqual(s['generated_layered_count'], 60)
+            self.assertEqual(s['manual_migration_count'], 102)
             self.assertTrue(report.is_file())
             self.assertEqual(s, json.loads(report.read_text()))
             generated = list((out / 'assets/tfc/items').rglob('*.json'))
@@ -47,6 +48,8 @@ class ItemSelectorGenerationTests(unittest.TestCase):
                         },
                         'fluid': model['fluid'],
                     })
+                elif model.get('loader') in ('tfc:fluid_container', 'tfc:trim'):
+                    self.assertEqual(generated_model, {'type': model['loader'], 'parent': model['parent'], 'textures': model['textures']})
                 else:
                     self.assertEqual(generated_model, {
                         'type': 'minecraft:model', 'model': 'tfc:item/' + rel,
@@ -54,7 +57,7 @@ class ItemSelectorGenerationTests(unittest.TestCase):
             for special, reasons in s['manual_migrations'].items():
                 self.assertTrue(reasons)
                 self.assertFalse((out / 'assets/tfc/items' / (special + '.json')).exists())
-            self.assertIn('loader', s['manual_migrations']['wooden_bucket'])
+            self.assertNotIn('wooden_bucket', s['manual_migrations'])
             self.assertNotIn('bucket/beer', s['manual_migrations'])
             self.assertIn('overrides', s['manual_migrations']['powderkeg'])
             self.assertIn('tintindex', s['manual_migrations']['grass_inv'])
@@ -106,6 +109,32 @@ class ItemSelectorGenerationTests(unittest.TestCase):
             self.assertEqual(s['manual_migration_count'], 3)
             self.assertTrue(has_legacy_tint({'elements':[{'faces':{'north':{'tintindex':0}}}]}))
             self.assertFalse(has_legacy_tint({'layers':[{'tint':'#ff00ff'}]}))
+
+    def test_layered_codecs_reject_unknown_fields_and_preserve_slots(self):
+        fluid = {'loader': 'tfc:fluid_container', 'parent': 'neoforge:item/default',
+                 'textures': {'base': 'tfc:item/base', 'fluid': 'tfc:item/mask', 'cover': 'tfc:item/cover'}}
+        self.assertEqual(native_layered_item(fluid)['model']['textures'], fluid['textures'])
+        for key, value in [('display', {}), ('overrides', []), ('flip_gas', True)]:
+            self.assertIsNone(native_layered_item(dict(fluid, **{key: value})))
+        self.assertIsNone(native_layered_item(dict(fluid, textures={'base': '#missing', 'fluid': 'tfc:item/mask'})))
+        trim = {'loader': 'tfc:trim', 'parent': 'neoforge:item/default',
+                'textures': {'armor': 'minecraft:item/leather_boots', 'overlay': 'minecraft:item/leather_boots_overlay', 'trim': 'tfc:item/boots_trim'}}
+        self.assertEqual(native_layered_item(trim)['model']['textures'], trim['textures'])
+
+    def test_vanilla_trim_overrides_have_native_selectors(self):
+        source = PROJECT / 'src/main/resources/assets/minecraft/models/item'
+        count = 0
+        for legacy in source.glob('*.json'):
+            model = json.loads(legacy.read_text())
+            if model.get('loader') != 'tfc:trim':
+                continue
+            selector = json.loads((PROJECT / 'src/main/resources/assets/minecraft/items' / legacy.name).read_text())['model']
+            self.assertEqual(selector['type'], 'tfc:trim')
+            self.assertEqual(selector['parent'], model['parent'])
+            self.assertEqual(selector['textures'], model['textures'])
+            self.assertEqual(selector.get('tints', []), [{'type': 'minecraft:dye', 'default': 10511680}] if legacy.stem.startswith('leather_') else [])
+            count += 1
+        self.assertEqual(count, 8)
 
     def test_native_fixed_fluid_codec_is_available_on_pinned_neoforge(self):
         import os
