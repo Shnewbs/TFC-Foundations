@@ -1,5 +1,26 @@
 # TFC Foundations — Current Project Status
 
+## 2026-10-17 UTC — Client colormap reload registration crash fixed
+
+Fixed the client crash reported on NeoForge 26.1.2.122: normal and summer
+foliage intentionally read `tfc:textures/colormap/foliage.png`, but were also
+registered under that same reload-listener key. Summer now registers as
+`tfc:colormap/foliage_summer`. Both texture lookups and both cache consumers
+remain unchanged; no asset, save or gameplay ID is migrated.
+
+A native-event regression test reproduces the exact exception before the fix
+and passes afterwards. It registers all nine TFC color maps and the star
+catalog alongside a vanilla listener and executes NeoForge's listener sort
+in two fresh resource managers. Full pinned Java 25/NeoForge 26.1.2.114 Gradle
+build succeeds in 37 seconds: **215 tests passed, 12 skipped, no failures/errors**.
+The rebuilt JAR contains the new key; SHA-256 `4704bb8ffeaab4022a02bd42397bdc773e6a338a7b9335d30c33ed4041bcfae7`.
+Exact results are in `validation/2026-10-17-client-colormap-reload-fix.json`.
+
+This fixes the reported registration failure. Full graphical client startup
+and world loading remain unverified; the preceding checkpoint's live
+component-binding/world-reload issues remain open. Dependencies and candidate
+version 0.0.0 are unchanged. No new branch is created.
+
 ## 2026-10-17 UTC — Native transfer, complete build and first server reload
 
 Continued directly on `26.1.2` from `7b5715acd23da8b97ed012c1b66d666e50c0de96`. **Main compilation: 44 → 0 errors**, 1,699 diagnostic sources, Java 25 exit 0 without timeout. Main/data/test compilation, packaging, all three license checks, pinned dependency verification and the full Gradle build pass. JUnit reports **226 tests: 214 passed, 12 existing skips, zero failures/errors**. All **36 API runners** pass. Candidate version `0.0.0` and all pinned dependencies remain unchanged. **The packaged JAR is not playable or a release.** Normal dedicated-server startup reaches world-data reload and overworld creation, but live component binding still invalidates recipe decoding and fatal self-tests stop the server. A successful Gradle `runServer` exit is not startup success.

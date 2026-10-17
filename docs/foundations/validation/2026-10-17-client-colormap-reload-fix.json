@@ -1,0 +1,28 @@
+{
+  "reported_failure": "Attempted to register two reload listeners for the same key: tfc:textures/colormap/foliage.png",
+  "reported_neoforge": "26.1.2.122",
+  "build_neoforge": "26.1.2.114",
+  "parent": "8b87bc6b6157e8fafebeb3f71acb6fbbed918a75",
+  "fix": "Give summer foliage its own reload-listener key while retaining the shared foliage texture and both consumers.",
+  "regression_before": "Exact duplicate-key exception reproduced through real AddClientReloadListenersEvent.",
+  "regression_after": "All nine TFC color maps and star catalog register and sort in two fresh resource managers with a vanilla listener.",
+  "full_gradle_build": {
+    "result": "BUILD SUCCESSFUL",
+    "seconds": 37,
+    "junit": {
+      "tests": 227,
+      "skipped": 12,
+      "failures": 0,
+      "errors": 0
+    }
+  },
+  "jar": {
+    "name": "TFC-Foundations-26.1.2-0.0.0.jar",
+    "bytes": 69054978,
+    "sha256": "4704bb8ffeaab4022a02bd42397bdc773e6a338a7b9335d30c33ed4041bcfae7"
+  },
+  "limits": [
+    "No full graphical client startup or world-load success claimed.",
+    "Known native live component-binding/world-reload issues remain."
+  ]
+}

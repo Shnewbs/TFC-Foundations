@@ -757,7 +757,8 @@ public final class ClientEventHandler
         event.addListener(TFCColors.GRASS_COLORS_LOCATION, new ColorMapReloadListener(TFCColors::setGrassColors, TFCColors.GRASS_COLORS_LOCATION));
         event.addListener(TFCColors.TALL_GRASS_COLORS_LOCATION, new ColorMapReloadListener(TFCColors::setTallGrassColors, TFCColors.TALL_GRASS_COLORS_LOCATION));
         event.addListener(TFCColors.FOLIAGE_COLORS_LOCATION, new ColorMapReloadListener(TFCColors::setFoliageColors, TFCColors.FOLIAGE_COLORS_LOCATION));
-        event.addListener(TFCColors.FOLIAGE_SUMMER_COLORS_LOCATION, new ColorMapReloadListener(TFCColors::setFoliageSummerColors, TFCColors.FOLIAGE_SUMMER_COLORS_LOCATION));
+        // Summer and ordinary foliage intentionally read the same PNG, but event keys identify consumers, not textures.
+        event.addListener(Helpers.identifier("colormap/foliage_summer"), new ColorMapReloadListener(TFCColors::setFoliageSummerColors, TFCColors.FOLIAGE_SUMMER_COLORS_LOCATION));
         event.addListener(TFCColors.FOLIAGE_FALL_COLORS_LOCATION, new ColorMapReloadListener(TFCColors::setFoliageFallColors, TFCColors.FOLIAGE_FALL_COLORS_LOCATION));
 
         event.addListener(Helpers.identifier("stars"), new StarsReloadListener());
