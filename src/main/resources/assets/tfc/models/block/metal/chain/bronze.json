@@ -1,6 +1,6 @@
 {
   "__comment__": "This file was automatically created by mcresources",
-  "parent": "minecraft:block/chain",
+  "parent": "minecraft:block/iron_chain",
   "textures": {
     "all": "tfc:block/metal/chain/bronze",
     "particle": "tfc:block/metal/chain/bronze"

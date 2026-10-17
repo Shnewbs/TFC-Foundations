@@ -1,5 +1,43 @@
 # TFC Foundations — Current Project Status
 
+## 2026-10-17 UTC — Rabbit temptation crash and native asset references repaired
+
+The uploaded integrated-server report reaches a world and then crashes in
+`TemptGoal.canUse` because `tfc:rabbit` lacks `minecraft:tempt_range`.
+Its supplier now starts with native `Rabbit.createAttributes()` and retains
+TFC's health 12, movement speed 0.3 and attack damage 3. A regression reproduces
+the exact exception before the fix; registered rabbit, horse, donkey, mule and
+ocelot suppliers now pass the native attribute lookup. Other custom animals
+use TFC's fixed-range temptation sensor and do not share that failing lookup.
+
+Repaired confirmed asset migration gaps: nine worn/horse armor equipment
+assets now generate during `processResources`, with 27 byte-identical aliases
+of the original artwork. Existing texture files and resource/gameplay IDs stay
+intact. All 36 armor-trim inputs now use native `trims/entity/humanoid` and
+`humanoid_leggings` paths, restoring 504 TFC palette variants. Nine metal chain
+models use the native iron-chain parent; ice uses the native block model.
+Ten wall-fan item models share vanilla's existing floor-fan sprites and sugar
+cane uses the current item sprite. Resource generators retain these fixes.
+
+Full pinned Java 25/NeoForge 26.1.2.114 Gradle build succeeds in 72 seconds:
+**219 tests passed, 12 skipped, zero failures/errors**. New native equipment
+codec tests verify all nine definitions and the exact original bytes of every
+armor texture alias; the trim test verifies every native input exists.
+`python3 resources validate` passes. A CPU check using the native atlas-source
+loader loads 4,052 block, 2,421 item and 1,081 armor-trim sprites without missing
+inputs. Reference audit of 14,399 TFC models finds no missing parents or literal
+textures across 19,072 texture references. The packaged JAR contains the new
+equipment definitions and all 27 original-image aliases.
+
+JAR SHA-256: `8248af60adc8b2b28ce4c49fd7b6b95c957e438b0ebd891fae5388a0a13f94f9` (69,109,378 bytes).
+Details: `docs/foundations/validation/2026-10-17-rabbit-native-assets-fix.json`.
+These checks establish native resource resolution, not GPU appearance or
+completed gameplay. The user's broad texture report has no screenshot or
+client resource-reload log yet; any additional terrain/rendering issue remains
+to be identified from that evidence. Prior world-data/component-binding runtime
+limits remain open. Pins, candidate 0.0.0 and the independent `26.x` track stay
+unchanged. Publish directly on existing `26.1.2`; no new branch.
+
 ## 2026-10-17 UTC — Required world-creation client Mixin repaired
 
 Reproduced the uploaded `CreateWorldScreenMixin.changeDefaultWorldType` crash

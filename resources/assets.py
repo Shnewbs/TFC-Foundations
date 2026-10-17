@@ -976,7 +976,7 @@ def generate(rm: ResourceManager):
 
     block = rm.blockstate('ice_pile', 'minecraft:block/ice').with_lang(lang('ice pile'))
     block.with_block_loot(when_silk_touch('minecraft:ice'))
-    rm.item_model('ice_pile', parent='minecraft:item/ice', no_textures=True)
+    rm.item_model('ice_pile', parent='minecraft:block/ice', no_textures=True)
 
     # Loot table for snow blocks and snow piles - override the vanilla one to return nothing (snowballs are useless and annoying)
     rm.block_loot('snow_pile', when_silk_touch('minecraft:snow'))
@@ -1082,7 +1082,7 @@ def generate(rm: ResourceManager):
             rm.block_model(('metal', 'chain', metal), {
                 'all': 'tfc:block/metal/chain/%s' % metal,
                 'particle': 'tfc:block/metal/chain/%s' % metal
-            }, parent='minecraft:block/chain')
+            }, parent='minecraft:block/iron_chain')
             rm.item_model(('metal', 'chain', metal), 'tfc:item/metal/chain/%s' % metal)
 
             # Lamp
@@ -2685,7 +2685,7 @@ def generate(rm: ResourceManager):
 
     rm.atlas('minecraft:armor_trims',atlases.palette(
         key='trims/color_palettes/trim_palette',
-        textures=['trims/models/armor/%s%s' % (pattern, suffix) for pattern in VANILLA_TRIMS for suffix in ('', '_leggings')],
+        textures=['trims/entity/%s/%s' % (layer, pattern) for pattern in VANILLA_TRIMS for layer in ('humanoid', 'humanoid_leggings')],
         permutations=dict((mat + '_tfc', 'tfc:color_palettes/trims/%s' % mat) for mat in TRIM_MATERIALS)
     ))
 
@@ -2730,7 +2730,9 @@ def corals(rm: ResourceManager, color: str, dead: bool):
     )).with_block_loot('tfc:coral/%s_coral_fan' % right)
 
     for variant in ('coral', 'coral_fan', 'coral_wall_fan'):
-        rm.item_model('coral/%s_%s' % (right, variant), 'minecraft:block/%s_%s' % (left, variant))
+        # Wall fans share the floor fan sprite; vanilla has no *_wall_fan PNG.
+        texture_variant = 'coral_fan' if variant == 'coral_wall_fan' else variant
+        rm.item_model('coral/%s_%s' % (right, variant), 'minecraft:block/%s_%s' % (left, texture_variant))
         rm.lang('block.tfc.coral.%s_%s' % (right, variant), lang('%s %s', left, variant))
 
 

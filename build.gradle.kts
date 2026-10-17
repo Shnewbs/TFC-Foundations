@@ -53,6 +53,26 @@ tasks.named<ProcessResources>("processResources") {
     from(generatedItemSelectorsRoot)
 }
 
+// Reuse the original armor artwork at the paths required by native equipment layers.
+val generatedEquipmentRoot = layout.buildDirectory.dir("generated/tfcEquipmentAssets")
+val generateTfcEquipmentAssets = tasks.register<Exec>("generateTfcEquipmentAssets") {
+    inputs.file("tools/porting/generate_equipment_assets.py")
+    inputs.file("src/main/java/net/dries007/tfc/common/TFCArmorMaterials.java")
+    inputs.dir("src/main/resources/assets/tfc/textures/models/armor")
+    inputs.dir("src/main/resources/assets/tfc/textures/entity/horse/armor")
+    outputs.dir(generatedEquipmentRoot)
+    val pythonExecutable = providers.gradleProperty("tfcPythonExecutable").orElse(
+        providers.systemProperty("os.name").map { if (it.startsWith("Windows", ignoreCase = true)) "python" else "python3" }
+    )
+    commandLine(pythonExecutable.get(), "tools/porting/generate_equipment_assets.py",
+        "--output", generatedEquipmentRoot.get().asFile.absolutePath)
+}
+
+tasks.named<ProcessResources>("processResources") {
+    dependsOn(generateTfcEquipmentAssets)
+    from(generatedEquipmentRoot)
+}
+
 
 val generateModMetadata = tasks.register<ProcessResources>("generateModMetadata") {
     val modReplacementProperties = mapOf(

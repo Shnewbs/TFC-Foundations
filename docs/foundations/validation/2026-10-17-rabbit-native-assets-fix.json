@@ -1,0 +1,94 @@
+{
+  "reported_crash": "tfc:rabbit TemptGoal.canUse: Cannot find attribute minecraft:tempt_range",
+  "branch": "26.1.2",
+  "base_commit": "82f6574aee736323a04a92beb1db25e0493b7bde",
+  "pins": {
+    "minecraft": "26.1.2",
+    "neoforge": "26.1.2.114",
+    "java": 25,
+    "mod": "0.0.0"
+  },
+  "tests": {
+    "tests": 231,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 12
+  },
+  "build": "BUILD SUCCESSFUL in 1m 12s; build-tools/rabbit-assets-build-final.log",
+  "native_regressions": {
+    "temptation_suppliers": [
+      "rabbit",
+      "horse",
+      "donkey",
+      "mule",
+      "ocelot"
+    ],
+    "preserved_rabbit_stats": {
+      "health": 12,
+      "movement_speed": 0.3,
+      "attack_damage": 3
+    },
+    "equipment_definitions": 9,
+    "byte_identical_armor_aliases": 27,
+    "native_trim_inputs": 36
+  },
+  "resource_validation": "python3 resources validate: exit 0",
+  "native_cpu_atlas_load": {
+    "blocks": 4052,
+    "items": 2421,
+    "armor_trims": 1081,
+    "restored_tfc_trim_variants": 504,
+    "missing_inputs": 0,
+    "gpu_upload": false,
+    "limit": "Native source listing and PNG decoding with CPU images, not graphical world rendering or complete client mod lifecycle."
+  },
+  "model_references": {
+    "tfc_models": 14399,
+    "literal_texture_references": 19072,
+    "missing_parents": {},
+    "missing_textures": {},
+    "limits": "Reference audit against native atlas sprite names; not GPU/world rendering."
+  },
+  "jar": {
+    "file": "TFC-Foundations-26.1.2-0.0.0.jar",
+    "size_bytes": 69109378,
+    "sha256": "8248af60adc8b2b28ce4c49fd7b6b95c957e438b0ebd891fae5388a0a13f94f9"
+  },
+  "limits": [
+    "No graphical/GPU appearance validation",
+    "No successful post-fix world/gameplay run",
+    "Need screenshot and client latest.log to identify further reported terrain texture issues",
+    "Prior live component-binding/world-data errors remain open"
+  ],
+  "source_sha256": {
+    "build.gradle.kts": "cc005e1295253ea0f8400b428583da73fcaf3e3c35cf1e0873ebba30c0e478b8",
+    "resources/assets.py": "59a404d53dea6ecacefdec2828a50581851a74bcf3c626d9be8f943cf40ce4df",
+    "src/main/java/net/dries007/tfc/common/entities/prey/TFCRabbit.java": "72002d3b33dfac83b5ddc1280870e58255353b7574ef5064de92aafcedab0ebe",
+    "tools/porting/generate_equipment_assets.py": "5f5655436b6f29c504f56ec5b40430532b98350f269ed116ff59f6d7116bac78",
+    "src/test/java/net/dries007/tfc/test/TemptationAttributesTest.java": "d3216ff26761bf8b9e6f6e9d978ae37fade02a952a3fdac79bef72796afcd880",
+    "src/test/java/net/dries007/tfc/test/client/EquipmentAssetsTest.java": "a781af5f069783660032cd6d4abd491eb6f8a11a695608156b05ac19ecbaf85e",
+    "src/test/java/net/dries007/tfc/test/client/AtlasAssetsTest.java": "eef227fb64b6c832393ba9ac46f5516a7ca8ec03978970b37000c66da9cdaa95",
+    "src/main/resources/assets/minecraft/atlases/armor_trims.json": "3657a09f147ba9f4e6883b72e6d2a405b31c467dcd3f43a6aa38d12d47eaea4e",
+    "src/main/resources/assets/tfc/models/item/ice_pile.json": "b0270049eac3f6e2ce4adb02345a400fc27a7228cf12dfb612846549af8396d7",
+    "src/main/resources/assets/tfc/models/item/plant/sugar_cane.json": "71cdb4426ada973b10e207a25740ab1dfd80b8bb6edb3fda522234b4f1ff9f3e",
+    "src/main/resources/assets/tfc/models/block/metal/chain/wrought_iron.json": "7fff7d79528a450ebe234543b4ceb8444df506eb73f04655657fdc27f6962cca",
+    "src/main/resources/assets/tfc/models/block/metal/chain/black_steel.json": "814f3708cb0fc52dfe70666126c60aac45f1f5495e6d99b31a97c679e540c8a1",
+    "src/main/resources/assets/tfc/models/block/metal/chain/bismuth_bronze.json": "1596b5165a7c63984f26a814ece6bea43f8336c9c9b17683da3a67834d9d7317",
+    "src/main/resources/assets/tfc/models/block/metal/chain/red_steel.json": "439ed2bd47b5ddb468c51eb737dd071ea01b3085df2864849b39f80081f3e041",
+    "src/main/resources/assets/tfc/models/block/metal/chain/steel.json": "68e8af0e0ba45d5118476dd92d6c442caaf1e78b738fb2951bc95c94e48aaede",
+    "src/main/resources/assets/tfc/models/block/metal/chain/black_bronze.json": "85e6464640ef1029af259d422e3c659adcba683c2267898ee3199e17f50f9401",
+    "src/main/resources/assets/tfc/models/block/metal/chain/bronze.json": "3e202e7638ce1a5f7815b83e15ee90d25a7a35667218c4f77ba03e90d5c0cba0",
+    "src/main/resources/assets/tfc/models/block/metal/chain/blue_steel.json": "e9938f9d272bccca069288d029f3970d8ab5e0d15a2087993c0eb1ad725995d6",
+    "src/main/resources/assets/tfc/models/block/metal/chain/copper.json": "5ab18cbd4c8354bb22afca79a8408135ba2775718c7accdb7194f43684644027",
+    "src/main/resources/assets/tfc/models/item/coral/tube_dead_coral_wall_fan.json": "1d948980e025cf00e92b38910a443dc9e3fcd91621c196a19628c68878ca0bd9",
+    "src/main/resources/assets/tfc/models/item/coral/horn_dead_coral_wall_fan.json": "9f2b999a7427b194710a8a3b1fdf86e4ae1d010e11f8f02535c0157d5cdda1be",
+    "src/main/resources/assets/tfc/models/item/coral/brain_coral_wall_fan.json": "a70901d1a76b1325477895ed5157028809013a92786f4dcfcf0f539bcbe05a52",
+    "src/main/resources/assets/tfc/models/item/coral/bubble_coral_wall_fan.json": "a1a0c74135bc066385d8c81165c13648e16f7aa4683c30b7ccb504d9bd762b0b",
+    "src/main/resources/assets/tfc/models/item/coral/bubble_dead_coral_wall_fan.json": "42d193f6e59a271a50e0f420f9d9701d58ae2ee2947e2db29bc51a9ffd1b577f",
+    "src/main/resources/assets/tfc/models/item/coral/fire_coral_wall_fan.json": "49565440c2383475f62b015e3d9f04dda3a7b99b0eb4f1e4bdf30f37d4b31c79",
+    "src/main/resources/assets/tfc/models/item/coral/tube_coral_wall_fan.json": "5730e9f20942d70a274fe8655386d27c9c3372d36953443157c0b9dee49583fa",
+    "src/main/resources/assets/tfc/models/item/coral/brain_dead_coral_wall_fan.json": "b66527ba571d5565c6d160f953d49616d4e697884d42ccd80277355ad0015f88",
+    "src/main/resources/assets/tfc/models/item/coral/fire_dead_coral_wall_fan.json": "2151091bdbe47af1ccd0da44f8945ff2233bc25ba568491a9bf4d26844cda445",
+    "src/main/resources/assets/tfc/models/item/coral/horn_coral_wall_fan.json": "7df083aa9e0d16d724644fda95d4512e222b9d91c4d25c4f3f46145fc15bb23c"
+  }
+}
