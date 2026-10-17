@@ -122,6 +122,7 @@ public final class TFCAnimalRenderStateExtractor
         }
         if (entity instanceof AbstractCamel camel)
         {
+            state.camelJumpCooldown = Math.max(camel.getJumpCooldown() - partialTick, 0f);
             state.isSaddled = !camel.getItemBySlot(EquipmentSlot.SADDLE).isEmpty();
             state.sitAnimationState.copyFrom(camel.sitAnimationState);
             state.sitPoseAnimationState.copyFrom(camel.sitPoseAnimationState);

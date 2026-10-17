@@ -6,40 +6,45 @@
 
 package net.dries007.tfc.client.render.blockentity;
 
+import java.util.function.Consumer;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.object.projectile.TridentModel;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.special.NoDataSpecialModelRenderer;
+import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
+import org.joml.Vector3fc;
 
 import net.dries007.tfc.client.RenderHelpers;
-import net.dries007.tfc.client.render.entity.ThrownJavelinRenderer;
-import net.dries007.tfc.common.items.JavelinItem;
+import net.dries007.tfc.client.model.entity.JavelinModel;
 
-public class JavelinItemRenderer extends BlockEntityWithoutLevelRenderer
+/** Reload-owned native special renderer with the original TFC geometry and material. */
+public record JavelinItemRenderer(JavelinModel model, Identifier texture) implements NoDataSpecialModelRenderer
 {
-    private final Identifier textureLocation;
-    private final TridentModel model;
-
-    public JavelinItemRenderer(JavelinItem item)
+    @Override
+    public void submit(PoseStack poses, SubmitNodeCollector collector, int light, int overlay, boolean foil, int outline)
     {
-        super(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
-        this.model = new TridentModel(Minecraft.getInstance().getEntityModels().bakeLayer(RenderHelpers.layerId("javelin")));
-        this.textureLocation = ThrownJavelinRenderer.JAVELIN_TEXTURES.getOrDefault(item, ThrownJavelinRenderer.DEFAULT_TEXTURE);
+        poses.pushPose();
+        poses.scale(1, -1, -1);
+        collector.submitModelPart(model.root(), poses, model.renderType(texture), light, overlay, null, false, foil, -1, null, outline);
+        poses.popPose();
     }
 
     @Override
-    public void renderByItem(ItemStack stack, ItemDisplayContext transforms, PoseStack poseStack, MultiBufferSource buffers, int packedLight, int packedOverlay)
+    public void getExtents(Consumer<Vector3fc> output)
     {
-        poseStack.pushPose();
-        poseStack.scale(1.0F, -1.0F, -1.0F);
-        VertexConsumer buffer = ItemRenderer.getFoilBufferDirect(buffers, this.model.renderType(textureLocation), false, stack.hasFoil());
-        model.renderToBuffer(poseStack, buffer, packedLight, packedOverlay);
-        poseStack.popPose();
+        final PoseStack poses = new PoseStack();
+        poses.scale(1, -1, -1);
+        model.root().getExtentsForGui(poses, output);
+    }
+
+    public record Unbaked(Identifier texture) implements NoDataSpecialModelRenderer.Unbaked
+    {
+        public static final MapCodec<Unbaked> CODEC = Identifier.CODEC.fieldOf("texture").xmap(Unbaked::new, Unbaked::texture);
+        @Override public MapCodec<Unbaked> type() { return CODEC; }
+        @Override public JavelinItemRenderer bake(SpecialModelRenderer.BakingContext context)
+        {
+            return new JavelinItemRenderer(new JavelinModel(context.entityModelSet().bakeLayer(RenderHelpers.layerId("javelin"))), texture);
+        }
     }
 }

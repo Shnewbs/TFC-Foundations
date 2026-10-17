@@ -18,6 +18,7 @@ def main():
     empty.mkdir(exist_ok=True)
     sources = [
         'src/main/java/net/dries007/tfc/client/ItemRenderTint.java',
+        'src/main/java/net/dries007/tfc/client/BlockTintRegistration.java',
         'src/main/java/net/dries007/tfc/mixin/client/accessor/ItemStackRenderStateAccessor.java',
         'src/main/java/net/dries007/tfc/mixin/client/BreakingItemParticleMixin.java',
         'tools/porting/ClientRenderHookSmoke.java',
@@ -32,6 +33,20 @@ def main():
     run([str(java / 'javac'), '--release', '25', '-proc:none', '-classpath', cp,
          '-sourcepath', str(empty), '-d', str(classes), *sources])
     print(run([str(java / 'java'), '-ea', '-classpath', str(classes) + os.pathsep + cp, 'ClientRenderHookSmoke']).strip())
+    tint_indices = set()
+    def tints(value):
+        if isinstance(value, dict):
+            for key, child in value.items():
+                if key == 'tintindex': tint_indices.add(child)
+                else: tints(child)
+        elif isinstance(value, list):
+            for child in value: tints(child)
+    for root in ('src/main/resources/assets/tfc/models', 'src/generated/resources/assets/tfc/models'):
+        for path in Path(root).rglob('*.json'): tints(json.loads(path.read_text()))
+    assert tint_indices == {0, 1}, tint_indices
+    for path in ('soil/ConnectedGrassBlock.java', 'plant/KrummholzBlock.java'):
+        assert 'SNOWY = BlockStateProperties.SNOWY;' in (Path('src/main/java/net/dries007/tfc/common/blocks') / path).read_text()
+    assert 'Set.of(BlockStateProperties.SNOWY)' in Path('src/main/java/net/dries007/tfc/client/BlockTintRegistration.java').read_text()
     count = 0
     api = {}
     def inspect(name):

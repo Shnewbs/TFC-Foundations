@@ -7,9 +7,10 @@ structure and proves special legacy models are NOT silently flattened.
 import json
 from pathlib import Path
 import tempfile
+import math
 import unittest
 
-from generate_item_selectors import generate, has_legacy_tint, scan_models, native_layered_item
+from generate_item_selectors import generate, has_legacy_tint, scan_models, native_layered_item, native_special_item
 
 PROJECT = Path(__file__).resolve().parents[2]
 LEGACY = PROJECT / 'src/main/resources/assets/tfc/models/item'
@@ -22,11 +23,12 @@ class ItemSelectorGenerationTests(unittest.TestCase):
             report = Path(tmp) / 'report.json'
             s = generate(LEGACY, out, (), report)
             self.assertEqual(s['source_count'], 5614)
-            self.assertEqual(s['generated_count'], 5512)
-            self.assertEqual(s['generated_static_count'], 5386)
+            self.assertEqual(s['generated_count'], 5613)
+            self.assertEqual(s['generated_static_count'], 5317)
             self.assertEqual(s['generated_fixed_fluid_count'], 66)
             self.assertEqual(s['generated_layered_count'], 60)
-            self.assertEqual(s['manual_migration_count'], 102)
+            self.assertEqual(s['generated_special_count'], 170)
+            self.assertEqual(s['manual_migration_count'], 1)
             self.assertTrue(report.is_file())
             self.assertEqual(s, json.loads(report.read_text()))
             generated = list((out / 'assets/tfc/items').rglob('*.json'))
@@ -50,6 +52,8 @@ class ItemSelectorGenerationTests(unittest.TestCase):
                     })
                 elif model.get('loader') in ('tfc:fluid_container', 'tfc:trim'):
                     self.assertEqual(generated_model, {'type': model['loader'], 'parent': model['parent'], 'textures': model['textures']})
+                elif native_special_item(rel, model, LEGACY) is not None:
+                    self.assertEqual(generated_model, native_special_item(rel, model, LEGACY)['model'])
                 else:
                     self.assertEqual(generated_model, {
                         'type': 'minecraft:model', 'model': 'tfc:item/' + rel,
@@ -59,8 +63,61 @@ class ItemSelectorGenerationTests(unittest.TestCase):
                 self.assertFalse((out / 'assets/tfc/items' / (special + '.json')).exists())
             self.assertNotIn('wooden_bucket', s['manual_migrations'])
             self.assertNotIn('bucket/beer', s['manual_migrations'])
-            self.assertIn('overrides', s['manual_migrations']['powderkeg'])
+            self.assertNotIn('powderkeg', s['manual_migrations'])
             self.assertIn('tintindex', s['manual_migrations']['grass_inv'])
+
+    def test_predicate_and_context_semantics_match_originals(self):
+        contexts = ('none', 'gui', 'ground', 'fixed', 'head', 'firstperson_lefthand',
+                    'firstperson_righthand', 'thirdperson_lefthand', 'thirdperson_righthand')
+        properties = ('tfc:cast', 'tfc:throwing', 'tfc:damaged', 'tfc:sealed', 'tfc:heat', 'blocking')
+        values = (-1, 0, 0.001, 0.2999, 0.3, 0.3999, 0.4, 0.4999, 0.5, 0.7499, 0.75, 0.8999, 0.9, 0.9999, 1, 2)
+        checks = 0
+        def native(node, context, value):
+            if node['type'] == 'minecraft:range_dispatch':
+                branches = [e['model'] for e in node['entries'] if value >= e['threshold']]
+                return native(branches[-1] if branches else node['fallback'], context, value)
+            if node['type'] == 'minecraft:select':
+                return native(next((c['model'] for c in node['cases'] if c['when'] == context), node['fallback']), context, value)
+            if node['type'] == 'minecraft:special':
+                return node['base']
+            return node['model']
+        def legacy(identifier, model, context, value):
+            for override in reversed(model.get('overrides', [])):
+                if all(value >= v for v in override['predicate'].values()):
+                    target = override['model']
+                    if target.startswith('tfc:item/'):
+                        child = json.loads((LEGACY / (target.removeprefix('tfc:item/') + '.json')).read_text())
+                        return legacy(target, child, context, value)
+                    return target
+            if model.get('loader') == 'neoforge:separate_transforms':
+                target = model['perspectives'].get(context, model['base'])['parent']
+                child = json.loads((LEGACY / (target.removeprefix('tfc:item/') + '.json')).read_text())
+                return legacy(target, child, context, value)
+            return identifier
+        for path in LEGACY.rglob('*.json'):
+            model = json.loads(path.read_text())
+            if not model.get('overrides') and model.get('loader') != 'neoforge:separate_transforms':
+                continue
+            item = path.relative_to(LEGACY).with_suffix('').as_posix()
+            converted = native_special_item(item, model, LEGACY)
+            self.assertIsNotNone(converted, item)
+            for context in contexts:
+                for value in values:
+                    self.assertEqual(native(converted['model'], context, value), legacy('tfc:item/' + item, model, context, value), (item, context, value))
+                    checks += 1
+        self.assertEqual(checks, 14544)
+
+    def test_chest_and_javelin_specials_preserve_materials(self):
+        for path in LEGACY.glob('wood/*chest/*.json'):
+            item = path.relative_to(LEGACY).with_suffix('').as_posix()
+            node = native_special_item(item, json.loads(path.read_text()), LEGACY)['model']
+            self.assertEqual(node['base'], 'tfc:item/' + item)
+            kind = 'trapped' if '/trapped_chest/' in item else 'normal'
+            self.assertEqual(node['model'], {'type': 'minecraft:chest', 'texture': 'tfc:' + kind + '/' + path.stem})
+        for item, material in [('metal/javelin/copper_in_hand', 'copper'), ('stone/javelin/metamorphic_throwing_base', 'stone'), ('obsidian_javelin_in_hand', 'obsidian')]:
+            model = json.loads((LEGACY / (item + '.json')).read_text())
+            node = native_special_item(item, model, LEGACY)['model']
+            self.assertEqual(node['model'], {'type': 'tfc:javelin', 'texture': 'tfc:textures/entity/projectiles/' + material + '_javelin.png'})
 
     def test_multiple_runs_are_deterministic_and_remove_stale_generated_files(self):
         with tempfile.TemporaryDirectory() as tmp:

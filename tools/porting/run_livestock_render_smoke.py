@@ -87,7 +87,7 @@ def main():
     classes.mkdir(parents=True)
     empty.mkdir(exist_ok=True)
     models = [*contracts, 'TFCPigModel', 'TFCGoatModel']
-    sources = [MODELS / (name + '.java') for name in [*models, 'AgeableModelTransforms', 'LivestockModel', 'TFCCatModel']]
+    sources = [MODELS / (name + '.java') for name in [*models, 'AgeableModelTransforms', 'LivestockModel', 'TFCCatModel', 'DromedaryCamelModel']]
     sources += [STATE / (name + '.java') for name in ('TFCAnimalRenderState', 'TFCCatRenderState', 'LivestockRenderStateMath', 'GuideRenderState')]
     # These are the actual renderer classes, not simplified stand-ins.
     sources += [ROOT / 'render/entity' / (name + '.java') for name in ('TFCCodRenderer', 'TFCSalmonRenderer', 'TFCPufferfishRenderer', 'TFCTropicalFishRenderer')]

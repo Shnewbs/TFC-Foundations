@@ -56,6 +56,102 @@ def native_layered_item(model: dict) -> dict | None:
     return {'model': {'type': loader, 'parent': model['parent'], 'textures': textures}}
 
 
+
+REVIEWED_PROPERTIES = {'tfc:cast', 'tfc:throwing', 'tfc:damaged', 'tfc:sealed', 'tfc:heat', 'blocking'}
+DISPLAY_CONTEXTS = {'none', 'gui', 'ground', 'fixed', 'head', 'firstperson_lefthand',
+                    'firstperson_righthand', 'thirdperson_lefthand', 'thirdperson_righthand', 'tfc:placed_item'}
+
+
+def native_special_item(item_id: str, model: dict, source: Path, seen: frozenset[str] = frozenset()) -> dict | None:
+    """Convert the inspected legacy transforms/predicates without altering source models.
+
+    Every branch is a native ItemModel; built-in entity parents are never treated
+    as ordinary cuboid geometry. Unknown loaders/properties remain explicit gaps.
+    """
+    if item_id in seen:
+        raise ValueError(f'Cyclic special item model: {item_id}')
+    seen = seen | {item_id}
+
+    def reference(identifier):
+        if not isinstance(identifier, str):
+            return None
+        if identifier.startswith('tfc:item/'):
+            key = identifier.removeprefix('tfc:item/')
+            path = source / (key + '.json')
+            if not path.is_file():
+                return None
+            if path.is_file():
+                child = json.loads(path.read_text(encoding='utf-8'))
+                converted = native_special_item(key, child, source, seen)
+                if converted is not None:
+                    return converted['model']
+                if child.get('loader') or child.get('overrides'):
+                    return None
+        return {'type': 'minecraft:model', 'model': identifier}
+
+    if item_id == 'pan/filled' and model.get('parent') == 'tfc:item/entity_with_transforms':
+        return {'model': {'type': 'tfc:pan'}}
+    if (item_id.startswith(('wood/chest/', 'wood/trapped_chest/')) and
+            model.get('parent') in ('item/chest', 'minecraft:item/chest')):
+        folder = 'trapped' if item_id.startswith('wood/trapped_chest/') else 'normal'
+        return {'model': {'type': 'minecraft:special', 'base': 'tfc:item/' + item_id,
+                          'model': {'type': 'minecraft:chest', 'texture': f'tfc:{folder}/{item_id.split("/")[-1]}'}}}
+    if model.get('parent') in ('item/trident_in_hand', 'item/trident_throwing',
+                               'minecraft:item/trident_in_hand', 'minecraft:item/trident_throwing'):
+        if 'javelin' not in item_id:
+            return None
+        material = item_id.split('/')[-1].removesuffix('_in_hand').removesuffix('_throwing_base')
+        material = material if item_id.startswith('metal/javelin/') else 'obsidian' if item_id.startswith('obsidian_javelin') else 'stone'
+        return {'model': {'type': 'minecraft:special', 'base': 'tfc:item/' + item_id,
+                          'model': {'type': 'tfc:javelin', 'texture': f'tfc:textures/entity/projectiles/{material}_javelin.png'}}}
+
+    if model.get('loader') == 'neoforge:separate_transforms':
+        if not set(model).issubset({'__comment__', 'loader', 'base', 'perspectives', 'textures', 'gui_light', 'overrides'}):
+            return None
+        base, perspectives = model.get('base'), model.get('perspectives')
+        if not isinstance(base, dict) or set(base) != {'parent'} or not isinstance(perspectives, dict):
+            return None
+        fallback = reference(base['parent'])
+        if fallback is None:
+            return None
+        cases = []
+        for context, part in perspectives.items():
+            if context not in DISPLAY_CONTEXTS or not isinstance(part, dict) or set(part) != {'parent'}:
+                return None
+            child = reference(part['parent'])
+            if child is None:
+                return None
+            cases.append({'when': context, 'model': child})
+        result = {'type': 'minecraft:select', 'property': 'minecraft:display_context', 'cases': cases, 'fallback': fallback}
+    elif model.get('loader'):
+        return None
+    else:
+        result = {'type': 'minecraft:model', 'model': 'tfc:item/' + item_id}
+
+    overrides = model.get('overrides', [])
+    if overrides:
+        # Only one reviewed numeric property per model, with ascending thresholds,
+        # has the same last-match semantics as a native range select.
+        entries, property_id = [], None
+        for override in overrides:
+            if set(override) != {'predicate', 'model'} or len(override['predicate']) != 1:
+                return None
+            key, threshold = next(iter(override['predicate'].items()))
+            if key not in REVIEWED_PROPERTIES or (property_id is not None and key != property_id):
+                return None
+            if not isinstance(threshold, (int, float)) or (entries and threshold <= entries[-1]['threshold']):
+                return None
+            property_id = key
+            child = reference(override['model'])
+            if child is None:
+                return None
+            entries.append({'threshold': threshold, 'model': child})
+        result = {'type': 'minecraft:range_dispatch', 'property': 'tfc:blocking' if property_id == 'blocking' else property_id,
+                  'entries': entries, 'fallback': result}
+    elif model.get('loader') != 'neoforge:separate_transforms':
+        return None
+    return {'model': result}
+
 def has_legacy_tint(model: object) -> bool:
     """Older built-in model face tint-index cannot be inferred from an item key."""
     if isinstance(model, dict):
@@ -72,6 +168,7 @@ def scan_models(source: Path, authored_roots: tuple[Path, ...]):
     skipped: dict[str, list[str]] = {}
     generated_fluid_count = 0
     generated_layered_count = 0
+    generated_special_count = 0
     for original in sorted(source.rglob('*.json')):
         if original.is_symlink():
             raise ValueError(f'Unexpected symlink in legacy item models: {original}')
@@ -85,7 +182,8 @@ def scan_models(source: Path, authored_roots: tuple[Path, ...]):
             reasons.append('existing_selector')
         fluid_definition = native_fixed_fluid_container(model)
         layered_definition = native_layered_item(model)
-        if fluid_definition is None and layered_definition is None:
+        special_definition = native_special_item(item_id, model, source)
+        if fluid_definition is None and layered_definition is None and special_definition is None:
             reasons.extend(sorted(MODEL_KEYS_REQUIRING_MIGRATION.intersection(model)))
         if has_legacy_tint(model):
             reasons.append('tintindex')
@@ -98,14 +196,17 @@ def scan_models(source: Path, authored_roots: tuple[Path, ...]):
         elif layered_definition is not None:
             definition = layered_definition
             generated_layered_count += 1
+        elif special_definition is not None:
+            definition = special_definition
+            generated_special_count += 1
         else:
             definition = {'model': {'type': 'minecraft:model', 'model': f'tfc:item/{item_id}'}}
         desired[relative] = json.dumps(definition, indent=2) + '\n'
-    return desired, skipped, generated_fluid_count, generated_layered_count
+    return desired, skipped, generated_fluid_count, generated_layered_count, generated_special_count
 
 
 def generate(source: Path, output: Path, authored_roots: tuple[Path, ...], report: Path | None):
-    desired, skipped, generated_fluid_count, generated_layered_count = scan_models(source, authored_roots)
+    desired, skipped, generated_fluid_count, generated_layered_count, generated_special_count = scan_models(source, authored_roots)
     items_root = output / 'assets' / 'tfc' / 'items'
     if output.resolve() == source.resolve() or source.resolve().is_relative_to(output.resolve()):
         raise ValueError('Output must not overwrite the source model directory')
@@ -127,7 +228,8 @@ def generate(source: Path, output: Path, authored_roots: tuple[Path, ...], repor
     summary = {
         'source_count': len(desired) + len(skipped),
         'generated_count': len(desired),
-        'generated_static_count': len(desired) - generated_fluid_count - generated_layered_count,
+        'generated_static_count': len(desired) - generated_fluid_count - generated_layered_count - generated_special_count,
+        'generated_special_count': generated_special_count,
         'generated_fixed_fluid_count': generated_fluid_count,
         'generated_layered_count': generated_layered_count,
         'manual_migration_count': len(skipped),
@@ -136,9 +238,9 @@ def generate(source: Path, output: Path, authored_roots: tuple[Path, ...], repor
     if report is not None:
         report.parent.mkdir(parents=True, exist_ok=True)
         report.write_text(json.dumps(summary, indent=2, sort_keys=True) + '\n', encoding='utf-8')
-    print(f"Generated {len(desired) - generated_fluid_count - generated_layered_count} static and "
+    print(f"Generated {len(desired) - generated_fluid_count - generated_layered_count - generated_special_count} static and "
           f"{generated_fluid_count} native fixed-fluid TFC item definitions; "
-          f"{generated_layered_count} native TFC fluid/trim definitions; {len(skipped)} models still need 26.x adapters.")
+          f"{generated_layered_count} native TFC fluid/trim definitions; {generated_special_count} native special/predicate definitions; {len(skipped)} models still need 26.x adapters.")
     return summary
 
 

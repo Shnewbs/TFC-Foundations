@@ -64,6 +64,7 @@ public final class LivestockRenderSmoke
             }
             System.out.println("PASS livestock model: " + name);
         }
+        testCamel();
         testCat();
         testTransforms();
         testSnapshotMath();
@@ -71,6 +72,50 @@ public final class LivestockRenderSmoke
         System.out.printf("PASS: %d livestock/cat models; %d scenarios; %d assertions; %d finite CPU vertices.%n",
             names.length + 1, scenarios, assertions, vertices);
         System.out.println("NOT RUN: live entity extraction, renderer construction, GPU drawing, client/server or gameplay.");
+    }
+
+    private static void testCamel()
+    {
+        final var model = new DromedaryCamelModel(net.minecraft.client.model.animal.camel.AdultCamelModel.createBodyLayer().bakeRoot());
+        final var reference = new net.minecraft.client.model.animal.camel.AdultCamelModel(net.minecraft.client.model.animal.camel.AdultCamelModel.createBodyLayer().bakeRoot());
+        for (int mode = 0; mode < 32; mode++)
+        {
+            final var state = state(mode);
+            state.yRot = -90 + mode * 6;
+            state.xRot = -50 + mode * 4;
+            state.camelJumpCooldown = mode * 2;
+            state.ageInTicks = 30 + mode;
+            state.sitAnimationState.startIfStopped(2);
+            state.sitPoseAnimationState.startIfStopped(3);
+            state.sitUpAnimationState.startIfStopped(4);
+            state.idleAnimationState.startIfStopped(5);
+            state.dashAnimationState.startIfStopped(6);
+            final var nativeState = new net.minecraft.client.renderer.entity.state.CamelRenderState();
+            nativeState.yRot = state.yRot;
+            nativeState.xRot = state.xRot;
+            nativeState.jumpCooldown = state.camelJumpCooldown;
+            nativeState.ageInTicks = state.ageInTicks;
+            nativeState.walkAnimationPos = state.walkAnimationPos;
+            nativeState.walkAnimationSpeed = state.walkAnimationSpeed;
+            nativeState.sitAnimationState.copyFrom(state.sitAnimationState);
+            nativeState.sitPoseAnimationState.copyFrom(state.sitPoseAnimationState);
+            nativeState.sitUpAnimationState.copyFrom(state.sitUpAnimationState);
+            nativeState.idleAnimationState.copyFrom(state.idleAnimationState);
+            nativeState.dashAnimationState.copyFrom(state.dashAnimationState);
+            reference.setupAnim(nativeState);
+            model.setupAnim(state);
+            equalPose(pose(reference), pose(model), "native camel pose " + mode);
+            draw(model, "dromedary camel");
+            model.setupAnim(state(0));
+            reference.setupAnim(new net.minecraft.client.renderer.entity.state.CamelRenderState());
+            // Compare a clean state with identical native motion inputs after animated reuse.
+            final var clean = new TFCAnimalRenderState();
+            model.setupAnim(clean);
+            equalPose(pose(reference), pose(model), "camel reset " + mode);
+            state.resetCustomState();
+            require(state.camelJumpCooldown == 0 && !state.sitAnimationState.isStarted(), "camel snapshot reset");
+        }
+        System.out.println("PASS: 32 TFC/native camel pose, reuse, timeline and CPU geometry scenarios.");
     }
 
     private static TFCAnimalRenderState state(int mask)

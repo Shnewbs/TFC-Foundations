@@ -18,6 +18,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class TFCAnimalRenderState extends LivingEntityRenderState
 {
+    public float camelJumpCooldown;
     public double movementLengthSqr;
     public int telegraphAttackTick;
     public boolean telegraphingAttack;
@@ -64,6 +65,7 @@ public class TFCAnimalRenderState extends LivingEntityRenderState
     /** Clear custom data before reusing this state for another extraction. */
     public void resetCustomState()
     {
+        camelJumpCooldown = 0;
         movementLengthSqr = 0;
         telegraphAttackTick = 0;
         telegraphingAttack = false;

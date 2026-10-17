@@ -24,6 +24,16 @@ public final class ClientRenderHookSmoke
 
     public static void main(String[] args) throws Exception
     {
+        final var snow = java.util.Set.<net.minecraft.world.level.block.state.properties.Property<?>>of(net.minecraft.world.level.block.state.properties.BooleanProperty.create("snowy"));
+        final net.dries007.tfc.client.BlockTintRegistration.Color callback = (block, level, pos, index) -> pos == null ? 0x112233 + index : 0x445566 + index;
+        for (int index = 0; index < 2; index++)
+        {
+            final var source = new net.dries007.tfc.client.BlockTintRegistration.Layer(callback, index, snow);
+            check(source.color(null) == (0xFF112233 + index));
+            check(source.colorInWorld(null, null, net.minecraft.core.BlockPos.ZERO) == (0xFF445566 + index));
+            check(source.colorAsTerrainParticle(null, null, net.minecraft.core.BlockPos.ZERO) == (0xFF445566 + index));
+            check(source.relevantProperties().equals(snow));
+        }
         final State state = new State();
         final var layersField = ItemStackRenderState.class.getDeclaredField("layers");
         final var countField = ItemStackRenderState.class.getDeclaredField("activeLayerCount");
@@ -59,6 +69,16 @@ public final class ClientRenderHookSmoke
             check(ItemRenderTint.firstColor(layers, countField.getInt(state)) == -1);
             check(first.tintLayers().isEmpty() && last.tintLayers().isEmpty());
         }
+        state.clear(); state.identities.clear();
+        final var vegetation = state.newLayer();
+        final var layers = (ItemStackRenderState.LayerRenderState[]) layersField.get(state);
+        ItemRenderTint.tintLastUncoloredLayer(state, layers, 1, 0xFF112233, -1);
+        check(vegetation.tintLayers().equals(it.unimi.dsi.fastutil.ints.IntList.of(0xFF112233, -1)));
+        check(state.identities.equals(List.of(0xFF112233, -1)));
+        ItemRenderTint.tintLastUncoloredLayer(state, layers, 1, 0xFF554433, 0xFF554433);
+        check(vegetation.tintLayers().getInt(0) == 0xFF112233 && state.identities.size() == 2);
+        state.clear();
+        check(vegetation.tintLayers().isEmpty());
         System.out.println("PASS " + checks + " native tint-layer identity/default/non-overwrite/reuse and accessor checks; no game or transformed Mixin startup.");
     }
 }

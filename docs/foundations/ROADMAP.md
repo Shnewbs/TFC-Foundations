@@ -1,5 +1,7 @@
 # Port milestones and release gates
 
+Current 26.1.2 checkpoint (2026-10-17): **93 → 44 main compiler errors** in pinned Gradle and diagnostic Java 25; native item predicates/special models and two-layer block/item tint handling migrated. Generated native definitions cover 5,613/5,614 legacy item-model files (one `grass_inv` helper remains). CPU selector/tint/camel checks and resource/license/dependency gates pass; packaging and all runtime/playability gates remain blocked. See the first project-status/work-log entry for exact evidence and limits.
+
 Pending unless PROJECT_STATUS.md explicitly records completion. Prioritize a playable 26.1.2 alpha while maintaining a separate 26.3 foundation for released 26.4 with a usable matching toolchain. Never broaden version ranges to claim untested compatibility.
 
 | Milestone | Deliverable | Exit evidence |

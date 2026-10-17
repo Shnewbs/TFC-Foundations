@@ -20,14 +20,17 @@ public final class ItemRenderTint
         return tints.isEmpty() ? -1 : tints.getInt(0);
     }
 
-    public static void tintLastUncoloredLayer(ItemStackRenderState state, ItemStackRenderState.LayerRenderState[] layers, int count, int color)
+    public static void tintLastUncoloredLayer(ItemStackRenderState state, ItemStackRenderState.LayerRenderState[] layers, int count, int... colors)
     {
         if (count == 0) return;
         final var tints = layers[count - 1].tintLayers();
         if (tints.isEmpty())
         {
-            tints.add(color);
-            state.appendModelIdentityElement(color);
+            for (int color : colors)
+            {
+                tints.add(color);
+                state.appendModelIdentityElement(color);
+            }
         }
     }
 }
