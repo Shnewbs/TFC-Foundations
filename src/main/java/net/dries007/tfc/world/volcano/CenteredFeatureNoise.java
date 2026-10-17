@@ -138,15 +138,6 @@ public class CenteredFeatureNoise
                 return biome.hasCinderCones();
             }
 
-            public double maxSafeDiameter(Cellular2D.Cell cell, int x, int z)
-            {
-                // This step is necessary because the exact center of a cell is not aligned with the exact center of a block
-                // Which causes the sampled position to be on one side of the center, and potentially closer to a different cell
-                final int deltaX = x - (int) cell.x();
-                final int deltaZ = z - (int) cell.y();
-                return cellNoise.cell(Math.signum(deltaX), Math.signum(deltaZ)).f2();
-            }
-
             /**
              * Calculate the center of the nearest volcano, if one exists, to the given x, z, at the given y.
              */
@@ -155,7 +146,9 @@ public class CenteredFeatureNoise
             public BlockPos calculateCenter(int x, int y, int z, float frequency)
             {
                 final Cellular2D.Cell cell = cellNoise.cell(x, z);
-                if (checkCellRarity(cell, frequency) & maxSafeDiameter(cell, x, z) > 0.46)
+                // Use this cone's local clearance, independent of the caller's
+                // direction and the unrelated cellular spacing at world origin.
+                if (checkCellRarity(cell, frequency) && maxSafeDiameterSquared(cell, cellNoise) > 0.46)
                 {
                     return new BlockPos((int) cell.x(), y, (int) cell.y());
                 }

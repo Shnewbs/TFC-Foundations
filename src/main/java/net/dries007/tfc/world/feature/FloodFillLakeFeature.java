@@ -50,9 +50,11 @@ public class FloodFillLakeFeature extends Feature<FloodFillLakeConfig>
         final Set<BlockPos> filled = new HashSet<>();
         final BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
 
-        // First, make sure we're currently at the lowest point in the column.
+        // Find the basin floor through both air and fluids this feature replaces.
+        // Stopping on existing water starts the fill above its contained surface,
+        // where the first layer can spill out and incorrectly abort replacement.
         mutablePos.set(pos);
-        while (worldIn.isEmptyBlock(mutablePos) && mutablePos.getY() > 11)
+        while (mutablePos.getY() > 11 && isFloodFillable(worldIn.getBlockState(mutablePos), config))
         {
             mutablePos.move(0, -1, 0);
         }

@@ -1,0 +1,137 @@
+{
+  "date": "2026-10-17",
+  "branch": "26.1.2",
+  "parent_commit": "a79b5faa3247f0d025db65b3ed40826f32849244",
+  "report": {
+    "image": "2026-10-17_11.55.22.png",
+    "sha256": "07835deef1d41ec1764ead48799070ea6102eea3a828a53bd22d9bc014b1ce33",
+    "visible_block_position": [
+      -1627,
+      161,
+      -912
+    ],
+    "seed": "not provided; no exact-world reproduction claimed",
+    "observation": "Water visible in a small magma-decorated basalt cone; consistent with the cinder-cone feature family."
+  },
+  "fixes": [
+    {
+      "class": "CenteredFeatureNoise.cinder",
+      "defect": "Clearance used signum(deltaX/Z) as absolute world coordinates, sampling near origin instead of near the volcano. This could suppress isolated crater decoration or accept crowded cones.",
+      "change": "Use the existing center-relative maxSafeDiameterSquared helper, retain the 0.46 cutoff and rarity/biome policies, and short-circuit disabled frequencies. Height/shape formulas and cone distribution are unchanged."
+    },
+    {
+      "class": "FloodFillLakeFeature.place",
+      "defect": "The downward floor search stopped on replacement water. Initial filling began above a full pool, where the next layer may escape the bounding area and abort replacement.",
+      "change": "Descend through the existing fillability predicate, including only fluids permitted by the configuration, before starting the bounded fill. Minimum size, limits, border checks, configured fluid and scheduled fluid updates remain."
+    }
+  ],
+  "validation": {
+    "minecraft": "26.1.2",
+    "neoforge": "26.1.2.114",
+    "user_reported_neoforge": "26.1.2.122",
+    "java": "Eclipse Temurin 25.0.4.1+1",
+    "gradle": "9.2.1",
+    "command": "gradle -I <host-neoform-fallback> -I <official-fml-agent-init> build --no-daemon --no-configuration-cache --console=plain",
+    "full_build_exit": 0,
+    "duration": "1m 2s",
+    "junit": {
+      "tests": 248,
+      "skipped": 12,
+      "failures": 0,
+      "errors": 0
+    },
+    "license_and_pinned_dependency_checks": "passed",
+    "focused_before": [
+      {
+        "suite": "FloodFillLakeFeatureTest",
+        "counts": {
+          "tests": 6,
+          "skipped": 0,
+          "failures": 2,
+          "errors": 0
+        },
+        "failed_tests": [
+          {
+            "name": "waterFilledCalderaReachesTheFloorAndReplacesTheEntirePool()",
+            "message": "org.opentest4j.AssertionFailedError: expected: <true> but was: <false>"
+          },
+          {
+            "name": "waterReplacementAlsoWorksAcrossNegativeChunkBoundaries()",
+            "message": "org.opentest4j.AssertionFailedError: BlockPos{x=-16, y=0, z=-17} ==> expected: <true> but was: <false>"
+          }
+        ]
+      },
+      {
+        "suite": "CinderConePlacementTest",
+        "counts": {
+          "tests": 3,
+          "skipped": 0,
+          "failures": 2,
+          "errors": 0
+        },
+        "failed_tests": [
+          {
+            "name": "crowdedConesAreNotAcceptedBecauseWorldOriginIsClear()",
+            "message": "org.opentest4j.AssertionFailedError: Crowded cone accepted at seed=4, x=-2048, z=-1024 ==> expected: <null> but was: <BlockPos{x=-2017, y=123, z=-1045}>"
+          },
+          {
+            "name": "isolatedConesAreNotSuppressedByCrowdingAtWorldOrigin()",
+            "message": "org.opentest4j.AssertionFailedError: Isolated cone suppressed at seed=0, x=-2048, z=-1536 ==> expected: <BlockPos{x=-2039, y=123, z=-1526}> but was: <null>"
+          }
+        ]
+      }
+    ],
+    "focused_after": [
+      {
+        "suite": "FloodFillLakeFeatureTest",
+        "counts": {
+          "tests": 6,
+          "skipped": 0,
+          "failures": 0,
+          "errors": 0
+        },
+        "failed_tests": []
+      },
+      {
+        "suite": "CinderConePlacementTest",
+        "counts": {
+          "tests": 3,
+          "skipped": 0,
+          "failures": 0,
+          "errors": 0
+        },
+        "failed_tests": []
+      }
+    ],
+    "fixture_scope": "Production FloodFillLakeFeature.place with actual native block/fluid states and the decoded authored caldera configuration, against a bounded WorldGenLevel proxy. Production cinder noise/center selection uses fixed seeds and native cellular samples. This is not a generated Minecraft world.",
+    "covered": [
+      "363-block contained water pool becomes configured lava",
+      "Dry crater lava and configured water generation",
+      "No placement or scheduled ticks for an uncontained basin",
+      "Water configuration cannot replace unlisted lava",
+      "Negative positions and chunk boundaries",
+      "Isolated cones near crowded origin cells and crowded cones near isolated origin cells",
+      "Disabled frequency preserves no-decoration behavior"
+    ],
+    "noise_sample_policy": "Seeds 0 through 31, 9 by 9 world-coordinate grid from -2048 through 2048; assertions select cells clearly outside the clearance threshold margin. Frequency-zero test uses a 17 by 17 grid.",
+    "assets_and_datapacks": "No resource, registry ID, generator or dependency changes; resource validation was not rerun. Full resource validation and graphical reload passed at the preceding checkpoint.",
+    "packaged_production_classes_match_tested_outputs": {
+      "net/dries007/tfc/world/feature/FloodFillLakeFeature.class": "09f0e69bfb6d6820cbb830a843f31193152a76501aa8eeab9006e4d6650a576c",
+      "net/dries007/tfc/world/volcano/CenteredFeatureNoise$1.class": "44f68e28c098cc771fdafffc4499be5069ab0cea6fda78626e1387e710034594"
+    },
+    "eight_authored_lake_configurations_match_packaged_bytes": true
+  },
+  "artifact": {
+    "filename": "TFC-Foundations-26.1.2-0.0.0.jar",
+    "bytes": 68844062,
+    "sha256": "1056e8d0be2479c550a912699092a9dc5b26a20a8e59b83b7ba2d1e34162f175"
+  },
+  "limits": [
+    "No exact-seed recreation or in-game new-crater screenshot for this report.",
+    "No new full graphical startup/world-generation/save/restart/multiplayer/survival test in this checkpoint.",
+    "Existing generated cones are not modified. Test new chunks or a separate fresh world.",
+    "Intentional Crater Lake/Kelimutu water or spring-water features are retained; this does not turn every volcanic lake into lava.",
+    "Earlier live server data/component-binding and remaining legacy asset warnings remain open.",
+    "Terralith-compatible feature integration remains an explicit separate requirement and is not enabled by these fixes."
+  ]
+}

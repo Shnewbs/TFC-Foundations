@@ -1,5 +1,46 @@
 # Continue development in another environment
 
+## 2026-10-17 UTC — Cinder-cone lava placement and flooded crater replacement
+
+The uploaded `2026-10-17_11.55.22.png` shows water in a small basalt cone with
+magma decorations near block -1627, 161, -912. No seed was supplied, so this
+checkpoint does not claim a matching-world visual reproduction. Source review
+and before/after native regressions confirm two defects consistent with it.
+
+Cinder-cone clearance was sampling near world origin rather than the cone's own
+center. This could skip lava decoration on isolated cones and accept crowded
+ones based on unrelated terrain. It now uses the existing center-relative
+clearance helper. The cutoff, biome/rarity policies, cone shape, height and
+distribution stay unchanged. Disabled frequencies still yield no centers.
+
+The shared flood-fill feature also stopped its floor search on water it was
+configured to replace. It then tried to start above the contained pool, where
+the next layer can spill beyond its bounds and abort. It now finds the floor
+through the existing permitted-fill predicate. The configured fluid, 3x3-chunk
+boundary, minimum size and fluid-update scheduling remain. Ordinary water
+features and intentional volcanic crater lakes/springs are retained.
+
+Before repair, **4 of 9 new tests fail**: two flooded-crater cases and two local
+clearance cases. After repair, **all 9 pass**. Full pinned Java 25/NeoForge
+26.1.2.114 build passes in 1m 2s: **236 passed, 12 existing skips, zero failures
+or errors**. Native feature fixtures verify a complete 363-block replacement,
+dry lava/water configurations, negative chunk boundaries and no writes/ticks
+for an uncontained basin. Deterministic cinder-noise checks cover local versus
+origin clearance and disabled frequency. These are actual production feature
+and noise calls in native fixtures, not a completed in-game world test.
+
+JAR SHA-256: `1056e8d0be2479c550a912699092a9dc5b26a20a8e59b83b7ba2d1e34162f175` (68,844,062 bytes).
+The two changed production classes match their tested compiled bytes in the
+JAR, and eight authored lake configurations match the packaged resources.
+Details: `validation/2026-10-17-volcano-crater-fluids.json`.
+No resource IDs, assets, dependency pins or candidate version change. Existing
+chunks are untouched; check newly generated cones in a separate fresh world.
+Exact-world appearance, full new-world/save/restart/survival and the earlier
+live server reload limits remain open. The user reported NeoForge 26.1.2.122;
+this build tests pinned 26.1.2.114. TFC + compatible Terralith additions remain
+required and separate from this repair. Publish on existing `26.1.2` with
+`[skip ci]`; the independent `26.x` branch is unchanged.
+
 ## 2026-10-17 UTC — Seasonal foliage, groundcover atlases and terrain density
 
 The three uploaded screenshots now supply the missing visual evidence: seasonal
