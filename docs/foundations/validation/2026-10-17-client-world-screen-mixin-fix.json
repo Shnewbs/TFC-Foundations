@@ -1,0 +1,31 @@
+{
+  "reported_failure": "CreateWorldScreenMixin.changeDefaultWorldType: required Redirect injection matched 0/1 targets",
+  "fix": "Select the three-argument openFresh overload by its complete JVM method descriptor; retain the required redirect and TFC default preset.",
+  "baseline_client_probe": "Exact user failure reproduced with real FML CLIENT loader and required Mixins.",
+  "fixed_client_probe": {
+    "target_classes_loaded": 23,
+    "optional_sodium": "not tested; dependency absent",
+    "world_window_opened": false
+  },
+  "full_gradle_build": {
+    "result": "BUILD SUCCESSFUL",
+    "seconds": 39,
+    "junit": {
+      "tests": 227,
+      "skipped": 12,
+      "failures": 0,
+      "errors": 0
+    }
+  },
+  "jar": {
+    "name": "TFC-Foundations-26.1.2-0.0.0.jar",
+    "bytes": 69055012,
+    "sha256": "ffa0b4fb916eb2c487e602def8a88754c6ea3bab2414273ec936c6e88a0c8e38"
+  },
+  "reported_neoforge": "26.1.2.122",
+  "tested_neoforge": "26.1.2.114",
+  "limits": [
+    "Mixin class transformation is verified; full graphical startup/world creation/gameplay are not.",
+    "Known live world-data component-binding errors remain open."
+  ]
+}

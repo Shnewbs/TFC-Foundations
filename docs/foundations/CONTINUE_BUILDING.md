@@ -1,5 +1,32 @@
 # Continue development in another environment
 
+## 2026-10-17 UTC — Required world-creation client Mixin repaired
+
+Reproduced the uploaded `CreateWorldScreenMixin.changeDefaultWorldType` crash
+using the real FML **CLIENT** transforming classloader. The unqualified
+`openFresh` selector chose the overload that does not read `WorldPresets.NORMAL`.
+The redirect now specifies the complete three-argument method descriptor.
+The required injection and TFC default world preset behavior remain intact;
+no `require=0`, hook removal or dummy implementation is used.
+
+The real client transformation check fails with the exact reported exception
+before the change and passes after it. A broader pass loads **23 installed
+client Mixin target classes**, including the world screen and Patchouli book;
+optional Sodium is not tested because it is absent. Full pinned Java 25
+Gradle build passes in 39 seconds: **215 tests passed, 12 skipped**, no failures/errors.
+The previous server-side JUnit environment did not apply client Mixins; the
+new `tools/porting/run_client_mixin_smoke.py` exercises that separate gate.
+Run it after building classes and generating `port-diagnostics/classpath.txt`;
+use `--all-client-targets` and, on this restricted host, the documented
+`--fml-agent` argument. It opens no game window and creates no world.
+
+Rebuilt JAR SHA-256: `ffa0b4fb916eb2c487e602def8a88754c6ea3bab2414273ec936c6e88a0c8e38`.
+Detailed results: `validation/2026-10-17-client-world-screen-mixin-fix.json`.
+Reported on NeoForge 26.1.2.122; compiled and transformed against pinned
+26.1.2.114. Full graphical startup and world/gameplay validation remain open,
+including the preceding checkpoint's live component-binding/world-data issues.
+Dependency pins, candidate 0.0.0 and branch policy remain unchanged.
+
 ## 2026-10-17 UTC — Client colormap reload registration crash fixed
 
 Fixed the client crash reported on NeoForge 26.1.2.122: normal and summer

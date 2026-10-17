@@ -19,7 +19,7 @@ import net.dries007.tfc.TerraFirmaCraft;
 @Mixin(CreateWorldScreen.class)
 public abstract class CreateWorldScreenMixin
 {
-    @Redirect(method = "openFresh", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/levelgen/presets/WorldPresets;NORMAL:Lnet/minecraft/resources/ResourceKey;", opcode = Opcodes.GETSTATIC))
+    @Redirect(method = "openFresh(Lnet/minecraft/client/Minecraft;Ljava/lang/Runnable;Lnet/minecraft/client/gui/screens/worldselection/CreateWorldCallback;)V", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/levelgen/presets/WorldPresets;NORMAL:Lnet/minecraft/resources/ResourceKey;", opcode = Opcodes.GETSTATIC))
     private static ResourceKey<WorldPreset> changeDefaultWorldType()
     {
         // This selects the default UI element (which annoying, is not actually queried to create the default dimensions)
