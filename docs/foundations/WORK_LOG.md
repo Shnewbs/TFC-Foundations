@@ -1,5 +1,55 @@
 # TFC Foundations — Work Log
 
+## 2026-10-17 UTC — Seasonal foliage, groundcover atlases and terrain density
+
+The three uploaded screenshots now supply the missing visual evidence: seasonal
+foliage/ground plants show missing-model cubes, and terrain has abrupt walls.
+Inline seasonal alternatives now explicitly declare their parent dependencies;
+the native default dependency hook does not do this for CuboidModel children.
+All original model IDs, seasonal geometry, tint rules and blockstates remain.
+Native discovery resolves all four white-cedar parents and their geometry and
+particle materials. A real client reload also exposed 17 item sprites used by
+placed ores, groundcover and a fern. TFC-owned sprites now resolve exclusively
+to the blocks atlas; three vanilla images use runtime aliases with unchanged artwork. Generators and native
+resource-manager regression tests cover the atlas policy.
+
+River density composition was retaining the full incoming value and adding a
+weighted replacement, counting it twice. The production helper now starts at
+zero. Three regression tests fail before and pass after, including no-river
+identity and complete/partial river replacement. This repairs a confirmed
+generation defect; it does not establish that every photographed wall is fixed.
+Existing chunks are unchanged. Compare fresh worlds and new-chunk borders.
+
+Pinned NeoForge 26.1.2.114/Java 25 full build passes: **227 tests passed,
+12 existing skips, zero failures/errors**. Resource validation and the focused
+seasonal API runner pass (178 model definitions; 245 dynamic references).
+The real graphical client now completes resource reload and fatal model
+self-tests: TFC block-model atlas rejections fall from 256 to zero. All 413
+mixed-atlas item failures per reload also disappear. Namespace-restricted
+TFC item discovery and an items-atlas filter keep materials together without
+collecting other mods' item textures; three vanilla groundcover sprite aliases
+preserve vanilla's native item atlas. Resource-pack priority and namespace tests
+pass. Legacy model/reference warnings remain; this is not a zero-warning client.
+The resource check no longer creates item stacks before components bind. The retained creative/translation check runs on
+native client component binding and has not yet been exercised after world join.
+
+JAR SHA-256: `2bd97d82fab9442f41de022d79ed55bfe166306e23b588e56c5fa50d9057cce3` (68,844,200 bytes).
+Exact evidence and limits: `validation/2026-10-17-foliage-terrain-fix.json`.
+This host uses Eclipse Temurin 25.0.4.1+1, Gradle 9.2.1, the documented host-only
+NeoForm/FML adaptations and Mesa software OpenGL under Xvfb. Dependency pins and
+candidate 0.0.0 remain unchanged. The report was on NeoForge 26.1.2.122; this
+does not claim that loader combination was tested. Live world appearance,
+terrain traversal, dedicated-server data reload, save/restart and survival
+remain open. The bounded client is intentionally stopped after resource checks.
+
+**TFC + Terralith requirement retained:** keep TFC geology/ores, climate,
+hydrology, ecology and progression; add features TFC lacks through an original
+compatibility layer. The separate Terralith 2.6.2 artifact has been audited for
+collisions, generator resources and ore palettes. No third-party pack is copied
+into TFC, no dependency is added, and no hybrid features are enabled by this
+repair. See `TFC_TERRALITH.md` and the audit JSON for feature ownership and runtime
+gates. Publish directly on existing `26.1.2` with `[skip ci]`; `26.x` is unchanged.
+
 ## 2026-10-17 UTC — Rabbit temptation crash and native asset references repaired
 
 The uploaded integrated-server report reaches a world and then crashes in

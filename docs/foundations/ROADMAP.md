@@ -1,6 +1,6 @@
 # Port milestones and release gates
 
-Current 26.1.2 checkpoint (2026-10-17): **zero main compiler errors**; complete pinned build, packaging, data generation, resource/license/dependency checks and all 36 API runners pass. JUnit: 214 passed, 12 existing skips. All 6,243 active recipe resources decode in the bound-registry fixture. Normal server reload still fails live item/fluid component timing and fatal self-tests; client launch needs graphics. No playable release or completed world/survival test. See the first project-status/work-log entry for exact evidence and limits.
+Current 26.1.2 checkpoint (2026-10-17): zero main compiler errors; full pinned build and resource validation pass, with **227 tests passed and 12 existing skips**. Real graphical resource reload and fatal model self-tests pass after seasonal-parent and block-atlas repairs. A confirmed river-density double count is corrected. New-world visual checks and live server data/component reload gates remain open. TFC plus compatible Terralith additions are required, audited and documented in `TFC_TERRALITH.md`; the hybrid feature layer is not yet implemented. See the latest project-status/work-log entry and validation JSON for exact evidence and limits.
 
 Pending unless PROJECT_STATUS.md explicitly records completion. Prioritize a playable 26.1.2 alpha while maintaining a separate 26.3 foundation for released 26.4 with a usable matching toolchain. Never broaden version ranges to claim untested compatibility.
 
@@ -13,6 +13,10 @@ Pending unless PROJECT_STATUS.md explicitly records completion. Prioritize a pla
 | 4 — Building/art | Optional Conquest compatibility and coherent material palette | Permissions/versions recorded, tool/recipe/support balance checked, dense-build profiling |
 | 5 — Release | Verified candidate with matching source | GitHub and Foundations CurseForge artifacts/checksums match; gates below pass |
 | 6 — 26.4 | Port from a known good checkpoint | Build/runtime/performance suite, migration notes and dependency verification |
+
+## Compatible terrain expansion
+
+Retain all TFC features and add Terralith capabilities that fill actual gaps. Extend TFC's generator through an original compatibility layer, with TFC materials, climate, hydrology and progression. See `TFC_TERRALITH.md`; audit-only status is not implementation or runtime compatibility.
 
 ## Version policy
 

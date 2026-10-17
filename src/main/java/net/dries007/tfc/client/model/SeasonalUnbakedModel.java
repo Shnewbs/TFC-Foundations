@@ -51,7 +51,13 @@ public final class SeasonalUnbakedModel extends AbstractUnbakedModel implements 
     public void resolveDependencies(ResolvableModel.Resolver resolver)
     {
         if (parent() != null) resolver.markDependency(parent());
-        alternatives.forEach(model -> model.resolveDependencies(resolver));
+        for (UnbakedModel model : alternatives)
+        {
+            // Inline parents are not discovered by the outer model's parent walk.
+            // The native default resolveDependencies hook only handles extra dependencies.
+            if (model.parent() != null) resolver.markDependency(model.parent());
+            model.resolveDependencies(resolver);
+        }
     }
 
     @Override

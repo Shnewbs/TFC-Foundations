@@ -277,6 +277,7 @@ public final class ClientEventHandler
         bus.addListener(ClientForgeEventHandler::registerDebugEntries);
         bus.addListener(ClientEventHandler::registerMenuScreens);
         bus.addListener(ClientEventHandler::registerModelLoaders);
+        bus.addListener(ClientEventHandler::registerSpriteSources);
         bus.addListener(TFCItemProperties::register);
         bus.addListener(ClientEventHandler::registerSpecialRenderers);
         bus.addListener(BlockModelRegistration::registerLoaders);
@@ -638,6 +639,11 @@ public final class ClientEventHandler
     private static void register(ModelEvent.RegisterStandalone event, Identifier id)
     {
         StandaloneBlockModels.register(event, id);
+    }
+
+    public static void registerSpriteSources(net.neoforged.neoforge.client.event.RegisterSpriteSourcesEvent event)
+    {
+        event.register(Helpers.identifier("item_directory"), TFCItemSpriteSource.CODEC);
     }
 
     public static void registerModelLoaders(net.neoforged.neoforge.client.event.RegisterItemModelsEvent event)

@@ -1,0 +1,12 @@
+{
+  "__comment__": "This file was automatically created by mcresources",
+  "sources": [
+    {
+      "type": "filter",
+      "pattern": {
+        "namespace": "tfc",
+        "path": "item/.*"
+      }
+    }
+  ]
+}

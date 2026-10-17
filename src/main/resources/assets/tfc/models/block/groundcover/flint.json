@@ -1,8 +1,8 @@
 {
   "credit": "Made with Blockbench",
   "textures": {
-    "0": "item/flint",
-    "particle": "item/flint"
+    "0": "tfc:block/groundcover/flint",
+    "particle": "tfc:block/groundcover/flint"
   },
   "elements": [
     {

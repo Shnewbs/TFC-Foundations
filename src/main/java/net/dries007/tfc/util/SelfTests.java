@@ -122,11 +122,19 @@ public final class SelfTests
         {
             NeoForge.EVENT_BUS.post(new ClientSelfTestEvent()); // For other mods, as this is invoked via a tricky mixin
             final Stopwatch tick = Stopwatch.createStarted();
-            throwIfAny(
-                validateModels(),
-                validateTranslationsAndCreativeTabs()
-            );
-            LOGGER.info("Client self tests passed in {}", tick.stop());
+            throwIfAny(validateModels());
+            LOGGER.info("Client resource self tests passed in {}", tick.stop());
+        }
+    }
+
+    /** Item prototypes are only available after the server's default components arrive. */
+    public static void runClientItemSelfTests()
+    {
+        if (ENABLED)
+        {
+            final Stopwatch tick = Stopwatch.createStarted();
+            throwIfAny(validateTranslationsAndCreativeTabs());
+            LOGGER.info("Client item self tests passed in {}", tick.stop());
         }
     }
 

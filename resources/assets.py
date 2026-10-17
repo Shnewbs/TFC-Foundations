@@ -2680,8 +2680,18 @@ def generate(rm: ResourceManager):
                 **{mat: f'minecraft:trims/color_palettes/{mat}' for mat in VANILLA_TRIM_MATERIALS},
             }
         ),
-        atlases.directory('entity/bell')
+        atlases.directory('entity/bell'),
+        # TFC models mix block, generated-palette and item materials. Native
+        # cuboid items require one atlas, and block models require this atlas.
+        {'type': 'tfc:item_directory'},
+        # Runtime aliases keep vanilla item sprites on their own native atlas.
+        *({'type': 'single', 'resource': 'minecraft:item/' + item, 'sprite': 'tfc:block/groundcover/' + item}
+          for item in ('feather', 'flint', 'rotten_flesh'))
     )
+
+    # Remove only TFC-owned items from the native directory source. Their IDs
+    # remain unchanged and are now resolved exclusively from the blocks atlas.
+    rm.atlas('minecraft:items', {'type': 'filter', 'pattern': {'namespace': 'tfc', 'path': 'item/.*'}})
 
     rm.atlas('minecraft:armor_trims',atlases.palette(
         key='trims/color_palettes/trim_palette',

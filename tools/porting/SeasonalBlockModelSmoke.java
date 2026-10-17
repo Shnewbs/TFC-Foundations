@@ -226,6 +226,7 @@ public final class SeasonalBlockModelSmoke
                     for (String name : names)
                     {
                         UnbakedModel child = CONTEXT.deserialize(json.get(name), UnbakedModel.class);
+                        if (child.parent() != null) expected.add(child.parent());
                         child.resolveDependencies(expected::add);
                     }
                     check(dependencies.equals(expected), "all seasonal dependencies / parent references");

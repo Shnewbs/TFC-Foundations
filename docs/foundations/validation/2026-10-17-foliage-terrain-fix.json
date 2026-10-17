@@ -1,0 +1,113 @@
+{
+  "date": "2026-10-17",
+  "branch": "26.1.2",
+  "parent_source_commit": "58a8ddbb93e77e4d47a30ca0881c4e4b6f5a56dd",
+  "minecraft": "26.1.2",
+  "neoforge_compile_and_client": "26.1.2.114",
+  "user_reported_neoforge": "26.1.2.122",
+  "java": "Eclipse Temurin 25.0.4.1+1",
+  "gradle": "9.2.1",
+  "host_adaptations": [
+    "Official unmodified FML DevAgent",
+    "Opt-in NeoForm Java-command fallback",
+    "Trusted host proxy CA",
+    "Xvfb TCP display and Mesa software OpenGL; null host audio device"
+  ],
+  "jar": {
+    "filename": "TFC-Foundations-26.1.2-0.0.0.jar",
+    "sha256": "2bd97d82fab9442f41de022d79ed55bfe166306e23b588e56c5fa50d9057cce3",
+    "bytes": 68844200
+  },
+  "build": {
+    "command": "gradle -I <host-neoform-fallback> -I <official-fml-agent-init> build --no-daemon --no-configuration-cache --console=plain",
+    "exit": 0,
+    "duration": "1m 11s",
+    "junit": {
+      "tests": 239,
+      "skipped": 12,
+      "failures": 0,
+      "errors": 0
+    },
+    "license_and_dependency_checks": "passed"
+  },
+  "regressions": {
+    "seasonal_models": "Authored inline alternatives explicitly declare their parents; native white-cedar discovery resolves all four seasonal parents, geometry and particle material.",
+    "before_failures": "Authored parent declaration test and all three density tests fail with the original behavior. The initial native graph fixture also failed to access Minecraft resources; that fixture failure is not claimed as a production regression.",
+    "terrain": "No-river identity, identity-modifier blending, full river replacement and half replacement pass after accumulation starts at zero.",
+    "block_atlas": "TFC item images are loaded by a namespace-restricted source into the blocks atlas and removed only from the native items atlas. Fourteen block-used TFC item images retain their IDs. Three vanilla images use new TFC block sprite aliases, preserving original native item sprites and all PNG artwork. Native tests cover namespace isolation, higher-priority pack overrides and source filtering.",
+    "client_lifecycle": "Fatal model self-tests remain at initial resource reload. Stack-dependent creative/translation checks move to DefaultDataComponentsBoundEvent.CLIENT_PACKET_RECEIVED; they are retained, not disabled."
+  },
+  "focused_seasonal_runner": {
+    "python_tests": 6,
+    "scalar_comparisons": 200225,
+    "contract_assertions": 208269,
+    "native_mold_cells": 392,
+    "asset_loader_checks": 194,
+    "seasonal_definitions": 178,
+    "dynamic_state_references": 245,
+    "preserved_blockstates": 115,
+    "exit": 0
+  },
+  "resources_validate": {
+    "command": "python3 resources validate",
+    "exit": 0
+  },
+  "real_client_before": {
+    "rejected_block_namespace_models": 256,
+    "rejected_item_namespace_models_via_block_api": 344,
+    "failed_legacy_model_parses": 352,
+    "resource_self_test_pass_lines": [],
+    "mixed_atlas_item_failures": 826,
+    "duplicate_sprite_warnings": 0,
+    "unbound_components_exception": true,
+    "missing_particle_summaries": [
+      "[11:24:21] [Render thread/ERROR] [ne.dr.tf.ut.SelfTests/]: 48 block states with missing particles:",
+      "[11:24:30] [Render thread/ERROR] [ne.dr.tf.ut.SelfTests/]: 48 block states with missing particles:"
+    ]
+  },
+  "real_client_after": {
+    "rejected_block_namespace_models": 0,
+    "rejected_item_namespace_models_via_block_api": 0,
+    "failed_legacy_model_parses": 176,
+    "resource_self_test_pass_lines": [
+      "[11:42:03] [Render thread/INFO] [ne.dr.tf.ut.SelfTests/]: Client resource self tests passed in 111.2 ms"
+    ],
+    "mixed_atlas_item_failures": 0,
+    "duplicate_sprite_warnings": 0,
+    "unbound_components_exception": false,
+    "missing_particle_summaries": []
+  },
+  "real_client_scope": "Actual FML client and OpenGL resource reload with fatal self-tests enabled. Bounded validation stops the client after the result; Gradle runClient termination is not a gameplay pass.",
+  "terralith": {
+    "status": "external artifact audit and required integration architecture only; no hybrid feature layer is enabled",
+    "audit": "2026-10-17-terralith-compat-audit.json",
+    "design": "../TFC_TERRALITH.md"
+  },
+  "not_verified": [
+    "Matching-seed new-world visual comparison with the uploaded screenshots",
+    "Whole foliage/terrain appearance in a live world",
+    "Client item self-tests after server component sync",
+    "Dedicated-server live data reload repairs",
+    "New world generation, chunk borders, save/restart, multiplayer and survival progression",
+    "Terralith and Lithostitched runtime combination"
+  ],
+  "remaining": [
+    "Legacy item-model parse/reference warnings remain for further migration; this is not a zero-warning client.",
+    "Existing generated chunks are unchanged. New terrain density affects newly generated chunks and needs border review.",
+    "Earlier dedicated-server component/data reload limits are still open. This is a development repair, not a validated release."
+  ],
+  "packaged_matches_validated_outputs": {
+    "net/dries007/tfc/world/TerrainDensity.class": "9a525b0bce05daf194c5df51dabb10923a2ae7e1cc59e3df40ea5d5e47136b5e",
+    "net/dries007/tfc/client/model/SeasonalUnbakedModel.class": "4f0e5ba2cd5ff8b9e3796d90d6c4afc67067ad0c115f0054237caadc760267d7",
+    "net/dries007/tfc/client/TFCItemSpriteSource.class": "841ffe4e21d5d2cd6e54ed6033c2e49261734503dab77120155a77ab651af70e",
+    "net/dries007/tfc/client/ClientEventHandler.class": "0b0df058bb538ce95e27d59327ba2a2facebdb55db02e1129d131a35d912981d",
+    "net/dries007/tfc/client/ClientForgeEventHandler.class": "9cd0b93571954dabffb5a78c873faab3639f11b5ef25cdbc26963d858e6b7764",
+    "net/dries007/tfc/util/SelfTests.class": "5442091dfafd20837a843ec183ad31509962ac6913ce7d4791cb4b343277da62",
+    "assets/minecraft/atlases/blocks.json": "0da5dc66b73e45bdcef2b1ba0c077085557b09212a7176ffc62d93769b5afc85",
+    "assets/minecraft/atlases/items.json": "b51dcdcd312d5bda52a5ec8374a1f8441facbaffc1e7541323bfc3572091e698",
+    "assets/tfc/models/block/groundcover/flint.json": "0b091befc61b8d2d13a1b34c9af19e0e56eb0abfd26651dd08dd7340aa3e4c31",
+    "assets/tfc/models/block/groundcover/feather.json": "c3dca28d6479691df93e14fb327b2047f0ac87681261bfca4888abdc2dcdd20c",
+    "assets/tfc/models/block/groundcover/rotten_flesh.json": "201631f4a515745d4237a3082169d8dc530bda0f092c497aaa5e0625746c43d3"
+  },
+  "real_client_startup_screen": "Minecraft welcome/accessibility screen rendered after the resource self-test pass; no world opened."
+}

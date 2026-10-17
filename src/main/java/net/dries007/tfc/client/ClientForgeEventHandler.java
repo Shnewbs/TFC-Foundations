@@ -71,6 +71,7 @@ import net.neoforged.neoforge.client.event.ToastAddEvent;
 import net.neoforged.neoforge.client.event.ViewportEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.DefaultDataComponentsBoundEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
@@ -145,6 +146,7 @@ public class ClientForgeEventHandler
         bus.addListener(ClientForgeEventHandler::onToast);
         bus.addListener(ClientForgeEventHandler::onEffectRender);
         bus.addListener(ClientForgeEventHandler::onRecipesUpdated);
+        bus.addListener(ClientForgeEventHandler::onDefaultComponentsBound);
         bus.addListener(IngameOverlays::checkGuiOverlays);
         bus.addListener(ClientForgeEventHandler::onScreenOpen);
     }
@@ -153,6 +155,14 @@ public class ClientForgeEventHandler
     public static void onResourceLoadFinished(ClientResourceLoadFinishedEvent event)
     {
         if (event.isInitial()) SelfTests.runClientSelfTests();
+    }
+
+    public static void onDefaultComponentsBound(DefaultDataComponentsBoundEvent event)
+    {
+        if (event.getUpdateCause() == DefaultDataComponentsBoundEvent.UpdateCause.CLIENT_PACKET_RECEIVED)
+        {
+            SelfTests.runClientItemSelfTests();
+        }
     }
 
     public static void registerDebugEntries(RegisterDebugEntriesEvent event)

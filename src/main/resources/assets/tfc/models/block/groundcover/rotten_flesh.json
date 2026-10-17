@@ -1,9 +1,9 @@
 {
   "credit": "Made with Blockbench",
   "textures": {
-    "0": "item/rotten_flesh",
+    "0": "tfc:block/groundcover/rotten_flesh",
     "1": "block/bone_block_side",
-    "particle": "item/rotten_flesh"
+    "particle": "tfc:block/groundcover/rotten_flesh"
   },
   "elements": [
     {

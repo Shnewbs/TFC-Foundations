@@ -134,6 +134,24 @@
       "type": "directory",
       "source": "entity/bell",
       "prefix": "entity/bell/"
+    },
+    {
+      "type": "tfc:item_directory"
+    },
+    {
+      "type": "single",
+      "resource": "minecraft:item/feather",
+      "sprite": "tfc:block/groundcover/feather"
+    },
+    {
+      "type": "single",
+      "resource": "minecraft:item/flint",
+      "sprite": "tfc:block/groundcover/flint"
+    },
+    {
+      "type": "single",
+      "resource": "minecraft:item/rotten_flesh",
+      "sprite": "tfc:block/groundcover/rotten_flesh"
     }
   ]
 }

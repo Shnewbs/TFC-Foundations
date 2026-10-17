@@ -591,20 +591,7 @@ public class ChunkNoiseFiller extends ChunkHeightFiller
 
         // Apply transformations from rivers
         // Each river blend type applies to the initial noise value, and then is weighted by its blend weight
-        for (RiverBlendType type : RiverBlendType.ALL)
-        {
-            final double weight = riverBlendWeights[type.ordinal()];
-            if (type == RiverBlendType.NONE)
-            {
-                noise += weight * postShoreNoise;
-            }
-            else if (weight > 0)
-            {
-                final RiverNoiseSampler sampler = riverNoiseSamplers.get(type);
-                noise += weight * sampler.noise(y, postShoreNoise);
-            }
-        }
-
+        noise = TerrainDensity.applyRivers(y, postShoreNoise, riverBlendWeights, riverNoiseSamplers);
 
         noise = BiomeNoiseSampler.AIR_THRESHOLD - noise; // Positive noise = solid
         if (y > heightNoiseValue)

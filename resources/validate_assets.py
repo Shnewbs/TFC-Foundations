@@ -148,6 +148,16 @@ def validate_textures(model_locations):
     existing_textures = []
     atlas = load(ASSETS_PATH + 'minecraft/atlases/blocks.json')
     for source in atlas['sources']:
+        if source['type'] == 'single' and 'sprite' in source:
+            # A single source may expose an existing image under a sprite ID.
+            # Native atlas tests also verify vanilla image inputs at this pin.
+            res = utils.resource_location(source['resource'])
+            if res.domain == 'tfc' and not glob(ASSETS_PATH + 'tfc/textures/%s.png' % res.path):
+                print('Atlas alias source not found: %s' % source['resource'])
+                errors += 1
+            sprite = utils.resource_location(source['sprite'])
+            if sprite.domain == 'tfc':
+                existing_textures.append(ASSETS_PATH + 'tfc/textures/%s.png' % sprite.path)
         if source['type'] == 'paletted_permutations':
             for tex in source['textures']:
                 TEXTURE_FORGIVENESS_PATHS.append(tex.replace('tfc:', ''))
