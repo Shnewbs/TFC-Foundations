@@ -8,6 +8,7 @@ package net.dries007.tfc.common.recipes;
 
 import net.dries007.tfc.common.recipes.input.NoopInput;
 
+import net.dries007.tfc.common.recipes.outputs.FluidOutput;
 import net.minecraft.world.item.crafting.Recipe;
 
 import com.mojang.serialization.MapCodec;
@@ -28,19 +29,29 @@ import org.jetbrains.annotations.Nullable;
 public record BlastFurnaceRecipe(
     SizedFluidIngredient inputFluid,
     Ingredient catalyst,
-    FluidStack outputFluid
+    FluidOutput prototype
 ) implements INoopInputRecipe, IRecipePredicate<FluidStack>
 {
+    public BlastFurnaceRecipe(SizedFluidIngredient inputFluid, Ingredient catalyst, FluidStack outputFluid)
+    {
+        this(inputFluid, catalyst, FluidOutput.of(outputFluid));
+    }
+
+    public FluidStack outputFluid()
+    {
+        return prototype.copy();
+    }
+
     public static final MapCodec<BlastFurnaceRecipe> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
         LegacySizedIngredientCodecs.FLAT_FLUID.fieldOf("fluid").forGetter(c -> c.inputFluid),
         net.dries007.tfc.common.recipes.LegacyIngredientCodecs.ITEM.fieldOf("catalyst").forGetter(c -> c.catalyst),
-        FluidStack.CODEC.fieldOf("result").forGetter(c -> c.outputFluid)
+        FluidOutput.CODEC.fieldOf("result").forGetter(c -> c.prototype)
     ).apply(i, BlastFurnaceRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, BlastFurnaceRecipe> STREAM_CODEC = StreamCodec.composite(
         SizedFluidIngredient.STREAM_CODEC, c -> c.inputFluid,
         Ingredient.CONTENTS_STREAM_CODEC, c -> c.catalyst,
-        FluidStack.STREAM_CODEC, c -> c.outputFluid,
+        FluidOutput.STREAM_CODEC, c -> c.prototype,
         BlastFurnaceRecipe::new
     );
 
@@ -104,10 +115,10 @@ public record BlastFurnaceRecipe(
     public FluidStack assembleFluidOutput(FluidStack inputFluid)
     {
         final int maximumRatio = inputFluid.getAmount() / this.inputFluid.amount();
-        final FluidStack outputFluid = this.outputFluid.copy();
+        final FluidStack outputFluid = this.prototype.copy();
 
         inputFluid.shrink(maximumRatio * this.inputFluid.amount());
-        outputFluid.setAmount(this.outputFluid.getAmount() * maximumRatio);
+        outputFluid.setAmount(this.prototype.getAmount() * maximumRatio);
 
         return outputFluid;
     }

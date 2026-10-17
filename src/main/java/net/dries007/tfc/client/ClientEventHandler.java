@@ -808,6 +808,7 @@ public final class ClientEventHandler
     public static void registerPresetEditors(RegisterPresetEditorsEvent event)
     {
         event.register(TerraFirmaCraft.PRESET, CreateTFCWorldScreen::new);
+        event.register(TerraFirmaCraft.NATURAL_PRESET, CreateTFCWorldScreen::new);
     }
 
     public static void registerExtensions(RegisterClientExtensionsEvent event)

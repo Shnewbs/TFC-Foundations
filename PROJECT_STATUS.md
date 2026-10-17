@@ -1,5 +1,68 @@
 # TFC Foundations — Current Project Status
 
+## 2026-10-17 UTC — Natural landscapes and live-world loading
+
+The optional **TerraFirmaCraft — Natural** preset (`tfc:natural`) adds smooth,
+convex biome blending and small weathered rock arches while retaining TFC
+geology, climate, rivers, aquifers, vegetation and progression. Older settings
+and `tfc:overworld` retain ordinary generation. The customization screen keeps
+the profile, and existing chunks are not regenerated. Arches stay inside their
+chunk, use local hardened rock and reject water, steep foundations and structure
+reference chunks. Optional Terralith arch density changes their weathering;
+Terralith's generator, biomes, ores and loot are not merged into TFC.
+
+Real world creation exposed recipe stacks being decoded before default
+components bind. Outputs now use immutable native item/fluid templates and
+materialize stacks when used. Existing JSON and network representations and
+native stack constructors/getters are retained. Both item and fluid pre-binding
+regressions, byte-identical network checks and food display/crafted decay tests
+pass. All 7,481 recipes load in the dedicated runtime. Two advancement icons now
+reference existing items. Explicit native no-loot declarations are accepted while
+all declared loot tables remain validated; no self-tests are disabled.
+
+Client joining exposed 3,720 missing names: block items now inherit their block
+names, with explicit item names retained for seeds and appropriate standalone
+block items. A native registry test checks every TFC item. Duplicate creative-tab
+entries from shared mappings and flowing/source fluids are coalesced without
+losing component variants or parent/search visibility. All ten tabs build through
+the native duplicate-checking output. This repairs JEI category omissions.
+Exploration also reproduced predator construction failures. Brain builders no
+longer access the owner's unassigned brain; schedules apply after construction
+and after saved brain restoration. Solitary, pack and amphibious native brain
+initialization tests pass, with live wolf/bear/crocodile/lion spawn checks.
+
+The pinned Java 25/NeoForge 26.1.2.114 full build passes: **253 tests passed,
+12 existing skips, zero failures/errors**. Native data generation covers 8,501
+files and a repeat writes zero changes. Authored assets/resource validation
+passes. Regional rainfall/geology parity covers 289 positions; normalized biome
+weights and overlapping samples cover positive/negative chunk boundaries.
+Geometry tests cover connected stone, grounded feet, an open walkway and gentle
+versus steep foundations. Actual graphical worlds display terrain and foliage;
+resource/item/data self-tests remain enabled and fatal. Optional Terralith 2.6.2
+with Lithostitched 1.8.1 is exercised separately from standalone TFC.
+
+A forced full source compile verifies record/lambda body updates after a stale
+incremental class was detected. Compilation is nonincremental, and JARs exclude
+datagen `.cache` bookkeeping.
+
+Fresh standalone and Terralith worlds generate arches at block -8120, 84, -8264.
+A live reload succeeds. After save, full server restart and client reconnect,
+all three sampled full-chunk block hashes are unchanged and all three tagged
+wildlife types are preserved.
+
+JAR SHA-256: `9ebdeaeeba4fe8302cd03ce404b1a19a77aa56af31a75ddb97c81198d76cd490` (68,863,301 bytes).
+
+Exact final fresh-world, reload, persistence and artifact evidence is in
+`docs/foundations/validation/2026-10-17-natural-worlds.json`. The comparison with
+an earlier ordinary seed-42 world retains biome/substrate data but its groundcover
+and vegetation differ; do not claim whole-world byte-identical decoration or
+universal generation-order determinism. Legacy unused item-model loader errors
+and a non-fatal development-server client Button class probe remain. Two-client
+multiplayer, complete survival progression, old-world migrations and the user's
+reported NeoForge 26.1.2.122 remain outside this validation. This is a tested
+candidate, not a claim of perfect terrain or completed release certification.
+Publish directly to existing `26.1.2` with `[skip ci]`; `26.x` is unchanged.
+
 ## 2026-10-17 UTC — Cinder-cone lava placement and flooded crater replacement
 
 The uploaded `2026-10-17_11.55.22.png` shows water in a small basalt cone with

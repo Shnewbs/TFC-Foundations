@@ -687,6 +687,7 @@
   "tfc.commands.trim.bad_template": "Template item not recognized",
   "tfc.settings.km": "%s km",
   "generator.tfc.overworld": "TerraFirmaCraft",
+  "generator.tfc.natural": "TerraFirmaCraft — Natural",
   "tfc.tooltip.create_world.title": "TerraFirmaCraft 세계 설정",
   "tfc.create_world.flat_bedrock": "기반암 평지",
   "tfc.create_world.spawn_distance": "Spawn Distance",

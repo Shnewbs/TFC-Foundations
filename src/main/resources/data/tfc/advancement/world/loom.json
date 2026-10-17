@@ -15,7 +15,7 @@
   },
   "display": {
     "icon": {
-      "id": "tfc:wood/planks/pine_loom"
+      "id": "tfc:wood/loom/pine"
     },
     "title": {
       "translate": "tfc.advancements.world.loom.title"

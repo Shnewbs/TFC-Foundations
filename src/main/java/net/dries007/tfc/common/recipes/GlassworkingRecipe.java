@@ -8,6 +8,7 @@ package net.dries007.tfc.common.recipes;
 
 import net.dries007.tfc.common.recipes.input.NoopInput;
 
+import net.dries007.tfc.common.recipes.outputs.ItemOutput;
 import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.List;
@@ -31,19 +32,29 @@ import net.dries007.tfc.common.component.glass.GlassWorking;
 public record GlassworkingRecipe(
     List<GlassOperation> operations,
     Ingredient batchItem,
-    ItemStack resultItem
+    ItemOutput prototype
 ) implements INoopInputRecipe, IRecipePredicate<ItemStack>
 {
+    public GlassworkingRecipe(List<GlassOperation> operations, Ingredient batchItem, ItemStack resultItem)
+    {
+        this(operations, batchItem, ItemOutput.of(resultItem));
+    }
+
+    public ItemStack resultItem()
+    {
+        return prototype.copy();
+    }
+
     public static final MapCodec<GlassworkingRecipe> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
         GlassOperation.REGISTRY.byNameCodec().listOf().fieldOf("operations").forGetter(c -> c.operations),
         net.dries007.tfc.common.recipes.LegacyIngredientCodecs.ITEM.fieldOf("batch").forGetter(c -> c.batchItem),
-        ItemStack.CODEC.fieldOf("result").forGetter(c -> c.resultItem)
+        ItemOutput.CODEC.fieldOf("result").forGetter(c -> c.prototype)
     ).apply(i, GlassworkingRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, GlassworkingRecipe> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.registry(GlassOperation.KEY).apply(ByteBufCodecs.list()), c -> c.operations,
         Ingredient.CONTENTS_STREAM_CODEC, c -> c.batchItem,
-        ItemStack.STREAM_CODEC, c -> c.resultItem,
+        ItemOutput.STREAM_CODEC, c -> c.prototype,
         GlassworkingRecipe::new
     );
 
@@ -65,7 +76,7 @@ public record GlassworkingRecipe(
 
         public ItemStack getResultItem(@Nullable HolderLookup.Provider registries)
     {
-        return resultItem.copy();
+        return prototype.copy();
     }
 
     @Override

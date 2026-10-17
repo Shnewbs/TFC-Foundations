@@ -12,6 +12,7 @@ import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.UnaryOperator;
@@ -59,6 +60,9 @@ import net.minecraft.world.level.chunk.ProtoChunk;
 import net.minecraft.world.level.levelgen.Aquifer;
 import net.minecraft.world.level.levelgen.Beardifier;
 import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.DensityFunction;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
@@ -88,6 +92,7 @@ import net.dries007.tfc.world.biome.TFCBiomes;
 import net.dries007.tfc.world.chunkdata.ChunkData;
 import net.dries007.tfc.world.chunkdata.ChunkDataGenerator;
 import net.dries007.tfc.world.chunkdata.RockData;
+import net.dries007.tfc.world.feature.TFCFeatures;
 import net.dries007.tfc.world.layer.TFCLayers;
 import net.dries007.tfc.world.layer.framework.AreaFactory;
 import net.dries007.tfc.world.layer.framework.ConcurrentArea;
@@ -146,6 +151,11 @@ public class TFCChunkGenerator extends ChunkGenerator implements ChunkGeneratorE
 
         this.stupidMojangChunkGenerator = new NoiseBasedChunkGenerator(biomeSource.self(), noiseSettings);
         this.aquiferCache = new FastConcurrentCache<>(256);
+    }
+
+    public Optional<DensityFunction> archDetail()
+    {
+        return noiseSampler.archDetail;
     }
 
     @Override
@@ -210,6 +220,10 @@ public class TFCChunkGenerator extends ChunkGenerator implements ChunkGeneratorE
 
         this.seed = seed;
         this.noiseSampler = new NoiseSampler(seed.next(), level.registryAccess().lookupOrThrow(Registries.NOISE), level.registryAccess().lookupOrThrow(Registries.DENSITY_FUNCTION));
+        if (settings.naturalLandscapes())
+        {
+            net.dries007.tfc.TerraFirmaCraft.LOGGER.info("Natural landscapes enabled; arch detail: {}", noiseSampler.archDetail.isPresent() ? "Terralith density function" : "built-in weathering");
+        }
         this.chunkDataGenerator = regionGenerator.chunkDataGenerator();
         this.surfaceManager = new SurfaceManager(seed);
         this.tideHeightNoise = BiomeNoise.shoreTideLevelNoise(seed);
@@ -224,8 +238,8 @@ public class TFCChunkGenerator extends ChunkGenerator implements ChunkGeneratorE
 
     public ChunkHeightFiller createHeightFillerForChunk(ChunkPos pos)
     {
-        final Object2DoubleMap<BiomeExtension>[] biomeWeights = ChunkBiomeSampler.sampleBiomes(pos, this::sampleBiomeNoRiver, BiomeExtension::biomeBlendType);
-        return new ChunkHeightFiller(biomeWeights, customBiomeSource, createBiomeSamplersForChunk(null), createRiverSamplersForChunk(), createShoreSamplersForChunk(), createVolcanoSamplersForChunk(), getSeaLevel(), tideHeightNoise);
+        final Object2DoubleMap<BiomeExtension>[] biomeWeights = ChunkBiomeSampler.sampleBiomes(pos, this::sampleBiomeNoRiver, BiomeExtension::biomeBlendType, settings.naturalLandscapes());
+        return new ChunkHeightFiller(biomeWeights, customBiomeSource, createBiomeSamplersForChunk(null), createRiverSamplersForChunk(), createShoreSamplersForChunk(), createVolcanoSamplersForChunk(), getSeaLevel(), tideHeightNoise).naturalLandscapes(settings.naturalLandscapes());
     }
 
     @Override
@@ -311,6 +325,16 @@ public class TFCChunkGenerator extends ChunkGenerator implements ChunkGeneratorE
             }
         });
         allAdjacentBiomes.retainAll(this.biomeSource.possibleBiomes());
+
+        if (settings.naturalLandscapes() && chunk.getAllReferences().isEmpty())
+        {
+            // A separate world/chunk seed leaves all ordinary decorator seeds and feature indices intact.
+            final RandomSource landmarkRandom = new XoroshiroRandomSource(Helpers.hash(level.getSeed() ^ 0x6e61747572616cL, originPos));
+            if (landmarkRandom.nextInt(48) == 0)
+            {
+                TFCFeatures.NATURAL_STONE_ARCH.get().place(new FeaturePlaceContext<>(Optional.empty(), level, this, landmarkRandom, originPos, NoneFeatureConfiguration.INSTANCE));
+            }
+        }
 
         for (int decorationIndex = 0; decorationIndex < Math.max(DECORATION_STEPS, orderedFeatures.size()); ++decorationIndex)
         {
@@ -427,9 +451,11 @@ public class TFCChunkGenerator extends ChunkGenerator implements ChunkGeneratorE
             sections.add(section);
         }
 
-        final Object2DoubleMap<BiomeExtension>[] biomeWeights = ChunkBiomeSampler.sampleBiomes(chunkPos, this::sampleBiomeNoRiver, BiomeExtension::biomeBlendType);
+        final Object2DoubleMap<BiomeExtension>[] biomeWeights = ChunkBiomeSampler.sampleBiomes(chunkPos, this::sampleBiomeNoRiver, BiomeExtension::biomeBlendType, this.settings.naturalLandscapes());
         final ChunkBaseBlockSource baseBlockSource = createBaseBlockSourceForChunk(chunk);
         final ChunkNoiseFiller filler = new ChunkNoiseFiller((ProtoChunk) chunk, biomeWeights, customBiomeSource, createBiomeSamplersForChunk(chunk), createRiverSamplersForChunk(), createShoreSamplersForChunk(), createVolcanoSamplersForChunk(), noiseSampler, baseBlockSource, settings, getSeaLevel(), tideHeightNoise, Beardifier.forStructuresInChunk(structureManager, chunkPos));
+
+        filler.naturalLandscapes(this.settings.naturalLandscapes());
 
         final BiomeExtension cinderConeBiome = CenteredFeatureNoise.cinder(seed).getCenterBiome(chunkPos.getBlockX(8), chunkPos.getBlockZ(8), customBiomeSource);
         final BiomeExtension tuffRingBiome = CenteredFeatureNoise.tuffRing(seed).getCenterBiome(chunkPos.getBlockX(8), chunkPos.getBlockZ(8), customBiomeSource);

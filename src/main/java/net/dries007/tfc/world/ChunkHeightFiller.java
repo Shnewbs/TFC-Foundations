@@ -56,6 +56,14 @@ public class ChunkHeightFiller
     // Centered Features, such as volcanoes
     protected final Map<CenteredFeatureBlendType, CenteredFeatureNoiseSampler> volcanoNoiseSamplers;
 
+    private boolean naturalLandscapes;
+
+    public ChunkHeightFiller naturalLandscapes(boolean enabled)
+    {
+        this.naturalLandscapes = enabled;
+        return this;
+    }
+
     protected int blockX, blockZ; // Absolute x/z positions
     protected int localX, localZ; // Chunk-local x/z
 
@@ -98,7 +106,7 @@ public class ChunkHeightFiller
      */
     protected final void prepareColumnBiomeWeights()
     {
-        ChunkBiomeSampler.sampleBiomesColumn(biomeWeights1, sampledBiomeWeights, localX, localZ);
+        ChunkBiomeSampler.sampleBiomesColumn(biomeWeights1, sampledBiomeWeights, localX, localZ, naturalLandscapes);
     }
 
     /**

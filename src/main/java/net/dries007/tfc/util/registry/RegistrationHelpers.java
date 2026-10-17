@@ -66,7 +66,7 @@ public final class RegistrationHelpers
         final DeferredHolder<Block, T> block = blocks.register(actualName, id -> RegistrationContext.block(id, blockSupplier));
         if (blockItemFactory != null)
         {
-            items.register(actualName, id -> RegistrationContext.item(id, () -> blockItemFactory.apply(block.get())));
+            items.register(actualName, id -> RegistrationContext.blockItem(id, block.get().getDescriptionId(), () -> blockItemFactory.apply(block.get())));
         }
         return block;
     }

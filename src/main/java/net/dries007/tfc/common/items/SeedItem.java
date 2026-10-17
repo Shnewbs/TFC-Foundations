@@ -24,7 +24,7 @@ public class SeedItem extends BlockItem implements PlantableInfo
 
     public SeedItem(Crop crop, Block block, Block deadBlock, Properties properties)
     {
-        super(block, properties.useBlockDescriptionPrefix());
+        super(block, properties.useItemDescriptionPrefix());
         this.deadBlock = deadBlock;
         nutrients = new PlantNutrients(crop.getNitrogen(), crop.getPhosphorous(), crop.getPotassium());
         climateRange = crop.getClimateRange();

@@ -699,6 +699,7 @@
   "tfc.commands.trim.bad_template": "无法识别的模板",
   "tfc.settings.km": "%s 公里",
   "generator.tfc.overworld": "群峦传说",
+  "generator.tfc.natural": "TerraFirmaCraft — Natural",
   "tfc.tooltip.create_world.title": "群峦传说世界生成设置",
   "tfc.create_world.flat_bedrock": "平坦基岩层",
   "tfc.create_world.spawn_distance": "出生点半径",

@@ -9,6 +9,7 @@ package net.dries007.tfc.util.data;
 import java.util.Optional;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.dries007.tfc.common.recipes.outputs.ItemOutput;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -44,9 +45,24 @@ public record KnappingType(
     boolean consumeAfterComplete,
     boolean hasOffTexture,
     boolean spawnsParticles,
-    ItemStack icon
+    ItemOutput iconPrototype
 ) implements IRecipePredicate<ItemStack>
 {
+    public KnappingType(SizedIngredient inputItem, int amountToConsume, Holder<SoundEvent> clickSound, boolean consumeAfterComplete, boolean hasOffTexture, boolean spawnsParticles, ItemStack icon)
+    {
+        this(inputItem, amountToConsume, clickSound, consumeAfterComplete, hasOffTexture, spawnsParticles, ItemOutput.of(icon));
+    }
+
+    public KnappingType(SizedIngredient inputItem, Optional<Integer> amountToConsume, Holder<SoundEvent> clickSound, boolean consumeAfterComplete, boolean hasOffTexture, boolean spawnsParticles, ItemOutput icon)
+    {
+        this(inputItem, amountToConsume.orElse(inputItem.count()), clickSound, consumeAfterComplete, hasOffTexture, spawnsParticles, icon);
+    }
+
+    public ItemStack icon()
+    {
+        return iconPrototype.copy();
+    }
+
     public static final Codec<KnappingType> CODEC = RecordCodecBuilder.create(i -> i.group(
         LegacySizedIngredientCodecs.FLAT_ITEM.fieldOf("input").forGetter(c -> c.inputItem),
         Codec.INT.optionalFieldOf("amount_to_consume").forGetter(c -> c.amountToConsume == c.inputItem.count() ? Optional.empty() : Optional.of(c.amountToConsume)),
@@ -54,7 +70,7 @@ public record KnappingType(
         Codec.BOOL.fieldOf("consume_after_complete").forGetter(c -> c.consumeAfterComplete),
         Codec.BOOL.fieldOf("has_off_texture").forGetter(c -> c.hasOffTexture),
         Codec.BOOL.fieldOf("spawns_particles").forGetter(c -> c.spawnsParticles),
-        ItemStack.CODEC.fieldOf("icon").forGetter(c -> c.icon)
+        ItemOutput.CODEC.fieldOf("icon").forGetter(c -> c.iconPrototype)
     ).apply(i, KnappingType::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, KnappingType> STREAM_CODEC = StreamCodecs.composite(
@@ -64,7 +80,7 @@ public record KnappingType(
         ByteBufCodecs.BOOL, c -> c.consumeAfterComplete,
         ByteBufCodecs.BOOL, c -> c.hasOffTexture,
         ByteBufCodecs.BOOL, c -> c.spawnsParticles,
-        ItemStack.STREAM_CODEC, c -> c.icon,
+        ItemOutput.STREAM_CODEC, c -> c.iconPrototype,
         KnappingType::new
     );
 

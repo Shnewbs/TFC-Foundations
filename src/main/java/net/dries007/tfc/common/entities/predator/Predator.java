@@ -171,6 +171,7 @@ public class Predator extends WildAnimal
     {
         super.readAdditionalSaveData(tag);
         setSleeping(tag.getBooleanOr("sleeping", false));
+        TFCBrain.updatePredatorActivity(this);
     }
 
     @Override

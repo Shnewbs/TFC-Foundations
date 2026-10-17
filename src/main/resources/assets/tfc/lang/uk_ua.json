@@ -688,6 +688,7 @@
   "tfc.commands.trim.bad_template": "Предмет шаблону не розпізнано",
   "tfc.settings.km": "%s км",
   "generator.tfc.overworld": "TerraFirmaCraft",
+  "generator.tfc.natural": "TerraFirmaCraft — Natural",
   "tfc.tooltip.create_world.title": "Налаштування світу TerraFirmaCraft",
   "tfc.create_world.flat_bedrock": "Пласка корінна порода",
   "tfc.create_world.spawn_distance": "Дальність появи",

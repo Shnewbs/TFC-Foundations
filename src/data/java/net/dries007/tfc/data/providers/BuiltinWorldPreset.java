@@ -46,19 +46,24 @@ public final class BuiltinWorldPreset
 {
     public static void load(BootstrapContext<WorldPreset> context)
     {
+        register(context, TerraFirmaCraft.PRESET, false);
+        register(context, TerraFirmaCraft.NATURAL_PRESET, true);
+    }
+
+    private static void register(BootstrapContext<WorldPreset> context, ResourceKey<WorldPreset> key, boolean natural)
+    {
         final HolderGetter<DimensionType> dimensionTypes = context.lookup(Registries.DIMENSION_TYPE);
         final HolderGetter<NoiseGeneratorSettings> noiseSettings = context.lookup(Registries.NOISE_SETTINGS);
         final HolderGetter<RockSettings> rockSettings = context.lookup(RockSettings.KEY);
-
         context.register(
-            TerraFirmaCraft.PRESET,
+            key,
             new WorldPreset(Map.of(
                 LevelStem.OVERWORLD, new LevelStem(
                     dimensionTypes.getOrThrow(BuiltinDimensionTypes.OVERWORLD),
                     new TFCChunkGenerator(
                         new RegionBiomeSource(context.lookup(Registries.BIOME)),
                         noiseSettings.getOrThrow(NoiseGeneratorSettings.OVERWORLD),
-                        defaultSettings(rockSettings)
+                        defaultSettings(rockSettings).withNaturalLandscapes(natural)
                     )
                 ),
                 LevelStem.NETHER, new LevelStem(

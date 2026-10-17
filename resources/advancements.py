@@ -64,7 +64,7 @@ def generate(rm: ResourceManager):
     story.advancement('trip_hammer', icon('tfc:trip_hammer'), 'Tripping Hazard', 'Make a trip hammer', 'brass_mechanisms', inventory_changed('tfc:trip_hammer'))
     story.advancement('crankshaft', icon('tfc:crankshaft'), 'Automatic Cranking', 'Make a crankshaft', 'brass_mechanisms', inventory_changed('tfc:crankshaft'))
     story.advancement('water_wheel', icon('tfc:wood/water_wheel/sequoia'), 'River Power', 'Make a water wheel', 'gear_box', inventory_changed('#tfc:water_wheels'))
-    story.advancement('windmill', icon('tfc:windmill_blade'), 'Wind Power', 'Make a windmill and add five blades to it', 'gear_box', generic('tfc:max_windmill', None), frame='challenge')
+    story.advancement('windmill', icon('tfc:lattice_windmill_blade'), 'Wind Power', 'Make a windmill and add five blades to it', 'gear_box', generic('tfc:max_windmill', None), frame='challenge')
     story.advancement('pump', icon('tfc:steel_pump'), 'Moving Water', 'Make a steel pump', 'gear_box', inventory_changed('tfc:steel_pump'), frame='challenge')
     # Glassblowing and metal block advancements parented to sheets
     story.advancement('plated_block', icon('tfc:metal/block/copper'), 'Mostly Wood', 'Make a metal plated block', 'sheet', inventory_changed('#tfc:metal_plated_blocks'))
@@ -97,7 +97,7 @@ def generate(rm: ResourceManager):
     world.advancement('lava_lamp', icon('tfc:metal/lamp/blue_steel'), 'Lava Lamp', 'Light a lamp that burns forever', 'root', generic('tfc:lava_lamp', None))
     world.advancement('pan', icon('tfc:pan/empty'), 'Gold Rush', 'Craft a pan for sifting', 'root', inventory_changed('tfc:pan/empty'))
     world.advancement('spindle', icon('tfc:spindle'), 'Spindly', 'Craft a spindle', 'loom', inventory_changed('tfc:spindle'))
-    world.advancement('loom', icon('tfc:wood/planks/pine_loom'), 'Weaver', 'Craft a loom for weaving', 'root', inventory_changed('#tfc:looms'))
+    world.advancement('loom', icon('tfc:wood/loom/pine'), 'Weaver', 'Craft a loom for weaving', 'root', inventory_changed('#tfc:looms'))
     world.advancement('bed', icon('minecraft:red_bed'), 'A Good Night\'s Rest', 'Craft a bed', 'spindle', inventory_changed('#minecraft:beds'))
     world.advancement('volcano', icon('tfc:rock/magma/basalt'), 'Pacific Rim', 'Find an area with high volcanic activity', 'root', multiple_all(*[biome(b) for b in TFC_BIOMES if 'volcanic' in b]))
     world.advancement('coral_reef', icon('tfc:coral/brain_coral_fan'), 'What a rel-Reef!', 'Find a coral reef', 'volcano', biome('ocean_reef'))

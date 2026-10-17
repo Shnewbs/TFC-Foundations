@@ -137,7 +137,7 @@ public final class DataEntryPoint
             );
             tags.tag(PhysicalDamageType.IS_SLASHING);
         });
-        tags(event, Registries.WORLD_PRESET, lookup, (provider, tags) -> tags.tag(WorldPresetTags.NORMAL).add(PRESET));
+        tags(event, Registries.WORLD_PRESET, lookup, (provider, tags) -> tags.tag(WorldPresetTags.NORMAL).add(PRESET, NATURAL_PRESET));
 
         add(event, new BuiltinDeposits(output, lookup));
         add(event, new BuiltinEntityDamageResist(output, lookup));

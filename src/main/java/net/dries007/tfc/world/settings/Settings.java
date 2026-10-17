@@ -30,9 +30,21 @@ public record Settings(
     RockLayerSettings rockLayerSettings,
     float continentalness,
     float grassDensity,
-    boolean finiteContinents
+    boolean finiteContinents,
+    boolean naturalLandscapes
 )
 {
+    /** Existing presets and saved settings retain ordinary TFC terrain. */
+    public Settings(boolean flatBedrock, int spawnDistance, int spawnCenterX, int spawnCenterZ, int temperatureScale, float temperatureConstant, int rainfallScale, float rainfallConstant, RockLayerSettings rockLayerSettings, float continentalness, float grassDensity, boolean finiteContinents)
+    {
+        this(flatBedrock, spawnDistance, spawnCenterX, spawnCenterZ, temperatureScale, temperatureConstant, rainfallScale, rainfallConstant, rockLayerSettings, continentalness, grassDensity, finiteContinents, false);
+    }
+
+    public Settings withNaturalLandscapes(boolean enabled)
+    {
+        return new Settings(flatBedrock, spawnDistance, spawnCenterX, spawnCenterZ, temperatureScale, temperatureConstant, rainfallScale, rainfallConstant, rockLayerSettings, continentalness, grassDensity, finiteContinents, enabled);
+    }
+
     public static final MapCodec<Settings> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
         Codec.BOOL.fieldOf("flat_bedrock").forGetter(c -> c.flatBedrock),
         Codec.INT.fieldOf("spawn_distance").forGetter(c -> c.spawnDistance),
@@ -45,6 +57,7 @@ public record Settings(
         RockLayerSettings.CODEC.fieldOf("rock_layer_settings").forGetter(c -> c.rockLayerSettings),
         Codec.FLOAT.fieldOf("continentalness").forGetter(c -> c.continentalness),
         Codec.FLOAT.fieldOf("grass_density").forGetter(c -> c.grassDensity),
-        Codec.BOOL.fieldOf("finite_continents").forGetter(c -> c.finiteContinents)
+        Codec.BOOL.fieldOf("finite_continents").forGetter(c -> c.finiteContinents),
+        Codec.BOOL.optionalFieldOf("natural_landscapes", false).forGetter(c -> c.naturalLandscapes)
     ).apply(instance, Settings::new));
 }

@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.common.recipes;
 
+import net.dries007.tfc.common.recipes.outputs.FluidOutput;
 import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class SimplePotRecipe extends PotRecipe
 {
     public static final MapCodec<SimplePotRecipe> CODEC = RecordCodecBuilder.<SimplePotRecipe>mapCodec(i -> i.group(
         PotRecipe.CODEC.forGetter(c -> c),
-        FluidStack.CODEC.optionalFieldOf("fluid_output", FluidStack.EMPTY).forGetter(c -> c.outputFluid),
+        FluidOutput.CODEC.optionalFieldOf("fluid_output", FluidOutput.EMPTY).forGetter(c -> c.outputFluid),
         ItemStackProvider.CODEC.listOf(0, 5).optionalFieldOf("item_output", List.of()).forGetter(c -> c.outputItems),
         Codec.BOOL.optionalFieldOf("uses_all_fluid", true).forGetter(c -> c.usesAllFluid)
     ).apply(i, SimplePotRecipe::new))
@@ -45,17 +46,22 @@ public class SimplePotRecipe extends PotRecipe
 
     public static final StreamCodec<RegistryFriendlyByteBuf, SimplePotRecipe> STREAM_CODEC = StreamCodec.composite(
         PotRecipe.STREAM_CODEC, c -> c,
-        FluidStack.OPTIONAL_STREAM_CODEC, c -> c.outputFluid,
+        FluidOutput.OPTIONAL_STREAM_CODEC, c -> c.outputFluid,
         ItemStackProvider.STREAM_CODEC.apply(ByteBufCodecs.list(5)), c -> c.outputItems,
         ByteBufCodecs.BOOL, c -> c.usesAllFluid,
         SimplePotRecipe::new
     );
 
-    protected final FluidStack outputFluid;
+    protected final FluidOutput outputFluid;
     protected final List<ItemStackProvider> outputItems;
     protected final boolean usesAllFluid;
 
     public SimplePotRecipe(PotRecipe base, FluidStack outputFluid, List<ItemStackProvider> outputProviders, boolean usesAllFluid)
+    {
+        this(base, FluidOutput.of(outputFluid), outputProviders, usesAllFluid);
+    }
+
+    public SimplePotRecipe(PotRecipe base, FluidOutput outputFluid, List<ItemStackProvider> outputProviders, boolean usesAllFluid)
     {
         super(base);
         this.outputFluid = outputFluid;
@@ -65,7 +71,7 @@ public class SimplePotRecipe extends PotRecipe
 
     public FluidStack getDisplayFluid()
     {
-        return outputFluid;
+        return outputFluid.copy();
     }
 
     public List<ItemStackProvider> getOutputItems()
@@ -92,7 +98,7 @@ public class SimplePotRecipe extends PotRecipe
                 outputs.add(providers.removeFirst().getSingleStack(input));
             }
         }
-        return new SimpleOutput(usesAllFluid ? outputFluid.copy() : favorNewFluidStack(inventory.getFluidHandler().getFluidInTank(0), outputFluid), outputs);
+        return new SimpleOutput(usesAllFluid ? outputFluid.copy() : favorNewFluidStack(inventory.getFluidHandler().getFluidInTank(0), outputFluid.copy()), outputs);
     }
 
     public FluidStack favorNewFluidStack(FluidStack input, FluidStack output)

@@ -250,6 +250,8 @@ val verifyPortDependencies = tasks.register("verifyPortDependencies") {
 }
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
+    // Java 25 record/lambda body edits must not reuse stale incremental outputs.
+    options.isIncremental = false
     // Expose the migration backlog in one CI pass without suppressing any errors.
     options.compilerArgs.addAll(listOf("-Xmaxerrs", "10000"))
 }
@@ -325,6 +327,8 @@ tasks {
     }
 
     jar {
+        // Datagen bookkeeping is not a runtime resource.
+        exclude(".cache/**")
         optionalIntegrationSources.values.forEach { from(it.output) }
         manifest {
             attributes["Implementation-Version"] = project.version

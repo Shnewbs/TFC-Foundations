@@ -13,6 +13,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import org.jetbrains.annotations.Nullable;
 
 /** Carries the actual deferred entry key through legacy supplier factories, including shared properties. */
 public final class RegistrationContext
@@ -32,6 +33,11 @@ public final class RegistrationContext
         return ScopedValue.where(ITEM, new Entry<>(ResourceKey.create(Registries.ITEM, id))).call(factory::get);
     }
 
+    public static <T extends Item> T blockItem(Identifier id, String description, Supplier<T> factory)
+    {
+        return ScopedValue.where(ITEM, new Entry<>(ResourceKey.create(Registries.ITEM, id), description)).call(factory::get);
+    }
+
     /** Called before native properties first derive a loot-table key. Outside these factories, do nothing. */
     public static void bind(BlockBehaviour.Properties properties)
     {
@@ -41,15 +47,27 @@ public final class RegistrationContext
     /** Called before native properties first derive description/model/component-initializer keys. */
     public static void bind(Item.Properties properties)
     {
-        if (ITEM.isBound()) properties.setId(ITEM.get().claim(properties));
+        if (ITEM.isBound())
+        {
+            final Entry<Item> entry = ITEM.get();
+            properties.setId(entry.claim(properties));
+            // Native BlockItem no longer inherits its block's description automatically.
+            if (entry.description != null) properties.overrideDescription(entry.description);
+        }
     }
 
     private static final class Entry<T>
     {
         private final ResourceKey<T> key;
+        private final @Nullable String description;
         private Object properties;
 
-        private Entry(ResourceKey<T> key) { this.key = key; }
+        private Entry(ResourceKey<T> key) { this(key, null); }
+        private Entry(ResourceKey<T> key, @Nullable String description)
+        {
+            this.key = key;
+            this.description = description;
+        }
 
         private ResourceKey<T> claim(Object properties)
         {

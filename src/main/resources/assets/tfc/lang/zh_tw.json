@@ -700,6 +700,7 @@
   "tfc.commands.trim.bad_template": "無法識別的模板",
   "tfc.settings.km": "%s 公里",
   "generator.tfc.overworld": "群巒傳說",
+  "generator.tfc.natural": "TerraFirmaCraft — Natural",
   "tfc.tooltip.create_world.title": "群巒傳說世界生成設置",
   "tfc.create_world.flat_bedrock": "平滑基岩層",
   "tfc.create_world.spawn_distance": "世界生成規模",

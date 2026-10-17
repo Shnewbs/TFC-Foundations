@@ -1,0 +1,342 @@
+{
+  "generated_at_utc": "2026-10-17T20:21:50.298938+00:00",
+  "source_base_sha": "680cd84ecdb7c798814c74989e3b7a04bf357a91",
+  "branch": "26.1.2",
+  "independent_26_x_changed": false,
+  "toolchain": {
+    "minecraft": "26.1.2",
+    "neoforge": "26.1.2.114",
+    "java": "Eclipse Temurin 25.0.4.1+1",
+    "gradle": "9.2.1"
+  },
+  "build": {
+    "result": "BUILD SUCCESSFUL",
+    "duration": "2m 16s",
+    "tasks_executed": 17,
+    "forced_full_source_compilation": true,
+    "build_cache": false,
+    "excluded_already_prepared_tasks": [
+      "createMinecraftArtifacts",
+      "downloadAssets"
+    ],
+    "unit_tests": {
+      "tests": 265,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 12
+    },
+    "passed": 253,
+    "native_datagen_files": 8501,
+    "repeat_datagen_changed_files": 0,
+    "license_and_dependency_checks": "passed",
+    "authored_resource_validation": "passed",
+    "texture_files_validated": 10984,
+    "texture_entries_validated": 18864,
+    "blockstate_files_validated": 26792,
+    "unused_model_files_validated": 8785,
+    "cache_bookkeeping_excluded_from_jar": true
+  },
+  "implemented": {
+    "preset": "tfc:natural",
+    "display_name": "TerraFirmaCraft \u2014 Natural",
+    "old_settings_default": "natural_landscapes=false",
+    "standard_preset": "tfc:overworld",
+    "blending": "convex cubic B-splines at regional and column scales",
+    "climate_geology_comparison_positions": 289,
+    "arch_geometry_cases": 360,
+    "arch_scope": "local coordinates 1\u201314, no neighboring writes; dry uplands; local hardened rock; <=3-block foundation variation; pre-vegetation; skip structure references",
+    "external_density": "terralith:overworld/arch/thickness, world-seeded and normalized to bounded detail; built-in fallback",
+    "tfc_ownership": [
+      "geology",
+      "ores",
+      "climate",
+      "soils",
+      "hydrology",
+      "aquifers",
+      "vegetation",
+      "wildlife",
+      "progression"
+    ],
+    "external_generator_or_biomes_merged": false,
+    "existing_chunks_rewritten": false
+  },
+  "runtime_fixes": [
+    "Native item/fluid recipe templates defer component access; original JSON and network representations retained",
+    "Existing advancement icons corrected",
+    "Explicit no-loot declarations distinguished from missing declared tables",
+    "Block-item and seed translation identifiers corrected",
+    "Creative entries deduplicated with component variants and parent/search visibility preserved",
+    "Predator schedule initialization deferred until the brain is assigned, including saved brain restoration"
+  ],
+  "optional_artifacts": [
+    {
+      "filename": "Terralith_26.1_v2.6.2_Neoforge.jar",
+      "version": "2.6.2",
+      "sha256": "3e28c628eb2cfcfe86b36b7f27c821f07e98fafac97e7774038ca868c3f1e7c7",
+      "bundled_in_tfc": false
+    },
+    {
+      "filename": "lithostitched-1.8.1-neoforge-26.1.jar",
+      "version": "1.8.1",
+      "sha256": "bbe669da8671b2da36d3b89fbc113d28c7d92f3fe5b6709d0e6875e5f867d05d",
+      "bundled_in_tfc": false
+    }
+  ],
+  "fresh_standalone": {
+    "seed": 42,
+    "settings": "natural_landscapes=true",
+    "gates": {
+      "resource": [],
+      "items": [],
+      "data": [
+        "[13:16:19] [main/INFO] [ne.dr.tf.ut.SelfTests/]: Data pack self tests passed in 12.49 ms"
+      ],
+      "server": [
+        "[13:16:21] [Server thread/INFO] [ne.dr.tf.ut.SelfTests/]: Server self tests passed in 322.9 ms"
+      ]
+    },
+    "done": true,
+    "arch_lines": [
+      "[13:16:32] [worldgen/INFO] [ne.dr.tf.TerraFirmaCraft/]: Natural stone arch at BlockPos{x=-8120, y=84, z=-8264}: 138 blocks, Terralith detail=false"
+    ],
+    "server_exit": 0
+  },
+  "fresh_terralith": {
+    "seed": 42,
+    "gates_server": {
+      "resource": [],
+      "items": [],
+      "data": [
+        "[13:16:22] [main/INFO] [ne.dr.tf.ut.SelfTests/]: Data pack self tests passed in 18.71 ms",
+        "[13:17:45] [Server thread/INFO] [ne.dr.tf.ut.SelfTests/]: Data pack self tests passed in 9.123 ms"
+      ],
+      "server": [
+        "[13:16:23] [Server thread/INFO] [ne.dr.tf.ut.SelfTests/]: Server self tests passed in 220.7 ms"
+      ]
+    },
+    "gates_client": {
+      "resource": [
+        "[13:17:07] [Render thread/INFO] [ne.dr.tf.ut.SelfTests/]: Client resource self tests passed in 147.3 ms"
+      ],
+      "items": [
+        "[13:17:17] [Render thread/INFO] [ne.dr.tf.ut.SelfTests/]: Client item self tests passed in 218.7 ms"
+      ],
+      "data": [
+        "[13:17:22] [Render thread/INFO] [ne.dr.tf.ut.SelfTests/]: Data pack self tests passed in 18.38 ms",
+        "[13:17:46] [Render thread/INFO] [ne.dr.tf.ut.SelfTests/]: Data pack self tests passed in 6.301 ms"
+      ],
+      "server": []
+    },
+    "done": true,
+    "client_joined": true,
+    "arch_lines": [
+      "[13:16:36] [worldgen/INFO] [ne.dr.tf.TerraFirmaCraft/]: Natural stone arch at BlockPos{x=-8120, y=84, z=-8264}: 136 blocks, Terralith detail=true"
+    ],
+    "live_reload": true,
+    "recipes_loaded": [
+      "7481",
+      "7481"
+    ],
+    "creative_duplicate_exceptions": 0,
+    "failed_mob_construction": 0,
+    "missing_model_self_test_failures": 0,
+    "legacy_model_parse_errors": 176,
+    "actors_summoned": [
+      "tfc:wolf",
+      "tfc:grizzly_bear",
+      "tfc:crocodile"
+    ],
+    "server_exit": 0
+  },
+  "save_restart": {
+    "before": {
+      "chunks": {
+        "-508,-517": {
+          "status": "minecraft:full",
+          "sha256": "ff232a48782573c8e4cdca2a55dfdd3cacdf427c7cde91f76fa341cb78e497fc"
+        },
+        "-506,-516": {
+          "status": "minecraft:full",
+          "sha256": "9e0c10ab05d5da88923d86cd10481144dae0f84a7f7c4be729cf6e19b69da668"
+        },
+        "-509,-518": {
+          "status": "minecraft:full",
+          "sha256": "ef179a99e379cc275cc888883f5262b9367932d99f07c9774eee979ad9a84f0c"
+        }
+      },
+      "actors": {
+        "tfc:wolf": 1,
+        "tfc:grizzly_bear": 1,
+        "tfc:crocodile": 1
+      },
+      "seed": 42,
+      "natural_landscapes": true
+    },
+    "after": {
+      "chunks": {
+        "-508,-517": {
+          "status": "minecraft:full",
+          "sha256": "ff232a48782573c8e4cdca2a55dfdd3cacdf427c7cde91f76fa341cb78e497fc"
+        },
+        "-506,-516": {
+          "status": "minecraft:full",
+          "sha256": "9e0c10ab05d5da88923d86cd10481144dae0f84a7f7c4be729cf6e19b69da668"
+        },
+        "-509,-518": {
+          "status": "minecraft:full",
+          "sha256": "ef179a99e379cc275cc888883f5262b9367932d99f07c9774eee979ad9a84f0c"
+        }
+      },
+      "actors": {
+        "tfc:wolf": 1,
+        "tfc:grizzly_bear": 1,
+        "tfc:crocodile": 1
+      },
+      "seed": 42,
+      "natural_landscapes": true
+    },
+    "all_three_full_chunk_block_hashes_unchanged": true,
+    "tagged_wildlife_preserved": true,
+    "fixture_actor_flags": [
+      "Invulnerable",
+      "NoGravity"
+    ],
+    "ai_disabled": false,
+    "client_reconnected": true,
+    "gates_server": {
+      "resource": [],
+      "items": [],
+      "data": [
+        "[13:20:26] [main/INFO] [ne.dr.tf.ut.SelfTests/]: Data pack self tests passed in 10.51 ms"
+      ],
+      "server": [
+        "[13:20:27] [Server thread/INFO] [ne.dr.tf.ut.SelfTests/]: Server self tests passed in 207.0 ms"
+      ]
+    },
+    "gates_client": {
+      "resource": [
+        "[13:21:02] [Render thread/INFO] [ne.dr.tf.ut.SelfTests/]: Client resource self tests passed in 156.1 ms"
+      ],
+      "items": [
+        "[13:21:04] [Render thread/INFO] [ne.dr.tf.ut.SelfTests/]: Client item self tests passed in 252.6 ms"
+      ],
+      "data": [
+        "[13:21:07] [Render thread/INFO] [ne.dr.tf.ut.SelfTests/]: Data pack self tests passed in 10.56 ms"
+      ],
+      "server": []
+    },
+    "existing_arch_regenerated": false,
+    "server_exit": 0
+  },
+  "ordinary_comparison": {
+    "chunk": [
+      137,
+      73
+    ],
+    "different_voxels": 278,
+    "nonvegetation_differences": 0,
+    "nonvegetation_examples": [],
+    "biomes_equal": true
+  },
+  "artifact": {
+    "filename": "TFC-Foundations-26.1.2-0.0.0.jar",
+    "size_bytes": 68863301,
+    "sha256": "9ebdeaeeba4fe8302cd03ce404b1a19a77aa56af31a75ddb97c81198d76cd490",
+    "tests": {
+      "tests": 265,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 12
+    },
+    "packaged_matches_compiled": {
+      "net/dries007/tfc/common/recipes/SewingRecipe.class": "874c5fb8480464c16e9f44da40c398392f82eddd8e2dda72e75f98583c55b598",
+      "net/dries007/tfc/util/Helpers$1.class": "c4b4dae5ed303eb332e4732d9279cabd5bf202849e9137f504f2b1b1930721fb",
+      "net/dries007/tfc/util/Helpers$2.class": "257f3a17acab3024dd5f7f7a7780cc7b4aa76e3d4ffb036158fa3c09f0549c8b",
+      "net/dries007/tfc/util/Helpers$3.class": "a95afc00e2af6025b93fda7362c4380d075abc67601b1fa6b3655f2350883768",
+      "net/dries007/tfc/util/Helpers$CarryCount.class": "436249639906fc334961c90585e1f4e7e4ddffd7b611b76133a3226b703d1c95",
+      "net/dries007/tfc/util/Helpers.class": "2291803167fd6edb28972a2c66c35e05cd87f9cc5e53e8ae09f72c88e720e4e7",
+      "net/dries007/tfc/common/recipes/JamPotRecipe.class": "5702f9198cb304c8b194baf357e8f6248e54a374a40b4a7c7c43d25db0a1e340",
+      "net/dries007/tfc/common/recipes/JamPotRecipe$JamOutput.class": "44be9a791049f20078d53812013354c447e5bc35edf9be26688a40ff7c2a1eb3",
+      "net/dries007/tfc/world/TFCChunkGenerator.class": "41f1db60458c0a1ce359f6099e8c648819211f0f9983fd89213462feb0d65387",
+      "net/dries007/tfc/common/recipes/BlastFurnaceRecipe.class": "14db9f2c0c04694e6a1ae7652d28367c77fbf39c12d84ef68f0462dfa83dfc9c",
+      "net/dries007/tfc/common/recipes/outputs/ExtraProductModifier.class": "be7760353ff3c3dd4ac34c92755321dff2f624a3833b96939df332def8c5fa67",
+      "net/dries007/tfc/common/recipes/GlassworkingRecipe.class": "e099294fac764ee36742223d3d97c19c93bee935a091efd40ddd295e98ca62fe",
+      "net/dries007/tfc/common/recipes/KnappingRecipe.class": "8b3f5a4aebc0f609cb1ddab98b3dd8f5ccfeed0ff31521e101848e4b40d858e5",
+      "net/dries007/tfc/util/data/KnappingType.class": "222e44ffb65cc995d42b03971e9f721bac3683b305d912f20629ca5406a9116f",
+      "net/dries007/tfc/common/entities/ai/predator/PackPredatorAi.class": "72b8e92332757ff2283bc1bafda1f41aff2cba609c2a7b18a0acdab1ad529ade",
+      "net/dries007/tfc/common/entities/ai/predator/PredatorAi.class": "a4b76ecfc90109a4710186d46006bf4c317ad8d5004e9b731925938ccccf7f67",
+      "net/dries007/tfc/common/recipes/HeatingRecipe.class": "3a4c78fde2595880c5e123f6a5222c96b45eac235c6db6041f729066fe8e842a",
+      "net/dries007/tfc/common/recipes/InstantFluidBarrelRecipe.class": "0d7fd852a1fcc78612ca64da469468568a5ecf0e33bcd692ea065b0501bf32c6",
+      "net/dries007/tfc/common/recipes/BarrelRecipe.class": "ce040cc91732e6a7bae08ac5048e697a07cf38db118df773a2b4489a853c5631",
+      "net/dries007/tfc/common/recipes/BarrelRecipe$Builder.class": "ba8097faec7959625f8ad2afb3d8e823ad832c543504ed0959182fd4f96827e3",
+      "net/dries007/tfc/common/items/TFCItems.class": "19c56f44c0d6adcb0e746799ddcfb9ed770cafb8c212fa907514f8b74df4e9fe",
+      "net/dries007/tfc/common/items/TFCItems$ItemId.class": "44f83d78b7fde76c783f67e5e90a180a974152f3d38e397db656eab6f9077b53",
+      "net/dries007/tfc/util/registry/RegistrationHelpers.class": "e8c1bc65a0c3e88048481616d1fa883307f548fe8b9bbb2d19712ad021761757",
+      "net/dries007/tfc/util/SelfTests$ClientSelfTestEvent.class": "db669ca80aad1926b1fe7c997b4a1cb5e228a165c8f03317d3e248eeb2ede875",
+      "net/dries007/tfc/util/SelfTests.class": "5c5ed3ca10ea03bd37992866fc214925e47fa04297decd85f5a61a506ef06653",
+      "net/dries007/tfc/common/recipes/outputs/ItemOutput.class": "08534ae96059f7e8d427dafc2dcdcb4a90f494312a43262af3dd3b8c3101644c",
+      "net/dries007/tfc/client/screen/CreateTFCWorldScreen.class": "9539ba272904c1ca8c7bac3e86d0b701c444245147c8266885e7ee0f2086af0b",
+      "net/dries007/tfc/world/noise/NoiseSampler.class": "b873783135bb551ff7bc25f91cec69960dde477ca18c3bf171ad06bcc8a34ce1",
+      "net/dries007/tfc/world/noise/NoiseSampler$NoiseWiringVisitor.class": "c8ef871257ad2d63c78f42011dac38e4e574e8d25ebfe967640214b9afe8f802",
+      "net/dries007/tfc/common/entities/predator/Predator.class": "7aaf3869393bd985083bc5d245ee04a187ad3d7c0adc96986defff37a52c6f15",
+      "net/dries007/tfc/common/recipes/outputs/FluidOutput.class": "c6f4166e903873bcb2d6f3fd8d4af415ed1cb37b33fbe5c4042cd077ab6368fd",
+      "net/dries007/tfc/common/recipes/outputs/ItemStackProvider.class": "a9c685463a8f33865ddba8e736248a3a7196cbb4be851ccab2011f80d08d357b",
+      "net/dries007/tfc/world/feature/NaturalStoneArchFeature.class": "025c0a26d4ace9f3879f90f9c2dcd578f9eb39657b734668a8fd3741df0bdfa1",
+      "net/dries007/tfc/world/settings/Settings.class": "c6fe48693d0ebca63ce31408e6ad6b3aa54b939a9f2e819bdb26cb446c7f2844",
+      "net/dries007/tfc/world/ChunkBiomeSampler.class": "baa2d3b6cf7adb4faddac3fd297e10768c7fa382df90c2fcc2f5ad40b5151dc7",
+      "net/dries007/tfc/common/recipes/SimplePotRecipe$SimpleOutput.class": "d31459f4913e79420cef832a4a7373bb5a4ddf486e9c3ea3b675dc4e8c972fb6",
+      "net/dries007/tfc/common/recipes/SimplePotRecipe.class": "645ba01cbe7369a990f8fade37dd2c905cac5b63391409953f97ba0cbc9f73e8",
+      "net/dries007/tfc/util/registry/RegistrationContext.class": "c14142a8b1efc3bbdb2f550fe486d18db3fe1bc4c97fc47e5ed8b269afd1b6a0",
+      "net/dries007/tfc/util/registry/RegistrationContext$Entry.class": "026f539fe4630740575743c2eb59c4015438df2ab16ca1bc52ded6736b057ea0",
+      "net/dries007/tfc/common/entities/ai/predator/AmphibiousPredatorAi.class": "f1cfce5024edee462fda583102e5e2a456230e424b43e958d04bfba852711de6",
+      "net/dries007/tfc/TerraFirmaCraft.class": "b288d14890c20e107345fc636639b2e5920168de43be9bc08d0b83ad111b4e94",
+      "net/dries007/tfc/client/ClientEventHandler.class": "8f7467f9596f4e77292d3a73b5e77192d3adffd6a8b67a0cc508ccf3f19be283",
+      "net/dries007/tfc/compat/jei/TFCCraftingExtensions$2.class": "efa59d89184ba4c725108eb3c94157a93e5e3c374dfdafd16a08f0b830a7116a",
+      "net/dries007/tfc/compat/jei/TFCCraftingExtensions.class": "7e5a36dc267e0599143c15bb046892919646743ba89da8a44766c5e59388b812",
+      "net/dries007/tfc/compat/jei/TFCCraftingExtensions$1.class": "47821d477146512d365395298778632b9a30e5d3e39b061d52d14ad0387e0ba8",
+      "net/dries007/tfc/world/ChunkHeightFiller.class": "ca5ea1be7da57e0522da16041957d4e2c11ffd3b5d9c6612b4b8da8208a6bbb3",
+      "net/dries007/tfc/common/TFCCreativeTabs$1.class": "99798abae1fadd33ec01cf5c4ddcfa2f71a0b383b488a6a3d71cecd664509ffb",
+      "net/dries007/tfc/common/TFCCreativeTabs$Id.class": "ab2f6cd6d77564cac3e33ec997ddb247b6d7b8e3bd2464e8b61650d41a09b3fa",
+      "net/dries007/tfc/common/TFCCreativeTabs.class": "f42722ba404aa22ca80fd4172780c458fcc04810c3f03d2fef73b629764f241f",
+      "net/dries007/tfc/common/items/SeedItem.class": "228098c7aa9820434f5c06098f41700023dc03cc22edb8a24c7f8cbb09f60524",
+      "net/dries007/tfc/world/feature/TFCFeatures$Id.class": "1402ae5d32c280b57c7d1548ab013ee921e83e7a8d06907ef9b215520a9ab118",
+      "net/dries007/tfc/world/feature/TFCFeatures.class": "52ae5fbba634b7924e58c98350c70dd29f119d13b1bc91e8bc7ab60c9cad8fde",
+      "net/dries007/tfc/world/feature/StoneArchShape.class": "b44a3b4827d3eeccd459c3ca68b894769c6cf18011cd5148665778c5cf004d5e"
+    },
+    "datagen_cache_bundled": false,
+    "third_party_distribution_bundled": false,
+    "refined_arch_bytecode_verified": true
+  },
+  "images": [
+    {
+      "filename": "TFC-Natural-Stone-Arch.png",
+      "sha256": "1c2297b9b330ad65ce888d3fa8e487794758fe7be76bb5b83e4a9ed4d7e695fd",
+      "size_bytes": 943496,
+      "type": "native Minecraft framebuffer capture",
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "filename": "TFC-Natural-Terrain.png",
+      "sha256": "8467895db0933fde1f1b540a6649f332eb36695ba6bb4e8373fc8bbd3ac3c200",
+      "size_bytes": 837522,
+      "type": "native Minecraft framebuffer capture",
+      "dimensions": [
+        1280,
+        720
+      ]
+    }
+  ],
+  "limits": [
+    "One native client joins and reconnects; two-client multiplayer and complete survival progression are not certified",
+    "NeoForge 26.1.2.122 from the user log is not the pinned tested loader",
+    "No matching-seed reproduction of the user screenshots; the original seed was not provided",
+    "Ordinary comparison covers one full chunk; vegetation/groundcover vary, so whole-world byte-identical decoration and universal generation-order independence are not claimed",
+    "Legacy unused item-model JSON loader errors remain, although resource/item self-tests pass and captured foliage/terrain render",
+    "A non-fatal client Button class probe remains in the development dedicated-server log; blocked Mojang authentication DNS and offline local-only test servers are environment limits",
+    "This selects Terralith arch detail; it does not import all Terralith biomes/features or establish perfect terrain",
+    "Old-world migrations, broader performance benchmarks, and other optional dependency combinations remain unverified"
+  ]
+}

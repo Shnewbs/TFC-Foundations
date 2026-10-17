@@ -462,17 +462,10 @@ public final class Helpers
             return ((RecipeManagerAccessor) server.getRecipeManager()).accessor$getRecipes();
         }
 
-        try
+        if (net.neoforged.fml.loading.FMLEnvironment.getDist() == net.neoforged.api.distmarker.Dist.CLIENT)
         {
             final RecipeMap client = ClientHelpers.tryGetSafeRecipeMap();
-            if (client != null)
-            {
-                return client;
-            }
-        }
-        catch (Throwable t)
-        {
-            LOGGER.info("^ This is fine - No client or server recipe manager present upon initial resource reload on physical server");
+            if (client != null) return client;
         }
 
         if (CACHED_RECIPES != null)

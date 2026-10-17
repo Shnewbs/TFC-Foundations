@@ -8,6 +8,7 @@ package net.dries007.tfc.common.recipes;
 
 import net.dries007.tfc.common.recipes.input.NoopInput;
 
+import net.dries007.tfc.common.recipes.outputs.FluidOutput;
 import net.minecraft.world.item.crafting.Recipe;
 
 import com.mojang.serialization.Codec;
@@ -38,7 +39,7 @@ public class HeatingRecipe implements INoopInputRecipe, IRecipePredicate<ItemSta
     public static final MapCodec<HeatingRecipe> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
         net.dries007.tfc.common.recipes.LegacyIngredientCodecs.ITEM.fieldOf("ingredient").forGetter(c -> c.ingredient),
         ItemStackProvider.CODEC.optionalFieldOf("result_item", ItemStackProvider.empty()).forGetter(c -> c.outputItem),
-        FluidStack.CODEC.optionalFieldOf("result_fluid", FluidStack.EMPTY).forGetter(c -> c.outputFluid),
+        FluidOutput.CODEC.optionalFieldOf("result_fluid", FluidOutput.EMPTY).forGetter(c -> c.outputFluid),
         Codec.FLOAT.fieldOf("temperature").forGetter(c -> c.temperature),
         Codec.BOOL.optionalFieldOf("use_durability", false).forGetter(c -> c.useDurability)
     ).apply(i, HeatingRecipe::new));
@@ -46,7 +47,7 @@ public class HeatingRecipe implements INoopInputRecipe, IRecipePredicate<ItemSta
     public static final StreamCodec<RegistryFriendlyByteBuf, HeatingRecipe> STREAM_CODEC = StreamCodec.composite(
         Ingredient.CONTENTS_STREAM_CODEC, c -> c.ingredient,
         ItemStackProvider.STREAM_CODEC, c -> c.outputItem,
-        FluidStack.OPTIONAL_STREAM_CODEC, c -> c.outputFluid,
+        FluidOutput.OPTIONAL_STREAM_CODEC, c -> c.outputFluid,
         ByteBufCodecs.FLOAT, c -> c.temperature,
         ByteBufCodecs.BOOL, c -> c.useDurability,
         HeatingRecipe::new
@@ -60,11 +61,16 @@ public class HeatingRecipe implements INoopInputRecipe, IRecipePredicate<ItemSta
 
     private final Ingredient ingredient;
     private final ItemStackProvider outputItem;
-    private final FluidStack outputFluid;
+    private final FluidOutput outputFluid;
     private final float temperature;
     private final boolean useDurability;
 
     public HeatingRecipe(Ingredient ingredient, ItemStackProvider outputItem, FluidStack outputFluid, float temperature, boolean useDurability)
+    {
+        this(ingredient, outputItem, FluidOutput.of(outputFluid), temperature, useDurability);
+    }
+
+    public HeatingRecipe(Ingredient ingredient, ItemStackProvider outputItem, FluidOutput outputFluid, float temperature, boolean useDurability)
     {
         this.ingredient = ingredient;
         this.outputItem = outputItem;
@@ -159,7 +165,7 @@ public class HeatingRecipe implements INoopInputRecipe, IRecipePredicate<ItemSta
 
     public FluidStack getDisplayOutputFluid()
     {
-        return outputFluid;
+        return outputFluid.copy();
     }
 
     @Override

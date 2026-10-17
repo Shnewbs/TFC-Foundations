@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.common.recipes;
 
+import net.dries007.tfc.common.recipes.outputs.ItemOutput;
 import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.List;
@@ -68,13 +69,13 @@ public class SewingRecipe implements ISimpleRecipe<SewingTableContainer.Input>
             }
             return DataResult.success(squares);
         }).fieldOf("squares").forGetter(c -> c.squares),
-        ItemStack.CODEC.fieldOf("result").forGetter(c -> c.result)
+        ItemOutput.CODEC.fieldOf("result").forGetter(c -> c.result)
     ).apply(i, SewingRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, SewingRecipe> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.VAR_LONG, c -> c.stitches,
         ByteBufCodecs.STRING_UTF8, c -> c.squares,
-        ItemStack.STREAM_CODEC, c -> c.result,
+        ItemOutput.STREAM_CODEC, c -> c.result,
         SewingRecipe::new
     );
 
@@ -103,9 +104,14 @@ public class SewingRecipe implements ISimpleRecipe<SewingTableContainer.Input>
     private final long stitches; // A bitset of 45 total stitches, where 0 = false, 1 = true
     private final String squares; // A string of 32 total squares (characters), where ' ' = none, 'B' = burlap, 'W' = wool
 
-    private final ItemStack result;
+    private final ItemOutput result;
 
     public SewingRecipe(long stitches, String squares, ItemStack result)
+    {
+        this(stitches, squares, ItemOutput.of(result));
+    }
+
+    public SewingRecipe(long stitches, String squares, ItemOutput result)
     {
         this.stitches = stitches;
         this.squares = squares;

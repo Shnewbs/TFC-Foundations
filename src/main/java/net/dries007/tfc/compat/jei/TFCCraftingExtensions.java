@@ -149,7 +149,7 @@ public final class TFCCraftingExtensions
             }
         }
         remainder.ifPresent(r -> r.modifiers().forEach(mod -> {
-            if (mod instanceof ExtraProductModifier(ItemStack extra)) builder.addOutputSlot(60, 0).addItemStack(extra);
+            if (mod instanceof ExtraProductModifier extra) builder.addOutputSlot(60, 0).addItemStack(extra.stack());
         }));
     }
 }

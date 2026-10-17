@@ -149,7 +149,8 @@ public class CreateTFCWorldScreen extends Screen
                 old.rockLayerSettings(),
                 continentalness.get().floatValue(),
                 grassDensity.get().floatValue(),
-                finiteContinents.get()
+                finiteContinents.get(),
+                old.naturalLandscapes()
             ));
         }
     }

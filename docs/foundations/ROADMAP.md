@@ -1,6 +1,6 @@
 # Port milestones and release gates
 
-Current 26.1.2 checkpoint (2026-10-17): zero main compiler errors; full pinned build passes with **236 tests passed and 12 existing skips**. Cinder-cone clearance now samples locally, and lava features can replace contained water pools; nine new production-feature/noise tests pass after four reproduced failures. Earlier seasonal foliage, sprite-atlas and river-density fixes remain. Graphical resource reload passed at the preceding checkpoint; matching-seed new-world visuals and live server data/component reload gates remain open. TFC plus compatible Terralith additions remain required; the hybrid feature layer is not yet implemented. See the latest project-status/work-log entry and validation JSON for exact evidence and limits.
+Current 26.1.2 checkpoint (2026-10-17): pinned full build passes with **253 tests passed and 12 existing skips**. The optional Natural preset, smooth terrain blending and original TFC rock arches are implemented, including selected external Terralith density integration. Real client joins, resource/item/data self-tests, fresh dedicated worlds, data reload and wildlife spawning are exercised; exact final persistence evidence is in `validation/2026-10-17-natural-worlds.json`. Earlier foliage, river-density and crater-fluid repairs remain. Native template outputs, correct block-item names, unique creative entries and predator brain construction repair the failures uncovered during live testing. Complete survival, two-client multiplayer and full release certification remain open.
 
 Pending unless PROJECT_STATUS.md explicitly records completion. Prioritize a playable 26.1.2 alpha while maintaining a separate 26.3 foundation for released 26.4 with a usable matching toolchain. Never broaden version ranges to claim untested compatibility.
 
@@ -16,7 +16,7 @@ Pending unless PROJECT_STATUS.md explicitly records completion. Prioritize a pla
 
 ## Compatible terrain expansion
 
-Retain all TFC features and add Terralith capabilities that fill actual gaps. Extend TFC's generator through an original compatibility layer, with TFC materials, climate, hydrology and progression. See `TFC_TERRALITH.md`; audit-only status is not implementation or runtime compatibility.
+Retain all TFC features and add Terralith capabilities that fill actual gaps. Extend TFC's generator through an original compatibility layer, with TFC materials, climate, hydrology and progression. See `TFC_TERRALITH.md`; the current preset integrates selected arch detail, with full ownership and limits documented.
 
 ## Version policy
 

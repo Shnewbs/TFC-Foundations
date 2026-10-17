@@ -69,7 +69,8 @@ public class PackPredatorAi
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         brain.setDefaultActivity(TFCBrain.HUNT.get());
         brain.setActiveActivityIfPossible(TFCBrain.HUNT.get());
-        TFCBrain.updatePredatorActivity(predator);
+        // LivingEntity has not assigned this brain yet. Predator applies its schedule
+        // after construction, and after restored memories are assigned on load.
 
         return brain;
     }

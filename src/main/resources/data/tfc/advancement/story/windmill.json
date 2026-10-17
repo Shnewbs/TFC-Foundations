@@ -8,7 +8,7 @@
   },
   "display": {
     "icon": {
-      "id": "tfc:windmill_blade"
+      "id": "tfc:lattice_windmill_blade"
     },
     "title": {
       "translate": "tfc.advancements.story.windmill.title"

@@ -8,6 +8,7 @@ package net.dries007.tfc.common.recipes;
 
 import net.dries007.tfc.common.recipes.input.NoopInput;
 
+import net.dries007.tfc.common.recipes.outputs.ItemOutput;
 import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.Optional;
@@ -35,14 +36,14 @@ public class KnappingRecipe implements INoopInputRecipe, IRecipePredicate<Knappi
         KnappingType.MANAGER.byIdReferenceCodec().fieldOf("knapping_type").forGetter(c -> c.knappingType),
         KnappingPattern.CODEC.forGetter(c -> c.pattern),
         net.dries007.tfc.common.recipes.LegacyIngredientCodecs.ITEM.optionalFieldOf("ingredient").forGetter(c -> c.ingredient),
-        ItemStack.CODEC.fieldOf("result").forGetter(c -> c.result)
+        ItemOutput.CODEC.fieldOf("result").forGetter(c -> c.result)
     ).apply(i, KnappingRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, KnappingRecipe> STREAM_CODEC = StreamCodec.composite(
         KnappingType.MANAGER.byIdStreamCodec(), c -> c.knappingType,
         KnappingPattern.STREAM_CODEC, c -> c.pattern,
         ByteBufCodecs.optional(Ingredient.CONTENTS_STREAM_CODEC), c -> c.ingredient,
-        ItemStack.STREAM_CODEC, c -> c.result,
+        ItemOutput.STREAM_CODEC, c -> c.result,
         KnappingRecipe::new
     );
 
@@ -55,9 +56,14 @@ public class KnappingRecipe implements INoopInputRecipe, IRecipePredicate<Knappi
     private final DataManager.Reference<KnappingType> knappingType;
     private final KnappingPattern pattern;
     private final Optional<Ingredient> ingredient;
-    private final ItemStack result;
+    private final ItemOutput result;
 
     public KnappingRecipe(DataManager.Reference<KnappingType> knappingType, KnappingPattern pattern, Optional<Ingredient> ingredient, ItemStack result)
+    {
+        this(knappingType, pattern, ingredient, ItemOutput.of(result));
+    }
+
+    public KnappingRecipe(DataManager.Reference<KnappingType> knappingType, KnappingPattern pattern, Optional<Ingredient> ingredient, ItemOutput result)
     {
         this.knappingType = knappingType;
         this.pattern = pattern;
@@ -101,7 +107,7 @@ public class KnappingRecipe implements INoopInputRecipe, IRecipePredicate<Knappi
 
         public ItemStack getResultItem(@Nullable HolderLookup.Provider registries)
     {
-        return result;
+        return result.copy();
     }
 
     @Override

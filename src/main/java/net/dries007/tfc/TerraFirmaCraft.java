@@ -96,6 +96,7 @@ public final class TerraFirmaCraft
     public static final boolean JADE = OptionalIntegrations.JADE.isAvailable();
     public static final boolean THE_ONE_PROBE = OptionalIntegrations.THE_ONE_PROBE.isAvailable();
 
+    public static final ResourceKey<WorldPreset> NATURAL_PRESET = ResourceKey.create(Registries.WORLD_PRESET, Helpers.identifier("natural"));
     public static final ResourceKey<WorldPreset> PRESET = ResourceKey.create(Registries.WORLD_PRESET, Helpers.identifier("overworld"));
 
     private @Nullable Throwable syncLoadError;

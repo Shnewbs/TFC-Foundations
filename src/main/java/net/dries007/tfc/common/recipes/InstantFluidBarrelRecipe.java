@@ -10,6 +10,7 @@ package net.dries007.tfc.common.recipes;
 import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.common.recipes.input.NoopInput;
 
+import net.dries007.tfc.common.recipes.outputs.FluidOutput;
 import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.Optional;
@@ -43,14 +44,14 @@ public class InstantFluidBarrelRecipe extends BarrelRecipe
     public static final MapCodec<InstantFluidBarrelRecipe> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
         LegacySizedIngredientCodecs.FLAT_FLUID.fieldOf("primary_fluid").forGetter(c -> c.inputFluid),
         LegacySizedIngredientCodecs.FLAT_FLUID.fieldOf("added_fluid").forGetter(c -> c.addedFluid),
-        FluidStack.CODEC.optionalFieldOf("output_fluid", FluidStack.EMPTY).forGetter(c -> c.outputFluid),
+        FluidOutput.CODEC.optionalFieldOf("output_fluid", FluidOutput.EMPTY).forGetter(c -> c.outputFluid),
         SoundEvent.CODEC.optionalFieldOf("sound", Holder.direct(SoundEvents.BREWING_STAND_BREW)).forGetter(c -> c.sound)
     ).apply(i, InstantFluidBarrelRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, InstantFluidBarrelRecipe> STREAM_CODEC = StreamCodec.composite(
         SizedFluidIngredient.STREAM_CODEC, c -> c.inputFluid,
         SizedFluidIngredient.STREAM_CODEC, c -> c.addedFluid,
-        FluidStack.OPTIONAL_STREAM_CODEC, c -> c.outputFluid,
+        FluidOutput.OPTIONAL_STREAM_CODEC, c -> c.outputFluid,
         ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT), c -> c.sound,
         InstantFluidBarrelRecipe::new
     );
@@ -58,6 +59,11 @@ public class InstantFluidBarrelRecipe extends BarrelRecipe
     private final SizedFluidIngredient addedFluid;
 
     public InstantFluidBarrelRecipe(SizedFluidIngredient primaryFluid, SizedFluidIngredient addedFluid, FluidStack outputFluid, Holder<SoundEvent> sound)
+    {
+        this(primaryFluid, addedFluid, FluidOutput.of(outputFluid), sound);
+    }
+
+    public InstantFluidBarrelRecipe(SizedFluidIngredient primaryFluid, SizedFluidIngredient addedFluid, FluidOutput outputFluid, Holder<SoundEvent> sound)
     {
         super(Optional.empty(), primaryFluid, ItemStackProvider.empty(), outputFluid, sound);
         this.addedFluid = addedFluid;

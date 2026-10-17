@@ -8,6 +8,7 @@ package net.dries007.tfc.common;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 import net.minecraft.core.registries.Registries;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackLinkedSet;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.ItemLike;
@@ -154,7 +156,6 @@ public final class TFCCreativeTabs
 
         for (SoilBlockType.Variant variant : SoilBlockType.Variant.values())
         {
-            accept(out, TFCBlocks.SOIL, SoilBlockType.MUD_BRICKS, variant);
             accept(out, TFCBlocks.SOIL, SoilBlockType.MUD_BRICKS, variant);
             accept(out, TFCBlocks.MUD_BRICK_DECORATIONS.get(variant));
         }
@@ -1282,14 +1283,33 @@ public final class TFCCreativeTabs
 
     // Helpers
 
+    /** Flowing/source fluid entries and shared item mappings can refer to the same exact stack. */
+    public static CreativeModeTab.DisplayItemsGenerator uniqueDisplayItems(CreativeModeTab.DisplayItemsGenerator generator)
+    {
+        return (parameters, output) -> {
+            final Set<ItemStack> parent = ItemStackLinkedSet.createTypeAndComponentsSet();
+            final Set<ItemStack> search = ItemStackLinkedSet.createTypeAndComponentsSet();
+            generator.accept(parameters, (stack, visibility) -> {
+                final boolean addParent = visibility != CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY && parent.add(stack);
+                final boolean addSearch = visibility != CreativeModeTab.TabVisibility.PARENT_TAB_ONLY && search.add(stack);
+                if (addParent || addSearch)
+                {
+                    output.accept(stack, addParent && addSearch ? CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
+                        : addParent ? CreativeModeTab.TabVisibility.PARENT_TAB_ONLY : CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+                }
+            });
+        };
+    }
+
     private static Id register(String name, Supplier<ItemStack> icon, CreativeModeTab.DisplayItemsGenerator displayItems)
     {
+        final var unique = uniqueDisplayItems(displayItems);
         final var holder = CREATIVE_TABS.register(name, () -> CreativeModeTab.builder()
             .icon(icon)
             .title(Component.translatable("tfc.creative_mode_tab." + name))
-            .displayItems(displayItems)
+            .displayItems(unique)
             .build());
-        return new Id(holder, displayItems);
+        return new Id(holder, unique);
     }
 
     private static <R extends ItemLike, K1, K2> void accept(CreativeModeTab.Output out, Map<K1, Map<K2, R>> map, K1 key1, K2 key2)

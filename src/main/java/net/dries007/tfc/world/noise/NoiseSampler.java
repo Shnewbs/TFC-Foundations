@@ -6,7 +6,10 @@
 
 package net.dries007.tfc.world.noise;
 
+import java.util.Optional;
 import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.DensityFunction;
 import net.minecraft.world.level.levelgen.Noises;
@@ -25,6 +28,8 @@ public final class NoiseSampler
     public final DensityFunction noodleRidgeA;
     public final DensityFunction noodleRidgeB;
 
+    public final Optional<DensityFunction> archDetail;
+
     // Aquifers
     public final NormalNoise barrierNoise;
     public final PositionalRandomFactory positionalRandomFactory;
@@ -32,6 +37,9 @@ public final class NoiseSampler
     public NoiseSampler(long seed, HolderGetter<NormalNoise.NoiseParameters> parameters, HolderGetter<DensityFunction> functions)
     {
         this.positionalRandomFactory = new XoroshiroRandomSource(seed).forkPositional();
+
+        this.archDetail = functions.get(ResourceKey.create(Registries.DENSITY_FUNCTION, Identifier.fromNamespaceAndPath("terralith", "overworld/arch/thickness")))
+            .map(h -> h.value().mapAll(new NoiseWiringVisitor()));
 
         this.noiseCaves = create(functions, TFCDensityFunctions.NOISE_CAVES);
         this.noodleToggle = create(functions, TFCDensityFunctions.NOODLE_TOGGLE);

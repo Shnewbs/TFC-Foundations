@@ -123,7 +123,7 @@ public final class TFCItems
 
     public static final Map<Wood, Map<Metal, ItemId>> HANGING_SIGNS = Helpers.mapOf(Wood.class, wood ->
         Helpers.mapOf(Metal.class, Metal::allParts, metal ->
-            register("wood/hanging_sign/" + metal.name() + "/" + wood.name(), () -> new HangingSignItem(TFCBlocks.CEILING_HANGING_SIGNS.get(wood).get(metal).get(), TFCBlocks.WALL_HANGING_SIGNS.get(wood).get(metal).get(), new Properties().rarity(metal.rarity())))
+            register("wood/hanging_sign/" + metal.name() + "/" + wood.name(), () -> new HangingSignItem(TFCBlocks.CEILING_HANGING_SIGNS.get(wood).get(metal).get(), TFCBlocks.WALL_HANGING_SIGNS.get(wood).get(metal).get(), new Properties().useBlockDescriptionPrefix().rarity(metal.rarity())))
         )
     );
 
@@ -159,11 +159,11 @@ public final class TFCItems
     public static final ItemId FLOWER_CUTTING = register("flower_cutting", () -> new FlowerCuttingItem(new Properties()));
 
     public static final Map<Coral, ItemId> CORAL_FANS = Helpers.mapOf(Coral.class, color ->
-        register("coral/" + color.toString() + "_coral_fan", () -> new StandingAndWallBlockItem(TFCBlocks.CORAL.get(color).get(Coral.BlockType.CORAL_FAN).get(), TFCBlocks.CORAL.get(color).get(Coral.BlockType.CORAL_WALL_FAN).get(), Direction.DOWN, new Properties()))
+        register("coral/" + color.toString() + "_coral_fan", () -> new StandingAndWallBlockItem(TFCBlocks.CORAL.get(color).get(Coral.BlockType.CORAL_FAN).get(), TFCBlocks.CORAL.get(color).get(Coral.BlockType.CORAL_WALL_FAN).get(), Direction.DOWN, new Properties().useBlockDescriptionPrefix()))
     );
 
     public static final Map<Coral, ItemId> DEAD_CORAL_FANS = Helpers.mapOf(Coral.class, color ->
-        register("coral/" + color.toString() + "_dead_coral_fan", () -> new StandingAndWallBlockItem(TFCBlocks.CORAL.get(color).get(Coral.BlockType.DEAD_CORAL_FAN).get(), TFCBlocks.CORAL.get(color).get(Coral.BlockType.DEAD_CORAL_WALL_FAN).get(), Direction.DOWN, new Properties()))
+        register("coral/" + color.toString() + "_dead_coral_fan", () -> new StandingAndWallBlockItem(TFCBlocks.CORAL.get(color).get(Coral.BlockType.DEAD_CORAL_FAN).get(), TFCBlocks.CORAL.get(color).get(Coral.BlockType.DEAD_CORAL_WALL_FAN).get(), Direction.DOWN, new Properties().useBlockDescriptionPrefix()))
     );
 
     // Decorations
@@ -178,8 +178,8 @@ public final class TFCItems
     public static final ItemId MOLLISOL_MUD_BRICK = register("mud_brick/mollisol");
 
     public static final ItemId ALABASTER_BRICK = register("alabaster_brick");
-    public static final ItemId TORCH = register("torch", () -> new TorchItem(TFCBlocks.TORCH.get(), TFCBlocks.WALL_TORCH.get(), new Properties()));
-    public static final ItemId DEAD_TORCH = register("dead_torch", () -> new StandingAndWallBlockItem(TFCBlocks.DEAD_TORCH.get(), TFCBlocks.DEAD_WALL_TORCH.get(), Direction.DOWN, new Properties()));
+    public static final ItemId TORCH = register("torch", () -> new TorchItem(TFCBlocks.TORCH.get(), TFCBlocks.WALL_TORCH.get(), new Properties().useBlockDescriptionPrefix()));
+    public static final ItemId DEAD_TORCH = register("dead_torch", () -> new StandingAndWallBlockItem(TFCBlocks.DEAD_TORCH.get(), TFCBlocks.DEAD_WALL_TORCH.get(), Direction.DOWN, new Properties().useBlockDescriptionPrefix()));
 
     // Misc
 

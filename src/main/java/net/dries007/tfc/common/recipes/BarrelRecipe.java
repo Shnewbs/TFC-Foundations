@@ -8,6 +8,7 @@ package net.dries007.tfc.common.recipes;
 
 import net.dries007.tfc.common.recipes.input.NoopInput;
 
+import net.dries007.tfc.common.recipes.outputs.FluidOutput;
 import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.Objects;
@@ -56,7 +57,7 @@ public class BarrelRecipe implements INoopInputRecipe, IRecipePredicate<BarrelIn
         LegacySizedIngredientCodecs.FLAT_ITEM.optionalFieldOf("input_item").forGetter(c -> c.inputItem),
         LegacySizedIngredientCodecs.FLAT_FLUID.fieldOf("input_fluid").forGetter(c -> c.inputFluid),
         ItemStackProvider.CODEC.optionalFieldOf("output_item", ItemStackProvider.empty()).forGetter(c -> c.outputItem),
-        FluidStack.CODEC.optionalFieldOf("output_fluid", FluidStack.EMPTY).forGetter(c -> c.outputFluid),
+        FluidOutput.CODEC.optionalFieldOf("output_fluid", FluidOutput.EMPTY).forGetter(c -> c.outputFluid),
         SoundEvent.CODEC.optionalFieldOf("sound", Holder.direct(SoundEvents.BREWING_STAND_BREW)).forGetter(c -> c.sound)
     ).apply(i, BarrelRecipe::new));
 
@@ -64,7 +65,7 @@ public class BarrelRecipe implements INoopInputRecipe, IRecipePredicate<BarrelIn
         ByteBufCodecs.optional(SizedIngredient.STREAM_CODEC), c -> c.inputItem,
         SizedFluidIngredient.STREAM_CODEC, c -> c.inputFluid,
         ItemStackProvider.STREAM_CODEC, c -> c.outputItem,
-        FluidStack.OPTIONAL_STREAM_CODEC, c -> c.outputFluid,
+        FluidOutput.OPTIONAL_STREAM_CODEC, c -> c.outputFluid,
         ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT), c -> c.sound,
         BarrelRecipe::new
     );
@@ -78,7 +79,7 @@ public class BarrelRecipe implements INoopInputRecipe, IRecipePredicate<BarrelIn
     protected final Optional<SizedIngredient> inputItem;
     protected final SizedFluidIngredient inputFluid;
     protected final ItemStackProvider outputItem;
-    protected final FluidStack outputFluid;
+    protected final FluidOutput outputFluid;
     protected final Holder<SoundEvent> sound;
 
     protected BarrelRecipe(BarrelRecipe parent)
@@ -87,6 +88,11 @@ public class BarrelRecipe implements INoopInputRecipe, IRecipePredicate<BarrelIn
     }
 
     protected BarrelRecipe(Optional<SizedIngredient> inputItem, SizedFluidIngredient inputFluid, ItemStackProvider outputItem, FluidStack outputFluid, Holder<SoundEvent> sound)
+    {
+        this(inputItem, inputFluid, outputItem, FluidOutput.of(outputFluid), sound);
+    }
+
+    protected BarrelRecipe(Optional<SizedIngredient> inputItem, SizedFluidIngredient inputFluid, ItemStackProvider outputItem, FluidOutput outputFluid, Holder<SoundEvent> sound)
     {
         this.inputItem = inputItem;
         this.inputFluid = inputFluid;
@@ -124,7 +130,7 @@ public class BarrelRecipe implements INoopInputRecipe, IRecipePredicate<BarrelIn
             if (!outputFluid.isEmpty())
             {
                 int capacity = TFCConfig.SERVER.barrelCapacity.get();
-                if (FluidStack.isSameFluidSameComponents(outputFluid, fluid))
+                if (FluidStack.isSameFluidSameComponents(outputFluid.copy(), fluid))
                 {
                     capacity -= fluid.getAmount();
                 }
@@ -214,7 +220,7 @@ public class BarrelRecipe implements INoopInputRecipe, IRecipePredicate<BarrelIn
 
     public FluidStack getOutputFluid()
     {
-        return outputFluid;
+        return outputFluid.copy();
     }
 
     public SoundEvent getCompleteSound()

@@ -20,28 +20,37 @@ import net.minecraft.world.level.ItemLike;
 import net.dries007.tfc.common.component.food.FoodCapability;
 
 public record ItemStackProvider(
-    ItemStack stack,
+    ItemOutput prototype,
     List<ItemStackModifier> modifiers
 ) {
     public ItemStackProvider
     {
-        stack = FoodCapability.setTransientNonDecaying(stack);
         modifiers = List.copyOf(modifiers);
+    }
+
+    public ItemStackProvider(ItemStack stack, List<ItemStackModifier> modifiers)
+    {
+        this(ItemOutput.of(FoodCapability.setTransientNonDecaying(stack)), modifiers);
+    }
+
+    public ItemStack stack()
+    {
+        return FoodCapability.setTransientNonDecaying(prototype.copy());
     }
 
     public static final Codec<ItemStackProvider> CODEC = Codec.either(
         RecordCodecBuilder.<ItemStackProvider>create(i -> i.group(
-            ItemStack.CODEC.optionalFieldOf("stack", ItemStack.EMPTY).forGetter(c -> c.stack),
+            ItemOutput.CODEC.optionalFieldOf("stack", ItemOutput.EMPTY).forGetter(c -> c.prototype),
             ItemStackModifier.CODEC.listOf().fieldOf("modifiers").forGetter(c -> c.modifiers)
         ).apply(i, ItemStackProvider::new)),
-        ItemStack.CODEC
+        ItemOutput.CODEC
     ).xmap(
-        e -> e.map(Function.identity(), ItemStackProvider::of),
-        provider -> provider.modifiers.isEmpty() ? Either.right(provider.stack) : Either.left(provider)
+        e -> e.map(Function.identity(), value -> new ItemStackProvider(value, List.of())),
+        provider -> provider.modifiers.isEmpty() && !provider.prototype.isEmpty() ? Either.right(provider.prototype) : Either.left(provider)
     );
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ItemStackProvider> STREAM_CODEC = StreamCodec.composite(
-        ItemStack.OPTIONAL_STREAM_CODEC, c -> c.stack,
+        ItemStack.OPTIONAL_STREAM_CODEC, ItemStackProvider::stack,
         ItemStackModifier.STREAM_CODEC.apply(ByteBufCodecs.list()), c -> c.modifiers,
         ItemStackProvider::of
     );
@@ -161,7 +170,7 @@ public record ItemStackProvider(
      */
     public ItemStack getStack(ItemStack input, ItemStackModifier.Context context)
     {
-        ItemStack output = stack.copy();
+        ItemStack output = stack().copy();
 
         // Since we might need to be able to apply modifiers to the entire output at once, set the count here.
         if (!input.isEmpty())

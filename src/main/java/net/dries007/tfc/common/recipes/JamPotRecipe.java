@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.common.recipes;
 
+import net.dries007.tfc.common.recipes.outputs.ItemOutput;
 import net.minecraft.world.item.crafting.Recipe;
 
 import com.mojang.serialization.MapCodec;
@@ -35,15 +36,15 @@ public class JamPotRecipe extends PotRecipe
 {
     public static final MapCodec<JamPotRecipe> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
         PotRecipe.CODEC.forGetter(c -> c),
-        ItemStack.CODEC.fieldOf("unsealed_result").forGetter(c -> c.jarredStack),
-        ItemStack.CODEC.fieldOf("sealed_result").forGetter(c -> c.jarredStackWithLid),
+        ItemOutput.CODEC.fieldOf("unsealed_result").forGetter(c -> c.jarredStack),
+        ItemOutput.CODEC.fieldOf("sealed_result").forGetter(c -> c.jarredStackWithLid),
         Identifier.CODEC.fieldOf("texture").forGetter(c -> c.texture)
     ).apply(i, JamPotRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, JamPotRecipe> STREAM_CODEC = StreamCodec.composite(
         PotRecipe.STREAM_CODEC, c -> c,
-        ItemStack.STREAM_CODEC, c -> c.jarredStack,
-        ItemStack.STREAM_CODEC, c -> c.jarredStackWithLid,
+        ItemOutput.STREAM_CODEC, c -> c.jarredStack,
+        ItemOutput.STREAM_CODEC, c -> c.jarredStackWithLid,
         Identifier.STREAM_CODEC, c -> c.texture,
         JamPotRecipe::new
     );
@@ -55,11 +56,16 @@ public class JamPotRecipe extends PotRecipe
         return new JamPotRecipe.JamOutput(stack, stack2, texture);
     };
 
-    private final ItemStack jarredStack;
-    private final ItemStack jarredStackWithLid;
+    private final ItemOutput jarredStack;
+    private final ItemOutput jarredStackWithLid;
     private final Identifier texture;
 
     public JamPotRecipe(PotRecipe base, ItemStack jarredStack, ItemStack jarredStackWithLid, Identifier texture)
+    {
+        this(base, ItemOutput.of(jarredStack), ItemOutput.of(jarredStackWithLid), texture);
+    }
+
+    public JamPotRecipe(PotRecipe base, ItemOutput jarredStack, ItemOutput jarredStackWithLid, Identifier texture)
     {
         super(base);
         this.jarredStack = jarredStack;
@@ -69,7 +75,7 @@ public class JamPotRecipe extends PotRecipe
 
         public ItemStack getResultItem(HolderLookup.Provider registries)
     {
-        return jarredStackWithLid;
+        return jarredStackWithLid.copy();
     }
 
     public Identifier getTexture()

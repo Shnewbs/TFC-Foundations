@@ -32,18 +32,25 @@ public final class ChunkBiomeSampler
      */
     public static <T> Object2DoubleMap<T>[] sampleBiomes(ChunkPos pos, Sampler<T> biomeSampler, Function<T, BiomeBlendType> groupFunction)
     {
+        return sampleBiomes(pos, biomeSampler, groupFunction, false);
+    }
+
+    public static <T> Object2DoubleMap<T>[] sampleBiomes(ChunkPos pos, Sampler<T> biomeSampler, Function<T, BiomeBlendType> groupFunction, boolean natural)
+    {
+        final int width = natural ? 6 : 4;
+        final int offset = natural ? 2 : 1;
         // First, sample biomes at chunk distance, in a 4x4 grid centered on the target chunk.
         // These are used to build the large-scale biome blending radius
-        final Object2DoubleMap<T>[] chunkBiomeWeightArray = newWeightArray(4 * 4);
+        final Object2DoubleMap<T>[] chunkBiomeWeightArray = newWeightArray(width * width);
         final int chunkX = pos.getMinBlockX(), chunkZ = pos.getMinBlockZ(); // Block coordinates
-        for (int x = 0; x < 4; x++)
+        for (int x = 0; x < width; x++)
         {
-            for (int z = 0; z < 4; z++)
+            for (int z = 0; z < width; z++)
             {
                 // x, z = 0, 0 is the -1, -1 chunk relative to chunkX, chunkZ
                 final Object2DoubleMap<T> chunkBiomeWeight = new Object2DoubleOpenHashMap<>();
-                chunkBiomeWeightArray[x | (z << 2)] = chunkBiomeWeight;
-                sampleBiomesAtPositionWithKernel(chunkBiomeWeight, biomeSampler, KERNEL_9x9, 4, chunkX, chunkZ, x - 1, z - 1);
+                chunkBiomeWeightArray[x + z * width] = chunkBiomeWeight;
+                sampleBiomesAtPositionWithKernel(chunkBiomeWeight, biomeSampler, KERNEL_9x9, 4, chunkX, chunkZ, x - offset, z - offset);
             }
         }
 
@@ -71,13 +78,20 @@ public final class ChunkBiomeSampler
                 final double lerpX = (x1 - (coordX << 4)) * (1 / 16d); // Deltas, in the range [0, 1)
                 final double lerpZ = (z1 - (coordZ << 4)) * (1 / 16d);
 
-                final int index16X = ((x1 - chunkX) >> 4) + 1; // Index into chunkBiomeWeightArray
-                final int index16Z = ((z1 - chunkZ) >> 4) + 1;
+                final int index16X = ((x1 - chunkX) >> 4) + offset; // Index into chunkBiomeWeightArray
+                final int index16Z = ((z1 - chunkZ) >> 4) + offset;
 
-                sampleBiomesCornerContribution(chunkBiomeWeight, chunkBiomeWeightArray[index16X | (index16Z << 2)], (1 - lerpX) * (1 - lerpZ));
-                sampleBiomesCornerContribution(chunkBiomeWeight, chunkBiomeWeightArray[(index16X + 1) | (index16Z << 2)], lerpX * (1 - lerpZ));
-                sampleBiomesCornerContribution(chunkBiomeWeight, chunkBiomeWeightArray[index16X | ((index16Z + 1) << 2)], (1 - lerpX) * lerpZ);
-                sampleBiomesCornerContribution(chunkBiomeWeight, chunkBiomeWeightArray[(index16X + 1) | ((index16Z + 1) << 2)], lerpX * lerpZ);
+                if (natural)
+                {
+                    sampleCubic(chunkBiomeWeight, chunkBiomeWeightArray, width, index16X, index16Z, lerpX, lerpZ);
+                }
+                else
+                {
+                    sampleBiomesCornerContribution(chunkBiomeWeight, chunkBiomeWeightArray[index16X | (index16Z << 2)], (1 - lerpX) * (1 - lerpZ));
+                    sampleBiomesCornerContribution(chunkBiomeWeight, chunkBiomeWeightArray[(index16X + 1) | (index16Z << 2)], lerpX * (1 - lerpZ));
+                    sampleBiomesCornerContribution(chunkBiomeWeight, chunkBiomeWeightArray[index16X | ((index16Z + 1) << 2)], (1 - lerpX) * lerpZ);
+                    sampleBiomesCornerContribution(chunkBiomeWeight, chunkBiomeWeightArray[(index16X + 1) | ((index16Z + 1) << 2)], lerpX * lerpZ);
+                }
 
                 // Compose chunk weights -> wide quart weights.
                 composeSampleWeights(quartBiomeWeight, chunkBiomeWeight, biome -> {
@@ -93,6 +107,11 @@ public final class ChunkBiomeSampler
 
     public static <T> void sampleBiomesColumn(Object2DoubleMap<T> accumulator, Object2DoubleMap<T>[] corners, int localX, int localZ)
     {
+        sampleBiomesColumn(accumulator, corners, localX, localZ, false);
+    }
+
+    public static <T> void sampleBiomesColumn(Object2DoubleMap<T> accumulator, Object2DoubleMap<T>[] corners, int localX, int localZ, boolean natural)
+    {
         final int index4X = (localX >> 2) + 1;
         final int index4Z = (localZ >> 2) + 1;
 
@@ -100,10 +119,39 @@ public final class ChunkBiomeSampler
         final double lerpZ = (localZ - ((localZ >> 2) << 2)) * (1 / 4d);
 
         accumulator.clear();
+        if (natural)
+        {
+            sampleCubic(accumulator, corners, 7, index4X, index4Z, lerpX, lerpZ);
+            return;
+        }
         sampleBiomesCornerContribution(accumulator, corners[index4X + index4Z * 7], (1 - lerpX) * (1 - lerpZ));
         sampleBiomesCornerContribution(accumulator, corners[(index4X + 1) + index4Z * 7], lerpX * (1 - lerpZ));
         sampleBiomesCornerContribution(accumulator, corners[index4X + (index4Z + 1) * 7], (1 - lerpX) * lerpZ);
         sampleBiomesCornerContribution(accumulator, corners[(index4X + 1) + (index4Z + 1) * 7], lerpX * lerpZ);
+    }
+
+    /** Convex cubic B-spline: no negative weights or height overshoot at biome boundaries. */
+    public static double cubicWeight(int index, double t)
+    {
+        return switch (index)
+        {
+            case 0 -> (1 - t) * (1 - t) * (1 - t) / 6;
+            case 1 -> (3 * t * t * t - 6 * t * t + 4) / 6;
+            case 2 -> (-3 * t * t * t + 3 * t * t + 3 * t + 1) / 6;
+            case 3 -> t * t * t / 6;
+            default -> throw new IllegalArgumentException("Cubic support index: " + index);
+        };
+    }
+
+    private static <T> void sampleCubic(Object2DoubleMap<T> result, Object2DoubleMap<T>[] samples, int width, int x, int z, double tx, double tz)
+    {
+        for (int dx = 0; dx < 4; dx++)
+        {
+            for (int dz = 0; dz < 4; dz++)
+            {
+                sampleBiomesCornerContribution(result, samples[x + dx - 1 + (z + dz - 1) * width], cubicWeight(dx, tx) * cubicWeight(dz, tz));
+            }
+        }
     }
 
     private static <T> void sampleBiomesCornerContribution(Object2DoubleMap<T> accumulator, Object2DoubleMap<T> corner, double t)

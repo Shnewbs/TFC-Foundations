@@ -1607,6 +1607,7 @@ DEFAULT_LANG = {
     # Create World Screen Options
     'tfc.settings.km': '%s km',
     'generator.tfc.overworld': 'TerraFirmaCraft',
+    'generator.tfc.natural': 'TerraFirmaCraft — Natural',
     'tfc.tooltip.create_world.title': 'TerraFirmaCraft World Settings',
     'tfc.create_world.flat_bedrock': 'Flat Bedrock',
     'tfc.create_world.spawn_distance': 'Spawn Distance',

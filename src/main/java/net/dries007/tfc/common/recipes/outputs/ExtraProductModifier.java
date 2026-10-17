@@ -22,9 +22,19 @@ import net.dries007.tfc.common.recipes.RecipeHelpers;
  * This is still very brittle.
  * @param stack the extra product.
  */
-public record ExtraProductModifier(ItemStack stack) implements ItemStackModifier
+public record ExtraProductModifier(ItemOutput prototype) implements ItemStackModifier
 {
-    public static final MapCodec<ExtraProductModifier> CODEC = ItemStack.CODEC.fieldOf("stack").xmap(ExtraProductModifier::of, ExtraProductModifier::stack);
+    public ExtraProductModifier(ItemStack stack)
+    {
+        this(ItemOutput.of(FoodCapability.setTransientNonDecaying(stack)));
+    }
+
+    public ItemStack stack()
+    {
+        return FoodCapability.setTransientNonDecaying(prototype.copy());
+    }
+
+    public static final MapCodec<ExtraProductModifier> CODEC = ItemOutput.CODEC.fieldOf("stack").xmap(ExtraProductModifier::new, ExtraProductModifier::prototype);
     public static final StreamCodec<RegistryFriendlyByteBuf, ExtraProductModifier> STREAM_CODEC = ItemStack.STREAM_CODEC.map(ExtraProductModifier::of, ExtraProductModifier::stack);
 
     public static ExtraProductModifier of(ItemStack stack)

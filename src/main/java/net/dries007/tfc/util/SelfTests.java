@@ -212,12 +212,18 @@ public final class SelfTests
             .listElementIds()
             .map(net.minecraft.resources.ResourceKey::identifier)
             .toList();
-        final List<Block> missingLootTables = blocks.stream()
-            .filter(b -> b.getLootTable().map(key -> !lootTables.contains(key.identifier())).orElse(true))
-            .filter(b -> !b.defaultBlockState().isAir())
-            .toList();
+        final List<Block> missingLootTables = findMissingBlockLootTables(lootTables, blocks);
 
         return logRegistryErrors("{} blocks found with a non-existent loot table:", missingLootTables, logger);
+    }
+
+    public static List<Block> findMissingBlockLootTables(Collection<Identifier> lootTables, Collection<Block> blocks)
+    {
+        return blocks.stream()
+            // Native Optional.empty is an explicit no-loot declaration, not a missing table.
+            .filter(b -> b.getLootTable().map(key -> !lootTables.contains(key.identifier())).orElse(false))
+            .filter(b -> !b.defaultBlockState().isAir())
+            .toList();
     }
 
     public static <T> boolean logErrors(String error, Collection<T> errors, Logger logger)

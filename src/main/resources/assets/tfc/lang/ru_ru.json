@@ -691,6 +691,7 @@
   "tfc.commands.trim.bad_template": "Кузнечный шаблон не распознан",
   "tfc.settings.km": "%s км",
   "generator.tfc.overworld": "TerraFirmaCraft",
+  "generator.tfc.natural": "TerraFirmaCraft — Natural",
   "tfc.tooltip.create_world.title": "Настройки мира TerraFirmaCraft",
   "tfc.create_world.flat_bedrock": "Плоский бедрок",
   "tfc.create_world.spawn_distance": "Дистанция появления игрока",

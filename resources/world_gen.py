@@ -991,6 +991,7 @@ def generate(rm: ResourceManager):
                     'with': [{'block': 'tfc:rock/hardened/%s' % rock}]
                 }],
             })
+    rm.configured_feature('natural_stone_arch', 'tfc:natural_stone_arch', {})
     configured_placed_feature(rm, 'sea_stacks', 'tfc:sea_stacks', {}, decorate_heightmap('ocean_floor_wg'), decorate_replaceable())
     configured_placed_feature(rm, 'sea_stacks_patch', 'tfc:random_patch', {'feature': 'tfc:sea_stacks', 'tries': 6, 'xz_spread': 8, 'y_spread': 2}, decorate_chance(120), decorate_square(), decorate_heightmap('ocean_floor_wg'))
 
