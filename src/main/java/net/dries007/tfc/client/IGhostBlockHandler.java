@@ -7,27 +7,15 @@
 package net.dries007.tfc.client;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.neoforged.neoforge.client.CustomBlockOutlineRenderer;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public interface IGhostBlockHandler
 {
-    /** Resolves the preview and its lighting during extraction, before render callbacks run. */
-    @Nullable
-    default CustomBlockOutlineRenderer extractGhost(ClientLevel level, Player player, BlockState lookState, BlockPos lookPos, Vec3 location, Direction lookDirection, ItemStack item)
-    {
-        final BlockState state = getStateToDraw(level, player, lookState, lookDirection, lookPos, location.x - lookPos.getX(), location.y - lookPos.getY(), location.z - lookPos.getZ(), item);
-        return state == null ? null : RenderHelpers.extractGhostBlock(level, state, lookPos, shouldGrowSlightly(), Mth.floor(alpha() * 255));
-    }
-
     /**
      * Controls if the model should be grown slightly to avoid clipping issues
      */

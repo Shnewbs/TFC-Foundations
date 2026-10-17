@@ -6,6 +6,10 @@
 
 package net.dries007.tfc.client;
 
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+
+import net.minecraft.client.renderer.ShapeRenderer;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +47,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.player.PlayerModelPart;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -579,6 +584,26 @@ public final class RenderHelpers
         buffer.addVertex(pose, minX, y, maxZ).setColor(color).setUv(sprite.getU(minX), sprite.getV(maxZ)).setOverlay(packedOverlay).setLight(packedLight).setNormal(pose, 0, 1, 0);
         buffer.addVertex(pose, maxX, y, maxZ).setColor(color).setUv(sprite.getU(maxX), sprite.getV(maxZ)).setOverlay(packedOverlay).setLight(packedLight).setNormal(pose, 0, 1, 0);
         buffer.addVertex(pose, maxX, y, minZ).setColor(color).setUv(sprite.getU(maxX), sprite.getV(minX)).setOverlay(packedOverlay).setLight(packedLight).setNormal(pose, 0, 1, 0);
+    }
+
+    public static CustomBlockOutlineRenderer outline(BlockPos pos, VoxelShape shape, int color, boolean suppressVanilla)
+    {
+        return (renderState, buffers, stack, translucentPass, levelState) -> {
+            final Vec3 camera = levelState.cameraRenderState.pos;
+            ShapeRenderer.renderShape(stack, buffers.getBuffer(RenderTypes.lines()), shape,
+                pos.getX() - camera.x, pos.getY() - camera.y, pos.getZ() - camera.z, color, 2f);
+            return suppressVanilla;
+        };
+    }
+
+    /** Resolve the common block's preview while keeping client renderer types out of its interface. */
+    @Nullable
+    public static CustomBlockOutlineRenderer extractGhost(IGhostBlockHandler handler, ClientLevel level, Player player,
+        BlockState lookState, BlockPos lookPos, Vec3 location, Direction lookDirection, ItemStack item)
+    {
+        final BlockState state = handler.getStateToDraw(level, player, lookState, lookDirection, lookPos,
+            location.x - lookPos.getX(), location.y - lookPos.getY(), location.z - lookPos.getZ(), item);
+        return state == null ? null : extractGhostBlock(level, state, lookPos, handler.shouldGrowSlightly(), Mth.floor(handler.alpha() * 255));
     }
 
     /** Extracts all model, tint and lighting data without retaining the level in the render callback. */

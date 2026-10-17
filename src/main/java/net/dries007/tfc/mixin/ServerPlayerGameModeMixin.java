@@ -17,7 +17,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.dries007.tfc.common.items.CreativeMiningTool;
@@ -28,14 +27,10 @@ public abstract class ServerPlayerGameModeMixin
     @Shadow protected ServerLevel level;
     @Shadow @Final protected ServerPlayer player;
 
-    @Inject(
-        method = "destroyBlock",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayerGameMode;removeBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Z)Z", remap = false), // Added by Forge patch
-        slice = @Slice(
-            from = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayerGameMode;isCreative()Z"),
-            to = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;canHarvestBlock(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/player/Player;)Z", remap = false) // Added by IForgeBlockState
-        )
-    )
+    // The first native removal is the preventsBlockDrops (creative) branch; the second is survival mining.
+    @Inject(method = "destroyBlock", at = @At(value = "INVOKE",
+        target = "Lnet/minecraft/server/level/ServerPlayerGameMode;removeBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;ZLnet/minecraft/world/item/ItemStack;)Z",
+        ordinal = 0, remap = false))
     private void applySpecialMiningEffectsInCreativeMode(BlockPos pos, CallbackInfoReturnable<Boolean> cir)
     {
         final BlockState state = this.level.getBlockState(pos);

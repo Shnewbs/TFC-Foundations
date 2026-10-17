@@ -534,16 +534,16 @@ public class ClientForgeEventHandler
         final Block blockAt = stateAt.getBlock();
 
         ChiselRecipe.computeResult(player, stateAt, hit, false).ifLeft(chiseled ->
-            event.addCustomRenderer(IHighlightHandler.outline(pos, chiseled.getShape(level, pos), 0x66FF0000, true)));
+            event.addCustomRenderer(RenderHelpers.outline(pos, chiseled.getShape(level, pos), 0x66FF0000, true)));
 
         if (blockAt instanceof IHighlightHandler handler)
         {
             final IHighlightHandler.Highlight highlight = handler.extractHighlight(level, pos, player, hit);
-            if (highlight != null) event.addCustomRenderer(highlight.renderer(pos));
+            if (highlight != null) event.addCustomRenderer(RenderHelpers.outline(pos, highlight.shape(), highlight.color(), true));
         }
         else if (blockAt instanceof IGhostBlockHandler handler)
         {
-            final CustomBlockOutlineRenderer ghost = handler.extractGhost(level, player, stateAt, pos, hit.getLocation(), hit.getDirection(), player.getMainHandItem());
+            final CustomBlockOutlineRenderer ghost = RenderHelpers.extractGhost(handler, level, player, stateAt, pos, hit.getLocation(), hit.getDirection(), player.getMainHandItem());
             if (ghost != null) event.addCustomRenderer(ghost);
         }
         else if (blockAt instanceof SluiceBlock && level.getBlockEntity(pos) instanceof SluiceBlockEntity sluice)
@@ -555,13 +555,13 @@ public class ClientForgeEventHandler
             }
             if (!level.getBlockState(waterPos).canBeReplaced())
             {
-                event.addCustomRenderer(IHighlightHandler.outline(waterPos.immutable(), Shapes.block(), 0x660000FF, false));
+                event.addCustomRenderer(RenderHelpers.outline(waterPos.immutable(), Shapes.block(), 0x660000FF, false));
             }
             final BlockPos posAbove = pos.above();
             final BlockState stateAbove = level.getBlockState(posAbove);
             if (!stateAbove.getFluidState().isEmpty())
             {
-                event.addCustomRenderer(IHighlightHandler.outline(posAbove, stateAbove.getFluidState().getShape(level, posAbove), 0x66FF0000, false));
+                event.addCustomRenderer(RenderHelpers.outline(posAbove, stateAbove.getFluidState().getShape(level, posAbove), 0x66FF0000, false));
             }
         }
     }

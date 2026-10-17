@@ -46,6 +46,11 @@ def main():
     assert '(Lnet/minecraft/tags/TagKey;)Z' in entity
     tag_loader = run([str(java/'javap'), '-p', '-s', '-classpath', cp, 'net.minecraft.tags.TagLoader'])
     assert 'tryBuildTag(' in tag_loader and '(Lnet/minecraft/tags/TagEntry$Lookup;Ljava/util/List;)Lcom/mojang/datafixers/util/Either;' in tag_loader
+    mining = run([str(java/'javap'), '-p', '-s', '-classpath', cp, 'net.minecraft.server.level.ServerPlayerGameMode'])
+    assert '(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;ZLnet/minecraft/world/item/ItemStack;)Z' in mining
+    for interface in ('IGhostBlockHandler', 'IHighlightHandler'):
+        common = Path('src/main/java/net/dries007/tfc/client/' + interface + '.java').read_text()
+        assert 'net.minecraft.client' not in common and 'CustomBlockOutlineRenderer' not in common
     mixins = Path('src/main/java/net/dries007/tfc/mixin')
     assert 'IPlayerInfo.get(player).eat(food)' in (mixins/'FoodPropertiesMixin.java').read_text()
     assert 'getEyeInFluidType' not in (mixins/'EntityMixin.java').read_text()

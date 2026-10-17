@@ -1,0 +1,482 @@
+{
+  "date": "2026-10-17",
+  "branch": "26.1.2",
+  "parent": "7b5715acd23da8b97ed012c1b66d666e50c0de96",
+  "candidate": "0.0.0",
+  "playable": false,
+  "release": false,
+  "pins": {
+    "minecraft": "26.1.2",
+    "neoforge": "26.1.2.114",
+    "jei": "29.43.0.107",
+    "patchouli": "26.1-94",
+    "moddev": "2.0.148",
+    "gradle": "9.2.1",
+    "jdk": "OpenJDK 25+36"
+  },
+  "main": {
+    "sources": 1699,
+    "errors": 0
+  },
+  "full_build": {
+    "exit_code": 0,
+    "main": true,
+    "data": true,
+    "test": true,
+    "jar": true,
+    "licenses": true,
+    "dependency_verification": true
+  },
+  "junit": {
+    "tests": 226,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 12,
+    "passed": 214,
+    "classes": [
+      {
+        "class": "net.dries007.tfc.test.block.BlocksTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "net.dries007.tfc.test.block.BranchDirectionTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "net.dries007.tfc.test.block.DirectionPropertyBlockTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "net.dries007.tfc.test.drawing.BiomeNoiseTest",
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 12
+      },
+      {
+        "class": "net.dries007.tfc.test.drawing.RegionGeneratorTests",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "net.dries007.tfc.test.earth.EarthCoordinatesTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "net.dries007.tfc.test.earth.ElevationTransformTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "net.dries007.tfc.test.item.FluidComponentTest",
+        "tests": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "net.dries007.tfc.test.item.HeatingItemTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "net.dries007.tfc.test.item.MoldTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "net.dries007.tfc.test.item.NativeTransferTest",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "net.dries007.tfc.test.item.ToolsTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "net.dries007.tfc.test.item.VesselTest",
+        "tests": 31,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "net.dries007.tfc.test.item.WoodenBucketTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "net.dries007.tfc.test.recipes.AdvancedCraftingTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "net.dries007.tfc.test.recipes.CraftingRecipesTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "net.dries007.tfc.test.recipes.EmptyIngredientTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "net.dries007.tfc.test.recipes.LegacyIngredientTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "net.dries007.tfc.test.recipes.RecipeResourcesTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "net.dries007.tfc.test.recipes.TreeTemplateTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "net.dries007.tfc.test.util.FlowTest",
+        "tests": 13,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "net.dries007.tfc.test.util.ForgeRuleTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "net.dries007.tfc.test.util.KnappingPatternTest",
+        "tests": 77,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "net.dries007.tfc.test.util.RotationNetworkTest",
+        "tests": 28,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "class": "net.dries007.tfc.test.util.SolarCalculatorTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  "api_runners": {
+    "runners": [
+      {
+        "runner": "run_transfer_api_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_loot_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_common_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_visual_save_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_entity_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_attachment_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_player_food_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_shared_runtime_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_snow_ice_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_thatch_bed_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_model_render_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_instrument_model_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_livestock_render_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_mechanical_boat_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_seasonal_block_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_snapshot_block_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_worldgen_api_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_item_registration_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_predator_sound_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_item_selector_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_recipe_serializer_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_selected_slot_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_sound_event_holder_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_tool_material_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_recipe_helper_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_flat_ingredient_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_interaction_api_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_neighbor_shape_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_deferred_shape_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_tag_ingredient_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_fluid_explosion_api_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_item_display_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_item_layer_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_client_render_hook_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_upstream_sync_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_overworld_render_smoke.py",
+        "exit_code": 0
+      }
+    ],
+    "passed": 36,
+    "failed": 0,
+    "scope": "Native API/source/CPU checks; not startup, transformed Mixins, GPU or gameplay"
+  },
+  "recipe_resources": {
+    "total": 6455,
+    "decoded": 6243,
+    "disabled_by_registered_never_condition": 212,
+    "scope": "Native registry fixture with default components and item/fluid tags already bound; not live server reload"
+  },
+  "datagen": {
+    "pass_all_providers": true,
+    "managed_files": 8500,
+    "repeat_writes": 0,
+    "repeat_stale_deletions": 0,
+    "cache_enabled": true
+  },
+  "generated_audit": {
+    "changed_count": 2680,
+    "added": [
+      "src/generated/resources/data/minecraft/recipe/suspicious_stew_from_allium.json",
+      "src/generated/resources/data/minecraft/recipe/suspicious_stew_from_azure_bluet.json",
+      "src/generated/resources/data/minecraft/recipe/suspicious_stew_from_blue_orchid.json",
+      "src/generated/resources/data/minecraft/recipe/suspicious_stew_from_closed_eyeblossom.json",
+      "src/generated/resources/data/minecraft/recipe/suspicious_stew_from_cornflower.json",
+      "src/generated/resources/data/minecraft/recipe/suspicious_stew_from_dandelion.json",
+      "src/generated/resources/data/minecraft/recipe/suspicious_stew_from_golden_dandelion.json",
+      "src/generated/resources/data/minecraft/recipe/suspicious_stew_from_lily_of_the_valley.json",
+      "src/generated/resources/data/minecraft/recipe/suspicious_stew_from_open_eyeblossom.json",
+      "src/generated/resources/data/minecraft/recipe/suspicious_stew_from_orange_tulip.json",
+      "src/generated/resources/data/minecraft/recipe/suspicious_stew_from_oxeye_daisy.json",
+      "src/generated/resources/data/minecraft/recipe/suspicious_stew_from_pink_tulip.json",
+      "src/generated/resources/data/minecraft/recipe/suspicious_stew_from_poppy.json",
+      "src/generated/resources/data/minecraft/recipe/suspicious_stew_from_red_tulip.json",
+      "src/generated/resources/data/minecraft/recipe/suspicious_stew_from_torchflower.json",
+      "src/generated/resources/data/minecraft/recipe/suspicious_stew_from_white_tulip.json",
+      "src/generated/resources/data/minecraft/recipe/suspicious_stew_from_wither_rose.json",
+      "src/generated/resources/data/minecraft/tags/block/cannot_support_snow_layer.json",
+      "src/generated/resources/data/minecraft/tags/block/support_override_snow_layer.json",
+      "src/generated/resources/data/minecraft/tags/block/supports_bamboo.json",
+      "src/generated/resources/data/minecraft/tags/item/dyeable.json"
+    ],
+    "missing": [],
+    "syntax_equivalent_count": 2679,
+    "other_differences": [
+      "src/generated/resources/assets/tfc/field_guide/config_defaults.json"
+    ],
+    "normalizations": [
+      "item/tag ingredient syntax",
+      "registered compound OR ingredient syntax",
+      "native ingredient discriminator",
+      "implicit count=1",
+      "native ponder-goat-horn prototype instrument",
+      "retired false condition -> registered never condition"
+    ]
+  },
+  "trees": {
+    "target_version": 4790,
+    "changed_templates": 539,
+    "header_only": 478,
+    "authored_ignored_property_normalization": 61,
+    "normalized_palette_entries": 126,
+    "other_payload_differences": [],
+    "native_reader_tests": "TreeTemplateTest: 2 tests pass in the final full JUnit build",
+    "generated_templates": 472,
+    "retained_authored_templates": 67,
+    "authored_header_only": 6
+  },
+  "inputs": {
+    "paths": 43685,
+    "sha256": "9a6f07d65c5595fcb0d63a154b8496282abecab8385b270b78f11dcfb391a663",
+    "algorithm": "Sorted repository path UTF-8 + NUL + raw SHA256(file) for tracked src/, resources/, tools/porting/, and build settings"
+  },
+  "artifact": {
+    "filename": "TFC-Foundations-26.1.2-0.0.0.jar",
+    "size": 69054961,
+    "sha256": "716ff98409affded968607c00962c4b872dbc3b10b8c220f387e4feadd3e28f9",
+    "status": "Local unplayable build candidate; no release published"
+  },
+  "runtime": {
+    "dedicated_server_success": false,
+    "stage": "FML registration and transformed common hooks complete; actual data reload and overworld creation reached; fatal self-tests stop the server",
+    "shared_json_codec_errors": 2937,
+    "unbound_component_errors": 2935,
+    "invalid_advancement_item_ids": [
+      "tfc:windmill_blade",
+      "tfc:wood/planks/pine_loom"
+    ],
+    "missing_block_loot_tables": 30,
+    "client_success": false,
+    "client_blocker": "Headless GLFW initialization failure; bounded launch exits by timeout",
+    "server_gradle_exit_is_not_game_success": true,
+    "world_generation_complete": false,
+    "save_restart_tested": false,
+    "multiplayer_tested": false,
+    "survival_tested": false,
+    "wolf_howl_audio_restored": false
+  },
+  "host": {
+    "snapshot_outside_synchronized_workspace": true,
+    "gradle_tracking_disabled": false,
+    "neoform_java_command_fallback": true,
+    "unmodified_fml_bundled_dev_agent": true,
+    "proxy_ca": true
+  },
+  "commands": [
+    "python tools/porting/compile_main_diagnostics.py",
+    "python tools/porting/inspect_api.py",
+    "python resources validate",
+    "gradlew -I <neoform-java-fallback.gradle> -I <fml-dev-agent.gradle> build --continue",
+    "gradlew -I <neoform-java-fallback.gradle> -I <fml-dev-agent.gradle> runData",
+    "gradlew -I <neoform-java-fallback.gradle> -I <fml-dev-agent.gradle> runServer"
+  ],
+  "next_steps": [
+    "Move live resource output decoding to native template/component binding lifecycle without early fake bindings",
+    "Fix invalid advancement item IDs and missing no-drop block loot declarations without disabling self-tests",
+    "Repeat dedicated-server data reload, world generation and save/restart tests",
+    "Run client GPU and multiplayer/survival acceptance gates on a graphics-capable host"
+  ],
+  "publication_parent": "f3deca87b1df42348bec0aab0dacfac9ef31da79",
+  "concurrent_checkpoint": "Preserved the uploaded-error audit and its historical status entries; code differs only by the later dedicated-server boundary/creative-mining fixes and validation."
+}
