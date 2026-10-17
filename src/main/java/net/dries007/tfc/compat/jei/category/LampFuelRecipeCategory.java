@@ -52,7 +52,7 @@ public class LampFuelRecipeCategory extends AbstractRecipeCategory<LampFuel>
             .addIngredients(JEIIntegration.FLUID_STACK, RecipeHelpers.stream(recipe.fluid()).map(fluid -> new FluidStack(fluid, FluidType.BUCKET_VOLUME)).toList())
             .setBackground(slot, -1, -1);
 
-        builder.addSlot(RecipeIngredientRole.CATALYST, 43, 11)
+        builder.addSlot(RecipeIngredientRole.CRAFTING_STATION, 43, 11)
             .addIngredients(BaseRecipeCategory.collapse(recipe.lamps()))
             .setBackground(slot, -1, -1);
     }

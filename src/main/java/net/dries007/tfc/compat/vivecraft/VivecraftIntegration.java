@@ -14,7 +14,7 @@ public class VivecraftIntegration
 
     public static boolean isVREnabled()
     {
-        if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) return false;
+        if (FMLEnvironment.getDist() == Dist.DEDICATED_SERVER) return false;
 
         try
         {

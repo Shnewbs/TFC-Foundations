@@ -62,7 +62,7 @@ import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
-import net.neoforged.neoforge.client.event.RegisterDimensionSpecialEffectsEvent;
+import net.neoforged.neoforge.client.event.RegisterCustomEnvironmentEffectRendererEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
@@ -316,6 +316,7 @@ public final class ClientEventHandler
         bus.addListener(ClientEventHandler::registerExtensions);
         bus.addListener(FluidModelRegistration::registerModels);
         bus.addListener(ClientEventHandler::registerDimensionEffects);
+        bus.addListener(LevelRendererExtension::registerPipelines);
         bus.addListener(IngameOverlays::registerOverlays);
 
         mod.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
@@ -912,8 +913,9 @@ public final class ClientEventHandler
         if (item != null) event.registerItem(ItemRendererExtension.cached(() -> renderer.apply((T) item.get().asItem())), item.get().asItem());
     }
 
-    public static void registerDimensionEffects(RegisterDimensionSpecialEffectsEvent event)
+    public static void registerDimensionEffects(RegisterCustomEnvironmentEffectRendererEvent event)
     {
-        event.register(BuiltinDimensionTypes.OVERWORLD_EFFECTS, LevelRendererExtension.INSTANCE);
+        event.registerSkyboxRenderer(LevelRendererExtension.EFFECTS, LevelRendererExtension.INSTANCE);
+        event.registerWeatherEffectRenderer(LevelRendererExtension.EFFECTS, LevelRendererExtension.INSTANCE);
     }
 }

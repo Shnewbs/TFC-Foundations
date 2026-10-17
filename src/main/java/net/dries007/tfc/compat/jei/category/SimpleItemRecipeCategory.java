@@ -41,7 +41,7 @@ public abstract class SimpleItemRecipeCategory<T extends ItemRecipe> extends Bas
         IRecipeSlotBuilder toolSlot = null;
         if (getToolTag() != null)
         {
-            toolSlot = builder.addSlot(RecipeIngredientRole.CATALYST, 26, 5);
+            toolSlot = builder.addSlot(RecipeIngredientRole.CRAFTING_STATION, 26, 5);
         }
         IRecipeSlotBuilder outputSlot = builder.addSlot(RecipeIngredientRole.OUTPUT, 76, 5);
 

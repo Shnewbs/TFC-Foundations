@@ -1,0 +1,324 @@
+{
+  "date": "2026-10-17",
+  "branch": "26.1.2",
+  "parent": "7017226aeef4a63d447729a8b9e8c30666b480d4",
+  "baseline": {
+    "gradle_main_errors": 203,
+    "diagnostic_main_errors": 203
+  },
+  "final_diagnostic": {
+    "source_count": 1678,
+    "exit_code": 1,
+    "displayed_errors": 93,
+    "timed_out": false,
+    "annotation_processing": false,
+    "note": "Diagnostic main compilation only. Error counts can hide cascading or later failures; no gameplay or full Gradle success is implied."
+  },
+  "final_gradle": {
+    "exit_code": 1,
+    "main_errors": 93,
+    "failed_tasks": [
+      "compileJava"
+    ],
+    "other_tasks": {
+      "licenses": "PASS",
+      "dependency_verification": "PASS",
+      "assets": "UP-TO-DATE after successful independent retry",
+      "generated_selectors": "PASS"
+    },
+    "packaging": "BLOCKED by main compilation"
+  },
+  "api_probes": {
+    "runners": [
+      {
+        "runner": "run_loot_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_common_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_visual_save_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_entity_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_attachment_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_player_food_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_shared_runtime_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_snow_ice_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_thatch_bed_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_model_render_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_instrument_model_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_livestock_render_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_mechanical_boat_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_seasonal_block_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_snapshot_block_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_worldgen_api_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_item_registration_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_predator_sound_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_item_selector_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_recipe_serializer_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_selected_slot_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_sound_event_holder_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_tool_material_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_recipe_helper_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_flat_ingredient_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_interaction_api_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_neighbor_shape_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_deferred_shape_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_tag_ingredient_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_fluid_explosion_api_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_item_display_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_item_layer_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_client_render_hook_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_upstream_sync_smoke.py",
+        "exit_code": 0
+      },
+      {
+        "runner": "run_overworld_render_smoke.py",
+        "exit_code": 0
+      }
+    ],
+    "passed": 35,
+    "failed": 0,
+    "scope": "Native API/source/CPU checks; not startup, transformed Mixins, GPU or gameplay"
+  },
+  "new_sky_cpu_assertions": 15611,
+  "resource_validation": {
+    "exit_code": 0,
+    "errors": 0,
+    "generated_texture_comparison": "PASS"
+  },
+  "source_preservation": {
+    "drawStar": "637367c607d547c353fab02c24792334d0bd604caa41232ef0b90339dde7daef",
+    "rotateTo": "c49238273f82813335c7e7eda4fe7256c2df47dd020c379b4f14e0de966c44ad",
+    "rotateSkyTo": "221823a1add1ea9f2691f0ca3338711267b35a278af670747c02105cef52ab0d",
+    "weather_vertices_0": "4ae9bb959247b86c6e2f8a2ec59bbe7b40788675477930e3eb9b7eecf7a21abb",
+    "weather_vertices_1": "92cc7f4f8b8f770198a1676d93156fc5fa7dd9455fd3fa8d734cd3ef2545a322"
+  },
+  "production_sha256": {
+    "src/main/java/net/dries007/tfc/client/ClientEventHandler.java": "c0ce8e707d2d9c7f7424df04b95812484de47ea980d764837d19d42583093ce1",
+    "src/main/java/net/dries007/tfc/client/ClientForgeEventHandler.java": "4a38bd6b792111a1652508d08460b066d709607a35fbbbaa2dab8bbc3dc41c75",
+    "src/main/java/net/dries007/tfc/client/TFCColors.java": "6b43273c2c212c93bfe08996a3fb09100be155b97287fb29f5bb2f1d3660e022",
+    "src/main/java/net/dries007/tfc/client/overworld/LevelRendererExtension.java": "cef66c12a3bf12878f67c708f66722d9efdf2b210923ac51b2e52aa813df6058",
+    "src/main/java/net/dries007/tfc/client/overworld/SkyGeometry.java": "c0e5745e8c880debc3af2e6318d583ca9ad540639299e87c7c507eec040928d2",
+    "src/main/java/net/dries007/tfc/common/blockentities/TFCBlockEntity.java": "7973328ddc1cc89f820361f4507edc4a4ef3103766988384cda56a28dda3d976",
+    "src/main/java/net/dries007/tfc/common/commands/AddTrimCommand.java": "41af62598d2a80e0a7d80738c8c8410f346fe9d979c9b6f97019f9752f6b75ca",
+    "src/main/java/net/dries007/tfc/compat/jei/JEIIntegration.java": "db27381b7ef02a31ea10677695009407c1d440278fe436791895237ae839d85a",
+    "src/main/java/net/dries007/tfc/compat/jei/category/GlassworkingRecipeCategory.java": "f4671cfe7bcfd16887bb34750d36feca0aee9dbdb3c02c96ca8a6dfd13aa1eba",
+    "src/main/java/net/dries007/tfc/compat/jei/category/LampFuelRecipeCategory.java": "55eb505e85576840c0b4e96f51c2fba497e704e6b94fccc0876e4829e21a565c",
+    "src/main/java/net/dries007/tfc/compat/jei/category/SimpleItemRecipeCategory.java": "973b3593dc283e40d7bd14b019e7a9c5fa2f80a5f2599fc5688c6f225f11ec5e",
+    "src/main/java/net/dries007/tfc/compat/jei/transfer/AnvilRecipeTransferHandler.java": "47471cdd5131c309fde782432a4925562760c358f9afd3ba925544359a82bd31",
+    "src/main/java/net/dries007/tfc/compat/jei/transfer/BaseTransferInfo.java": "0ead80019bd432838a76d6ffa67b00faed5153bd914239129c79587f4ba08dfd",
+    "src/main/java/net/dries007/tfc/compat/vivecraft/VivecraftIntegration.java": "b5cdd4c6cbc29000db0f1122d9fd4093d1d81fa1905b9455ce33cc5bbbc9e04c",
+    "src/main/java/net/dries007/tfc/mixin/ChunkMapMixin.java": "51d789a1ccc12a1f873d619fff30745dce114add74d2bd7d7a538d1d48b15302",
+    "src/main/java/net/dries007/tfc/mixin/LevelAccessorMixin.java": null,
+    "src/main/java/net/dries007/tfc/mixin/LevelMixin.java": "32f6a53cf5d7c31cc7b8be99fca03295f70b26d6e3a112b9cc14523c4a4b86b5",
+    "src/main/java/net/dries007/tfc/mixin/client/ClientLevelMixin.java": "3c25ab8f44d0ac424c8068f3b06d4d7c74b9906cd6510c964402fc55e093a3ea",
+    "src/main/java/net/dries007/tfc/mixin/client/EnvironmentAttributeSystemMixin.java": "06c310c1f16115ab6dfc48f4197912784de18af7309fd0fb3c0abd150949e9db",
+    "src/main/java/net/dries007/tfc/mixin/client/WorldSelectionListMixin.java": "8a711a5b08356c2caf4913f788d1bd09214cbed1ac1be4a3eb2bf57b406a949a",
+    "src/main/resources/tfc.mixins.json": "6b8b53846d0adc8e5431dac7e3fbfd8c6d19d1857591838c1570fce993392ab1"
+  },
+  "classpath_sha256": {
+    "minecraft-patched-26.1.2.114.jar": "7e7ffccb9a01995ad9dbdcc400809b3fc47a3deeaa5f9a775ed9ba4d0e9b8cef",
+    "jei-26.1.2-neoforge-api-29.43.0.107.jar": "a7b6d082d9b8214a0051a367fa01661adeb9799a77f70ea43285b07701a1a5d5",
+    "jei-26.1.2-common-api-29.43.0.107.jar": "971879c12bd11c7fcd84baed2799f6b2219c8736f8a38879cf9c01499122d9c9",
+    "patchouli-neoforge-26.1-94.jar": "00f9e611930614eacd565916c906a4341363e4a43e271c1a01bda8227707dd49",
+    "neoforge-26.1.2.114-universal.jar": "72280019afecf55b4c9d1c1ec0b929aa07ee7d5885ac5950939494bfa7600750",
+    "loader-11.0.15.jar": "dad0947efdfbc1b09f52c7779c86c3660ed6d385fd5c07b3b649332f6f75a429",
+    "accesstransformers-11.0.2.jar": "e5f175eca04f3ab68dab45742323f5c38d1b61cf9a098b5ad85bd1d19621cdba",
+    "asm-commons-9.9.1.jar": "c2319e014ce7199f2b7f7d56d6bb991863168c3f4b6cd6c9f542a4937ef7ef88",
+    "asm-util-9.9.1.jar": "c5ebbbeaf68126af094b42fa4800f59bc4413abd02d95b9aefad722cd257e207",
+    "asm-analysis-9.9.1.jar": "6260bffc8ec008dd1b713702c7994e2c94d188a3da5bef9e87278a16df6a7522",
+    "asm-tree-9.9.1.jar": "0f3555096b720b820bbacab0b515589bee0200bee099bda14c561738ae837ba1",
+    "asm-9.9.1.jar": "6f3828a215c920059a5efa2fb55c233d6c54ec5cadca99ce1b1bdd10077c7ddd",
+    "earlydisplay-11.0.15.jar": "5abb1a589a6544b6d52ace65390b2fa39d0f012789142a0483236c8ac3d7c18f",
+    "bus-8.0.5.jar": "705e24f37752809499a5cd0c7dd31eaabf3d933c5d3b2060168e94e9ef62593a",
+    "mergetool-2.0.7-api.jar": "e78f586e085206e3b5699bf0a8de3ee94c59dd34d8cd5b4033e8c58e5ac9c2ec",
+    "toml-3.8.3.jar": "ccb92882264bf071e3916ab122fe5ea3e211b8ebf199201698a1324f151f928f",
+    "core-3.8.3.jar": "971dc88c1c22085611ee1c300f5bbf8595938178e819befbb5e98c3cbd272b79",
+    "JarJarSelector-0.5.0.jar": "15ca1bf4d49d9baae4b2d78ca47619125759f3a3c1bbfa223330139bde4bf2cb",
+    "JarJarMetadata-0.5.0.jar": "f618f4cc199dda2f05cdc102c899b27d8151f130d1c56bc3338829c41eece3de",
+    "maven-artifact-3.9.9.jar": "30f015d1c1a393e19c18cd4f43532089c36d4ca328608ce3dda78b74d3d31515",
+    "typetools-0.6.3.jar": "408300867804be05d1083cc0287dd3a21295a9e76090e288013ba5a4182dc96d",
+    "terminalconsoleappender-1.3.0.jar": "1afea1bca095068f7f4483f061feed94753be34233ddb0df9ec380fc14d5a985",
+    "sponge-mixin-0.17.4+mixin.0.8.7.jar": "1f0ae44db7295f8626f33b1dc0ad7f043d8954a8d6847247875fcc5dfcecc934",
+    "mixinextras-neoforge-0.5.5.jar": "f0c3e3c1ad835b80e70cb3f78359b71f107f74689523b4fb391f160ee487cfbf",
+    "jsr305-3.0.2.jar": "766ad2a0783f2687962c8ad74ceecc38a28b9f72a2d085ee438b7813e928d0c7",
+    "annotations-26.0.2-1.jar": "2037be378980d3ba9333e97955f3b2cde392aa124d04ca73ce2eee6657199297",
+    "java-objc-bridge-1.1.jar": "77e34a13bccffc6c8b1a0e3ed46ddb0ea7dd56f2104ecdfacaaec9e4054ac332",
+    "log4j-core-2.25.2.jar": "e50db7701430ff907981850ef527a41d51a53dd0017f53a0860afcbab8570277",
+    "log4j-api-2.25.2.jar": "9fd66c9fe0bea06fa9666c147989a46cafaa92b4a88753697d3945cc43338cbb",
+    "guava-33.5.0-jre.jar": "1e301f0c52ac248b0b14fdc3d12283c77252d4d6f48521d572e7d8c4c2cc4ac7",
+    "gson-2.13.2.jar": "dd0ce1b55a3ed2080cb70f9c655850cda86c206862310009dcb5e5c95265a5e0",
+    "commons-lang3-3.19.0.jar": "32733ab4bc90b45b63eb72677d886961003fd4ed113e07b1028f9877cb2ac735",
+    "logging-1.6.11.jar": "5d803eb7348a27468c6172daef2f0d77260dd63cde377ebfa73e36789ae8fcee",
+    "at-parser-11.0.2.jar": "546bf36537c606b4d14cb1a313873f41fba13837d067987a32170c4a3199f08a",
+    "slf4j-api-2.0.17.jar": "7b751d952061954d5abfed7181c1f645d336091b679891591d63329c622eb832",
+    "plexus-utils-3.5.1.jar": "86e0255d4c879c61b4833ed7f13124e8bb679df47debb127326e7db7dd49a07b",
+    "jline-reader-3.20.0.jar": "acd1c94d1e228aa7b7962f69b21ed3a9fd828eb3a63e4baf9086954e626af1f0",
+    "lz4-java-1.10.1.jar": "a58a84c4271e50df4c96ed916ccb7e48a869f8ed9cdcda1ad5d3d4c33b0214a3",
+    "azure-json-1.4.0.jar": "c50bc998cd1a6c689f8644b51c206217bf2da09d5b949e777490a60290cc3a0d",
+    "oshi-core-6.9.0.jar": "b29ba9bce041e6ea822203d5b5a692660c87551241510ebc76eedffe684844c7",
+    "failureaccess-1.0.3.jar": "cbfc3906b19b8f55dd7cfd6dfe0aa4532e834250d7f080bd8d211a3e246b59cb",
+    "icu4j-77.1.jar": "b3640b9f416a4411fd33c59abbeea8fd57d024c23e1819bf9673220a97499fe3",
+    "msal4j-1.23.1.jar": "414d4fe3c66c7bb1a741014f352e5f0a8329172703e7fbb0020d232a8c8385b1",
+    "authlib-7.0.63.jar": "44de93d9df077fa1d4829ada260efe9d126476b9b7abdfba30cfbb5db145cb2f",
+    "blocklist-1.0.10.jar": "830bfd639c8db49236bbd8e45d3a2b8c96c56ff654a10118654958a6235d4c44",
+    "brigadier-1.3.10.jar": "c8ee4136e474ac7723ca2b432ec8d1a2bc88ef7d1ec57c314ba9e33cdc83dd75",
+    "datafixerupper-9.0.19.jar": "9653a39cf5c4853cc98628d902dcb23ffeb2755122ecc563bde38c8f60c0b61e",
+    "jtracy-1.0.37.jar": "8bb68d0b65e8eceb92de2bd1d9e1443a8c9a9dd1b5818a5e54870b0f8253672a",
+    "patchy-2.2.10.jar": "16d70e7968b45caffc81576268eb000f473fb60bf257182d3447dea8ec919d5a",
+    "text2speech-1.18.11.jar": "587f08aa316ee4d6a9f39f77d3ba7d8a83425da53aa74938a1f034a4e3fc255f",
+    "commons-codec-1.19.0.jar": "5c3881e4f556855e9c532927ee0c9dfde94cc66760d5805c031a59887070af5f",
+    "commons-io-2.20.0.jar": "df90bba0fe3cb586b7f164e78fe8f8f4da3f2dd5c27fa645f888100ccc25dd72",
+    "netty-buffer-4.2.7.Final.jar": "b81613c8ed22b1cc39eccf2a28bd0c1d4561fb2e5e542061617ef4ce1d228bf5",
+    "netty-codec-base-4.2.7.Final.jar": "6360415b7c87160afcde5e7d4946c35539b9f043e8166c91a7fff95cc6067d9f",
+    "netty-codec-compression-4.2.7.Final.jar": "edd53ad34991804301a46571113d8ffb4d6f67e6d874674dafbb915724275cb3",
+    "netty-codec-http-4.2.7.Final.jar": "2984dd38420a61c4dd68fcacc51ffc528eb46f73f7795cdafdb3a4d6fcb76862",
+    "netty-common-4.2.7.Final.jar": "2345bc0ed5843fa57aa49eba67529485c3a1d420fcf0429324c8220c7a80e9a6",
+    "netty-handler-4.2.7.Final.jar": "21d063409c12dbcec46d380c8856a0f7b6a5b68bb5f1d005eb065b4d64146cb3",
+    "netty-resolver-4.2.7.Final.jar": "7e4d569867e6c08437fb21a220ea01c294b0e38f01149b683c895a1bcd928438",
+    "netty-transport-classes-epoll-4.2.7.Final.jar": "4492948e6a7694398e5197cf15ed2e21d6662a739d010ae666fa276e7222853c",
+    "netty-transport-classes-kqueue-4.2.7.Final.jar": "a3eb1c94ae1a6be9e1d1ec52c3f5c510a75b04b8ef1ea86b7e77b3f1287ae3cc",
+    "netty-transport-native-unix-common-4.2.7.Final.jar": "736703b3f6d127e182f5be888b6e15732b0c08d6634e00725352a6a9d19974b2",
+    "netty-transport-4.2.7.Final.jar": "aadc6fb05c14fb789368ca3f854721549c72f6c0d81798bbccf9de1bb716892b",
+    "fastutil-8.5.18.jar": "9094ae67d01d0ad246f886f11ad557fc2e79c72cbf3feed83e1512a8ae90a74a",
+    "jna-platform-5.17.0.jar": "b7e3d46c87bad2eb409b0e704916bcd81206168e357312dfddd0e253679cd9e0",
+    "jna-5.17.0.jar": "b3a9408e7c51e08ef0e3bfcc08f443f6ec0f6191ba8cd7c18d53d2b22e5bdbc0",
+    "jopt-simple-5.0.4.jar": "df26cc58f235f477db07f753ba5a3ab243ebe5789d9f89ecf68dd62ea9a66c28",
+    "commons-compress-1.28.0.jar": "e1522945218456f3649a39bc4afd70ce4bd466221519dba7d378f2141a4642ca",
+    "log4j-slf4j2-impl-2.25.2.jar": "faffe8c867d59f813fb4bd1edf5354bfe86125811a7c9b305e5d225da8e7ea54",
+    "jorbis-0.0.17.jar": "e067f29a3701426b67ed973036949c6e58ca5bb53eef7240b2e71e286d252a9e",
+    "joml-1.10.8.jar": "bf19510145178df82cd3bd37edd514c13f411531ec5545299fd3abcbc98fe7c2",
+    "jspecify-1.0.0.jar": "1fad6e6be7557781e4d33729d49ae1cdc8fdda6fe477bb0cc68ce351eafdfbab",
+    "lwjgl-freetype-3.4.1.jar": "c57a40cedf39c4f3dfe25df596c0933cecb91d323c3fc4c2ed08661d1b79d8c7",
+    "lwjgl-glfw-3.4.1.jar": "c2d93964f0a8b2a846708c7fb1b0a095e7d79dce8ea4c543969ffef508027190",
+    "lwjgl-jemalloc-3.4.1.jar": "184866f4dcb444666e9062f690c389d69e4a62dd7fd9e2bb13ab7bdf3d03bd1e",
+    "lwjgl-openal-3.4.1.jar": "824a68b6f22220feb45cdaf06ebd5496b96e38c50e2588fc3ea0e819f910cf28",
+    "lwjgl-opengl-3.4.1.jar": "a76b8fd9ff7428ae5e0f01b8f91a4e44debba87285048e965757742093418702",
+    "lwjgl-stb-3.4.1.jar": "3d77b0a242b8a52788934356560191db910ed242ab23c521d55f030b4e867970",
+    "lwjgl-tinyfd-3.4.1.jar": "3ffad01103b6cbc8c12c7156691fd87a96f063600a5ff5c9087d321c6736963a",
+    "lwjgl-3.4.1.jar": "9b1c3a3a078c2377219ecb8a2662730b3dece07c10592cf1d12f957286037b69",
+    "jline-terminal-3.20.0.jar": "12125170e795519ba6dc8010c070b53c76aae92b485c1e37530e54ab5dd08d43",
+    "error_prone_annotations-2.41.0.jar": "a56e782b5b50811ac204073a355a21d915a2107fce13ec711331ad036f660fcc",
+    "listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar": "b372a037d4230aa57fbeffdef30fd6123f9c0c2db85d0aced00c91b974f33f99",
+    "j2objc-annotations-3.1.jar": "84d3a150518485f8140ea99b8a985656749629f6433c92b80c75b36aba3b099b"
+  },
+  "toolchain": {
+    "java": "OpenJDK 25 build 25+36",
+    "gradle": "9.2.1",
+    "neoform_host_fallback": "Opt-in local 2.0.31 java.home executable fallback; not a stock toolchain validation",
+    "tls": "Host trusted proxy CA imported into local Java 25 and auxiliary Java 21 stores; verification enabled"
+  },
+  "corrected_attempts": [
+    "Initial sky radius test assumed exact trigonometry; final tolerance accounts for Minecraft approximation.",
+    "Initial native buffer test lacked runtime LWJGL native JARs; final runner includes resolved matching host classifiers.",
+    "Initial aggregate API run failed an unused Helpers import in TFCBlockEntity, removed before final 35/35 passing run.",
+    "Initial full build also failed Java 21 asset TLS trust. Corrected local store; downloadAssets retry exit 0; final full build fails only main compilation."
+  ],
+  "not_run": [
+    "Transformed Mixin application",
+    "GPU pipeline initialization/rendered appearance",
+    "Native day/night timeline and color timing in-world",
+    "Whole resource reload in running client",
+    "Client/server startup",
+    "World generation, save/reload",
+    "Multiplayer and survival",
+    "Performance measurements"
+  ],
+  "forward_upstream_commit": "64bc0554bf820464cbefb57c551b3007b6298a1f",
+  "playable_jar": false
+}

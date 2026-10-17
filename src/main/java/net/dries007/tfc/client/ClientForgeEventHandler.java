@@ -126,6 +126,8 @@ public class ClientForgeEventHandler
     {
         final IEventBus bus = NeoForge.EVENT_BUS;
 
+        bus.addListener(net.dries007.tfc.client.overworld.LevelRendererExtension::extract);
+
         bus.addListener(ClientForgeEventHandler::onRenderGameOverlayPost);
         bus.addListener(ClientForgeEventHandler::onItemTooltip);
         bus.addListener(ClientForgeEventHandler::onInitGuiPost);

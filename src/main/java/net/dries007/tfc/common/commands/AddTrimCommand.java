@@ -21,9 +21,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.equipment.trim.ArmorTrim;
-import net.minecraft.world.item.equipment.trim.TrimMaterials;
-import net.minecraft.world.item.equipment.trim.TrimPatterns;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SmithingRecipeInput;
+import net.minecraft.world.item.crafting.SmithingTrimRecipe;
+import java.util.Objects;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.server.command.EnumArgument;
 
@@ -42,9 +43,9 @@ public class AddTrimCommand
         return Commands.literal("trim").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
             .then(Commands.argument("material", ItemArgument.item(buildContext))
                 .then(Commands.argument("pattern", ItemArgument.item(buildContext))
-                    .executes(context -> addTrim(context.getSource(), context.getArgument("material", ItemInput.class).getItem(), context.getArgument("pattern", ItemInput.class).getItem(), context.getSource().getPlayerOrException().getMainHandItem()))
+                    .executes(context -> addTrim(context.getSource(), context.getArgument("material", ItemInput.class).item().value(), context.getArgument("pattern", ItemInput.class).item().value(), context.getSource().getPlayerOrException().getMainHandItem()))
                     .then(Commands.argument("metal", EnumArgument.enumArgument(Metal.class))
-                        .executes(context -> spawnSet(context.getSource(), context.getArgument("material", ItemInput.class).getItem(), context.getArgument("pattern", ItemInput.class).getItem(), context.getArgument("metal", Metal.class)))
+                        .executes(context -> spawnSet(context.getSource(), context.getArgument("material", ItemInput.class).item().value(), context.getArgument("pattern", ItemInput.class).item().value(), context.getArgument("metal", Metal.class)))
                     )
                 )
             );
@@ -72,19 +73,31 @@ public class AddTrimCommand
 
     public static int addTrim(CommandSourceStack source, Item materialItem, Item patternItem, ItemStack item)
     {
-        final var material = TrimMaterials.getFromIngredient(source.registryAccess(), materialItem.getDefaultInstance());
-        final var pattern = TrimPatterns.getFromTemplate(source.registryAccess(), patternItem.getDefaultInstance());
-        if (material.isEmpty())
+        final ItemStack materialStack = materialItem.getDefaultInstance();
+        final var material = materialStack.get(DataComponents.PROVIDES_TRIM_MATERIAL);
+        if (material == null)
         {
             source.sendFailure(Component.translatable(FAIL_BAD_MATERIAL));
             return 0;
         }
-        if (pattern.isEmpty())
+        // Native patterns belong to smithing recipes. Resolve by template, preserving data-driven patterns.
+        final ItemStack base = item.copy();
+        base.remove(DataComponents.TRIM);
+        final ItemStack template = patternItem.getDefaultInstance();
+        final var trim = source.getServer().getRecipeManager().recipeMap().byType(RecipeType.SMITHING).stream()
+            .map(holder -> holder.value())
+            .filter(recipe -> recipe instanceof SmithingTrimRecipe)
+            .map(recipe -> (SmithingTrimRecipe) recipe)
+            .filter(recipe -> recipe.templateIngredient().map(ingredient -> ingredient.test(template)).orElse(false))
+            .map(recipe -> recipe.assemble(new SmithingRecipeInput(template, base, materialStack)).get(DataComponents.TRIM))
+            .filter(Objects::nonNull)
+            .findFirst();
+        if (trim.isEmpty())
         {
             source.sendFailure(Component.translatable(FAIL_BAD_TEMPLATE));
             return 0;
         }
-        item.set(DataComponents.TRIM, new ArmorTrim(material.get(), pattern.get()));
+        item.set(DataComponents.TRIM, trim.get());
         return Command.SINGLE_SUCCESS;
     }
 

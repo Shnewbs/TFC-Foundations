@@ -58,7 +58,7 @@ public class GlassworkingRecipeCategory extends BaseRecipeCategory<GlassworkingR
         int idx = 0;
         for (GlassOperation operation : recipe.operations())
         {
-            var slot = builder.addSlot(RecipeIngredientRole.CATALYST, idx < 3 ? 6 : 90, 25 * ((idx % 3) + 1))
+            var slot = builder.addSlot(RecipeIngredientRole.CRAFTING_STATION, idx < 3 ? 6 : 90, 25 * ((idx % 3) + 1))
                 .setBackground(this.slot, -1, -1);
             for (Holder<Item> item : operation.getItems())
             {

@@ -6,84 +6,115 @@
 
 package net.dries007.tfc.client.overworld;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-import net.dries007.tfc.util.Unchecked.ThrowingSupplier;
-import com.mojang.blaze3d.platform.GlStateManager;
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
+import com.mojang.blaze3d.buffers.GpuBuffer;
+import com.mojang.blaze3d.pipeline.BlendFunction;
+import com.mojang.blaze3d.pipeline.ColorTargetState;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.MeshData;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexBuffer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
-
-import net.dries007.tfc.client.ClientHelpers;
-import net.dries007.tfc.common.TFCTags;
-import net.dries007.tfc.common.blocks.TFCBlocks;
-import net.dries007.tfc.common.blocks.devices.CharcoalForgeBlock;
-import net.dries007.tfc.common.blocks.devices.FirepitBlock;
-
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
-import net.minecraft.server.level.ParticleStatus;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.DimensionSpecialEffects;
-import net.minecraft.client.renderer.fog.FogRenderer;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.rendertype.OutputTarget;
+import net.minecraft.client.renderer.state.level.LevelRenderState;
+import net.minecraft.client.renderer.state.level.SkyRenderState;
+import net.minecraft.client.renderer.state.level.WeatherRenderState;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ParticleStatus;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.util.context.ContextKey;
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.MoonPhase;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.FogType;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.client.CustomSkyboxRenderer;
+import net.neoforged.neoforge.client.CustomWeatherEffectRenderer;
+import net.neoforged.neoforge.client.event.ExtractLevelRenderStateEvent;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
-import org.joml.Quaternionf;
+import org.joml.Matrix4fc;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
+import net.dries007.tfc.client.ClientHelpers;
 import net.dries007.tfc.client.ClimateRenderCache;
+import net.dries007.tfc.client.render.blockentity.CapturedGeometry;
+import net.dries007.tfc.common.TFCTags;
+import net.dries007.tfc.common.blocks.TFCBlocks;
 import net.dries007.tfc.common.blocks.IBlockRain;
+import net.dries007.tfc.common.blocks.devices.CharcoalForgeBlock;
+import net.dries007.tfc.common.blocks.devices.FirepitBlock;
 import net.dries007.tfc.util.Helpers;
 import net.dries007.tfc.util.calendar.Calendars;
 import net.dries007.tfc.util.climate.Climate;
 import net.dries007.tfc.util.climate.ClimateModel;
 import net.dries007.tfc.util.tracker.WeatherHelpers;
 
-/**
- * Overrides {@link DimensionSpecialEffects.OverworldEffects} in order to provide additional features and modifications of the weather
- * and sky/sun/moon rendering.
- */
-public class LevelRendererExtension extends DimensionSpecialEffects.OverworldEffects
+import static net.dries007.tfc.client.overworld.SkyGeometry.*;
+
+/** Native environment renderers. World access is restricted to extraction and rain ticks. */
+
+public final class LevelRendererExtension implements CustomSkyboxRenderer, CustomWeatherEffectRenderer
 {
     public static final LevelRendererExtension INSTANCE = new LevelRendererExtension();
+    public static void registerPipelines(net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent event)
+    {
+        event.registerPipeline(COLORED_STARS);
+        event.registerPipeline(COVER);
+    }
 
-    // Most of this is copied from LevelRenderer
+    public static final Identifier EFFECTS = Helpers.identifier("overworld");
+    private static final ContextKey<Frame> FRAME = new ContextKey<>(Helpers.identifier("overworld_frame"));
 
+    private record WeatherBatch(Identifier texture, CapturedGeometry.Snapshot geometry) {}
+    private record Frame(SkyPos sun, SkyPos moon, SkyPos stars, int phase, float starBrightness,
+        CapturedGeometry.Snapshot catalog, List<WeatherBatch> weather) {}
+
+    private static final RenderPipeline COLORED_STARS = RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
+        .withLocation(Helpers.identifier("pipeline/colored_stars"))
+        .withVertexShader("core/position_color").withFragmentShader("core/position_color")
+        .withColorTargetState(new ColorTargetState(BlendFunction.OVERLAY))
+        .withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS).build();
+    private static final RenderPipeline COVER = RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
+        .withLocation(Helpers.identifier("pipeline/celestial_cover"))
+        .withVertexShader("core/position_color").withFragmentShader("core/position_color")
+        .withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS).build();
     private static final Identifier[] RAIN_LOCATIONS = new Identifier[] {
         Helpers.identifier("textures/environment/rain_0.png"),
         Helpers.identifier("textures/environment/rain_1.png"),
@@ -97,323 +128,214 @@ public class LevelRendererExtension extends DimensionSpecialEffects.OverworldEff
         Helpers.identifier("textures/environment/snow_2.png"),
         Helpers.identifier("textures/environment/snow_3.png"),
     };
-    private static final Identifier MOON_LOCATION = Identifier.withDefaultNamespace("textures/environment/moon_phases.png");
-    private static final Identifier SUN_LOCATION = Identifier.withDefaultNamespace("textures/environment/sun.png");
-
     private static final float RAIN_MAX_ANGLE = 20 * Mth.DEG_TO_RAD;
     private static final float SNOW_MAX_ANGLE = 30 * Mth.DEG_TO_RAD;
 
-    private static VertexBuffer createBuffer(ThrowingSupplier<?> draw)
-    {
-        final VertexBuffer buffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
-        buffer.bind();
-        buffer.upload(Helpers.uncheck(draw));
-        VertexBuffer.unbind();
-        return buffer;
-    }
-
-    private final float[] rainSizeX;
-    private final float[] rainSizeZ;
+    private final float[] rainSizeX = new float[1024];
+    private final float[] rainSizeZ = new float[1024];
     private int rainSoundTime;
-
-    private @Nullable VertexBuffer starBuffer = null;
-    private final VertexBuffer skyBuffer;
-    private final VertexBuffer darkBuffer;
+    private volatile CapturedGeometry.Snapshot catalog = new CapturedGeometry.Snapshot(List.of());
+    private @Nullable CapturedGeometry.Snapshot uploadedCatalog;
+    private @Nullable GpuBuffer starBuffer;
+    private int starIndexCount;
 
     private LevelRendererExtension()
     {
-        // Reflect into LevelRenderer to avoid copying (both at runtime, and code)
-        final Field rainSizeX = Helpers.uncheck(() -> LevelRenderer.class.getDeclaredField("rainSizeX"));
-        final Field rainSizeZ = Helpers.uncheck(() -> LevelRenderer.class.getDeclaredField("rainSizeZ"));
-        final Method buildSkyDisc = Helpers.uncheck(() -> LevelRenderer.class.getDeclaredMethod("buildSkyDisc", Tesselator.class, float.class));
-
-        rainSizeX.setAccessible(true);
-        rainSizeZ.setAccessible(true);
-        buildSkyDisc.setAccessible(true);
-
-        final LevelRenderer instance = Minecraft.getInstance().levelRenderer;
-
-        this.rainSizeX = Helpers.uncheck(() -> rainSizeX.get(instance));
-        this.rainSizeZ = Helpers.uncheck(() -> rainSizeZ.get(instance));
-
-        this.skyBuffer = createBuffer(() -> buildSkyDisc.invoke(null, Tesselator.getInstance(), 16.0F));
-        this.darkBuffer = createBuffer(() -> buildSkyDisc.invoke(null, Tesselator.getInstance(), -16.0F));
+        // Native WeatherEffectRenderer's column directions, without reflection or GPU work at class initialization.
+        for (int z = 0; z < 32; z++) for (int x = 0; x < 32; x++)
+        {
+            final float dx = x - 16, dz = z - 16;
+            final float length = Mth.sqrt(dx * dx + dz * dz);
+            rainSizeX[z * 32 + x] = length == 0 ? 0 : -dz / length;
+            rainSizeZ[z * 32 + x] = length == 0 ? 0 : dx / length;
+        }
     }
 
     public void updateStars(List<Star> stars)
     {
-        if (starBuffer != null) starBuffer.close();
-        starBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
-        starBuffer.bind();
-        starBuffer.upload(drawStars(stars));
-        VertexBuffer.unbind();
-    }
-
-    private MeshData drawStars(List<Star> stars)
-    {
-        final Tesselator tesselator = Tesselator.getInstance();
-        final BufferBuilder buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        final CapturedGeometry vertices = new CapturedGeometry();
         final RandomSource random = RandomSource.create(42L);
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        for (Star star : stars) drawStar(buffer, star, random);
-        return buffer.buildOrThrow();
+        for (Star star : stars) drawStar(vertices, star, random);
+        // Reload workers publish CPU values only. GPU replacement happens on the render thread.
+        catalog = vertices.snapshot();
     }
 
-    private void drawStar(BufferBuilder buffer, Star star, RandomSource random)
+    public static void extract(ExtractLevelRenderStateEvent event)
     {
-        final float zenith = star.zenith();
-        final float azimuth = star.azimuth();
-        final int color = 0xff000000 | star.color();
-        final float size = Mth.clampedMap(star.apparentMagnitude(), -1, 6, 0.4f, 0.1f);
-
-        final float sinZenith = Mth.sin(zenith);
-        final float x = 100f * sinZenith * Mth.cos(azimuth);
-        final float z = 100f * sinZenith * Mth.sin(azimuth);
-        final float y = 100f * Mth.cos(zenith);
-
-        final Vector3f pos = new Vector3f(x, y, z);
-        final Quaternionf q = new Quaternionf()
-            .rotateTo(new Vector3f(0.0F, 0.0F, -1.0F), pos)
-            .rotateZ(random.nextFloat() * Mth.TWO_PI);
-
-        buffer.addVertex(pos.add(new Vector3f(size, -size, 0).rotate(q))).setColor(color);
-        buffer.addVertex(pos.add(new Vector3f(size, size, 0).rotate(q))).setColor(color);
-        buffer.addVertex(pos.add(new Vector3f(-size, size, 0).rotate(q))).setColor(color);
-        buffer.addVertex(pos.add(new Vector3f(-size, -size, 0).rotate(q))).setColor(color);
+        final ClientLevel level = event.getLevel();
+        final LevelRenderState state = event.getRenderState();
+        // Match the former OVERWORLD_EFFECTS registration; other skybox types keep their own renderers.
+        if (level.dimensionType().skybox() != DimensionType.Skybox.OVERWORLD) return;
+        final Camera camera = event.getCamera();
+        final float partialTick = event.getDeltaTracker().getGameTimeDeltaPartialTick(false);
+        final BlockPos pos = camera.blockPosition();
+        final float stars = camera.attributeProbe().getValue(EnvironmentAttributes.STAR_BRIGHTNESS, partialTick);
+        state.setRenderData(FRAME, new Frame(
+            ClientSolarCalculatorBridge.getSunPosition(level, pos),
+            ClientSolarCalculatorBridge.getMoonPosition(level, pos),
+            ClientSolarCalculatorBridge.getStarPosition(level, pos),
+            ClientSolarCalculatorBridge.getMoonPhase(), stars, INSTANCE.catalog,
+            INSTANCE.captureWeather(level, event.getRenderTick(), partialTick, camera.position())));
     }
 
-    /**
-     * See {@link LevelRenderer#renderSky} for reference. This implementation has a few modifications:
-     * <ul>
-     *     <li>We don't implement End-dimension rendering, as this is only used for the overworld</li>
-     * </ul>
-     *
-     * @return {@code true} to prevent vanilla sky rendering
-     */
     @Override
-    public boolean renderSky(ClientLevel level, int ticks, float partialTick, Matrix4f frustumMatrix, Camera camera, Matrix4f projectionMatrix, boolean isFoggy, Runnable skyFogSetup)
+    public boolean renderSky(LevelRenderState levelState, SkyRenderState sky, Matrix4fc modelView, Runnable setupFog)
     {
-        skyFogSetup.run();
-        if (!isFoggy)
+        final Frame frame = levelState.getRenderData(FRAME);
+        if (frame == null) return false;
+        setupFog.run();
+        final PoseStack stack = new PoseStack();
+        stack.mulPose(new Matrix4f(modelView));
+        draw(skyDisc(16), stack.last().pose(), ARGB.vector4fFromARGB32(0xFF000000 | sky.skyColor), RenderPipelines.SKY, null, false);
+
+        final float sunriseAlpha = ARGB.alphaFloat(sky.sunriseAndSunsetColor);
+        if (sunriseAlpha > 0)
         {
-            final FogType fogType = camera.getFluidInCamera();
-            if (fogType != FogType.POWDER_SNOW && fogType != FogType.LAVA && !this.doesMobEffectBlockSky(camera))
+            final CapturedGeometry fan = new CapturedGeometry();
+            final Matrix4f pose = rotateTo(stack, SkyPos.of(-Mth.HALF_PI, frame.sun().azimuth() + Mth.PI));
+            final int rgb = sky.sunriseAndSunsetColor & 0xFFFFFF;
+            fan.addVertex(pose, 0, 100, 0).setColor(sky.sunriseAndSunsetColor);
+            for (int i = 0; i <= 16; i++)
             {
-                // This override is only implemented for the overworld, so we skip the possible end dimension rendering path
-                //
-                // First, we query the sun position. This determines most of the rest of the other rendering as per the sun
-                // visibility in the sky. We have to rewrite anything that currently uses daytime internally, as it will be wrong
-
-                final PoseStack stack = new PoseStack();
-                final Vec3 skyColor = level.getSkyColor(Minecraft.getInstance().gameRenderer.getMainCamera().position(), partialTick);
-                final SkyPos sunPos = ClientSolarCalculatorBridge.getSunPosition(level, camera.blockPosition());
-
-                stack.mulPose(frustumMatrix);
-
-                FogRenderer.levelFogColor();
-                final Tesselator tesselator = Tesselator.getInstance();
-                RenderSystem.depthMask(false);
-                RenderSystem.setShaderColor((float) skyColor.x, (float) skyColor.y, (float) skyColor.z, 1.0F);
-                final ShaderInstance shader = RenderSystem.getShader();
-                assert shader != null;
-                skyBuffer.bind();
-                skyBuffer.drawWithShader(stack.last().pose(), projectionMatrix, shader);
-                VertexBuffer.unbind();
-                RenderSystem.enableBlend();
-
-                // Sunrise Colors
-                // This is using corrected day time via the underlying call being redirected on client
-                // todo: use an adjusted time of day here. The effect means we get day-long sunrises in the north pole in summer, which isn't
-                // really realistic. we should compress this - unsure if across all time, or just across compressed areas
-                final float[] sunriseColor = level.effects().getSunriseColor(level.getTimeOfDay(partialTick), partialTick);
-                if (sunriseColor != null)
-                {
-                    RenderSystem.setShader(GameRenderer::getPositionColorShader);
-                    RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-
-                    // Position the sunrise colors based on the sun azimuth position, but fixed at the horizon
-                    // The offsets + negative here are to not have to deal with the weirdness that is the default rendering code
-                    final Matrix4f pose = rotateTo(stack, SkyPos.of(-Mth.HALF_PI, sunPos.azimuth() + Mth.PI));
-                    final BufferBuilder buffer = tesselator.begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
-                    buffer.addVertex(pose, 0.0F, 100.0F, 0.0F).setColor(sunriseColor[0], sunriseColor[1], sunriseColor[2], sunriseColor[3]);
-
-                    for (int i = 0; i <= 16; i++)
-                    {
-                        final float angle = i * Mth.TWO_PI / 16.0F;
-                        final float sin = Mth.sin(angle);
-                        final float cos = Mth.cos(angle);
-                        buffer.addVertex(pose, sin * 120.0F, cos * 120.0F, -cos * 40.0F * sunriseColor[3])
-                            .setColor(sunriseColor[0], sunriseColor[1], sunriseColor[2], 0.0F);
-                    }
-
-                    BufferUploader.drawWithShader(buffer.buildOrThrow());
-                }
-
-                RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-
-                // Rain darkening, this is redirected on client to use the client-side rain level
-                final float rainAlpha = 1.0F - level.getRainLevel(partialTick);
-                final float starAlpha = level.getStarBrightness(partialTick);
-                final float nightAlpha = starAlpha * rainAlpha;
-
-                // Stars
-                if (nightAlpha > 0.0F && starBuffer != null)
-                {
-                    final SkyPos starPos = ClientSolarCalculatorBridge.getStarPosition(level, camera.blockPosition());
-
-                    RenderSystem.setShaderColor(nightAlpha, nightAlpha, nightAlpha, nightAlpha);
-                    FogRenderer.setupNoFog();
-
-                    final Matrix4f stars = rotateSkyTo(stack, starPos);
-                    final ShaderInstance starShader = GameRenderer.getPositionColorShader();
-                    assert starShader != null;
-                    starBuffer.bind();
-                    starBuffer.drawWithShader(stars, projectionMatrix, starShader);
-                    VertexBuffer.unbind();
-                    skyFogSetup.run();
-                }
-
-                RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-                RenderSystem.disableBlend();
-
-                final double distanceAboveHorizon = camera.getEntity().getEyePosition(partialTick).y - level.getLevelData().getHorizonHeight(level);
-                if (distanceAboveHorizon < 0.0)
-                {
-                    stack.pushPose();
-                    stack.translate(0.0F, 12.0F, 0.0F);
-                    darkBuffer.bind();
-                    darkBuffer.drawWithShader(stack.last().pose(), projectionMatrix, shader);
-                    VertexBuffer.unbind();
-                    stack.popPose();
-                }
-
-                // Sun and Moon positions
-                final Matrix4f sun = rotateTo(stack, sunPos);
-                final SkyPos moonPos = ClientSolarCalculatorBridge.getMoonPosition(level, camera.blockPosition());
-                final Matrix4f moon = rotateTo(stack, moonPos);
-
-                // We need to cut a sky-colored quad out of the sky in order to render the sun and moon with the correct blending
-                float[] coverColors;
-                if (sunriseColor != null)
-                {
-                    coverColors = Arrays.copyOf(sunriseColor,sunriseColor.length);
-                } else {
-                    coverColors = new float[3];
-                    coverColors[0] = (float) skyColor.x;
-                    coverColors[1] = (float) skyColor.y;
-                    coverColors[2] = (float) skyColor.z;
-                }
-
-                coverColors[0] = (float) skyColor.x;
-                coverColors[1] = (float) skyColor.y;
-                coverColors[2] = (float) skyColor.z;
-
-                FogRenderer.levelFogColor();
-                RenderSystem.depthMask(false);
-
-                RenderSystem.setShaderColor(1, 1, 1, 1.0F);
-                RenderSystem.setShader(GameRenderer::getPositionColorShader);
-                BufferBuilder buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-                buffer.addVertex(sun, -7.5F, 100.0F, -7.5F).setColor(coverColors[0],coverColors[1],coverColors[2], 1.0f);
-                buffer.addVertex(sun, 7.5F, 100.0F, -7.5F).setColor(coverColors[0],coverColors[1],coverColors[2], 1.0f);
-                buffer.addVertex(sun, 7.5F, 100.0F, 7.5F).setColor(coverColors[0],coverColors[1],coverColors[2], 1.0f);
-                buffer.addVertex(sun, -7.5F, 100.0F, 7.5F).setColor(coverColors[0],coverColors[1],coverColors[2], 1.0f);
-                BufferUploader.drawWithShader(buffer.buildOrThrow());
-
-                buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-                buffer.addVertex(moon, -7.5F, 100.0F, -7.5F).setColor(coverColors[0],coverColors[1],coverColors[2], 1.0f);
-                buffer.addVertex(moon, 7.5F, 100.0F, -7.5F).setColor(coverColors[0],coverColors[1],coverColors[2], 1.0f);
-                buffer.addVertex(moon, 7.5F, 100.0F, 7.5F).setColor(coverColors[0],coverColors[1],coverColors[2], 1.0f);
-                buffer.addVertex(moon, -7.5F, 100.0F, 7.5F).setColor(coverColors[0],coverColors[1],coverColors[2], 1.0f);
-                BufferUploader.drawWithShader(buffer.buildOrThrow());
-
-                RenderSystem.enableBlend();
-
-                // Sun With Glow
-
-                RenderSystem.setShaderColor(1f, 1f, 1f, rainAlpha);
-                RenderSystem.setShader(GameRenderer::getPositionTexShader);
-                RenderSystem.setShaderTexture(0, SUN_LOCATION);
-                buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                buffer.addVertex(sun, -30.0F, 100.0F, -30.0F).setUv(0.0F, 0.0F);
-                buffer.addVertex(sun, 30.0F, 100.0F, -30.0F).setUv(1.0F, 0.0F);
-                buffer.addVertex(sun, 30.0F, 100.0F, 30.0F).setUv(1.0F, 1.0F);
-                buffer.addVertex(sun, -30.0F, 100.0F, 30.0F).setUv(0.0F, 1.0F);
-                BufferUploader.drawWithShader(buffer.buildOrThrow());
-
-
-                // Moon With Glow
-                // The moon uses a separate shader color, that alpha's out the moon somewhat when it's during the day, just to make it
-                // seem a little less prominent than in night
-                final float moonAlpha = (0.2f + 0.8f * starAlpha) * rainAlpha;
-
-                final int moonPhase = ClientSolarCalculatorBridge.getMoonPhase();
-                final int moonU = (moonPhase % 4);
-                final int moonV = (moonPhase / 4 % 2);
-
-                RenderSystem.setShaderColor(1f, 1f, 1f, moonAlpha);
-                RenderSystem.setShaderTexture(0, MOON_LOCATION);
-                buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-                buffer.addVertex(moon, -30.0F, 100.0F, -30.0F).setUv(moonU / 4.0F, (moonV + 1) / 2.0F);
-                buffer.addVertex(moon, 30.0F, 100.0F, -30.0F).setUv((moonU + 1) / 4.0F, (moonV + 1) / 2.0F);
-                buffer.addVertex(moon, 30.0F, 100.0F, 30.0F).setUv((moonU + 1) / 4.0F, moonV / 2.0F);
-                buffer.addVertex(moon, -30.0F, 100.0F, 30.0F).setUv(moonU / 4.0F, moonV / 2.0F);
-                BufferUploader.drawWithShader(buffer.buildOrThrow());
-
-                RenderSystem.disableBlend();
-                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-                RenderSystem.depthMask(true);
+                final float angle = i * Mth.TWO_PI / 16f;
+                fan.addVertex(pose, Mth.sin(angle) * 120, Mth.cos(angle) * 120, -Mth.cos(angle) * 40 * sunriseAlpha).setColor(rgb);
             }
+            draw(fan.snapshot(), new Matrix4f(), new Vector4f(1), RenderPipelines.SUNRISE_SUNSET, null, false);
         }
+
+        if (uploadedCatalog != frame.catalog() && frame.catalog().vertices().isEmpty() && starBuffer != null)
+        {
+            starBuffer.close();
+            starBuffer = null;
+            uploadedCatalog = frame.catalog();
+        }
+        final float nightAlpha = frame.starBrightness() * sky.rainBrightness;
+        if (nightAlpha > 0 && !frame.catalog().vertices().isEmpty())
+        {
+            if (uploadedCatalog != frame.catalog())
+            {
+                final GpuBuffer replacement;
+                try (ByteBufferBuilder bytes = ByteBufferBuilder.exactlySized(frame.catalog().vertices().size() * DefaultVertexFormat.POSITION_COLOR.getVertexSize()))
+                {
+                    final BufferBuilder buffer = new BufferBuilder(bytes, VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+                    frame.catalog().draw(new PoseStack().last(), buffer);
+                    try (MeshData mesh = buffer.buildOrThrow())
+                    {
+                        replacement = RenderSystem.getDevice().createBuffer(() -> "TFC colored star catalog", GpuBuffer.USAGE_VERTEX, mesh.vertexBuffer());
+                        starIndexCount = mesh.drawState().indexCount();
+                    }
+                }
+                if (starBuffer != null) starBuffer.close();
+                starBuffer = replacement;
+                uploadedCatalog = frame.catalog();
+            }
+            drawBuffer(starBuffer, starIndexCount, frame.catalog().vertices().size(),
+                rotateSkyTo(stack, frame.stars()), new Vector4f(nightAlpha), COLORED_STARS, null, false);
+        }
+        if (sky.shouldRenderDarkDisc)
+        {
+            stack.pushPose();
+            stack.translate(0, 12, 0);
+            draw(skyDisc(-16), stack.last().pose(), new Vector4f(0, 0, 0, 1), RenderPipelines.SKY, null, false);
+            stack.popPose();
+        }
+
+        final Matrix4f sun = rotateTo(stack, frame.sun());
+        final Matrix4f moon = rotateTo(stack, frame.moon());
+        final CapturedGeometry cover = new CapturedGeometry();
+        for (Matrix4f pose : List.of(sun, moon))
+        {
+            cover.addVertex(pose, -7.5f, 100, -7.5f).setColor(0xFF000000 | sky.skyColor);
+            cover.addVertex(pose, 7.5f, 100, -7.5f).setColor(0xFF000000 | sky.skyColor);
+            cover.addVertex(pose, 7.5f, 100, 7.5f).setColor(0xFF000000 | sky.skyColor);
+            cover.addVertex(pose, -7.5f, 100, 7.5f).setColor(0xFF000000 | sky.skyColor);
+        }
+        draw(cover.snapshot(), new Matrix4f(), new Vector4f(1), COVER, null, false);
+        final TextureAtlas atlas = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.CELESTIALS);
+        draw(celestial(atlas.getSprite(Identifier.withDefaultNamespace("sun")), false), sun,
+            new Vector4f(1, 1, 1, sky.rainBrightness), RenderPipelines.CELESTIAL, atlas, false);
+        final MoonPhase phase = MoonPhase.values()[Math.floorMod(frame.phase(), MoonPhase.COUNT)];
+        draw(celestial(atlas.getSprite(Identifier.withDefaultNamespace("moon/" + phase.getSerializedName())), true), moon,
+            new Vector4f(1, 1, 1, (0.2f + 0.8f * frame.starBrightness()) * sky.rainBrightness), RenderPipelines.CELESTIAL, atlas, false);
         return true;
     }
 
-    private Matrix4f rotateTo(PoseStack stack, SkyPos pos)
+    /** Only native GPU handles, textures and captured vertices are used during drawing. */
+    private static void draw(CapturedGeometry.Snapshot geometry, Matrix4f matrix, Vector4f color,
+        RenderPipeline pipeline, @Nullable AbstractTexture texture, boolean weather)
     {
-        stack.pushPose();
-        stack.mulPose(Axis.YP.rotation(pos.azimuth()));
-        stack.mulPose(Axis.XN.rotation(pos.zenith()));
-        final Matrix4f pose = new Matrix4f(stack.last().pose());
-        stack.popPose();
-        return pose;
+        if (geometry.vertices().isEmpty()) return;
+        final GpuBuffer vertexBuffer;
+        final int indexCount;
+        final int vertexCount;
+        try (ByteBufferBuilder bytes = ByteBufferBuilder.exactlySized(geometry.vertices().size() * pipeline.getVertexFormat().getVertexSize()))
+        {
+            final BufferBuilder buffer = new BufferBuilder(bytes, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
+            geometry.draw(new PoseStack().last(), buffer);
+            try (MeshData mesh = buffer.buildOrThrow())
+            {
+                vertexBuffer = pipeline.getVertexFormat().uploadImmediateVertexBuffer(mesh.vertexBuffer());
+                indexCount = mesh.drawState().indexCount();
+                vertexCount = mesh.drawState().vertexCount();
+            }
+        }
+        drawBuffer(vertexBuffer, indexCount, vertexCount, matrix, color, pipeline, texture, weather);
     }
 
-    private Matrix4f rotateSkyTo(PoseStack stack, SkyPos pos)
+    private static void drawBuffer(GpuBuffer vertexBuffer, int indexCount, int vertexCount, Matrix4f matrix,
+        Vector4f color, RenderPipeline pipeline, @Nullable AbstractTexture texture, boolean weather)
     {
-        stack.pushPose();
-        stack.mulPose(Axis.XN.rotation(pos.zenith()));
-        stack.mulPose(Axis.YN.rotation(pos.azimuth()));
-        final Matrix4f pose = new Matrix4f(stack.last().pose());
-        stack.popPose();
-        return pose;
+        final var transforms = RenderSystem.getDynamicUniforms().writeTransform(matrix, color, new Vector3f(), new Matrix4f());
+        final RenderTarget target = weather ? OutputTarget.WEATHER_TARGET.getRenderTarget() : Minecraft.getInstance().getMainRenderTarget();
+        try (RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(
+            () -> "TFC environment", target.getColorTextureView(), OptionalInt.empty(), target.getDepthTextureView(), OptionalDouble.empty()))
+        {
+            pass.setPipeline(pipeline);
+            RenderSystem.bindDefaultUniforms(pass);
+            pass.setUniform("DynamicTransforms", transforms);
+            pass.setVertexBuffer(0, vertexBuffer);
+            if (texture != null) pass.bindTexture("Sampler0", texture.getTextureView(), texture.getSampler());
+            if (weather) pass.bindTexture("Sampler2", Minecraft.getInstance().gameRenderer.lightmap(),
+                RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR));
+            if (pipeline.getVertexFormatMode() == VertexFormat.Mode.QUADS)
+            {
+                final var indices = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
+                pass.setIndexBuffer(indices.getBuffer(indexCount), indices.type());
+                pass.drawIndexed(0, 0, indexCount, 1);
+            }
+            else pass.draw(0, vertexCount);
+        }
     }
 
-    /**
-     * See {@link LevelRenderer#renderSnowAndRain} for reference. This has a few modifications
-     * <ul>
-     *     <li>Uses a modified function to query for current precipitation including climate</li>
-     *     <li>Renders a different amount of rain and snow based on the current intensity of the weather event</li>
-     * </ul>
-     *
-     * @return {@code true} to prevent vanilla rendering
-     */
     @Override
-    public boolean renderSnowAndRain(ClientLevel level, int ticks, float partialTick, LightTexture lightTexture, double sourceCameraX, double sourceCameraY, double sourceCameraZ)
+    public boolean renderSnowAndRain(LevelRenderState state, WeatherRenderState weather, MultiBufferSource buffers, Vec3 camPos)
     {
+        final Frame frame = state.getRenderData(FRAME);
+        if (frame == null) return false;
+        final RenderPipeline pipeline = Minecraft.useShaderTransparency() ? RenderPipelines.WEATHER_DEPTH_WRITE : RenderPipelines.WEATHER_NO_DEPTH_WRITE;
+        for (WeatherBatch batch : frame.weather())
+            draw(batch.geometry(), new Matrix4f(RenderSystem.getModelViewMatrix()), new Vector4f(1), pipeline,
+                Minecraft.getInstance().getTextureManager().getTexture(batch.texture()), true);
+        return true;
+    }
+
+    private List<WeatherBatch> captureWeather(ClientLevel level, int ticks, float partialTick, Vec3 camera)
+    {
+        final List<WeatherBatch> batches = new ArrayList<>();
+        Identifier texture = RAIN_LOCATIONS[0];
         final float rainLevel = ClimateRenderCache.INSTANCE.getRainLevel(partialTick);
 
         if (rainLevel > 0)
         {
-            lightTexture.turnOnLightLayer();
 
-            final float camX = (float) sourceCameraX;
-            final float camY = (float) sourceCameraY;
-            final float camZ = (float) sourceCameraZ;
+            final float camX = (float) camera.x;
+            final float camY = (float) camera.y;
+            final float camZ = (float) camera.z;
 
             final int blockX = Mth.floor(camX);
             final int blockY = Mth.floor(camY);
             final int blockZ = Mth.floor(camZ);
-            final Tesselator tesselator = Tesselator.getInstance();
+
             final BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
 
             cursor.set(blockX, blockY, blockZ);
@@ -425,11 +347,7 @@ public class LevelRendererExtension extends DimensionSpecialEffects.OverworldEff
             final float rainIntensity = WeatherHelpers.calculateRealRainIntensity(climateRain, climateRainfall);
             final float currentTick = ticks + partialTick;
 
-            BufferBuilder buffer = null;
-
-            RenderSystem.disableCull();
-            RenderSystem.enableBlend();
-            RenderSystem.enableDepthTest();
+            CapturedGeometry buffer = null;
 
             // Vanilla switches between 5 and 10 based on if fancy graphics is enabled or not. We want to gradually increase the amount
             // in more intense precipitation, starting at 5 for most storms (but also applying other effects for lighter precipitation)
@@ -438,9 +356,6 @@ public class LevelRendererExtension extends DimensionSpecialEffects.OverworldEff
             final int blockRadius = ClientHelpers.useFancyGraphics()
                 ? (int) Mth.map(rainIntensity, 0f, 1f, 5, 15)
                 : 5;
-
-            RenderSystem.depthMask(Minecraft.useShaderTransparency());
-            RenderSystem.setShader(GameRenderer::getParticleShader);
 
             int stateFlag = -1;
 
@@ -495,16 +410,15 @@ public class LevelRendererExtension extends DimensionSpecialEffects.OverworldEff
                             {
                                 if (stateFlag >= 0)
                                 {
-                                    BufferUploader.drawWithShader(buffer.buildOrThrow());
+                                    batches.add(new WeatherBatch(texture, buffer.snapshot()));
                                 }
 
                                 stateFlag = 0;
 
-
                                 // select the texture based on the amount of rain
-                                RenderSystem.setShaderTexture(0, RAIN_LOCATIONS[Mth.clamp(Mth.floor(rainIntensity * 4.0f), 0, 3)]);
+                                texture = RAIN_LOCATIONS[Mth.clamp(Mth.floor(rainIntensity * 4.0f), 0, 3)];
 
-                                buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
+                                buffer = new CapturedGeometry();
                             }
 
                             // Mojang magic
@@ -537,7 +451,7 @@ public class LevelRendererExtension extends DimensionSpecialEffects.OverworldEff
 
                             cursor.set(x, y, z);
 
-                            final int light = LevelRenderer.getLightColor(level, cursor);
+                            final int light = LevelRenderer.getLightCoords(level, cursor);
 
                             Vector3f vert0 = new Vector3f(x - camX - rainSizeX + 0.5f, maxY - camY, z - camZ - rainSizeZ + 0.5f);
                             Vector3f vert1 = new Vector3f(x - camX + rainSizeX + 0.5f, maxY - camY, z - camZ + rainSizeZ + 0.5f);
@@ -577,14 +491,14 @@ public class LevelRendererExtension extends DimensionSpecialEffects.OverworldEff
                             {
                                 if (stateFlag >= 0)
                                 {
-                                    BufferUploader.drawWithShader(buffer.buildOrThrow());
+                                    batches.add(new WeatherBatch(texture, buffer.snapshot()));
                                 }
 
                                 stateFlag = 1;
 
-                                RenderSystem.setShaderTexture(0, SNOW_LOCATIONS[Mth.clamp(Mth.floor(rainIntensity * 4.0f), 0, 3)]);
+                                texture = SNOW_LOCATIONS[Mth.clamp(Mth.floor(rainIntensity * 4.0f), 0, 3)];
 
-                                buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
+                                buffer = new CapturedGeometry();
                             }
 
                             float speed = Mth.clampedMap(wind.length(), 0, 0.7f, 1, 16);
@@ -599,7 +513,7 @@ public class LevelRendererExtension extends DimensionSpecialEffects.OverworldEff
                             cursor.set(x, y, z);
 
                             // A hack from Mojang to make snow not turn dark in low-light environments
-                            final int light = LevelRenderer.getLightColor(level, cursor);
+                            final int light = LevelRenderer.getLightCoords(level, cursor);
                             final int lightV = light >> 16 & 65535;
                             final int lightU = light & 65535;
                             final int brightLightV = (lightV * 3 + 240) / 4;
@@ -651,25 +565,13 @@ public class LevelRendererExtension extends DimensionSpecialEffects.OverworldEff
 
             if (stateFlag >= 0)
             {
-                BufferUploader.drawWithShader(buffer.buildOrThrow());
+                batches.add(new WeatherBatch(texture, buffer.snapshot()));
             }
 
-            RenderSystem.enableCull();
-            RenderSystem.disableBlend();
-            lightTexture.turnOffLightLayer();
         }
-        return true;
+        return List.copyOf(batches);
     }
 
-    /**
-     * See {@link LevelRenderer#tickRain(Camera)} for reference. This has a few modifications:
-     * <ul>
-     *     <li>Uses a modified function to query for current precipitation including climate</li>
-     *     <li>Makes rain sounds quieter and reduce particles in less intense rainfall</li>
-     * </ul>
-     *
-     * @return {@code true} to prevent vanilla rain ticking
-     */
     @Override
     public boolean tickRain(ClientLevel level, int ticks, Camera camera)
     {
@@ -777,9 +679,4 @@ public class LevelRendererExtension extends DimensionSpecialEffects.OverworldEff
         return WeatherHelpers.calculateRealRainIntensity(climateRain, climateRainfall);
     }
 
-    private boolean doesMobEffectBlockSky(Camera camera)
-    {
-        return camera.getEntity() instanceof LivingEntity entity
-            && (entity.hasEffect(MobEffects.BLINDNESS) || entity.hasEffect(MobEffects.DARKNESS));
-    }
 }

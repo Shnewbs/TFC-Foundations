@@ -13,7 +13,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.common.recipes.AnvilRecipe;
@@ -51,7 +51,7 @@ public class AnvilRecipeTransferHandler<C extends AbstractContainerMenu>
             final @Nullable Identifier recipeId = AnvilRecipe.getId(recipe);
             if (recipeId != null)
             {
-                PacketDistributor.sendToServer(new SelectAnvilPlanPacket(recipeId));
+                ClientPacketDistributor.sendToServer(new SelectAnvilPlanPacket(recipeId));
             }
         }
 

@@ -60,6 +60,7 @@ import net.dries007.tfc.common.container.FirepitContainer;
 import net.dries007.tfc.common.container.GrillContainer;
 import net.dries007.tfc.common.container.TFCContainerTypes;
 import net.dries007.tfc.common.items.TFCItems;
+import net.dries007.tfc.common.recipes.RecipeHelpers;
 import net.dries007.tfc.common.recipes.AlloyRecipe;
 import net.dries007.tfc.common.recipes.AnvilRecipe;
 import net.dries007.tfc.common.recipes.BlastFurnaceRecipe;
@@ -161,8 +162,7 @@ public final class JEIIntegration implements IModPlugin
 
     private static <C extends RecipeInput, T extends Recipe<C>> List<RecipeHolder<T>> recipes(Supplier<net.minecraft.world.item.crafting.RecipeType<T>> type, Predicate<T> filter)
     {
-        return ClientHelpers.getLevelOrThrow().getRecipeManager()
-            .getAllRecipesFor(type.get())
+        return RecipeHelpers.getRecipes(Helpers.getUnsafeRecipeMap(), type)
             .stream()
             .filter(holder -> filter.test(holder.value()))
             .toList();
@@ -296,7 +296,7 @@ public final class JEIIntegration implements IModPlugin
         for (var entry : KnappingType.MANAGER.getElements().entrySet())
         {
             final RecipeType<RecipeHolder<KnappingRecipe>> recipeType = getKnappingType(entry);
-            for (ItemStack item : entry.getValue().inputItem().ingredient().getItems())
+            for (ItemStack item : RecipeHelpers.stacks(entry.getValue().inputItem().ingredient()))
             {
                 registry.addRecipeCatalyst(item, recipeType);
             }

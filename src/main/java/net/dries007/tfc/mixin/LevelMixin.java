@@ -28,12 +28,12 @@ public abstract class LevelMixin
      * that queries the climate model, if it supports that.
      */
     @WrapOperation(
-        method = "isRainingAt",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/biome/Biome;getPrecipitationAt(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/biome/Biome$Precipitation;")
+        method = "precipitationAt",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/biome/Biome;getPrecipitationAt(Lnet/minecraft/core/BlockPos;I)Lnet/minecraft/world/level/biome/Biome$Precipitation;")
     )
-    private Biome.Precipitation isRainingAtWithClimate(Biome instance, BlockPos pos, Operation<Biome.Precipitation> original)
+    private Biome.Precipitation isRainingAtWithClimate(Biome instance, BlockPos pos, int seaLevel, Operation<Biome.Precipitation> original)
     {
-        return WeatherHelpers.getPrecipitationAt((Level) (Object) this, pos, original.call(instance, pos));
+        return WeatherHelpers.getPrecipitationAt((Level) (Object) this, pos, original.call(instance, pos, seaLevel));
     }
 
 
@@ -50,11 +50,12 @@ public abstract class LevelMixin
         }
     }
 
-    @Inject(method = "getDayTime", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getOverworldClockTime", at = @At("HEAD"), cancellable = true)
     private void getSolarAdjustedDayTimeOnClient(CallbackInfoReturnable<Long> cir)
     {
         final Level level = (Level) (Object) this;
-        if (level.isClientSide())
+        if (level.isClientSide() && level.dimension() == Level.OVERWORLD
+            && net.dries007.tfc.client.ClientHelpers.getPlayer() != null)
         {
             cir.setReturnValue(ClientSolarCalculatorBridge.getDayTime(level));
         }

@@ -1,4 +1,5 @@
 """Record public signatures from the exact resolved target classpath, not a guessed version."""
+import json
 import os
 from pathlib import Path
 import subprocess
@@ -43,9 +44,13 @@ def main():
         raise SystemExit(report_tests.returncode or gate_tests.returncode)
     # A separate process checks actual production classes; no Minecraft or TFC stubs.
     failed = False
-    for probe in ('run_loot_smoke.py', 'run_common_smoke.py', 'run_visual_save_smoke.py', 'run_entity_smoke.py', 'run_attachment_smoke.py', 'run_player_food_smoke.py', 'run_shared_runtime_smoke.py', 'run_snow_ice_smoke.py', 'run_thatch_bed_smoke.py', 'run_model_render_smoke.py', 'run_instrument_model_smoke.py', 'run_livestock_render_smoke.py', 'run_mechanical_boat_smoke.py', 'run_seasonal_block_smoke.py', 'run_snapshot_block_smoke.py', 'run_worldgen_api_smoke.py', 'run_item_registration_smoke.py', 'run_predator_sound_smoke.py', 'run_item_selector_smoke.py', 'run_recipe_serializer_smoke.py', 'run_selected_slot_smoke.py', 'run_sound_event_holder_smoke.py', 'run_tool_material_smoke.py', 'run_recipe_helper_smoke.py', 'run_flat_ingredient_smoke.py', 'run_interaction_api_smoke.py', 'run_neighbor_shape_smoke.py', 'run_deferred_shape_smoke.py', 'run_tag_ingredient_smoke.py', 'run_fluid_explosion_api_smoke.py', 'run_item_display_smoke.py', 'run_item_layer_smoke.py', 'run_client_render_hook_smoke.py', 'run_upstream_sync_smoke.py'):
+    probe_results = []
+    for probe in ('run_loot_smoke.py', 'run_common_smoke.py', 'run_visual_save_smoke.py', 'run_entity_smoke.py', 'run_attachment_smoke.py', 'run_player_food_smoke.py', 'run_shared_runtime_smoke.py', 'run_snow_ice_smoke.py', 'run_thatch_bed_smoke.py', 'run_model_render_smoke.py', 'run_instrument_model_smoke.py', 'run_livestock_render_smoke.py', 'run_mechanical_boat_smoke.py', 'run_seasonal_block_smoke.py', 'run_snapshot_block_smoke.py', 'run_worldgen_api_smoke.py', 'run_item_registration_smoke.py', 'run_predator_sound_smoke.py', 'run_item_selector_smoke.py', 'run_recipe_serializer_smoke.py', 'run_selected_slot_smoke.py', 'run_sound_event_holder_smoke.py', 'run_tool_material_smoke.py', 'run_recipe_helper_smoke.py', 'run_flat_ingredient_smoke.py', 'run_interaction_api_smoke.py', 'run_neighbor_shape_smoke.py', 'run_deferred_shape_smoke.py', 'run_tag_ingredient_smoke.py', 'run_fluid_explosion_api_smoke.py', 'run_item_display_smoke.py', 'run_item_layer_smoke.py', 'run_client_render_hook_smoke.py', 'run_upstream_sync_smoke.py', 'run_overworld_render_smoke.py'):
         smoke = subprocess.run(['python3', 'tools/porting/' + probe], timeout=360)
         failed |= smoke.returncode != 0
+        probe_results.append({"runner": probe, "exit_code": smoke.returncode})
+    (OUT / 'api-probes-summary.json').write_text(json.dumps({"runners": probe_results, "passed": sum(row["exit_code"] == 0 for row in probe_results), "failed": sum(row["exit_code"] != 0 for row in probe_results), "scope": "Native API/source/CPU checks; not startup, transformed Mixins, GPU or gameplay"}, indent=2) + '\n')
+    print(f'API runners: {sum(row["exit_code"] == 0 for row in probe_results)} passed; {sum(row["exit_code"] != 0 for row in probe_results)} failed.')
     raise SystemExit(1 if failed else 0)
 
 

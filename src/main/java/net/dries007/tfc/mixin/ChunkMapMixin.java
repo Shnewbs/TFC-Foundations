@@ -54,7 +54,8 @@ public abstract class ChunkMapMixin implements ChunkMapBridge
             generator,
             worldGenContext.structureManager(),
             worldGenContext.lightEngine(),
-            worldGenContext.mainThreadMailBox()
+            worldGenContext.mainThreadExecutor(),
+            worldGenContext.unsavedListener()
         );
     }
 }

@@ -9,14 +9,14 @@
     "ChunkMapMixin",
     "CreativeModeTabMixin",
     "DedicatedServerPropertiesMixin",
-    "EntityMixin", "FallingBlockMixin",
+    "EntityMixin",
+    "FallingBlockMixin",
     "FishingHookMixin",
     "FlowingFluidMixin",
     "GameTestInfoMixin",
     "HeightmapMixin",
     "ItemStackMixin",
     "LavaMixin",
-    "LevelAccessorMixin",
     "LevelMixin",
     "MainMixin",
     "MilkBucketItemMixin",
@@ -79,7 +79,8 @@
     "client.accessor.AbstractSignRendererAccessor",
     "client.accessor.ItemStackRenderStateAccessor",
     "client.compat.patchouli.GuiBookMixin",
-    "client.compat.sodium.DefaultFluidRendererMixin"
+    "client.compat.sodium.DefaultFluidRendererMixin",
+    "client.EnvironmentAttributeSystemMixin"
   ],
   "injectors": {
     "defaultRequire": 1

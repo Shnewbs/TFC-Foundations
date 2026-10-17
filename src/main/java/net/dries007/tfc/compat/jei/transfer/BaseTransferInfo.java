@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
-import mezz.jei.api.recipe.RecipeType;
+import mezz.jei.api.recipe.types.IRecipeType;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
 import mezz.jei.api.recipe.transfer.IRecipeTransferInfo;
 import net.minecraft.world.entity.player.Inventory;
@@ -25,11 +25,11 @@ public abstract class BaseTransferInfo<C extends AbstractContainerMenu, R>
 {
     private final Class<? extends C> containerClass;
     private final Optional<MenuType<C>> menuType;
-    private final RecipeType<R> recipeType;
+    private final IRecipeType<R> recipeType;
     private final int[] recipeSlots;
     private final int inventorySlotStart;
 
-    protected BaseTransferInfo(Class<? extends C> containerClass, Optional<MenuType<C>> menuType, RecipeType<R> recipeType, int inventorySlotStart, int... recipeSlots)
+    protected BaseTransferInfo(Class<? extends C> containerClass, Optional<MenuType<C>> menuType, IRecipeType<R> recipeType, int inventorySlotStart, int... recipeSlots)
     {
         this.containerClass = containerClass;
         this.menuType = menuType;
@@ -48,7 +48,7 @@ public abstract class BaseTransferInfo<C extends AbstractContainerMenu, R>
         return menuType;
     }
 
-    public final RecipeType<R> getRecipeType()
+    public final IRecipeType<R> getRecipeType()
     {
         return recipeType;
     }

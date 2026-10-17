@@ -8,6 +8,7 @@ package net.dries007.tfc.client;
 
 import java.util.function.ToIntFunction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ColorResolver;
@@ -108,12 +109,12 @@ public final class TFCColors
 
     public static int getSkyColor(CommonLevelAccessor level, Biome biome, BlockPos pos)
     {
-        return TFCBiomes.hasExtension(level, biome) ? getClimateColor(SKY_COLORS_CACHE, pos) : biome.getSkyColor();
+        return TFCBiomes.hasExtension(level, biome) ? getClimateColor(SKY_COLORS_CACHE, pos) : biome.getAttributes().applyModifier(EnvironmentAttributes.SKY_COLOR, EnvironmentAttributes.SKY_COLOR.defaultValue());
     }
 
     public static int getFogColor(CommonLevelAccessor level, Biome biome, BlockPos pos)
     {
-        return TFCBiomes.hasExtension(level, biome) ? getClimateColor(FOG_COLORS_CACHE, pos) : biome.getFogColor();
+        return TFCBiomes.hasExtension(level, biome) ? getClimateColor(FOG_COLORS_CACHE, pos) : biome.getAttributes().applyModifier(EnvironmentAttributes.FOG_COLOR, EnvironmentAttributes.FOG_COLOR.defaultValue());
     }
 
     public static int getWaterColor(@Nullable BlockPos pos)
@@ -123,7 +124,7 @@ public final class TFCColors
 
     public static int getWaterFogColor(CommonLevelAccessor level, Biome biome, BlockPos pos)
     {
-        return TFCBiomes.hasExtension(level, biome) ? getClimateColor(WATER_FOG_COLORS_CACHE, pos) : biome.getWaterFogColor();
+        return TFCBiomes.hasExtension(level, biome) ? getClimateColor(WATER_FOG_COLORS_CACHE, pos) : biome.getAttributes().applyModifier(EnvironmentAttributes.WATER_FOG_COLOR, EnvironmentAttributes.WATER_FOG_COLOR.defaultValue());
     }
 
     public static int getSeasonalFoliageColor(@Nullable BlockPos pos, int tintIndex, int autumnIndex)
