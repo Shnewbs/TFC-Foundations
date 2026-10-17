@@ -66,7 +66,7 @@ public class TFCSquid extends Squid implements AquaticMob
     {
         if (super.hurt(source, amount))
         {
-            if (!level().isClientSide && getLastHurtByMob() instanceof Player player && random.nextInt(3) == 0 && player.distanceToSqr(this) < 64)
+            if (!level().isClientSide() && getLastHurtByMob() instanceof Player player && random.nextInt(3) == 0 && player.distanceToSqr(this) < 64)
             {
                 player.addEffect(new MobEffectInstance(getInkEffect(), 100));
             }
@@ -97,7 +97,8 @@ public class TFCSquid extends Squid implements AquaticMob
                 setSize((int) (getSize() * 0.8), true);
                 if (getSize() < pair.getFirst())
                 {
-                    discard();
+                    // todo: this is pretty wrong but works. we should find a different way to think about this.
+                    setSpawnCancelled(true);
                     return spawnData;
                 }
             }

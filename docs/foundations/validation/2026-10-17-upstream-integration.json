@@ -1,0 +1,1630 @@
+{
+  "date": "2026-10-17",
+  "branch": "26.x",
+  "upstream_repository": "TerraFirmaCraft/TerraFirmaCraft",
+  "base": "e9d9a88a187d5a33064e2d86b2803f54238cadd6",
+  "source_integration_cursor": "c3b4d9536b82e5a9746dd793c586720a74108057",
+  "git_ancestry_merge": false,
+  "commit_count": 42,
+  "commits": [
+    {
+      "sha": "eded434a29f11eb0efe73e0ef522bea62866b566",
+      "author": "CH4ACKO3",
+      "subject": "Translate remaining Chinese Field Guide strings"
+    },
+    {
+      "sha": "d35da968b342ac113032f0d1976d2e9cedece424",
+      "author": "CH4ACKO3",
+      "subject": "Regenerate translated Simplified Chinese Field Guide pages"
+    },
+    {
+      "sha": "0d0191f8ce8d7b334131f0fcf3247d4fb921a1c8",
+      "author": "theLittleStone",
+      "subject": "Fix farmland temperature tooltip showing null below 0\u00b0C"
+    },
+    {
+      "sha": "89a019eddc3a63f8c06602f5dbe9b44962392f3b",
+      "author": "theLittleStone",
+      "subject": "Remove comment on farmland temperature tooltip"
+    },
+    {
+      "sha": "ab18e7e4a19850714bd43e3b8a6da0e8ae351c14",
+      "author": "Allmoz",
+      "subject": "about bushes and bedrock"
+    },
+    {
+      "sha": "2eb6fdf4c40599ce8b14a0488e628c0d1ee256fd",
+      "author": "Therighthon",
+      "subject": "Split temp display styles into two enums"
+    },
+    {
+      "sha": "d3b76169c9d7326c05714bdf863201863f070188",
+      "author": "eerussianguy",
+      "subject": "port squid fix?"
+    },
+    {
+      "sha": "cddc9a651d8cd814b973c0681f513e9d459e6e5d",
+      "author": "eerussianguy",
+      "subject": "Merge remote-tracking branch 'upstream/1.21.x' into 1.21.x"
+    },
+    {
+      "sha": "4f05f12edf5867e242668fae3ff6c0fc83b37a9c",
+      "author": "eerussianguy",
+      "subject": "fix some issues with kilns (Closes #3293)"
+    },
+    {
+      "sha": "3927f57843ae5d65fc13981fd1df8ed71ec1e8be",
+      "author": "eerussianguy",
+      "subject": "some refactors to hide mojang functions for future reasons"
+    },
+    {
+      "sha": "3501f1753a050f15bf0bcca3eb090d57e0ce9844",
+      "author": "eerussianguy",
+      "subject": "fix banana crash"
+    },
+    {
+      "sha": "6b9749b4b9d4e165c1cc88c9d21bc29928713a78",
+      "author": "eerussianguy",
+      "subject": "possibly fix issue where cached block entity no longer exists and tries to update (?)"
+    },
+    {
+      "sha": "3fa102323f128d6d7c340b29bc91c076a525c280",
+      "author": "eerussianguy",
+      "subject": "soda ash from beach seaweed"
+    },
+    {
+      "sha": "37de6b042c686a1097f13f1ddf06c340f437989d",
+      "author": "Therighthon",
+      "subject": "Apply code style"
+    },
+    {
+      "sha": "5fc5322bad1313069f56945dc3a9c9930f353485",
+      "author": "Therighthon",
+      "subject": "Move some code around"
+    },
+    {
+      "sha": "26c93da28f21bb6931ae9dd2d8a780a1831e664a",
+      "author": "Therighthon",
+      "subject": "Merge pull request #3746 from Allmoz/bushes"
+    },
+    {
+      "sha": "ab42a68683a68167c755e273de2c13540f563664",
+      "author": "Daniel Petkau",
+      "subject": "Prevent mob spawning in thatch (Closes #3682)"
+    },
+    {
+      "sha": "c1daeac00973ab60aee17e90a153b75eca6f532a",
+      "author": "Daniel Petkau",
+      "subject": "python datagen"
+    },
+    {
+      "sha": "76dd9bbe0df2cca77162e25257fa2f4ce4e8f747",
+      "author": "Daniel Petkau",
+      "subject": "Fix missing texture on tfc armor with vanilla trim materials (Closes #3748)"
+    },
+    {
+      "sha": "f67a160166b7c49b44b601a7e02457cae72d1f8d",
+      "author": "Daniel Petkau",
+      "subject": "python datagen"
+    },
+    {
+      "sha": "c264e6a9b0b2b717e693d770121827d2254926b9",
+      "author": "eerussianguy",
+      "subject": "agents md"
+    },
+    {
+      "sha": "b95058fc0286a0617ae61575c9a6922db9f3bdb0",
+      "author": "eerussianguy",
+      "subject": "Merge remote-tracking branch 'upstream/1.21.x' into 1.21.x"
+    },
+    {
+      "sha": "51f95d47699c65911bbd91b18f6be018a148b872",
+      "author": "eerussianguy",
+      "subject": "Fix for advanced shapeless (the jei crafting extensions thing is horrible) (Closes #3755)"
+    },
+    {
+      "sha": "0ea63b503a82b61ee967ab07868b66d0b35b1417",
+      "author": "eerussianguy",
+      "subject": "Fix skip of neoforge data (Closes #3754)"
+    },
+    {
+      "sha": "1b8cd1174440c5a5464233e79a37c2cdec8ba9c2",
+      "author": "eerussianguy",
+      "subject": "Scraping persistence (Closes #3753)"
+    },
+    {
+      "sha": "ab7dfc843bce365dbabe575986bb017204cffec7",
+      "author": "eerussianguy",
+      "subject": "Merge branch '1.21.x' into 1.21.x"
+    },
+    {
+      "sha": "ea17ff4e6743b5b66cde7721ed2f45788e8ea9d0",
+      "author": "eerussianguy",
+      "subject": "Fix farmland temperature tooltip showing null at 0\u00b0C and below (#3744)"
+    },
+    {
+      "sha": "04a8c1f879db5782424d54e1357d4a052a731ba2",
+      "author": "eerussianguy",
+      "subject": "Merge pull request #3740 from CH4ACKO3/i18n/zh-cn-field-guide"
+    },
+    {
+      "sha": "85fbb4a42e867686227105ba67d3278361e0ad16",
+      "author": "eerussianguy",
+      "subject": "buoys + lobstering"
+    },
+    {
+      "sha": "7c275fb59190e1f3d5d658a5f56ba5501b9a3443",
+      "author": "eerussianguy",
+      "subject": "and of course this didnt attach"
+    },
+    {
+      "sha": "35163155f505d9dec7603cd8a052354ccfc64302",
+      "author": "eerussianguy",
+      "subject": "Merge remote-tracking branch 'upstream/1.21.x' into 1.21.x"
+    },
+    {
+      "sha": "5e15971edbf03c82c1bfb32fae590f4b5c443009",
+      "author": "eerussianguy",
+      "subject": "merge issue"
+    },
+    {
+      "sha": "f81840821f0885f2c23a7a78fdfb2f5a0eadbf89",
+      "author": "Daniel Petkau",
+      "subject": "Fix rope anchors visually rotating with the placed rope (Closes #3640)"
+    },
+    {
+      "sha": "84133fbaf3805332a008904757ef654f73634232",
+      "author": "Daniel Petkau",
+      "subject": "Fix rock rope anchors showing an extra rope while throwing"
+    },
+    {
+      "sha": "08bda4bd9d36beacd243f903e73370a9d87913a4",
+      "author": "eerussianguy",
+      "subject": "lots of misc block interaction cleanups + make tool racks fluid loggable"
+    },
+    {
+      "sha": "76f99cdb42d51ce4965c10525c1999bf49227c11",
+      "author": "eerussianguy",
+      "subject": "Merge remote-tracking branch 'upstream/1.21.x' into 1.21.x"
+    },
+    {
+      "sha": "e92327fc69ea94e487b4c47346fb5c23c136e7a2",
+      "author": "eerussianguy",
+      "subject": "nerf"
+    },
+    {
+      "sha": "f2b04f73a21f7b01cd1fb5ebd5e5dfd7934d54ff",
+      "author": "eerussianguy",
+      "subject": "soup always is checked last. this should work? still need to update recipes to test"
+    },
+    {
+      "sha": "29ebf64471d6a6963681ee8507167d37a143593e",
+      "author": "eerussianguy",
+      "subject": "fix possible race condition (Closes #3758) - they said its when placing so i think its syncing and briefly setting the texture to null in the time it takes to call it a second time"
+    },
+    {
+      "sha": "eebc28814f44fb68099f33db712a8f7ad21a4310",
+      "author": "eerussianguy",
+      "subject": "remove mold model cache - this rebuilds on chunk reload so it doesnt make sense to cache here (Closes #3598)"
+    },
+    {
+      "sha": "b3ffe0327339a834f5189ad3afc42030fe72ecc6",
+      "author": "eerussianguy",
+      "subject": "update ru_ru typo, cleanup tamable AI but it still is not amazing (Closes #3325)"
+    },
+    {
+      "sha": "c3b4d9536b82e5a9746dd793c586720a74108057",
+      "author": "eerussianguy",
+      "subject": "lobster junk + changelog"
+    }
+  ],
+  "path_count": 348,
+  "paths": [
+    {
+      "path": ".gitignore",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "AGENTS.md",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "resources/assets.py",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "resources/constants.py",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "resources/generate_book.py",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "resources/lang/en_us.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "resources/lang/ja_jp.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "resources/lang/ko_kr.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "resources/lang/pt_br.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "resources/lang/ru_ru.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "resources/lang/tr_tr.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "resources/lang/uk_ua.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "resources/lang/zh_cn.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "resources/lang/zh_hk.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "resources/lang/zh_tw.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "resources/world_gen.py",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/data/java/net/dries007/tfc/data/DataEntryPoint.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/data/java/net/dries007/tfc/data/providers/BuiltinBlockTags.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/data/java/net/dries007/tfc/data/providers/BuiltinDamageTypes.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/data/java/net/dries007/tfc/data/providers/BuiltinEntityLoot.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/data/java/net/dries007/tfc/data/providers/BuiltinEntityTags.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/data/java/net/dries007/tfc/data/providers/BuiltinItemHeat.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/data/java/net/dries007/tfc/data/providers/BuiltinItemSizes.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/data/java/net/dries007/tfc/data/providers/BuiltinItemTags.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/data/java/net/dries007/tfc/data/recipes/CraftingRecipes.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/data/java/net/dries007/tfc/data/recipes/HeatRecipes.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/c/tags/item/foods.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/minecraft/tags/block/mineable/axe.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/minecraft/tags/block/mineable/pickaxe.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/minecraft/tags/block/prevent_mob_spawning_inside.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/minecraft/tags/damage_type/no_knockback.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/damage_type/lobster_trap.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/loot_table/entities/arctic_char.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/loot_table/entities/bluegill.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/loot_table/entities/burbot.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/loot_table/entities/cod.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/loot_table/entities/crappie.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/loot_table/entities/crayfish.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/loot_table/entities/horseshoe_crab.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/loot_table/entities/isopod.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/loot_table/entities/lake_trout.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/loot_table/entities/largemouth_bass.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/loot_table/entities/lobster.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/loot_table/entities/muksun.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/loot_table/entities/northern_pike.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/loot_table/entities/pacu.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/loot_table/entities/peacock_bass.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/loot_table/entities/rainbow_trout.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/loot_table/entities/red_piranha.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/loot_table/entities/salmon.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/loot_table/entities/smallmouth_bass.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/loot_table/entities/spotted_gudgeon.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/loot_table/entities/tilapia.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/loot_table/entities/tropical_fish.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/recipe/crafting/buoy/black.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/recipe/crafting/buoy/blue.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/recipe/crafting/buoy/brown.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/recipe/crafting/buoy/cyan.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/recipe/crafting/buoy/gray.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/recipe/crafting/buoy/green.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/recipe/crafting/buoy/light_blue.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/recipe/crafting/buoy/light_gray.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/recipe/crafting/buoy/lime.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/recipe/crafting/buoy/magenta.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/recipe/crafting/buoy/orange.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/recipe/crafting/buoy/pink.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/recipe/crafting/buoy/purple.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/recipe/crafting/buoy/red.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/recipe/crafting/buoy/white.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/recipe/crafting/buoy/yellow.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/recipe/crafting/lobster_trap.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/recipe/heating/powder/soda_ash_from_groundcover_seaweed.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/tags/block/blocks_drink.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/tags/damage_type/counts_as_player_kill.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/tags/entity_type/caught_in_lobster_traps.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/tags/item/large_fishing_bait.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/tags/item/lobster_bait.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/tags/item/lobster_trap_junk.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/tags/item/metal_grates.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/tfc/item_heat/food/fresh_seaweed.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/tfc/item_size/buoys.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/generated/resources/data/tfc/tfc/item_size/lobster_trap.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/ForgeEventHandler.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/client/ClientEventHandler.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/client/model/ContainedFluidModel.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/client/model/MoldTableBlockModel.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/client/model/ScrapingBlockModel.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/client/render/blockentity/BuoyBlockEntityRenderer.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/client/render/blockentity/LobsterTrapBlockEntityRenderer.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/client/screen/ClimateScreen.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/client/screen/button/PlayerInventoryTabButton.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/TFCCreativeTabs.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/TFCDamageTypes.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/TFCPoiTypes.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/TFCTags.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blockentities/AbstractFirepitBlockEntity.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blockentities/BlastFurnaceBlockEntity.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blockentities/BloomeryBlockEntity.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blockentities/BuoyBlockEntity.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blockentities/ChannelBlockEntity.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blockentities/CharcoalForgeBlockEntity.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blockentities/FireboxBlockEntity.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blockentities/LobsterTrapBlockEntity.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blockentities/PotBlockEntity.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blockentities/ScrapingBlockEntity.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blockentities/TFCBlockEntities.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blockentities/TFCBlockEntity.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blockentities/ToolRackBlockEntity.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blocks/BowlBlock.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blocks/BuoyBlock.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blocks/FireboxBlock.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blocks/LobsterTrapBlock.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blocks/RopeAnchorBlock.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blocks/ShelfBlock.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blocks/TFCBlockStateProperties.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blocks/TFCBlocks.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blocks/devices/GrillBlock.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blocks/devices/PitKilnBlock.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blocks/devices/QuernBlock.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blocks/devices/ScrapingBlock.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blocks/devices/StovePotBlock.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blocks/plant/PlantRegrowth.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blocks/plant/fruit/BananaPlantBlock.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blocks/plant/fruit/StationaryBerryBushBlock.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blocks/plant/fruit/WaterloggedBerryBushBlock.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blocks/soil/FarmlandBlock.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/blocks/wood/ToolRackBlock.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/capabilities/BlockCapabilities.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/ai/EnterLobsterTrapGoal.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/ai/pet/TamableAi.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/aquatic/AquaticCritter.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/aquatic/TFCSquid.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/entities/misc/RopeKnot.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/items/PlantableInfo.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/items/RopeItem.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/recipes/PotRecipe.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/common/recipes/SoupPotRecipe.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/compat/jade/JadeIntegration.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/compat/jei/JEIIntegration.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/compat/jei/TFCCraftingExtensions.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/compat/patchouli/ConfigTextFunction.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/config/ClientConfig.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/config/ClimateTemperatureDisplayStyle.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/config/ItemTemperatureDisplayStyle.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/config/TemperatureDisplayStyle.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/util/Helpers.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/util/InteractionManager.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/util/climate/OverworldClimateModel.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/util/tooltip/BlockEntityTooltips.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/world/FastConcurrentCache.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/world/chunkdata/ChunkData.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/world/feature/ErosionFeature.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/world/feature/FloodFillLakeFeature.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/world/feature/RivuletFeature.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/world/feature/SoilForestAreaFeature.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/world/feature/cave/IceCaveFeature.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/world/feature/tree/OverlayTreeFeature.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/world/feature/tree/RandomTreeFeature.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/world/feature/tree/StackedTreeFeature.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/world/feature/vein/VeinFeature.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/world/layer/framework/Area.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/world/layer/framework/TypedArea.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/java/net/dries007/tfc/world/placement/BoundedCarvingMaskPlacement.java",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/minecraft/atlases/blocks.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/buoy/black.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/buoy/blue.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/buoy/brown.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/buoy/cyan.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/buoy/gray.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/buoy/green.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/buoy/light_blue.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/buoy/light_gray.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/buoy/lime.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/buoy/magenta.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/buoy/orange.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/buoy/pink.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/buoy/purple.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/buoy/red.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/buoy/white.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/buoy/yellow.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/lobster_trap.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/rock/rope_anchor/andesite.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/rock/rope_anchor/basalt.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/rock/rope_anchor/chalk.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/rock/rope_anchor/chert.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/rock/rope_anchor/claystone.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/rock/rope_anchor/conglomerate.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/rock/rope_anchor/dacite.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/rock/rope_anchor/diorite.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/rock/rope_anchor/dolomite.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/rock/rope_anchor/gabbro.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/rock/rope_anchor/gneiss.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/rock/rope_anchor/granite.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/rock/rope_anchor/limestone.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/rock/rope_anchor/marble.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/rock/rope_anchor/phyllite.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/rock/rope_anchor/quartzite.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/rock/rope_anchor/rhyolite.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/rock/rope_anchor/schist.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/rock/rope_anchor/shale.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/rock/rope_anchor/slate.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/rock/rope_anchor/tuff.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/blockstates/steel_rope_anchor.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/lang/de_de.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/lang/en_us.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/lang/es_es.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/lang/ja_jp.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/lang/ko_kr.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/lang/pl_pl.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/lang/pt_br.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/lang/ru_ru.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/lang/tr_tr.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/lang/uk_ua.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/lang/zh_cn.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/lang/zh_hk.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/lang/zh_tw.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/block/buoy.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/block/buoy/black.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/block/buoy/blue.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/block/buoy/brown.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/block/buoy/cyan.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/block/buoy/gray.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/block/buoy/green.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/block/buoy/light_blue.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/block/buoy/light_gray.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/block/buoy/lime.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/block/buoy/magenta.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/block/buoy/orange.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/block/buoy/pink.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/block/buoy/purple.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/block/buoy/red.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/block/buoy/white.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/block/buoy/yellow.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/block/horizontal_rope_anchored.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/block/lobster_trap.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/block/lobster_trap_bait.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/block/lobster_trap_closed.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/item/buoy/black.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/item/buoy/blue.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/item/buoy/brown.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/item/buoy/cyan.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/item/buoy/gray.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/item/buoy/green.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/item/buoy/light_blue.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/item/buoy/light_gray.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/item/buoy/lime.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/item/buoy/magenta.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/item/buoy/orange.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/item/buoy/pink.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/item/buoy/purple.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/item/buoy/red.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/item/buoy/white.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/item/buoy/yellow.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/models/item/lobster_trap.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/en_us/entries/food/fishing.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/ja_jp/entries/food/fishing.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/ko_kr/entries/food/fishing.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/pt_br/entries/food/fishing.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/ru_ru/entries/food/fishing.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/ru_ru/entries/metalworking/blast_furnace.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/tr_tr/entries/food/fishing.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/uk_ua/entries/food/fishing.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/zh_cn/categories/core_mechanics.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/zh_cn/categories/crafting.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/zh_cn/categories/food.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/zh_cn/categories/mechanics.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/zh_cn/categories/metalworking.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/zh_cn/entries/core_mechanics/lighting.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/zh_cn/entries/crafting/leather_making.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/zh_cn/entries/food/composter.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/zh_cn/entries/food/decay.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/zh_cn/entries/food/fishing.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/zh_cn/entries/getting_started/building_materials.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/zh_cn/entries/getting_started/pit_kiln.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/zh_cn/entries/getting_started/pottery.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/zh_cn/entries/mechanics/lamps.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/zh_cn/entries/the_world/ores_and_minerals.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/zh_cn/entries/the_world/wild_animals.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/zh_cn/entries/the_world/wild_fruits.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/zh_hk/entries/food/fishing.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/patchouli_books/field_guide/zh_tw/entries/food/fishing.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/textures/block/buoy/black.png",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/textures/block/buoy/blue.png",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/textures/block/buoy/brown.png",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/textures/block/buoy/cyan.png",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/textures/block/buoy/gray.png",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/textures/block/buoy/green.png",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/textures/block/buoy/light_blue.png",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/textures/block/buoy/light_gray.png",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/textures/block/buoy/lime.png",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/textures/block/buoy/magenta.png",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/textures/block/buoy/orange.png",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/textures/block/buoy/pink.png",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/textures/block/buoy/purple.png",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/textures/block/buoy/red.png",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/textures/block/buoy/white.png",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/textures/block/buoy/yellow.png",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/assets/tfc/textures/block/lobster_trap.png",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/loot_table/blocks/buoy/black.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/loot_table/blocks/buoy/blue.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/loot_table/blocks/buoy/brown.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/loot_table/blocks/buoy/cyan.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/loot_table/blocks/buoy/gray.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/loot_table/blocks/buoy/green.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/loot_table/blocks/buoy/light_blue.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/loot_table/blocks/buoy/light_gray.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/loot_table/blocks/buoy/lime.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/loot_table/blocks/buoy/magenta.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/loot_table/blocks/buoy/orange.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/loot_table/blocks/buoy/pink.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/loot_table/blocks/buoy/purple.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/loot_table/blocks/buoy/red.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/loot_table/blocks/buoy/white.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/loot_table/blocks/buoy/yellow.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/loot_table/blocks/lobster_trap.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/coastal_dunes.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/deep_ocean.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/deep_ocean_atolls.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/deep_ocean_trench.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/embayments.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/glacially_carved_oceanic_mountains.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/glacially_carved_volcanic_oceanic_mountains.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/glaciated_oceanic_mountains.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/glaciated_volcanic_oceanic_mountains.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/guano_island.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/ice_sheet_oceanic_mountains.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/ice_sheet_oceanic_mountains_edge.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/ice_sheet_shore.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/ice_sheet_volcanic_oceanic_mountains.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/ocean.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/ocean_atolls.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/ocean_reef.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/ocean_ridge.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/oceanic_mountains.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/oceanic_volcanic_arc.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/old_shield_volcano_shore.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/rocky_shores.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/sea_stacks.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/setback_cliffs.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/shield_volcano_shore.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/shore.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/terrace_lower.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/terrace_upper.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/tidal_flats.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/volcanic_island.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/volcanic_mountain_islands.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    },
+    {
+      "path": "src/main/resources/data/tfc/worldgen/biome/volcanic_oceanic_mountains.json",
+      "resolution": "upstream source delta applied; independent 26.3 API/runtime validation pending"
+    }
+  ],
+  "legacy_1_20_observation": "e39a6531face4df89ed2b08bcff4abfabbb8f299",
+  "verification": {
+    "java_syntax_files": 87,
+    "syntax_errors": 0,
+    "upstream_scraping_cpu_assertions": 2097152,
+    "resources": "PASS",
+    "chunkpos": "actual pinned 26.3 client signatures inspected",
+    "full_build": "NOT RUN",
+    "runtime": "NOT RUN",
+    "patchouli": "unresolved",
+    "note": "New content remains subject to target API and runtime validation. 26.1.2 error counts do not apply."
+  },
+  "downstream_base": "7ae812affaea5eda81b846075d3a3995c5481ccb",
+  "conflict_resolution": "Retained native Identifier, InteractionResult, extracted Highlights and game-rule package. Ported ChunkPos helpers to containing/unpack/pack. Kept upstream hand-aware interactions and removed old tool-rack main-hand override. Remaining independent 26.3 port not certified."
+}

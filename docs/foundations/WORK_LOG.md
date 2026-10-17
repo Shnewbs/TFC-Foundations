@@ -1,5 +1,16 @@
 # TFC Foundations — Work Log
 
+## 2026-10-17 UTC — Publish outstanding upstream source integration
+
+Imported the TerraFirmaCraft `1.21.x` delta from `e9d9a88a187d5a33064e2d86b2803f54238cadd6` through `c3b4d9536b82e5a9746dd793c586720a74108057` (42 commits) directly onto the existing `26.x` branch. This completes publication that was previously reported as prepared locally. It is a source port, not an ancestry merge. Upstream authors and EUPL notices are retained in the integration audit. Minecraft 26.3, NeoForge 26.3.0.58-beta and all dependency pins remain unchanged; Patchouli remains unresolved.
+
+Includes the upstream kiln, banana/berry, squid, scraping, rope, offhand/tool-rack and pet fixes; soup fallback ordering; buoys/lobster traps; recipes, translations, guide pages, trim palettes and thatch spawn tag. Resolved conflicts retain this port's Identifier/InteractionResult/highlight APIs and adapt the new ChunkPos helpers to the inspected 26.3 record API. Removed the obsolete tool-rack main-hand interaction method so upstream's hand-aware block interaction is used.
+
+Validation in this session: all 87 changed Java files pass syntax parsing; `python resources validate` passes language, parent, texture, blockstate, unused-model and generated-texture checks; the upstream runner passes 2,097,152 production scraping-mask checks plus source/resource guards. The ChunkPos helper signatures were inspected in the actual pinned Minecraft 26.3 client. These checks do not establish target-wide API compatibility.
+
+**No full 26.3 compilation, transformed Mixins, client/server startup, world/save/reload, gameplay or JAR packaging was verified in this continuation.** New content still needs target-specific API/runtime validation as part of this incomplete port. The 203-error result belongs exclusively to the separate 26.1.2 checkpoint; it must not be attributed to this branch. No task branch or Actions run was created.
+
+
 The complete earlier work log is retained byte-for-byte in [WORK_LOG_BEFORE_LOOT_MIGRATION](history/WORK_LOG_BEFORE_LOOT_MIGRATION.md). It records the initial source publication, toolchain/dependency work, dual-target decision, gameplay API migrations and Earth groundwork. This file continues that history; it does not replace the recorded validation limits.
 
 ## 2026-10-10 — Fluid property API port on both targets

@@ -267,7 +267,7 @@ public final class ForgeEventHandler
             final ChunkGenerator generator = extension.self();
             final ServerLevelData levelData = event.getSettings();
             final RandomSource random = new XoroshiroRandomSource(level.getSeed());
-            final ChunkPos chunkPos = new ChunkPos(extension.findSpawnBiome(random));
+            final ChunkPos chunkPos = Helpers.chunkPos(extension.findSpawnBiome(random));
 
             levelData.setSpawn(chunkPos.getWorldPosition().offset(8, generator.getSpawnHeight(level), 8), 0.0F);
             boolean foundExactSpawn = false;
@@ -411,7 +411,7 @@ public final class ForgeEventHandler
     public static void onExplosionDetonate(ExplosionEvent.Detonate event)
     {
         final Level level = event.getLevel();
-        if (!level.isClientSide)
+        if (!level.isClientSide())
         {
             WorldTracker.get(level).addCollapsePositions(BlockPos.containing(event.getExplosion().center()), event.getExplosion().getToBlow());
         }
@@ -926,7 +926,7 @@ public final class ForgeEventHandler
         final Level level = event.getLevel();
 
         Entity entity = event.getEntity();
-        if (entity instanceof ItemEntity itemEntity && !level.isClientSide && TFCConfig.SERVER.coolHotItemEntities.get())
+        if (entity instanceof ItemEntity itemEntity && !level.isClientSide() && TFCConfig.SERVER.coolHotItemEntities.get())
         {
             final ItemStack item = itemEntity.getItem();
             if (HeatCapability.isHot(item))
@@ -934,7 +934,7 @@ public final class ForgeEventHandler
                 itemEntity.lifespan = TFCConfig.SERVER.ticksBeforeItemCool.get();
             }
         }
-        else if (entity instanceof LightningBolt lightning && !level.isClientSide && !event.isCanceled())
+        else if (entity instanceof LightningBolt lightning && !level.isClientSide() && !event.isCanceled())
         {
             if (!TFCConfig.SERVER.enableLightning.get())
             {
@@ -1013,7 +1013,7 @@ public final class ForgeEventHandler
     {
         if (!TFCConfig.SERVER.coolHotItemEntities.get()) return;
         final ItemEntity entity = event.getEntity();
-        if (entity.level().isClientSide) return;
+        if (entity.level().isClientSide()) return;
 
         final ServerLevel level = (ServerLevel) entity.level();
         final ItemStack stack = entity.getItem();
@@ -1243,6 +1243,7 @@ public final class ForgeEventHandler
             // - Right-click a chest underwater -> it should open the chest, not drink
             // - Try and remove the filter from a Create 'Basin', by right-clicking with an empty hand (create cancels this event)
             final InteractionResult useBlockResult = state.useItemOn(stack, level, event.getEntity(), event.getHand(), event.getHitVec());
+            boolean interacted = false;
             if (useBlockResult.consumesAction())
             {
                 if (event.getEntity() instanceof ServerPlayer serverPlayer)
@@ -1251,8 +1252,25 @@ public final class ForgeEventHandler
                 }
                 event.setCanceled(true);
                 event.setCancellationResult(useBlockResult);
+                interacted = true;
             }
-            else
+            else if (useBlockResult == InteractionResult.TRY_WITH_EMPTY_HAND)
+            {
+                // Mirror vanilla, which tries the empty hand interaction when the item interaction passes
+                final InteractionResult useWithoutItemResult = state.useWithoutItem(level, event.getEntity(), event.getHitVec());
+                if (useWithoutItemResult.consumesAction())
+                {
+                    if (event.getEntity() instanceof ServerPlayer serverPlayer)
+                    {
+                        CriteriaTriggers.DEFAULT_BLOCK_USE.trigger(serverPlayer, event.getPos());
+                    }
+                    event.setCanceled(true);
+                    event.setCancellationResult(useWithoutItemResult);
+                    interacted = true;
+                }
+            }
+
+            if (!interacted && !Helpers.isBlock(state, TFCTags.Blocks.BLOCKS_DRINK))
             {
                 // If we haven't already interacted with a block, then we can attempt drinking.
                 final InteractionResult result = Drinkable.attemptDrink(level, event.getEntity(), true);
@@ -1395,7 +1413,7 @@ public final class ForgeEventHandler
                 {
                     holdingItem = held.split(1);
                 }
-                if (!player.level().isClientSide)
+                if (!player.level().isClientSide())
                 {
                     final HoldingMinecart minecart = new HoldingMinecart(player.level(), oldCart.getX(), oldCart.getY(), oldCart.getZ());
                     HoldingMinecart.copyMinecart(oldCart, minecart);
@@ -1430,7 +1448,7 @@ public final class ForgeEventHandler
         {
             final Player player = event.getEntity();
             final Level level = player.level();
-            if (level.isClientSide) return;
+            if (level.isClientSide()) return;
             int amount = 0;
             if (TFCConfig.SERVER.enableInfestations.get())
             {

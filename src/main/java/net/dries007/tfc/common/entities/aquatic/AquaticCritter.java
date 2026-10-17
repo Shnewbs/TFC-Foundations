@@ -26,6 +26,7 @@ import net.dries007.tfc.common.TFCTags;
 import net.minecraft.world.entity.AnimationState;
 
 import net.dries007.tfc.common.entities.EntityHelpers;
+import net.dries007.tfc.common.entities.ai.EnterLobsterTrapGoal;
 import net.dries007.tfc.common.entities.ai.TFCAvoidEntityGoal;
 import net.dries007.tfc.common.fluids.TFCFluids;
 import net.dries007.tfc.util.Helpers;
@@ -56,7 +57,7 @@ public class AquaticCritter extends WaterAnimal implements AquaticMob
     @Override
     public void tick()
     {
-        if (level().isClientSide)
+        if (level().isClientSide())
         {
             EntityHelpers.startOrStop(idleAnimation, getDeltaMovement().lengthSqr() < 1.0E-6D, tickCount);
             EntityHelpers.startOrStop(hurtAnimation, hurtTime > 0, tickCount);
@@ -71,8 +72,9 @@ public class AquaticCritter extends WaterAnimal implements AquaticMob
         //Will avoid the player if attacked
         goalSelector.addGoal(1, new CritterEscapeGoal<>(this, Player.class, 8.0F, 2.0D, 2.0D));
         goalSelector.addGoal(2, new AvoidEntityGoal<>(this, WaterAnimal.class, 8f, 5f, 5.4f, e -> Helpers.isEntity(e, TFCTags.Entities.OCEAN_PREDATORS)));
+        goalSelector.addGoal(3, new EnterLobsterTrapGoal(this));
         // don't have the ability to swim, but will path randomly anyway, resulting in them walking around the seafloor.
-        goalSelector.addGoal(3, new RandomSwimmingGoal(this, 1.0F, 30));
+        goalSelector.addGoal(4, new RandomSwimmingGoal(this, 1.0F, 30));
     }
 
     @Override

@@ -25,6 +25,11 @@ import static net.dries007.tfc.TerraFirmaCraft.*;
 
 public class ScrapingBlockEntity extends InventoryBlockEntity<ItemStackHandler>
 {
+    public static boolean checkPosition(short data, int x, int z, int value)
+    {
+        return ((data >> (x + 4 * z)) & 1) == value;
+    }
+
     @Nullable private Identifier inputTexture = null;
     @Nullable private Identifier outputTexture = null;
     private short positions = 0; // essentially a boolean[16]
@@ -46,14 +51,17 @@ public class ScrapingBlockEntity extends InventoryBlockEntity<ItemStackHandler>
         return positions;
     }
 
-    public void onClicked(float hitX, float hitZ)
+    public boolean onClicked(float hitX, float hitZ)
     {
         int xPos = (int) (hitX * 4);
         int zPos = (int) (hitZ * 4);
+        if (checkPosition(positions, xPos, zPos, 1))
+            return false;
+
         positions |= 1 << (xPos + zPos * 4);
 
         assert level != null;
-        if (!level.isClientSide)
+        if (!level.isClientSide())
         {
             if (isComplete())
             {
@@ -72,6 +80,7 @@ public class ScrapingBlockEntity extends InventoryBlockEntity<ItemStackHandler>
             markForSync();
         }
         level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
+        return true;
     }
 
     public boolean dye(DyeColor color)
@@ -139,6 +148,13 @@ public class ScrapingBlockEntity extends InventoryBlockEntity<ItemStackHandler>
     public Identifier getOutputTexture()
     {
         return outputTexture;
+    }
+
+    @Override
+    public void setAndUpdateSlots(int slot)
+    {
+        updateDisplayCache();
+        super.setAndUpdateSlots(slot);
     }
 
     public void updateDisplayCache()

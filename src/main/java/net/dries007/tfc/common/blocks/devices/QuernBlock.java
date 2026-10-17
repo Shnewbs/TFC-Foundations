@@ -59,13 +59,12 @@ public class QuernBlock extends DeviceBlock implements IHighlightHandler
     private static final VoxelShape FULL_SHAPE = Shapes.join(Shapes.or(BASE_SHAPE, HANDSTONE_SHAPE, HANDLE_SHAPE), INPUT_SLOT_SHAPE, BooleanOp.ONLY_FIRST);
     private static final VoxelShape COLLISION_FULL_SHAPE = Shapes.or(BASE_SHAPE, HANDSTONE_SHAPE);
 
-    private static SelectionPlace getPlayerSelection(BlockGetter level, BlockPos pos, Player player, BlockHitResult result)
+    private static SelectionPlace getPlayerSelection(BlockGetter level, BlockPos pos, ItemStack held, BlockHitResult result)
     {
         final QuernBlockEntity quern = level.getBlockEntity(pos, TFCBlockEntities.QUERN.get()).orElse(null);
         if (quern != null)
         {
             final IItemHandler inventory = quern.getInventory();
-            final ItemStack held = player.getItemInHand(InteractionHand.MAIN_HAND);
             final Vec3 hit = result.getLocation();
             if (quern.hasHandstone())
             {
@@ -86,18 +85,20 @@ public class QuernBlock extends DeviceBlock implements IHighlightHandler
         return SelectionPlace.BASE;
     }
 
-    private static InteractionResult insertOrExtract(Level level, QuernBlockEntity quern, IItemHandler inventory, Player player, ItemStack stack, int slot)
+    private static InteractionResult insertOrExtract(Level level, QuernBlockEntity quern, IItemHandler inventory, Player player, InteractionHand hand, ItemStack stack, int slot)
     {
         if (!stack.isEmpty())
         {
-            player.setItemInHand(InteractionHand.MAIN_HAND, inventory.insertItem(slot, stack, false));
+            player.setItemInHand(hand, inventory.insertItem(slot, stack, false));
         }
         else
         {
+            if (inventory.getStackInSlot(slot).isEmpty())
+                return InteractionResult.TRY_WITH_EMPTY_HAND;
             ItemHandlerHelper.giveItemToPlayer(player, inventory.extractItem(slot, inventory.getStackInSlot(slot).getCount(), false));
             if (slot == SLOT_HANDSTONE)
             {
-                insertOrExtract(level, quern, inventory, player, ItemStack.EMPTY, SLOT_INPUT); // extract the grinding item too
+                insertOrExtract(level, quern, inventory, player, hand, ItemStack.EMPTY, SLOT_INPUT); // extract the grinding item too
             }
         }
         quern.setAndUpdateSlots(slot);
@@ -135,20 +136,23 @@ public class QuernBlock extends DeviceBlock implements IHighlightHandler
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
-        final QuernBlockEntity quern = level.getBlockEntity(pos, TFCBlockEntities.QUERN.get()).orElse(null);
-        if (quern != null && !quern.isGrinding())
+        if (level.getBlockEntity(pos) instanceof QuernBlockEntity quern)
         {
             final IItemHandler inventory = quern.getInventory();
-            final ItemStack heldStack = player.getItemInHand(hand);
-            final SelectionPlace selection = getPlayerSelection(level, pos, player, hitResult);
+            final SelectionPlace selection = getPlayerSelection(level, pos, stack, hitResult);
+            if (quern.isGrinding())
+            {
+                // allow extracting while grinding (this is probably fine right?)
+                return insertOrExtract(level, quern, inventory, player, hand, ItemStack.EMPTY, SLOT_OUTPUT);
+            }
             return switch (selection)
             {
                 case HANDLE -> attemptGrind(level, pos, quern);
-                case INPUT_SLOT -> insertOrExtract(level, quern, inventory, player, heldStack, SLOT_INPUT);
-                case HANDSTONE -> (player.isShiftKeyDown() || Helpers.isItem(heldStack, TFCTags.Items.QUERN_HANDSTONES))
-                    ? insertOrExtract(level, quern, inventory, player, heldStack, SLOT_HANDSTONE)
+                case INPUT_SLOT -> insertOrExtract(level, quern, inventory, player, hand, stack, SLOT_INPUT);
+                case HANDSTONE -> (player.isShiftKeyDown() || Helpers.isItem(stack, TFCTags.Items.QUERN_HANDSTONES))
+                    ? insertOrExtract(level, quern, inventory, player, hand, stack, SLOT_HANDSTONE)
                     : attemptGrind(level, pos, quern);
-                case BASE -> insertOrExtract(level, quern, inventory, player, ItemStack.EMPTY, SLOT_OUTPUT);
+                case BASE -> insertOrExtract(level, quern, inventory, player, hand, ItemStack.EMPTY, SLOT_OUTPUT);
             };
         }
         return InteractionResult.TRY_WITH_EMPTY_HAND;
@@ -177,7 +181,8 @@ public class QuernBlock extends DeviceBlock implements IHighlightHandler
     @Nullable
     public IHighlightHandler.Highlight extractHighlight(Level level, BlockPos pos, Player player, BlockHitResult hit)
     {
-        final SelectionPlace selection = getPlayerSelection(level, pos, player, hit);
+        final ItemStack mainHand = player.getMainHandItem();
+        final SelectionPlace selection = getPlayerSelection(level, pos, mainHand.isEmpty() ? player.getOffhandItem() : mainHand, hit);
         return selection != SelectionPlace.BASE ? new IHighlightHandler.Highlight(selection.shape, 0x66FF0000) : null;
     }
 

@@ -7,9 +7,7 @@
 package net.dries007.tfc.client.model;
 
 import java.util.ArrayList;
-import java.util.IdentityHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
@@ -25,12 +23,12 @@ import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.dispatch.ModelState;
+import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;
@@ -44,11 +42,9 @@ import net.neoforged.neoforge.client.model.geometry.IGeometryLoader;
 import net.neoforged.neoforge.client.model.geometry.IUnbakedGeometry;
 import org.jetbrains.annotations.Nullable;
 
-import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.client.RenderHelpers;
-import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blockentities.TFCBlockEntities;
-import net.dries007.tfc.util.collections.IndirectHashCollection;
+import net.dries007.tfc.util.Helpers;
 
 public class MoldTableBlockModel implements IDynamicBakedModel, IUnbakedGeometry<MoldTableBlockModel>
 {
@@ -157,46 +153,14 @@ public class MoldTableBlockModel implements IDynamicBakedModel, IUnbakedGeometry
     {
         if (!stack.isEmpty())
         {
-            return new MoldModelData(MOLD_MODEL_CACHE.values.get(stack.getItem()));
+            final Identifier moldLocation = BuiltInRegistries.ITEM.getKey(stack.getItem());
+            final ModelManager modelManager = Minecraft.getInstance().getModelManager();
+            final BakedModel model = modelManager.getModel(RenderHelpers.modelId(Helpers.resourceLocation(moldLocation.getNamespace(), "block/mold/" + moldLocation.getPath())));
+            if (model != modelManager.getMissingModel())
+            {
+                return new MoldModelData(model);
+            }
         }
         return new MoldModelData(null);
-    }
-
-    private static final MoldModelCache MOLD_MODEL_CACHE = IndirectHashCollection.create(new MoldModelCache(new IdentityHashMap<>()));
-
-    record MoldModelCache(Map<Item, BakedModel> values) implements IndirectHashCollection.Cache
-    {
-        @Override
-        public void clear()
-        {
-            values.clear();
-        }
-
-        @Override
-        public void reload(RecipeManager manager)
-        {
-            BuiltInRegistries.ITEM.getTagOrEmpty(TFCTags.Items.USABLE_IN_MOLD_TABLE).forEach(
-                (item) -> {
-                    Identifier moldLocation = BuiltInRegistries.ITEM.getKey(item.value());
-                    ModelResourceLocation modelLocation = RenderHelpers.modelId(
-                        Identifier.fromNamespaceAndPath(
-                            moldLocation.getNamespace(),
-                            "block/mold/" + moldLocation.getPath()
-                        )
-                    );
-
-                    BakedModel model = Minecraft.getInstance().getModelManager().getModel(modelLocation);
-
-                    if (model != Minecraft.getInstance().getModelManager().getMissingModel())
-                    {
-                        values.put(item.value(), model);
-                    }
-                    else
-                    {
-                        TerraFirmaCraft.LOGGER.error("No mold model loaded for mold item {}", moldLocation);
-                    }
-                }
-            );
-        }
     }
 }

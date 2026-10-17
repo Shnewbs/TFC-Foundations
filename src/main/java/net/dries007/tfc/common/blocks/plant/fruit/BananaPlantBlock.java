@@ -53,7 +53,7 @@ public class BananaPlantBlock extends SeasonalPlantBlock implements HoeOverlayBl
     {
         // picking bananas or being in the wrong climate kills the plant. this propagates death to the whole stalk.
         Block deadBlock = TFCBlocks.DEAD_BANANA_PLANT.get();
-        if (!level.isClientSide)
+        if (!level.isClientSide())
         {
             BlockState deadState = deadBlock.defaultBlockState();
             BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos().set(pos.below());
@@ -114,7 +114,8 @@ public class BananaPlantBlock extends SeasonalPlantBlock implements HoeOverlayBl
 
         // Must be in an active lifecycle to consider growing
         // We get the blockstate from the pos in case the state has been updated by onUpdate
-        if (level.getBlockState(pos).getValue(LIFECYCLE).active() && level.getBlockEntity(pos) instanceof BerryBushBlockEntity counter)
+        final BlockState updatedState = level.getBlockState(pos);
+        if (updatedState.getBlock() == this && updatedState.getValue(LIFECYCLE).active() && level.getBlockEntity(pos) instanceof BerryBushBlockEntity counter)
         {
             // Then find the max number of times the plant could have grown in the time since the last update
             int maxCycles = (int) (counter.getTicksSinceUpdate() / (long) TFCConfig.SERVER.bananaPlantGrowthTicks.get());

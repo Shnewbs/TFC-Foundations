@@ -25,15 +25,17 @@ public enum ScrapingBlockModel implements SimpleStaticBlockEntityModel<ScrapingB
     @Override
     public TextureAtlasSprite render(ScrapingBlockEntity scraping, PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay)
     {
-        if (scraping.getInputTexture() != null && scraping.getOutputTexture() != null)
+        final Identifier input = scraping.getInputTexture();
+        final Identifier output = scraping.getOutputTexture();
+        if (input != null && output != null)
         {
             final short positions = scraping.getScrapedPositions();
-            drawTiles(buffer, poseStack, scraping.getInputTexture(), positions, 0, packedLight, packedOverlay, scraping.getColor1());
-            drawTiles(buffer, poseStack, scraping.getOutputTexture(), positions, 1, packedLight, packedOverlay, scraping.getColor2());
+            drawTiles(buffer, poseStack, input, positions, 0, packedLight, packedOverlay, scraping.getColor1());
+            drawTiles(buffer, poseStack, output, positions, 1, packedLight, packedOverlay, scraping.getColor2());
         }
-        if (scraping.getOutputTexture() != null)
+        if (output != null)
         {
-            return Minecraft.getInstance().getTextureAtlas(RenderHelpers.BLOCKS_ATLAS).apply(scraping.getOutputTexture());
+            return Minecraft.getInstance().getTextureAtlas(RenderHelpers.BLOCKS_ATLAS).apply(output);
         }
         return RenderHelpers.missingTexture();
     }
@@ -59,7 +61,7 @@ public enum ScrapingBlockModel implements SimpleStaticBlockEntityModel<ScrapingB
             for (int zOffset = 0; zOffset < 4; zOffset++)
             {
                 // Checks the nth bit of positions
-                if ((((positions >> (xOffset + 4 * zOffset)) & 1) == condition))
+                if (ScrapingBlockEntity.checkPosition(positions, xOffset, zOffset, condition))
                 {
                     buffer.addVertex(mat, xOffset / 4.0F, 0.01F, zOffset / 4.0F).setColor(color).setUv(sprite.getU(xOffset * 4f / 16f), sprite.getV(zOffset * 4f / 16f)).setOverlay(packedOverlay).setLight(packedLight).setNormal(0, 0, 1);
                     buffer.addVertex(mat, xOffset / 4.0F, 0.01F, zOffset / 4.0F + 0.25F).setColor(color).setUv(sprite.getU((xOffset * 4f) / 16f), sprite.getV((zOffset * 4f + 4f) / 16f)).setOverlay(packedOverlay).setLight(packedLight).setNormal(0, 0, 1);

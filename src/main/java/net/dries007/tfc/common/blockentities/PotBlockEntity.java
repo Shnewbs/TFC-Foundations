@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.common.blockentities;
 
+import java.util.Comparator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -194,7 +195,8 @@ public class PotBlockEntity extends AbstractFirepitBlockEntity<PotBlockEntity.Po
         {
             return;
         }
-        if (level.getBlockState(worldPosition).getValue(FirepitBlock.LIT))
+        final BlockState state = level.getBlockState(worldPosition);
+        if (state.hasProperty(FirepitBlock.LIT) && state.getValue(FirepitBlock.LIT))
         {
             final HeatCapability.Remainder remainder = HeatCapability.consumeFuelForTicks(ticks, inventory, burnTicks, burnTemperature, SLOT_FUEL_CONSUME, SLOT_FUEL_INPUT);
 
@@ -213,7 +215,7 @@ public class PotBlockEntity extends AbstractFirepitBlockEntity<PotBlockEntity.Po
                         handleCooking();
                     }
                 }
-                extinguish(level.getBlockState(worldPosition));
+                extinguish(state);
                 coolInstantly();
             }
             else
@@ -239,8 +241,11 @@ public class PotBlockEntity extends AbstractFirepitBlockEntity<PotBlockEntity.Po
     {
         assert level != null;
         cachedRecipe = level.getRecipeManager()
-            .getRecipeFor(TFCRecipeTypes.POT.get(), inventory, level)
+            .getAllRecipesFor(TFCRecipeTypes.POT.get())
+            .stream()
             .map(RecipeHolder::value)
+            .filter(recipe -> recipe.matches(inventory, level))
+            .min(Comparator.comparing(PotRecipe::isFallback))
             .orElse(null);
     }
 
@@ -313,7 +318,7 @@ public class PotBlockEntity extends AbstractFirepitBlockEntity<PotBlockEntity.Po
         public void fluidTankChanged()
         {
             // Fluid may be inserted or extracted via capability (i.e. pipes), so we need to update the recipe and sync to client
-            if (pot.getLevel() != null && !pot.getLevel().isClientSide)
+            if (pot.getLevel() != null && !pot.getLevel().isClientSide())
             {
                 pot.setAndUpdateSlots(-1);
             }

@@ -13,6 +13,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
@@ -379,6 +380,11 @@ public class TFCTags
         public static final TagKey<Block> CLOCK_READABLE = tag("clock_readable");
         public static final TagKey<Block> NO_ICICLE_GENERATION = tag("no_icicle_generation");
 
+        /**
+         * Blocks the player from drinking when clicking on it while waterlogged
+         */
+        public static final TagKey<Block> BLOCKS_DRINK = tag("blocks_drink");
+
         private static TagKey<Block> tag(String name)
         {
             return TagKey.create(Registries.BLOCK, Helpers.identifier(name));
@@ -544,6 +550,8 @@ public class TFCTags
         public static final TagKey<Item> LARGE_FISHING_BAIT = tag("large_fishing_bait");
         public static final TagKey<Item> HOLDS_SMALL_FISHING_BAIT = tag("holds_small_fishing_bait");
         public static final TagKey<Item> HOLDS_LARGE_FISHING_BAIT = tag("holds_large_fishing_bait");
+        public static final TagKey<Item> LOBSTER_BAIT = tag("lobster_bait");
+        public static final TagKey<Item> LOBSTER_TRAP_JUNK = tag("lobster_trap_junk");
 
         public static final TagKey<Item> PLANTS = tag("plants");
         public static final TagKey<Item> WILD_CROPS = tag("wild_crops");
@@ -782,6 +790,7 @@ public class TFCTags
          **/
         public static final TagKey<Item> UNFIRED_POTTERY = tag("unfired_pottery");
         public static final TagKey<Item> METAL_PLATED_BLOCKS = tag("metal_plated_blocks");
+        public static final TagKey<Item> METAL_GRATES = tag("metal_grates");
 
 
         /**
@@ -889,11 +898,22 @@ public class TFCTags
         public static final TagKey<EntityType<?>> TURTLE_FRIENDS = tag("turtle_friends");
         public static final TagKey<EntityType<?>> BUBBLE_COLUMN_IMMUNE = tag("bubble_column_immune");
         public static final TagKey<EntityType<?>> NEEDS_LARGE_FISHING_BAIT = tag("needs_large_fishing_bait");
+        public static final TagKey<EntityType<?>> CAUGHT_IN_LOBSTER_TRAPS = tag("caught_in_lobster_traps");
 
 
         private static TagKey<EntityType<?>> tag(String id)
         {
             return TagKey.create(Registries.ENTITY_TYPE, Helpers.identifier(id));
+        }
+    }
+
+    public static class DamageTypes
+    {
+        public static final TagKey<DamageType> COUNTS_AS_PLAYER_KILL = create("counts_as_player_kill");
+
+        private static TagKey<DamageType> create(String id)
+        {
+            return TagKey.create(Registries.DAMAGE_TYPE, Helpers.identifier(id));
         }
     }
 

@@ -200,9 +200,13 @@ def generate(rm: ResourceManager):
 
             block.with_lang(lang('%s %s', *rock_lang(block_type, rock)))
 
-        rm.blockstate(('rock', 'rope_anchor', rock), variants={
-            **four_rotations('tfc:block/rock/rope_anchor/%s' % rock, (90, None, 180, 270)),
-        }).with_lang(lang('%s rope anchor', rock)).with_block_loot('tfc:rock/loose/%s' % rock)
+        rm.blockstate_multipart(('rock', 'rope_anchor', rock),
+            {'model': 'tfc:block/rock/spike/%s_tip' % rock},
+            *[
+                ({'facing': facing}, {'model': 'tfc:block/rock/rope_anchor/%s' % rock, 'y': rotation})
+                for facing, rotation in {'north': 0, 'east': 90, 'south': 180, 'west': 270}.items()
+            ]
+        ).with_lang(lang('%s rope anchor', rock)).with_block_loot('tfc:rock/loose/%s' % rock)
         rm.block_model(('rock', 'rope_anchor', rock), parent='tfc:block/horizontal_rope_anchored', textures={'texture': 'tfc:block/rock/raw/%s' % rock})
 
         # Decorations
@@ -472,10 +476,14 @@ def generate(rm: ResourceManager):
 
     rm.blockstate('hanging_rope', variants=four_rotations('tfc:block/vertical_rope_side', (90, None, 180, 270))).with_lang(lang('rope')).with_block_loot('tfc:rope')
 
-    rm.blockstate('steel_rope_anchor', variants={
-        **four_rotations('tfc:block/steel_rope_anchor', (None, None, None, None), prefix='has_rope=false,'),
-        **four_rotations('tfc:block/steel_rope_anchor_rope', (90, None, 180, 270), prefix='has_rope=true,'),
-    }).with_lang(lang('steel rope anchor')).with_item_model().with_block_loot('tfc:steel_rope_anchor')
+    rm.blockstate_multipart(
+        'steel_rope_anchor',
+        {'model': 'tfc:block/steel_rope_anchor'},
+        *[
+            ({'has_rope': True, 'facing': facing}, {'model': 'tfc:block/steel_rope_anchor_rope', 'y': rotation})
+            for facing, rotation in {'north': 0, 'east': 90, 'south': 180, 'west': 270}.items()
+        ]
+    ).with_lang(lang('steel rope anchor')).with_item_model().with_block_loot('tfc:steel_rope_anchor')
     rm.block_model('steel_rope_anchor', parent='tfc:block/rope_anchor', textures={'texture': 'tfc:block/metal/smooth/steel'})
     rm.block_model('steel_rope_anchor_rope', parent='tfc:block/horizontal_rope_anchored', textures={'texture': 'tfc:block/metal/smooth/steel'})
 
@@ -2513,6 +2521,18 @@ def generate(rm: ResourceManager):
     block.with_lang(lang('precision clock')).with_block_loot('tfc:calendar_clock')
     rm.item_model('calendar_clock')
 
+    for color in COLORS:
+        block = rm.blockstate('buoy/%s' % color).with_block_model({'texture': 'tfc:block/buoy/%s' % color, 'particle': 'tfc:block/buoy/%s' % color}, parent='tfc:block/buoy')
+        block.with_lang(lang('%s buoy', color)).with_block_loot('tfc:buoy/%s' % color).with_item_model()
+
+    trap_models = {'open': 'tfc:block/lobster_trap', 'baited': 'tfc:block/lobster_trap_bait', 'closed': 'tfc:block/lobster_trap_closed'}
+    rm.blockstate('lobster_trap', variants=dict(
+        ('facing=%s,trap=%s' % (facing, trap), {'model': model, 'y': rot} if rot else {'model': model})
+        for facing, rot in (('north', 0), ('east', 90), ('south', 180), ('west', 270))
+        for trap, model in trap_models.items()
+    ), use_default_model=False).with_lang(lang('lobster trap')).with_block_loot('tfc:lobster_trap')
+    rm.item_model('lobster_trap', parent='tfc:block/lobster_trap', no_textures=True)
+
     # Candles
     for color in [None, *COLORS]:
         namespace = 'tfc:candle' + ('/' + color if color else '')
@@ -2655,7 +2675,10 @@ def generate(rm: ResourceManager):
         atlases.palette(
             key='trims/color_palettes/trim_palette',
             textures=['tfc:item/%s_trim' % section for section in TFC_ARMOR_SECTIONS],
-            permutations=dict((mat + '_tfc', 'tfc:color_palettes/trims/%s' % mat) for mat in TRIM_MATERIALS)
+            permutations={
+                **{mat + '_tfc': f'tfc:color_palettes/trims/{mat}' for mat in TRIM_MATERIALS},
+                **{mat: f'minecraft:trims/color_palettes/{mat}' for mat in VANILLA_TRIM_MATERIALS},
+            }
         ),
         atlases.directory('entity/bell')
     )
