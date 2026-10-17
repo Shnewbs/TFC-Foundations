@@ -140,6 +140,7 @@ public final class TerraFirmaCraft
         TFCRecipeTypes.RECIPE_TYPES.register(bus);
         TFCRecipeSerializers.RECIPE_SERIALIZERS.register(bus);
         TFCSounds.SOUNDS.register(bus);
+        TFCSounds.LEGACY_VANILLA_SOUNDS.register(bus);
         TFCParticles.PARTICLE_TYPES.register(bus);
         TFCBlockEntities.BLOCK_ENTITIES.register(bus);
         TFCCreativeTabs.CREATIVE_TABS.register(bus);
@@ -222,7 +223,6 @@ public final class TerraFirmaCraft
             return null;
         });
 
-        PatchouliIntegration.registerMultiBlocks();
         OptionalIntegrations.registerJadeToolHandlers();
     }
 

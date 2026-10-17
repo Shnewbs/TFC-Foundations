@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:dirt/entisol"
-    },
-    {
-      "tag": "c:gravels"
-    }
+    "tfc:dirt/entisol",
+    "#c:gravels"
   ],
   "result": {
     "count": 2,

@@ -123,7 +123,7 @@ public interface KnappingRecipes extends Recipes
             add(nameOf(TFCItems.ROCK_TOOLS.get(type).get(output)) + (suffix.isEmpty() ? "" : "_" + suffix), new KnappingRecipe(
                 KnappingType.MANAGER.getCheckedReference(BuiltinKnappingTypes.ROCK),
                 KnappingPattern.from(false, pattern),
-                Optional.of(Ingredient.of(TFCTags.Items.STONES_LOOSE_CATEGORY.get(type))),
+                Optional.of(net.dries007.tfc.data.Accessors.ingredient(TFCTags.Items.STONES_LOOSE_CATEGORY.get(type))),
                 new ItemStack(TFCItems.ROCK_TOOLS.get(type).get(output), count)
             ));
     }
@@ -138,7 +138,7 @@ public interface KnappingRecipes extends Recipes
         add(nameOf(output) + (suffix.isEmpty() ? "" : "_" + suffix), new KnappingRecipe(
             KnappingType.MANAGER.getCheckedReference(BuiltinKnappingTypes.ROCK),
             KnappingPattern.from(false, pattern),
-            Optional.of(Ingredient.of(TFCBlocks.GROUNDCOVER.get(GroundcoverBlockType.OBSIDIAN_SHARD))),
+            Optional.of(net.dries007.tfc.data.Accessors.ingredient(TFCBlocks.GROUNDCOVER.get(GroundcoverBlockType.OBSIDIAN_SHARD))),
             new ItemStack(output, count)
         ));
     }
@@ -199,8 +199,8 @@ public interface KnappingRecipes extends Recipes
     private void goatKnapping(ResourceKey<Instrument> instrument, String... pattern)
     {
         final ItemStack output = Items.GOAT_HORN.getDefaultInstance();
-        output.set(DataComponents.INSTRUMENT, BuiltInRegistries.INSTRUMENT.getHolderOrThrow(instrument));
-        knapping(BuiltinKnappingTypes.GOAT_HORN, pattern, output, true, instrument.location().getPath() + "_goat_horn");
+        output.set(DataComponents.INSTRUMENT, new net.minecraft.world.item.component.InstrumentComponent(lookup().lookupOrThrow(net.minecraft.core.registries.Registries.INSTRUMENT).getOrThrow(instrument)));
+        knapping(BuiltinKnappingTypes.GOAT_HORN, pattern, output, true, instrument.identifier().getPath() + "_goat_horn");
     }
 
     private void knapping(Identifier knappingType, String[] pattern, ItemLike output, boolean defaultOn, int count)

@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/kapok"
-    },
-    "P": {
-      "item": "tfc:wood/planks/kapok"
-    }
+    "L": "tfc:wood/lumber/kapok",
+    "P": "tfc:wood/planks/kapok"
   },
   "pattern": [
     "PLP",

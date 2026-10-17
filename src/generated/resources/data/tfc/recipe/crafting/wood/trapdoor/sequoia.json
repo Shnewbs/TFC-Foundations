@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/sequoia"
-    }
+    "L": "tfc:wood/lumber/sequoia"
   },
   "pattern": [
     "LLL",

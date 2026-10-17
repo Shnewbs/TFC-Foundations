@@ -30,7 +30,7 @@ public abstract class ItemStackMixin
      * Modify the components attached to a stack on constructing, for time-dependent components.
      * @see ItemStackHooks#onModifyItemStackComponents
      */
-    @Inject(method = "<init>(Lnet/minecraft/world/level/ItemLike;ILnet/minecraft/core/component/PatchedDataComponentMap;)V", at = @At("TAIL"))
+    @Inject(method = "<init>(Lnet/minecraft/core/Holder;ILnet/minecraft/core/component/PatchedDataComponentMap;)V", at = @At("TAIL"))
     private void modifyItemStackOnConstructing(CallbackInfo ci)
     {
         ItemStackHooks.onModifyItemStackComponents((ItemStack) (Object) this);
@@ -43,7 +43,7 @@ public abstract class ItemStackMixin
      * should be able to be stacked together.
      * @see ItemStackHooks#onCompareItemStackComponents
      */
-    @Inject(method = "isSameItemSameComponents", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "isSameItemSameComponents(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z", at = @At("HEAD"), cancellable = true)
     private static void sanitizeComponentsAndStackFood(ItemStack stack, ItemStack other, CallbackInfoReturnable<Boolean> cir)
     {
         ItemStackHooks.onCompareItemStackComponents(stack, other);
@@ -68,7 +68,7 @@ public abstract class ItemStackMixin
      * Inject into the same spot where unbreaking enchantment is processed, in order to additionally apply forging bonus in the same respect
      */
     @WrapOperation(
-        method = "hurtAndBreak(ILnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;Ljava/util/function/Consumer;)V",
+        method = "processDurabilityChange(ILnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;)I",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;processDurabilityChange(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;I)I")
     )
     private int applyForgingBonusToPreventItemDamage(ServerLevel level, ItemStack stack, int damage, Operation<Integer> original)

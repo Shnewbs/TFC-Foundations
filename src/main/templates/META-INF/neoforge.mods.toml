@@ -11,7 +11,7 @@ issueTrackerURL = "https://github.com/Shnewbs/TFC-Foundations/issues"
     displayName = "TFC Foundations"
     credits = "By AlcatrazEscapee, Disastermoo, Dries007, Bunsan, Claycorp, DavidTriphon, EERussianguy, Gaelmare, and many others. Based on the original work by Bioxx, Dunk, and Kitty. Music by Mike \"Menoch\" Pelaez"
     authors = "AlcatrazEscapee"
-    description = '''TFC Foundations — a TerraFirmaCraft port for Minecraft 26.3.'''
+    description = '''TFC Foundations — a TerraFirmaCraft port for Minecraft 26.1.2.'''
     enumExtensions = "META-INF/enumextensions.json"
 
 # Dependencies

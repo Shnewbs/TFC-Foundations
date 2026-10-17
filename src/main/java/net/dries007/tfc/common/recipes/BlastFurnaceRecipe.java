@@ -33,7 +33,7 @@ public record BlastFurnaceRecipe(
 {
     public static final MapCodec<BlastFurnaceRecipe> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
         LegacySizedIngredientCodecs.FLAT_FLUID.fieldOf("fluid").forGetter(c -> c.inputFluid),
-        Ingredient.CODEC.fieldOf("catalyst").forGetter(c -> c.catalyst),
+        net.dries007.tfc.common.recipes.LegacyIngredientCodecs.ITEM.fieldOf("catalyst").forGetter(c -> c.catalyst),
         FluidStack.CODEC.fieldOf("result").forGetter(c -> c.outputFluid)
     ).apply(i, BlastFurnaceRecipe::new));
 

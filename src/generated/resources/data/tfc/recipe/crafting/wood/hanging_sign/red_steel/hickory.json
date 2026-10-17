@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": {
-      "item": "tfc:metal/chain/red_steel"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/hickory"
-    }
+    "C": "tfc:metal/chain/red_steel",
+    "L": "tfc:wood/lumber/hickory"
   },
   "pattern": [
     "C C",

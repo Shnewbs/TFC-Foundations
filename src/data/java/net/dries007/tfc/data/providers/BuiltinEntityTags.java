@@ -25,7 +25,7 @@ public class BuiltinEntityTags extends EntityTypeTagsProvider
 {
     public BuiltinEntityTags(GatherDataEvent event, CompletableFuture<HolderLookup.Provider> provider)
     {
-        super(event.getGenerator().getPackOutput(), provider, TerraFirmaCraft.MOD_ID, event.getExistingFileHelper());
+        super(event.getGenerator().getPackOutput(), provider, TerraFirmaCraft.MOD_ID);
     }
 
     @Override
@@ -63,13 +63,13 @@ public class BuiltinEntityTags extends EntityTypeTagsProvider
         final var boatsTag = tag(Tags.EntityTypes.BOATS);
         for (Wood wood : Wood.values())
         {
-            boatsTag.add(TFCEntities.BOATS.get(wood).key());
-            boatsTag.add(TFCEntities.CHEST_BOATS.get(wood).key());
+            boatsTag.add(TFCEntities.BOATS.get(wood).get());
+            boatsTag.add(TFCEntities.CHEST_BOATS.get(wood).get());
         }
 
         tag(Tags.EntityTypes.MINECARTS)
-            .add(TFCEntities.CHEST_MINECART.key())
-            .add(TFCEntities.HOLDING_MINECART.key());
+            .add(TFCEntities.CHEST_MINECART.get())
+            .add(TFCEntities.HOLDING_MINECART.get());
 
         // ===== TFC Tags ===== //
 

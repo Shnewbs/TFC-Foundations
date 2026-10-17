@@ -2,15 +2,10 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "minecraft:pink_dye"
-    },
-    {
-      "item": "tfc:ceramic/unfired_vessel"
-    }
+    "minecraft:pink_dye",
+    "tfc:ceramic/unfired_vessel"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:ceramic/pink_unfired_vessel"
   }
 }

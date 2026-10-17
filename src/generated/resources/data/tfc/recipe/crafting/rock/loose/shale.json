@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:rock/cobble/shale"
-    }
+    "tfc:rock/cobble/shale"
   ],
   "result": {
     "count": 4,

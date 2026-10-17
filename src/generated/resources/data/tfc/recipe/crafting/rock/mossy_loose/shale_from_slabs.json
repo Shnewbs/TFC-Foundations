@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:rock/mossy_cobble/shale_slab"
-    }
+    "tfc:rock/mossy_cobble/shale_slab"
   ],
   "result": {
     "count": 2,

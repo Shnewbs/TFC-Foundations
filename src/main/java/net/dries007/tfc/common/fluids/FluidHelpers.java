@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.common.fluids;
 
+
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
@@ -51,6 +52,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.TFCBlocks;
 import net.dries007.tfc.common.blocks.rock.AqueductBlock;
@@ -117,7 +119,7 @@ public final class FluidHelpers
     {
         final BlockState state = level.getBlockState(pos);
         final ItemStack stack = originalStack.copyWithCount(1);
-        final IFluidHandlerItem handler = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        final IFluidHandlerItem handler = TransferAccess.fluidHandler(stack);
         if (handler == null)
         {
             return false;
@@ -170,7 +172,7 @@ public final class FluidHelpers
      */
     public static boolean transferBetweenBlockEntityAndItem(ItemStack originalStack, BlockEntity entity, Level level, BlockPos pos, AfterTransfer after)
     {
-        return transferBetweenBlockHandlerAndItem(originalStack, Helpers.getCapability(Capabilities.FluidHandler.BLOCK, entity), level, pos, after);
+        return transferBetweenBlockHandlerAndItem(originalStack, TransferAccess.fluidHandler(entity), level, pos, after);
     }
 
     /**
@@ -179,7 +181,7 @@ public final class FluidHelpers
     public static boolean transferBetweenBlockHandlerAndItem(ItemStack originalStack, @Nullable IFluidHandler blockHandler, Level level, BlockPos pos, AfterTransfer after)
     {
         final ItemStack stack = originalStack.copyWithCount(1);
-        final IFluidHandlerItem itemHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        final IFluidHandlerItem itemHandler = TransferAccess.fluidHandler(stack);
 
         if (itemHandler == null || blockHandler == null)
         {
@@ -352,7 +354,7 @@ public final class FluidHelpers
             {
                 // Directly execute, assuming that we can pickup into a bucket, then empty the bucket to obtain the contents
                 final ItemStack stack = pickup.pickupBlock(null, level, pos, state);
-                final @Nullable IFluidHandler fluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
+                final @Nullable IFluidHandler fluidHandler = TransferAccess.fluidHandler(stack);
                 final FluidStack fluid = fluidHandler != null ? fluidHandler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE) : FluidStack.EMPTY;
                 sound.accept(fluid);
                 return fluid;
@@ -565,7 +567,7 @@ public final class FluidHelpers
      */
     public static FluidStack getContainedFluid(ItemStack stack)
     {
-        final @Nullable IFluidHandlerItem handler = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        final @Nullable IFluidHandlerItem handler = TransferAccess.fluidHandler(stack);
         return handler != null ? handler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE) : FluidStack.EMPTY;
     }
 
@@ -575,7 +577,7 @@ public final class FluidHelpers
      */
     public static FluidStack getContainedFluidInTank(ItemStack stack)
     {
-        final @Nullable IFluidHandlerItem handler = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        final @Nullable IFluidHandlerItem handler = TransferAccess.fluidHandler(stack);
         return handler != null ? handler.getFluidInTank(0) : FluidStack.EMPTY;
     }
 

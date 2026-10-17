@@ -113,6 +113,7 @@ import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.client.ClientHelpers;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blockentities.InventoryBlockEntity;
@@ -150,7 +151,7 @@ public final class Helpers
     private static final int PRIME_X = 501125321;
     private static final int PRIME_Y = 1136930381;
 
-    @Nullable private static RecipeManager CACHED_RECIPE_MANAGER = null;
+    @Nullable private static Supplier<RecipeMap> CACHED_RECIPES = null;
 
     /**
      * @return A {@link Identifier} with the {@code tfc} namespace.
@@ -474,9 +475,9 @@ public final class Helpers
             LOGGER.info("^ This is fine - No client or server recipe manager present upon initial resource reload on physical server");
         }
 
-        if (CACHED_RECIPE_MANAGER != null)
+        if (CACHED_RECIPES != null)
         {
-            return ((RecipeManagerAccessor) CACHED_RECIPE_MANAGER).accessor$getRecipes();
+            return CACHED_RECIPES.get();
         }
 
         throw new IllegalStateException("No recipe manager was present - tried server, client, and captured value. This will cause problems!");
@@ -484,7 +485,12 @@ public final class Helpers
 
     public static void setCachedRecipeManager(RecipeManager manager)
     {
-        CACHED_RECIPE_MANAGER = manager;
+        CACHED_RECIPES = manager::recipeMap;
+    }
+
+    public static void setCachedRecipeMap(RecipeMap recipes)
+    {
+        CACHED_RECIPES = () -> recipes;
     }
 
     public static void updateReloadableData(RegistryAccess access, RecipeManager manager)
@@ -1201,7 +1207,7 @@ public final class Helpers
         if (!fluidStack.isEmpty())
         {
             final ItemStack mergeStack = inventory.getStackInSlot(slot);
-            final @Nullable IFluidHandlerItem fluidHandler = mergeStack.getCapability(Capabilities.FluidHandler.ITEM);
+            final @Nullable IFluidHandlerItem fluidHandler = TransferAccess.fluidHandler(mergeStack);
             if (fluidHandler != null)
             {
                 final int filled = fluidHandler.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);

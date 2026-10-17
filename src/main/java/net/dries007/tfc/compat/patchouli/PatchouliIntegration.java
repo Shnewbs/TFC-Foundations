@@ -85,8 +85,11 @@ public final class PatchouliIntegration
         PatchouliAPI.get().openBookEntry(player, BOOK_ID, entry, page);
     }
 
-    public static void registerMultiBlocks()
+    private static boolean multiblocksRegistered;
+
+    public static synchronized void registerMultiBlocks()
     {
+        if (multiblocksRegistered) return;
         registerMultiblock("bloomery", PatchouliIntegration::bloomery);
         registerMultiblock("blast_furnace", api -> blastFurnace(api, false));
         registerMultiblock("full_blast_furnace", api -> blastFurnace(api, true));
@@ -99,6 +102,7 @@ public final class PatchouliIntegration
         registerMultiblock("clutch_on", api -> clutch(api, true));
         registerMultiblock("crankshaft", PatchouliIntegration::crankshaft);
         registerMultiblock("rotating_quern", PatchouliIntegration::rotatingQuern);
+        multiblocksRegistered = true;
     }
 
     private static IMultiblock blastFurnace(PatchouliAPI.IPatchouliAPI api, boolean fullSize)

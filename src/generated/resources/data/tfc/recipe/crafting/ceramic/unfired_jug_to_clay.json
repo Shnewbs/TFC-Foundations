@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:ceramic/unfired_jug"
-    }
+    "tfc:ceramic/unfired_jug"
   ],
   "result": {
     "count": 5,

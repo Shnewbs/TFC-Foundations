@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "X": {
-      "item": "tfc:wood/log/willow"
-    }
+    "X": "tfc:wood/log/willow"
   },
   "pattern": [
     "XX",

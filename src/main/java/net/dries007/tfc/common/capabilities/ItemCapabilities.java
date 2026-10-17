@@ -6,9 +6,17 @@
 
 package net.dries007.tfc.common.capabilities;
 
+import java.util.function.Function;
+import java.util.IdentityHashMap;
+import java.util.Map;
 import java.util.Arrays;
 import java.util.stream.Stream;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ItemCapability;
@@ -17,6 +25,8 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
+import net.dries007.tfc.common.capabilities.transfer.ItemInventoryResourceHandler;
+import net.dries007.tfc.common.capabilities.transfer.ItemFluidResourceHandler;
 import net.dries007.tfc.common.blocks.TFCBlocks;
 import net.dries007.tfc.common.blocks.wood.Wood;
 import net.dries007.tfc.common.component.TFCComponents;
@@ -57,8 +67,8 @@ public final class ItemCapabilities
      */
     public static final ItemCapability<IMold, @Nullable Void> MOLD = ItemCapability.createVoid(Helpers.identifier("mold"), IMold.class);
 
-    public static final ItemCapability<IFluidHandlerItem, @Nullable Void> FLUID = Capabilities.FluidHandler.ITEM;
-    public static final ItemCapability<IItemHandler, @Nullable Void> ITEM = Capabilities.ItemHandler.ITEM;
+    public static final ItemCapability<ResourceHandler<FluidResource>, ItemAccess> FLUID = Capabilities.Fluid.ITEM;
+    public static final ItemCapability<ResourceHandler<ItemResource>, ItemAccess> ITEM = Capabilities.Item.ITEM;
 
 
     public static void register(RegisterCapabilitiesEvent event)
@@ -73,7 +83,7 @@ public final class ItemCapabilities
 
         event.registerItem(MOLD, ItemCapabilities::forMold, molds);
         event.registerItem(HEAT, ItemCapabilities::forMold, molds);
-        event.registerItem(FLUID, ItemCapabilities::forMold, molds);
+        registerFluid(event, ItemCapabilities::forMold, molds);
 
         final ItemLike[] vessels = Stream.concat(
             TFCItems.GLAZED_VESSELS.values().stream(),
@@ -82,24 +92,25 @@ public final class ItemCapabilities
 
         event.registerItem(MOLD, ItemCapabilities::forVessel, vessels);
         event.registerItem(HEAT, ItemCapabilities::forVessel, vessels);
-        event.registerItem(FLUID, ItemCapabilities::forVessel, vessels);
-        event.registerItem(ITEM, ItemCapabilities::forVessel, vessels);
+        registerFluid(event, ItemCapabilities::forVessel, vessels);
+        event.registerItem(ITEM, (stack, access) -> access == null ? null : new ItemInventoryResourceHandler(access,
+            value -> forVessel(value, null), value -> net.dries007.tfc.common.component.food.FoodCapability.removeTrait(value, net.dries007.tfc.common.component.food.FoodTraits.PRESERVED)), vessels);
 
         final ItemLike[] barrels = TFCBlocks.WOODS.values()
             .stream()
             .map(m -> m.get(Wood.BlockType.BARREL).asItem())
             .toArray(ItemLike[]::new);
 
-        event.registerItem(FLUID, (stack, context) -> new Barrel(stack), barrels);
+        registerFluid(event, (stack, context) -> new Barrel(stack), barrels);
 
         final ItemLike[] lamps = Arrays.stream(Metal.values())
             .filter(m -> Metal.BlockType.LAMP.has(m))
             .map(m -> TFCBlocks.METALS.get(m).get(Metal.BlockType.LAMP))
             .toArray(ItemLike[]::new);
 
-        event.registerItem(FLUID, ItemCapabilities::forLamp, lamps);
+        registerFluid(event, ItemCapabilities::forLamp, lamps);
 
-        event.registerItem(FLUID, ItemCapabilities::forBucket,
+        registerFluid(event, ItemCapabilities::forBucket,
             TFCItems.JUG,
             TFCItems.WOODEN_BUCKET,
             TFCItems.RED_STEEL_BUCKET,
@@ -108,6 +119,22 @@ public final class ItemCapabilities
             TFCItems.OLIVINE_GLASS_BOTTLE,
             TFCItems.SILICA_GLASS_BOTTLE,
             TFCItems.VOLCANIC_GLASS_BOTTLE);
+    }
+
+    private static final Map<Item, Function<ItemStack, ? extends IFluidHandlerItem>> FLUID_FACTORIES = new IdentityHashMap<>();
+
+    private static void registerFluid(RegisterCapabilitiesEvent event,
+        net.neoforged.neoforge.capabilities.ICapabilityProvider<ItemStack, @Nullable Void, ? extends IFluidHandlerItem> provider, ItemLike... items)
+    {
+        final Function<ItemStack, IFluidHandlerItem> factory = stack -> provider.getCapability(stack, null);
+        for (ItemLike item : items) FLUID_FACTORIES.put(item.asItem(), factory);
+        event.registerItem(FLUID, (stack, access) -> access == null ? null : new ItemFluidResourceHandler(access, factory), items);
+    }
+
+    public static @Nullable IFluidHandlerItem fluidHandler(ItemStack stack)
+    {
+        final var factory = FLUID_FACTORIES.get(stack.getItem());
+        return factory == null ? null : factory.apply(stack);
     }
 
     public static @Nullable IMold forMold(ItemStack stack, @Nullable Void context)

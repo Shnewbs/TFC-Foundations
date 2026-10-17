@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "I": {
-      "tag": "c:rods/wrought_iron"
-    },
-    "S": {
-      "tag": "c:rods/wooden"
-    },
-    "T": {
-      "item": "minecraft:redstone_torch"
-    }
+    "I": "#c:rods/wrought_iron",
+    "S": "#c:rods/wooden",
+    "T": "minecraft:redstone_torch"
   },
   "pattern": [
     "ISI",

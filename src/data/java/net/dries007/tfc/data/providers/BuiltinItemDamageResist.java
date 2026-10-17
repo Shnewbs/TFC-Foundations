@@ -45,7 +45,7 @@ public class BuiltinItemDamageResist extends DataManagerProvider<ItemDamageResis
 
     private void add(String name, float piercing, float slashing, float crushing)
     {
-        add(name + "_armor", new ItemDamageResistance(Ingredient.of(
+        add(name + "_armor", new ItemDamageResistance(net.dries007.tfc.data.Accessors.ingredient(
             itemOf(Identifier.withDefaultNamespace(name + "_helmet")),
             itemOf(Identifier.withDefaultNamespace(name + "_chestplate")),
             itemOf(Identifier.withDefaultNamespace(name + "_leggings")),
@@ -56,7 +56,7 @@ public class BuiltinItemDamageResist extends DataManagerProvider<ItemDamageResis
     private void add(Metal metal, float piercing, float slashing, float crushing)
     {
         final Map<Metal.ItemType, TFCItems.ItemId> items = TFCItems.METAL_ITEMS.get(metal);
-        add(metal.getSerializedName() + "_armor", new ItemDamageResistance(Ingredient.of(
+        add(metal.getSerializedName() + "_armor", new ItemDamageResistance(net.dries007.tfc.data.Accessors.ingredient(
             items.get(Metal.ItemType.HELMET),
             items.get(Metal.ItemType.CHESTPLATE),
             items.get(Metal.ItemType.GREAVES),

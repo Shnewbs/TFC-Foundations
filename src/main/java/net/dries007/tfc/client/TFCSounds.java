@@ -32,6 +32,11 @@ public final class TFCSounds
 {
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(Registries.SOUND_EVENT, MOD_ID);
 
+    // Restore the removed registry identity for pack compatibility. Stock 26.1 assets no longer provide its audio.
+    public static final DeferredRegister<SoundEvent> LEGACY_VANILLA_SOUNDS = DeferredRegister.create(Registries.SOUND_EVENT, "minecraft");
+    public static final DeferredHolder<SoundEvent, SoundEvent> WOLF_HOWL = LEGACY_VANILLA_SOUNDS.register("entity.wolf.howl",
+        () -> SoundEvent.createVariableRangeEvent(net.minecraft.resources.Identifier.withDefaultNamespace("entity.wolf.howl")));
+
     // Items
     public static final Id KNAP_STONE = register("item.knapping.stone");
     public static final Id KNAP_CLAY = register("item.knapping.clay");

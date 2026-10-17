@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:rock/cobble/basalt_wall"
-    }
+    "tfc:rock/cobble/basalt_wall"
   ],
   "result": {
     "count": 4,

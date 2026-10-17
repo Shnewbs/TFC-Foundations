@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:rock/cobble/rhyolite"
-    }
+    "tfc:rock/cobble/rhyolite"
   ],
   "result": {
     "count": 4,

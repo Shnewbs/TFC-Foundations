@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:rock/mossy_cobble/limestone_stairs"
-    }
+    "tfc:rock/mossy_cobble/limestone_stairs"
   ],
   "result": {
     "count": 3,

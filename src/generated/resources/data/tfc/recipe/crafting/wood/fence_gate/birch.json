@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/birch"
-    },
-    "P": {
-      "item": "tfc:wood/planks/birch"
-    }
+    "L": "tfc:wood/lumber/birch",
+    "P": "tfc:wood/planks/birch"
   },
   "pattern": [
     "LPL",

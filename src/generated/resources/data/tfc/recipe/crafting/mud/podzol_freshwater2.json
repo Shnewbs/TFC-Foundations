@@ -3,18 +3,14 @@
   "category": "misc",
   "ingredients": [
     {
-      "type": "tfc:fluid_content",
+      "neoforge:ingredient_type": "tfc:fluid_content",
       "fluid": {
         "amount": 100,
         "fluid": "minecraft:water"
       }
     },
-    {
-      "item": "tfc:dirt/podzol"
-    },
-    {
-      "item": "tfc:dirt/podzol"
-    }
+    "tfc:dirt/podzol",
+    "tfc:dirt/podzol"
   ],
   "result": {
     "count": 2,

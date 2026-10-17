@@ -18,6 +18,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
@@ -32,8 +33,6 @@ import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.common.data.ExistingFileHelper.ResourceType;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import net.dries007.tfc.TerraFirmaCraft;
@@ -57,19 +56,26 @@ import net.dries007.tfc.util.registry.IdHolder;
 
 import static net.dries007.tfc.common.TFCTags.Blocks.*;
 
-public class BuiltinBlockTags extends TagsProvider<Block> implements Accessors
+public class BuiltinBlockTags extends net.minecraft.data.tags.KeyTagProvider<Block> implements Accessors
 {
-    private final ExistingFileHelper.IResourceType resourceType;
 
     public BuiltinBlockTags(GatherDataEvent event, CompletableFuture<HolderLookup.Provider> lookup)
     {
-        super(event.getGenerator().getPackOutput(), Registries.BLOCK, lookup, TerraFirmaCraft.MOD_ID, event.getExistingFileHelper());
-        this.resourceType = new ResourceType(PackType.SERVER_DATA, ".json", Registries.tagsDirPath(registryKey));
+        this(event.getGenerator().getPackOutput(), lookup);
+    }
+
+    public BuiltinBlockTags(PackOutput output, CompletableFuture<HolderLookup.Provider> lookup)
+    {
+        super(output, Registries.BLOCK, lookup, TerraFirmaCraft.MOD_ID);
     }
 
     @Override
     protected void addTags(HolderLookup.Provider provider)
     {
+        tag(BlockTags.CANNOT_SUPPORT_SNOW_LAYER).addTag(TagKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("snow_layer_cannot_survive_on")));
+        tag(BlockTags.SUPPORT_OVERRIDE_SNOW_LAYER).addTag(TagKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("snow_layer_can_survive_on")));
+        tag(BlockTags.SUPPORTS_BAMBOO).addTag(TagKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("bamboo_plantable_on"))).remove(Tags.Blocks.SANDS).remove(BlockTags.SAND);
+
         // ===== Minecraft Tags (ordered like BlockTags) ===== //
 
         tag(BlockTags.PLANKS).add(TFCBlocks.WOODS, Wood.BlockType.PLANKS);
@@ -324,8 +330,8 @@ public class BuiltinBlockTags extends TagsProvider<Block> implements Accessors
         // since again, we typically want to refer to sharp tools instead
         // Needs Stone Tool is ~ Copper, which is every TFC pickaxe, so we don't bother here
         // "Incorrect For Tool" includes the "Needs For Tool", so we don't touch, since we don't add levels
-        tag(BlockTags.SNOW_LAYER_CANNOT_SURVIVE_ON).add(TFCBlocks.SEA_ICE, TFCBlocks.ICE_PILE).add(TFCBlocks.MAGMA_BLOCKS);
-        tag(BlockTags.SNOW_LAYER_CAN_SURVIVE_ON).add(TFCBlocks.SOIL.get(SoilBlockType.MUD));
+        tag(TagKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("snow_layer_cannot_survive_on"))).add(TFCBlocks.SEA_ICE, TFCBlocks.ICE_PILE).add(TFCBlocks.MAGMA_BLOCKS);
+        tag(TagKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("snow_layer_can_survive_on"))).add(TFCBlocks.SOIL.get(SoilBlockType.MUD));
         tag(BlockTags.REPLACEABLE).addEveryTFC(e -> e.defaultBlockState().canBeReplaced());
         tag(BlockTags.PREVENT_MOB_SPAWNING_INSIDE).add(TFCBlocks.THATCH);
 
@@ -499,7 +505,7 @@ public class BuiltinBlockTags extends TagsProvider<Block> implements Accessors
         tag(BAMBOO).add(TFCBlocks.PLANTS.get(Plant.GOLDEN_BAMBOO)).add(Blocks.BAMBOO);
         tag(BAMBOO_SAPLING).add(TFCBlocks.PLANTS.get(Plant.GOLDEN_BAMBOO_SAPLING)).add(Blocks.BAMBOO_SAPLING);
         tag(BlockTags.BAMBOO_BLOCKS).add(TFCBlocks.GOLDEN_BAMBOO_BLOCK);
-        tag(BlockTags.BAMBOO_PLANTABLE_ON).add(TFCBlocks.PLANTS.get(Plant.GOLDEN_BAMBOO_SAPLING), TFCBlocks.PLANTS.get(Plant.GOLDEN_BAMBOO)).remove(Tags.Blocks.SANDS);
+        tag(TagKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("bamboo_plantable_on"))).add(TFCBlocks.PLANTS.get(Plant.GOLDEN_BAMBOO_SAPLING), TFCBlocks.PLANTS.get(Plant.GOLDEN_BAMBOO)).remove(Tags.Blocks.SANDS);
         tag(LIVING_SPREADING_BUSHES)
             .add(TFCBlocks.SPREADING_BUSHES)
             .add(TFCBlocks.SPREADING_CANES);
@@ -556,7 +562,7 @@ public class BuiltinBlockTags extends TagsProvider<Block> implements Accessors
             TFCBlocks.PLANTS.get(Plant.TULIP_WHITE),
             TFCBlocks.PLANTS.get(Plant.YELLOW_SAXIFRAGE)
         );
-        tag(BlockTags.TALL_FLOWERS).add(
+        tag(TagKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("tall_flowers"))).add(
             TFCBlocks.PLANTS.get(Plant.ROSE),
             TFCBlocks.PLANTS.get(Plant.SUNFLOWER),
             TFCBlocks.PLANTS.get(Plant.FOXGLOVE),
@@ -960,7 +966,6 @@ public class BuiltinBlockTags extends TagsProvider<Block> implements Accessors
     @Override
     protected TagBuilder getOrCreateRawBuilder(TagKey<Block> tag)
     {
-        if (existingFileHelper != null) existingFileHelper.trackGenerated(tag.location(), resourceType);
         return this.builders.computeIfAbsent(tag.location(), key -> new TagBuilder()
         {
             @Override
@@ -973,7 +978,7 @@ public class BuiltinBlockTags extends TagsProvider<Block> implements Accessors
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    static class BlockTagAppender extends TagAppender<Block> implements Accessors
+    static class BlockTagAppender extends net.dries007.tfc.data.TfcTagAppender<Block> implements Accessors
     {
         BlockTagAppender(TagBuilder builder)
         {

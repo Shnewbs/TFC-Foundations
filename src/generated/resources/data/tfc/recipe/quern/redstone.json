@@ -1,13 +1,16 @@
 {
   "type": "tfc:quern",
-  "ingredient": [
-    {
-      "item": "tfc:ore/cinnabar"
-    },
-    {
-      "item": "tfc:ore/cryolite"
-    }
-  ],
+  "ingredient": {
+    "type": "neoforge:compound",
+    "children": [
+      {
+        "item": "tfc:ore/cinnabar"
+      },
+      {
+        "item": "tfc:ore/cryolite"
+      }
+    ]
+  },
   "result": {
     "count": 8,
     "id": "minecraft:redstone"

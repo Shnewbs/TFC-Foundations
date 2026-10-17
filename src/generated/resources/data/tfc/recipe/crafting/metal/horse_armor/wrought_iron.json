@@ -2,22 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "H": {
-      "item": "minecraft:leather_horse_armor"
-    },
-    "J": {
-      "item": "tfc:jute_fiber"
-    },
-    "S": {
-      "tag": "c:double_sheets/wrought_iron"
-    }
+    "H": "minecraft:leather_horse_armor",
+    "J": "tfc:jute_fiber",
+    "S": "#c:double_sheets/wrought_iron"
   },
   "pattern": [
     "JHJ",
     "SSS"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:metal/horse_armor/wrought_iron"
   }
 }

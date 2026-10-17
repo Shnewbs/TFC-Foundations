@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/sycamore"
-    },
-    "P": {
-      "item": "tfc:wood/planks/sycamore"
-    },
-    "S": {
-      "tag": "c:rods/wooden"
-    }
+    "L": "tfc:wood/lumber/sycamore",
+    "P": "tfc:wood/planks/sycamore",
+    "S": "#c:rods/wooden"
   },
   "pattern": [
     "PPP",

@@ -20,6 +20,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jspecify.annotations.Nullable;
 
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.util.Helpers;
 
 public class CopyFluidFunction extends LootItemConditionalFunction
@@ -34,8 +35,8 @@ public class CopyFluidFunction extends LootItemConditionalFunction
     {
         if (entity != null && !stack.isEmpty())
         {
-            final IFluidHandlerItem itemHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
-            final IFluidHandler blockHandler = Helpers.getCapability(Capabilities.FluidHandler.BLOCK, entity);
+            final IFluidHandlerItem itemHandler = TransferAccess.fluidHandler(stack);
+            final IFluidHandler blockHandler = TransferAccess.fluidHandler(entity);
             if (itemHandler != null && blockHandler != null)
             {
                 itemHandler.fill(blockHandler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE), IFluidHandler.FluidAction.EXECUTE);
@@ -52,8 +53,8 @@ public class CopyFluidFunction extends LootItemConditionalFunction
     {
         if (entity != null && !stack.isEmpty())
         {
-            final IFluidHandlerItem itemHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
-            final IFluidHandler blockHandler = Helpers.getCapability(Capabilities.FluidHandler.BLOCK, entity);
+            final IFluidHandlerItem itemHandler = TransferAccess.fluidHandler(stack);
+            final IFluidHandler blockHandler = TransferAccess.fluidHandler(entity);
             if (itemHandler != null && blockHandler != null)
             {
                 blockHandler.fill(itemHandler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE), IFluidHandler.FluidAction.EXECUTE);

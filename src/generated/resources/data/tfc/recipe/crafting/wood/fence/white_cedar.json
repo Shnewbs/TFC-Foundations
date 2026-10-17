@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/white_cedar"
-    },
-    "P": {
-      "item": "tfc:wood/planks/white_cedar"
-    }
+    "L": "tfc:wood/lumber/white_cedar",
+    "P": "tfc:wood/planks/white_cedar"
   },
   "pattern": [
     "PLP",

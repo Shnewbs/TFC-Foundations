@@ -13,6 +13,8 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
+import net.dries007.tfc.common.recipes.ingredients.EmptyIngredient;
+
 public record ItemSizeDefinition(
     Ingredient ingredient,
     Size size,
@@ -20,7 +22,7 @@ public record ItemSizeDefinition(
 ) implements IItemSize
 {
     public static final Codec<ItemSizeDefinition> CODEC = RecordCodecBuilder.create(i -> i.group(
-        Ingredient.CODEC.fieldOf("ingredient").forGetter(c -> c.ingredient),
+        net.dries007.tfc.common.recipes.LegacyIngredientCodecs.ITEM.fieldOf("ingredient").forGetter(c -> c.ingredient),
         Size.CODEC.fieldOf("size").forGetter(c -> c.size),
         Weight.CODEC.fieldOf("weight").forGetter(c -> c.weight)
     ).apply(i, ItemSizeDefinition::new));
@@ -34,7 +36,7 @@ public record ItemSizeDefinition(
 
     public ItemSizeDefinition(Size size, Weight weight)
     {
-        this(Ingredient.of(), size, weight);
+        this(EmptyIngredient.INSTANCE.toVanilla(), size, weight);
     }
 
     @Override

@@ -3,21 +3,16 @@
   "category": "misc",
   "ingredients": [
     {
-      "type": "tfc:fluid_content",
+      "neoforge:ingredient_type": "tfc:fluid_content",
       "fluid": {
         "amount": 1000,
         "fluid": "minecraft:lava"
       }
     },
-    {
-      "item": "tfc:blank_disc"
-    },
-    {
-      "item": "tfc:powder/native_gold"
-    }
+    "tfc:blank_disc",
+    "tfc:powder/native_gold"
   ],
   "result": {
-    "count": 1,
     "id": "minecraft:music_disc_pigstep"
   }
 }

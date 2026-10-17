@@ -228,6 +228,8 @@ public class BarrelRecipe implements INoopInputRecipe, IRecipePredicate<BarrelIn
     public static class Builder
     {
         private final Consumer<BarrelRecipe> onFinish;
+        private final java.util.function.Function<TagKey<Item>, Ingredient> itemTags;
+        private final java.util.function.Function<TagKey<Fluid>, FluidIngredient> fluidTags;
         private Optional<SizedIngredient> inputItem = Optional.empty();
         private @Nullable SizedFluidIngredient inputFluid = null;
         private ItemStackProvider outputItem = ItemStackProvider.empty();
@@ -236,12 +238,20 @@ public class BarrelRecipe implements INoopInputRecipe, IRecipePredicate<BarrelIn
 
         public Builder(Consumer<BarrelRecipe> onFinish)
         {
+            this(RecipeHelpers::ingredient, tag -> FluidIngredient.of(BuiltInRegistries.FLUID.getOrThrow(tag)), onFinish);
+        }
+
+        public Builder(java.util.function.Function<TagKey<Item>, Ingredient> itemTags,
+            java.util.function.Function<TagKey<Fluid>, FluidIngredient> fluidTags, Consumer<BarrelRecipe> onFinish)
+        {
+            this.itemTags = itemTags;
+            this.fluidTags = fluidTags;
             this.onFinish = onFinish;
         }
 
         public Builder input(ItemLike item) {return input(SizedIngredient.of(item, 1));}
 
-        public Builder input(TagKey<Item> item) {return input(new SizedIngredient(Ingredient.of(BuiltInRegistries.ITEM.getOrThrow(item)), 1));}
+        public Builder input(TagKey<Item> item) {return input(new SizedIngredient(itemTags.apply(item), 1));}
 
         public Builder input(Ingredient item) {return input(new SizedIngredient(item, 1));}
 
@@ -251,7 +261,7 @@ public class BarrelRecipe implements INoopInputRecipe, IRecipePredicate<BarrelIn
             return this;
         }
 
-        public Builder input(TagKey<Fluid> fluid, int amount) {return input(new SizedFluidIngredient(FluidIngredient.of(BuiltInRegistries.FLUID.getOrThrow(fluid)), amount));}
+        public Builder input(TagKey<Fluid> fluid, int amount) {return input(new SizedFluidIngredient(fluidTags.apply(fluid), amount));}
 
         public Builder input(Fluid fluid, int amount) {return input(SizedFluidIngredient.of(fluid, amount));}
 

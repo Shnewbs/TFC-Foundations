@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "G": {
-      "item": "tfc:glue"
-    },
-    "W": {
-      "item": "tfc:wood/stripped_log/rosewood"
-    }
+    "G": "tfc:glue",
+    "W": "tfc:wood/stripped_log/rosewood"
   },
   "pattern": [
     "WGW"

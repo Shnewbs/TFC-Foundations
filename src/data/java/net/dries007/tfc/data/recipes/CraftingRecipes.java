@@ -128,7 +128,6 @@ public interface CraftingRecipes extends Recipes
             "stone_hoe",
             "stone_shovel",
             "stone_sword",
-            "suspicious_stew",
             "tide_armor_trim_smithing_template",
             "tinted_glass",
             "tnt",
@@ -148,6 +147,10 @@ public interface CraftingRecipes extends Recipes
             "snow_block",
             "wolf_armor"
         );
+        removeRenamed("suspicious_stew", net.minecraft.core.registries.BuiltInRegistries.ITEM.stream()
+            .filter(item -> net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item).getNamespace().equals("minecraft"))
+            .filter(item -> net.minecraft.world.level.block.SuspiciousEffectHolder.tryGet(item) != null)
+            .map(item -> "suspicious_stew_from_" + nameOf(item)).toList());
         for (String material : List.of("diamond", "golden", "iron"))
             remove(
                 material + "_axe",
@@ -319,7 +322,7 @@ public interface CraftingRecipes extends Recipes
                 .pattern("X X", "MXM")
                 .shaped(blocks.get(Rock.BlockType.AQUEDUCT), 2);
             recipe()
-                .input(Ingredient.of(
+                .input(net.dries007.tfc.data.Accessors.ingredient(
                     blocks.get(Rock.BlockType.LOOSE),
                     blocks.get(Rock.BlockType.MOSSY_LOOSE)))
                 .inputIsPrimary(TFCTags.Items.TOOLS_CHISEL)
@@ -429,7 +432,7 @@ public interface CraftingRecipes extends Recipes
         addBoneHandledTool(TFCItems.OBSIDIAN_KNIFE_HEAD, TFCItems.OBSIDIAN_KNIFE);
         addBoneHandledTool(TFCItems.OBSIDIAN_SHOVEL_HEAD, TFCItems.OBSIDIAN_SHOVEL);
 
-        final Ingredient handle = CompoundIngredient.of(Ingredient.of(Tags.Items.RODS_WOODEN), Ingredient.of(Items.BONE));
+        final Ingredient handle = CompoundIngredient.of(net.dries007.tfc.data.Accessors.ingredient(Tags.Items.RODS_WOODEN), net.dries007.tfc.data.Accessors.ingredient(Items.BONE));
         recipe()
             .input('S', handle)
             .input('X', TFCBlocks.GROUNDCOVER.get(GroundcoverBlockType.OBSIDIAN_SHARD))
@@ -685,12 +688,12 @@ public interface CraftingRecipes extends Recipes
 
         TFCItems.FRUIT_PRESERVES.forEach((food, item) ->
             recipe()
-                .input(notRotten(Ingredient.of(item)))
+                .input(notRotten(net.dries007.tfc.data.Accessors.ingredient(item)))
                 .shapeless(TFCItems.UNSEALED_FRUIT_PRESERVES.get(food)));
 
         TFCItems.JAM.forEach((food, item) ->
             recipe()
-                .input(notRotten(Ingredient.of(TFCItems.UNSEALED_FRUIT_PRESERVES.get(food))))
+                .input(notRotten(net.dries007.tfc.data.Accessors.ingredient(TFCItems.UNSEALED_FRUIT_PRESERVES.get(food))))
                 .shapeless(item));
 
         replace("activator_rail")
@@ -810,10 +813,10 @@ public interface CraftingRecipes extends Recipes
             .pattern("R R", " R ", "RSR")
             .shaped(Items.ARMOR_STAND);
         recipe()
-            .input(Ingredient.of(TFCItems.POWDERS.get(Powder.COKE), TFCItems.POWDERS.get(Powder.CHARCOAL)))
+            .input(net.dries007.tfc.data.Accessors.ingredient(TFCItems.POWDERS.get(Powder.COKE), TFCItems.POWDERS.get(Powder.CHARCOAL)))
             .shapeless(Items.BLACK_DYE);
         recipe()
-            .input(Ingredient.of(TFCItems.ORE_POWDERS.get(Ore.GRAPHITE), TFCItems.ORE_POWDERS.get(Ore.LAPIS_LAZULI)))
+            .input(net.dries007.tfc.data.Accessors.ingredient(TFCItems.ORE_POWDERS.get(Ore.GRAPHITE), TFCItems.ORE_POWDERS.get(Ore.LAPIS_LAZULI)))
             .shapeless(Items.BLUE_DYE);
         replace("bowl")
             .input('L', TFCTags.Items.LUMBER)
@@ -821,7 +824,7 @@ public interface CraftingRecipes extends Recipes
             .pattern("LGL", " L ")
             .shaped(Items.BOWL);
         recipe()
-            .input(Ingredient.of(TFCItems.ORE_POWDERS.get(Ore.GARNIERITE)))
+            .input(net.dries007.tfc.data.Accessors.ingredient(TFCItems.ORE_POWDERS.get(Ore.GARNIERITE)))
             .shapeless(Items.BROWN_DYE);
         replace("clock")
             .input('G', ingredientOf(Metal.GOLD, Metal.ItemType.SHEET))
@@ -831,7 +834,7 @@ public interface CraftingRecipes extends Recipes
             .shaped(Items.CLOCK);
         replace("compass")
             .input('L', TFCItems.LENS)
-            .input('R', Ingredient.of(
+            .input('R', net.dries007.tfc.data.Accessors.ingredient(
                 TFCBlocks.SMALL_ORES.get(Ore.MAGNETITE),
                 TFCItems.GRADED_ORES.get(Ore.MAGNETITE).get(Ore.Grade.POOR),
                 TFCItems.GRADED_ORES.get(Ore.MAGNETITE).get(Ore.Grade.NORMAL),
@@ -912,7 +915,7 @@ public interface CraftingRecipes extends Recipes
             .input(Items.FLINT)
             .shapeless(Items.FLINT_AND_STEEL);
         recipe()
-            .input(Ingredient.of(
+            .input(net.dries007.tfc.data.Accessors.ingredient(
                 TFCItems.ORE_POWDERS.get(Ore.CASSITERITE),
                 TFCItems.ORE_POWDERS.get(Ore.MAGNETITE),
                 TFCItems.ORE_POWDERS.get(Ore.SPHALERITE),
@@ -920,10 +923,10 @@ public interface CraftingRecipes extends Recipes
             ))
             .shapeless(Items.GRAY_DYE);
         recipe()
-            .input(Ingredient.of(TFCItems.ORE_POWDERS.get(Ore.MALACHITE), TFCItems.ORE_POWDERS.get(Ore.BISMUTHINITE)))
+            .input(net.dries007.tfc.data.Accessors.ingredient(TFCItems.ORE_POWDERS.get(Ore.MALACHITE), TFCItems.ORE_POWDERS.get(Ore.BISMUTHINITE)))
             .shapeless(Items.GREEN_DYE);
-        replace("hay_block").to3x3(Ingredient.of(TFCItems.STRAW), Items.HAY_BLOCK);
-        recipe("from_hay").from3x3(Ingredient.of(Items.HAY_BLOCK), TFCItems.STRAW);
+        replace("hay_block").to3x3(net.dries007.tfc.data.Accessors.ingredient(TFCItems.STRAW), Items.HAY_BLOCK);
+        recipe("from_hay").from3x3(net.dries007.tfc.data.Accessors.ingredient(Items.HAY_BLOCK), TFCItems.STRAW);
         replace("item_frame")
             .input('S', TFCTags.Items.LUMBER)
             .input('L', Tags.Items.LEATHERS)
@@ -951,7 +954,7 @@ public interface CraftingRecipes extends Recipes
             .pattern("PP", "PS", "PP")
             .shaped(Items.NAME_TAG);
         recipe()
-            .input(Ingredient.of(TFCItems.ORE_POWDERS.get(Ore.NATIVE_COPPER), TFCItems.ORE_POWDERS.get(Ore.SYLVITE)))
+            .input(net.dries007.tfc.data.Accessors.ingredient(TFCItems.ORE_POWDERS.get(Ore.NATIVE_COPPER), TFCItems.ORE_POWDERS.get(Ore.SYLVITE)))
             .shapeless(Items.ORANGE_DYE);
         replace("painting")
             .input('S', Tags.Items.RODS_WOODEN)
@@ -1084,8 +1087,8 @@ public interface CraftingRecipes extends Recipes
         recipe()
             .input('M', FluidContentIngredient.of(Fluids.WATER, 100))
             .input('S', TFCTags.Items.SWEETENERS)
-            .input('E', notRotten(Ingredient.of(Items.EGG)))
-            .input('F', notRotten(Ingredient.of(TFCTags.Items.FLOUR)))
+            .input('E', notRotten(net.dries007.tfc.data.Accessors.ingredient(Items.EGG)))
+            .input('F', notRotten(net.dries007.tfc.data.Accessors.ingredient(TFCTags.Items.FLOUR)))
             .pattern(" M ", "SES", "FFF")
             .shaped(TFCBlocks.CAKE);
         recipe()
@@ -1141,8 +1144,8 @@ public interface CraftingRecipes extends Recipes
             .input('A', Items.ARROW)
             .pattern("AAA", "AGA", "AAA")
             .shaped(TFCItems.GLOW_ARROW, 8);
-        replace("slime_block").to3x3(Ingredient.of(TFCItems.GLUE, Items.SLIME_BALL), Items.SLIME_BLOCK);
-        recipe().from3x3(Ingredient.of(Tags.Items.STORAGE_BLOCKS_SLIME), TFCItems.GLUE);
+        replace("slime_block").to3x3(net.dries007.tfc.data.Accessors.ingredient(TFCItems.GLUE, Items.SLIME_BALL), Items.SLIME_BLOCK);
+        recipe().from3x3(net.dries007.tfc.data.Accessors.ingredient(Tags.Items.STORAGE_BLOCKS_SLIME), TFCItems.GLUE);
         recipe()
             .input(TFCItems.ORE_POWDERS.get(Ore.SALTPETER), 2)
             .input(TFCItems.ORE_POWDERS.get(Ore.SULFUR))
@@ -1177,7 +1180,7 @@ public interface CraftingRecipes extends Recipes
             .shaped(Items.LEAD);
         recipe()
             .inputIsPrimary(TFCTags.Items.TOOLS_KNIFE)
-            .input(notRotten(Ingredient.of(TFCBlocks.MELON)))
+            .input(notRotten(net.dries007.tfc.data.Accessors.ingredient(TFCBlocks.MELON)))
             .damageInputs()
             .shapeless(TFCItems.FOOD.get(Food.MELON_SLICE), 4);
         recipe()
@@ -1197,8 +1200,8 @@ public interface CraftingRecipes extends Recipes
             .shapeless(TFCItems.PAPYRUS_STRIP, 4);
         recipe()
             .input(TFCItems.TREATED_HIDE)
-            .input(notRotten(Ingredient.of(Items.EGG)))
-            .input(notRotten(Ingredient.of(TFCTags.Items.FLOUR)))
+            .input(notRotten(net.dries007.tfc.data.Accessors.ingredient(Items.EGG)))
+            .input(notRotten(net.dries007.tfc.data.Accessors.ingredient(TFCTags.Items.FLOUR)))
             .input(TFCItems.POWDERS.get(Powder.LIME))
             .shapeless(Items.PAPER, 2);
         recipe()
@@ -1217,15 +1220,15 @@ public interface CraftingRecipes extends Recipes
             .shaped(TFCBlocks.POWDERKEG);
         recipe()
             .inputIsPrimary(TFCTags.Items.TOOLS_HAMMER)
-            .input(notRotten(Ingredient.of(TFCBlocks.PUMPKIN)))
+            .input(notRotten(net.dries007.tfc.data.Accessors.ingredient(TFCBlocks.PUMPKIN)))
             .damageInputs()
             .shapeless(TFCItems.FOOD.get(Food.PUMPKIN_CHUNKS), 4);
         recipe()
             .inputIsPrimary(TFCTags.Items.TOOLS_KNIFE)
             .input(notRotten(Food.PUMPKIN_CHUNKS))
             .input(TFCTags.Items.SWEETENERS)
-            .input(notRotten(Ingredient.of(Items.EGG)))
-            .input(notRotten(Ingredient.of(TFCTags.Items.DOUGH)))
+            .input(notRotten(net.dries007.tfc.data.Accessors.ingredient(Items.EGG)))
+            .input(notRotten(net.dries007.tfc.data.Accessors.ingredient(TFCTags.Items.DOUGH)))
             .damageInputs()
             .shapeless(Items.PUMPKIN_PIE);
         recipe()
@@ -1239,7 +1242,7 @@ public interface CraftingRecipes extends Recipes
             .shapeless(TFCItems.ROTTEN_COMPOST);
         recipe()
             .inputIsPrimary(AndIngredient.of(
-                Ingredient.of(TFCTags.Items.CAN_BE_SALTED),
+                net.dries007.tfc.data.Accessors.ingredient(TFCTags.Items.CAN_BE_SALTED),
                 NotRottenIngredient.INSTANCE,
                 LacksTraitIngredient.of(FoodTraits.SALTED)
             ))
@@ -1360,7 +1363,7 @@ public interface CraftingRecipes extends Recipes
             .shapeless(TFCItems.CACTUS_WOOD);
         recipe().useTool(
             TFCTags.Items.TOOLS_HAMMER,
-            Ingredient.of(TFCTags.Items.FLUXSTONE),
+            net.dries007.tfc.data.Accessors.ingredient(TFCTags.Items.FLUXSTONE),
             TFCItems.POWDERS.get(Powder.FLUX), 2
         );
         recipe("from_alfalfa")
@@ -1419,7 +1422,7 @@ public interface CraftingRecipes extends Recipes
      */
     private Builder recipe()
     {
-        return new Builder((name, r) -> {
+        return new Builder(net.dries007.tfc.data.Accessors::ingredient, (name, r) -> {
             if (name != null) add(name, r);
             else add(r);
         });
@@ -1430,10 +1433,10 @@ public interface CraftingRecipes extends Recipes
      */
     private Builder recipe(String suffix)
     {
-        return new Builder((name, r) -> {
+        return new Builder(net.dries007.tfc.data.Accessors::ingredient, (name, r) -> {
             assert !suffix.startsWith("_") : "recipe(String suffix) shouldn't start with an '_', it is added for you!";
             assert name == null : "Cannot use a named recipe and recipe(String suffix) at the same time!";
-            add(nameOf(r.getResultItem(lookup()).getItem()) + "_" + suffix, r);
+            add(nameOf(net.dries007.tfc.data.Accessors.resultOf(r, lookup()).getItem()) + "_" + suffix, r);
         });
     }
 
@@ -1442,7 +1445,7 @@ public interface CraftingRecipes extends Recipes
      */
     private Builder replace(String name)
     {
-        return new Builder((name1, r) -> {
+        return new Builder(net.dries007.tfc.data.Accessors::ingredient, (name1, r) -> {
             assert name1 == null : "Cannot used replace() with a named recipe!";
             replace(name, r);
         });
@@ -1470,7 +1473,7 @@ public interface CraftingRecipes extends Recipes
             FoodData.ofFood(1f, 0.5f, 4.5f),
             List.of(
                 // For a 3-ingredient sandwich, average nutritional value is 0.75, matching salads
-                new MealModifier.MealPortion(Optional.of(Ingredient.of(TFCItems.FOOD.get(bread))), 0.675f, 0.5f, 0.5f),
+                new MealModifier.MealPortion(Optional.of(net.dries007.tfc.data.Accessors.ingredient(TFCItems.FOOD.get(bread))), 0.675f, 0.5f, 0.5f),
                 new MealModifier.MealPortion(Optional.empty(), 0.8f, 0.8f, 0.8f)
             ));
 
@@ -1488,7 +1491,7 @@ public interface CraftingRecipes extends Recipes
             recipe(pattern.replace(" ", "x").toLowerCase())
                 .input('K', TFCTags.Items.TOOLS_KNIFE)
                 .input('B', notRotten(bread))
-                .input('S', notRotten(Ingredient.of(TFCTags.Items.USABLE_IN_SANDWICH)))
+                .input('S', notRotten(net.dries007.tfc.data.Accessors.ingredient(TFCTags.Items.USABLE_IN_SANDWICH)))
                 .pattern("KB ", pattern, " B ")
                 .damageInputs()
                 .addOutputModifier(meal)
@@ -1504,8 +1507,8 @@ public interface CraftingRecipes extends Recipes
                 recipe("" + pattern.replace(" ", "x").toLowerCase() + variant)
                     .input('K', TFCTags.Items.TOOLS_KNIFE)
                     .input('B', notRotten(bread))
-                    .input('S', notRotten(Ingredient.of(TFCTags.Items.USABLE_IN_JAM_SANDWICH)))
-                    .input('J', notRotten(Ingredient.of(tag)))
+                    .input('S', notRotten(net.dries007.tfc.data.Accessors.ingredient(TFCTags.Items.USABLE_IN_JAM_SANDWICH)))
+                    .input('J', notRotten(net.dries007.tfc.data.Accessors.ingredient(tag)))
                     .pattern("KB ", pattern, " B ")
                     .damageInputs()
                     .addOutputModifier(meal)
@@ -1523,7 +1526,7 @@ public interface CraftingRecipes extends Recipes
                 recipe("" + pattern.replace(" ", "x").toLowerCase() + variant)
                     .input('K', TFCTags.Items.TOOLS_KNIFE)
                     .input('B', notRotten(bread))
-                    .input('J', notRotten(Ingredient.of(tag)))
+                    .input('J', notRotten(net.dries007.tfc.data.Accessors.ingredient(tag)))
                     .pattern("KB ", pattern, " B ")
                     .damageInputs()
                     .addOutputModifier(meal)
@@ -1557,7 +1560,7 @@ public interface CraftingRecipes extends Recipes
     {
         for (RockCategory type : RockCategory.values())
             recipe()
-                .input('S', CompoundIngredient.of(Ingredient.of(Tags.Items.RODS_WOODEN), Ingredient.of(Items.BONE)))
+                .input('S', CompoundIngredient.of(net.dries007.tfc.data.Accessors.ingredient(Tags.Items.RODS_WOODEN), net.dries007.tfc.data.Accessors.ingredient(Items.BONE)))
                 .input('X', TFCItems.ROCK_TOOLS.get(type).get(input))
                 .pattern("X", "S")
                 .shaped(TFCItems.ROCK_TOOLS.get(type).get(output));
@@ -1566,7 +1569,7 @@ public interface CraftingRecipes extends Recipes
     private void addBoneHandledTool(ItemLike input, ItemLike output)
     {
         recipe()
-            .input('S', CompoundIngredient.of(Ingredient.of(Tags.Items.RODS_WOODEN), Ingredient.of(Items.BONE)))
+            .input('S', CompoundIngredient.of(net.dries007.tfc.data.Accessors.ingredient(Tags.Items.RODS_WOODEN), net.dries007.tfc.data.Accessors.ingredient(Items.BONE)))
             .input('X', input)
             .pattern("X", "S")
             .shaped(output);
@@ -1574,7 +1577,7 @@ public interface CraftingRecipes extends Recipes
 
     private Ingredient notRotten(Food food)
     {
-        return notRotten(Ingredient.of(TFCItems.FOOD.get(food)));
+        return notRotten(net.dries007.tfc.data.Accessors.ingredient(TFCItems.FOOD.get(food)));
     }
 
     private Ingredient notRotten(Ingredient food)

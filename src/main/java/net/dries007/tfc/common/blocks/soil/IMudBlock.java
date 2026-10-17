@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.common.blocks.soil;
 
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -19,6 +20,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.fluids.FluidHelpers;
 import net.dries007.tfc.common.fluids.FluidHelpers.Transfer;
@@ -48,7 +50,7 @@ public interface IMudBlock
         final ItemStack held = player.getItemInHand(hand);
         final int waterRequired = 100;
         final FluidStack water = new FluidStack(Fluids.WATER, waterRequired);
-        final IFluidHandler fluidHandler = held.getCapability(Capabilities.FluidHandler.ITEM);
+        final IFluidHandler fluidHandler = TransferAccess.fluidHandler(held);
 
         if (fluidHandler != null)
         {

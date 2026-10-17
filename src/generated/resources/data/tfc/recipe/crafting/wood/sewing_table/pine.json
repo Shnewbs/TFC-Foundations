@@ -2,18 +2,10 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "G": {
-      "item": "tfc:wood/log/pine"
-    },
-    "L": {
-      "tag": "c:leathers"
-    },
-    "P": {
-      "item": "tfc:wood/planks/pine"
-    },
-    "S": {
-      "tag": "c:tools/shear"
-    }
+    "G": "tfc:wood/log/pine",
+    "L": "#c:leathers",
+    "P": "tfc:wood/planks/pine",
+    "S": "#c:tools/shear"
   },
   "pattern": [
     " LS",
@@ -21,7 +13,6 @@
     "G G"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/sewing_table/pine"
   }
 }

@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagBuilder;
@@ -24,8 +25,7 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.fluids.crafting.CompoundFluidIngredient;
 import net.neoforged.neoforge.fluids.crafting.FluidIngredient;
-import net.neoforged.neoforge.fluids.crafting.SingleFluidIngredient;
-import net.neoforged.neoforge.fluids.crafting.TagFluidIngredient;
+import net.neoforged.neoforge.fluids.crafting.SimpleFluidIngredient;
 
 import net.dries007.tfc.TerraFirmaCraft;
 import net.dries007.tfc.common.fluids.Alcohol;
@@ -39,13 +39,18 @@ import net.dries007.tfc.util.data.Drinkable;
 import static net.dries007.tfc.common.TFCTags.Fluids.*;
 import static net.dries007.tfc.common.fluids.SimpleFluid.*;
 
-public class BuiltinFluidTags extends TagsProvider<Fluid> implements Accessors
+public class BuiltinFluidTags extends net.minecraft.data.tags.KeyTagProvider<Fluid> implements Accessors
 {
     private final CompletableFuture<?> before;
 
     public BuiltinFluidTags(GatherDataEvent event, CompletableFuture<HolderLookup.Provider> provider, CompletableFuture<?> before)
     {
-        super(event.getGenerator().getPackOutput(), Registries.FLUID, provider, TerraFirmaCraft.MOD_ID, event.getExistingFileHelper());
+        this(event.getGenerator().getPackOutput(), provider, before);
+    }
+
+    public BuiltinFluidTags(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, CompletableFuture<?> before)
+    {
+        super(output, Registries.FLUID, provider, TerraFirmaCraft.MOD_ID);
         this.before = before;
     }
 
@@ -238,7 +243,7 @@ public class BuiltinFluidTags extends TagsProvider<Fluid> implements Accessors
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    static class FluidTagAppender extends TagAppender<Fluid> implements Accessors
+    static class FluidTagAppender extends net.dries007.tfc.data.TfcTagAppender<Fluid> implements Accessors
     {
         FluidTagAppender(TagBuilder builder, String modId)
         {
@@ -263,8 +268,8 @@ public class BuiltinFluidTags extends TagsProvider<Fluid> implements Accessors
         {
             switch (ingredient)
             {
-                case TagFluidIngredient tag -> addTag(tag.tag());
-                case SingleFluidIngredient item -> add(item.fluid().value());
+                case SimpleFluidIngredient simple -> simple.fluidSet().unwrap()
+                    .ifLeft(this::addTag).ifRight(values -> values.forEach(value -> add(value.value())));
                 case CompoundFluidIngredient comp -> comp.children().forEach(this::add);
                 default -> throw new AssertionError("Unhandled ingredient type: " + ingredient);
             }

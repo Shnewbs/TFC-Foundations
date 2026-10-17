@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "tfc:wood/axle/acacia"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/acacia"
-    },
-    "P": {
-      "item": "tfc:wood/planks/acacia"
-    }
+    "A": "tfc:wood/axle/acacia",
+    "L": "tfc:wood/lumber/acacia",
+    "P": "tfc:wood/planks/acacia"
   },
   "pattern": [
     "LPL",
@@ -18,7 +12,6 @@
     "LPL"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/water_wheel/acacia"
   }
 }

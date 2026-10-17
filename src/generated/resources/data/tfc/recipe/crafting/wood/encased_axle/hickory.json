@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "tfc:wood/axle/hickory"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/hickory"
-    },
-    "S": {
-      "item": "tfc:wood/stripped_log/hickory"
-    }
+    "A": "tfc:wood/axle/hickory",
+    "L": "tfc:wood/lumber/hickory",
+    "S": "tfc:wood/stripped_log/hickory"
   },
   "pattern": [
     " S ",

@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:lens"
-    },
-    "P": {
-      "tag": "tfc:lumber"
-    },
-    "R": {
-      "tag": "c:dusts/redstone"
-    }
+    "L": "tfc:lens",
+    "P": "#tfc:lumber",
+    "R": "#c:dusts/redstone"
   },
   "pattern": [
     "L",
@@ -18,7 +12,6 @@
     "P"
   ],
   "result": {
-    "count": 1,
     "id": "minecraft:daylight_detector"
   }
 }

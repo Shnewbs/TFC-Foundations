@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:dirt/mollisol"
-    },
-    {
-      "tag": "c:gravels"
-    }
+    "tfc:dirt/mollisol",
+    "#c:gravels"
   ],
   "result": {
     "count": 2,

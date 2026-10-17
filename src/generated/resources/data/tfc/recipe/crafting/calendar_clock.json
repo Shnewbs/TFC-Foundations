@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "tfc:brass_mechanisms"
-    },
-    "G": {
-      "item": "minecraft:glass_pane"
-    },
-    "S": {
-      "item": "tfc:metal/sheet/brass"
-    }
+    "B": "tfc:brass_mechanisms",
+    "G": "minecraft:glass_pane",
+    "S": "tfc:metal/sheet/brass"
   },
   "pattern": [
     " G ",
@@ -18,7 +12,6 @@
     " B "
   ],
   "result": {
-    "count": 1,
     "id": "tfc:calendar_clock"
   }
 }

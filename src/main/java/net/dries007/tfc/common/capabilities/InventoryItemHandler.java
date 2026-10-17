@@ -9,11 +9,11 @@ package net.dries007.tfc.common.capabilities;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.dries007.tfc.common.capabilities.transfer.TransactionalItemStackHandler;
 
 import net.dries007.tfc.common.container.ISlotCallback;
 
-public class InventoryItemHandler extends ItemStackHandler implements ISlotCallback
+public class InventoryItemHandler extends TransactionalItemStackHandler implements ISlotCallback
 {
     private final ISlotCallback callback;
 
@@ -44,7 +44,7 @@ public class InventoryItemHandler extends ItemStackHandler implements ISlotCallb
     }
 
     @Override
-    protected void onContentsChanged(int slot)
+    protected void onCommittedContentsChanged(int slot)
     {
         callback.setAndUpdateSlots(slot);
     }

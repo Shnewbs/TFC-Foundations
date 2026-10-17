@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/willow"
-    },
-    "P": {
-      "item": "tfc:wood/planks/willow"
-    }
+    "L": "tfc:wood/lumber/willow",
+    "P": "tfc:wood/planks/willow"
   },
   "pattern": [
     "LPL",

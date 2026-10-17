@@ -71,7 +71,7 @@ import net.dries007.tfc.util.Metal;
 import net.dries007.tfc.util.registry.RegistryHolder;
 
 @SuppressWarnings("NotNullFieldNotInitialized")
-public final class BuiltinRecipes extends VanillaRecipeProvider implements
+public final class BuiltinRecipes implements DataProvider,
     AnvilRecipes,
     AlloyRecipes,
     BarrelRecipes,
@@ -92,15 +92,10 @@ public final class BuiltinRecipes extends VanillaRecipeProvider implements
     final Set<Identifier> removedRecipes = new HashSet<>();
     final Set<Identifier> replacedRecipes = new HashSet<>();
 
-    // This here, is a dirty hack that allows us to generate a recipe without a 'type' field, which is perfectly legal! As long as
-    // we can ensure that the recipe will NEVER pass the condition - aka, if it is using a false condition. This is the most effective
-    // way to remove recipes, that generates the least amount of log spam, but NeoForge's condition serializer won't let us not write
-    // a real, actual recipe.
-    final Codec<Unit> emptyRecipeCodec = Codec.STRING.fieldOf("type")
-        .codec()
-        .listOf()
-        .fieldOf("neoforge:conditions")
-        .xmap(l -> Unit.INSTANCE, r -> List.of("neoforge:false"))
+    // A registered never-condition removes the recipe before the native recipe dispatch examines its type.
+    // Preserve disabled recipe IDs without inventing a recipe implementation or using retired condition IDs.
+    final Codec<Unit> emptyRecipeCodec = ICondition.LIST_CODEC.fieldOf("neoforge:conditions")
+        .xmap(l -> Unit.INSTANCE, r -> List.of(net.neoforged.neoforge.common.conditions.NeverCondition.INSTANCE))
         .codec();
 
     final CompletableFuture<?> before;
@@ -108,53 +103,68 @@ public final class BuiltinRecipes extends VanillaRecipeProvider implements
 
     RecipeOutput output;
     HolderLookup.Provider lookup;
+    private final CompletableFuture<HolderLookup.Provider> registries;
+    private final PackOutput.PathProvider recipePathProvider;
 
     public BuiltinRecipes(PackOutput output, CompletableFuture<HolderLookup.Provider> lookup, CompletableFuture<?> before, BuiltinItemHeat itemHeat)
     {
-        super(output, lookup);
+        this.registries = lookup;
+        this.recipePathProvider = output.createPathProvider(PackOutput.Target.DATA_PACK, "recipe");
         this.before = CompletableFuture.allOf(before, itemHeat.output());
         this.meltingRecipes = itemHeat.meltingRecipes;
     }
 
     @Override
-    public CompletableFuture<?> run(CachedOutput output, HolderLookup.Provider lookup)
-    {
-        this.lookup = lookup;
-        return before.thenCompose(v -> CompletableFuture.allOf(
-            super.run(output, lookup),
-            CompletableFuture.allOf(removedRecipes
-                .stream()
-                .map(id -> DataProvider.saveStable(output, lookup, emptyRecipeCodec, Unit.INSTANCE, recipePathProvider.json(id)))
-                .toArray(CompletableFuture[]::new))
-        ));
-    }
-
-    @Override // This is only used in vanilla to build an "impossible" trigger - just don't cause that to happen
-    @Deprecated // And warn ourselves if we use this method
-    protected CompletableFuture<?> buildAdvancement(CachedOutput output, HolderLookup.Provider registries, AdvancementHolder advancement)
-    {
-        return CompletableFuture.completedFuture(null);
-    }
+    public String getName() { return "TFC Recipes"; }
 
     @Override
-    public void buildRecipes(RecipeOutput output)
+    public CompletableFuture<?> run(CachedOutput cache)
     {
+        return before.thenCompose(ignored -> registries).thenCompose(lookup -> {
+            final List<CompletableFuture<?>> tasks = new java.util.ArrayList<>();
+            buildRecipes(lookup, new RecipeOutput() {
+                @Override public Advancement.Builder advancement() { return Advancement.Builder.recipeAdvancement(); }
+                // TFC deliberately did not emit vanilla recipe-book/root advancements before this port.
+                @Override public void includeRootAdvancement() {}
+                @Override public void accept(net.minecraft.resources.ResourceKey<Recipe<?>> id, Recipe<?> recipe,
+                    @Nullable AdvancementHolder advancement, ICondition... conditions)
+                {
+                    tasks.add(DataProvider.saveStable(cache, lookup, Recipe.CONDITIONAL_CODEC,
+                        java.util.Optional.of(new net.neoforged.neoforge.common.conditions.WithConditions<>(recipe, conditions)), recipePathProvider.json(id.identifier())));
+                }
+            });
+            removedRecipes.forEach(id -> tasks.add(DataProvider.saveStable(cache, lookup, emptyRecipeCodec, Unit.INSTANCE, recipePathProvider.json(id))));
+            return CompletableFuture.allOf(tasks.toArray(CompletableFuture[]::new));
+        });
+    }
+
+    public void buildRecipes(HolderLookup.Provider lookup, RecipeOutput output)
+    {
+        this.lookup = lookup;
         this.output = output;
 
         // Invoke vanilla's recipe building, just to get the list of all vanilla recipes, so we know which ones we can legally remove
-        super.buildRecipes(new RecipeOutput() {
-            @Override
-            public Advancement.Builder advancement()
+        final RecipeOutput collector = new RecipeOutput() {
+            @Override public Advancement.Builder advancement() { return output.advancement(); }
+            @Override public void includeRootAdvancement() {} // collection only; not an advancement writer
+            @Override public void accept(net.minecraft.resources.ResourceKey<Recipe<?>> id, Recipe<?> recipe,
+                @Nullable AdvancementHolder advancement, ICondition... conditions)
             {
-                return output.advancement();
+                vanillaRecipes.put(id.identifier(), recipe);
             }
-
+        };
+        class VanillaCollector extends VanillaRecipeProvider
+        {
+            VanillaCollector() { super(lookup, collector); }
             @Override
-            public void accept(Identifier id, Recipe<?> recipe, @Nullable AdvancementHolder advancement, ICondition... conditions)
+            protected void suspiciousStew(net.minecraft.world.item.Item item, net.minecraft.world.level.block.SuspiciousEffectHolder effect)
             {
-                vanillaRecipes.put(id, recipe);
+                // Vanilla's generator scans the live item registry; collect only recipes shipped by vanilla.
+                if (net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item).getNamespace().equals("minecraft")) super.suspiciousStew(item, effect);
             }
-        });
+            void collect() { super.buildRecipes(); }
+        }
+        new VanillaCollector().collect();
 
         anvilRecipes();
         alloyRecipes();
@@ -174,7 +184,7 @@ public final class BuiltinRecipes extends VanillaRecipeProvider implements
         for (BuiltinItemHeat.MeltingRecipe melt : meltingRecipes)
         {
             add(nameOf(melt.item()), new HeatingRecipe(
-                Ingredient.of(melt.item()),
+                net.dries007.tfc.data.Accessors.ingredient(melt.item()),
                 ItemStackProvider.empty(),
                 new FluidStack(fluidOf(melt.metal()), melt.units()),
                 temperatureOf(melt.metal()),
@@ -193,7 +203,7 @@ public final class BuiltinRecipes extends VanillaRecipeProvider implements
         // Blast Furnace Recipes
         add("pig_iron", new BlastFurnaceRecipe(
             SizedFluidIngredient.of(fluidOf(Metal.CAST_IRON), 1),
-            Ingredient.of(TFCItems.POWDERS.get(Powder.FLUX)),
+            net.dries007.tfc.data.Accessors.ingredient(TFCItems.POWDERS.get(Powder.FLUX)),
             new FluidStack(fluidOf(Metal.PIG_IRON), 1)
         ));
 
@@ -206,7 +216,7 @@ public final class BuiltinRecipes extends VanillaRecipeProvider implements
 
         // Scraping Recipes
         add(new ScrapingRecipe(
-            Ingredient.of(TFCItems.UNREFINED_PAPER), ItemStackProvider.of(Items.PAPER),
+            net.dries007.tfc.data.Accessors.ingredient(TFCItems.UNREFINED_PAPER), ItemStackProvider.of(Items.PAPER),
             Helpers.identifier("block/unrefined_paper"), Helpers.identifier("block/paper"),
             ItemStackProvider.empty()
         ));
@@ -215,14 +225,14 @@ public final class BuiltinRecipes extends VanillaRecipeProvider implements
         {
             final String sizeId = size.name().toLowerCase(Locale.ROOT);
             add(new ScrapingRecipe(
-                Ingredient.of(TFCItems.HIDES.get(HideItemType.SHEEPSKIN).get(size)),
+                net.dries007.tfc.data.Accessors.ingredient(TFCItems.HIDES.get(HideItemType.SHEEPSKIN).get(size)),
                 ItemStackProvider.of(TFCItems.HIDES.get(HideItemType.RAW).get(size)),
                 Helpers.identifier("item/hide/%s/sheepskin".formatted(sizeId)),
                 Helpers.identifier("item/hide/%s/raw".formatted(sizeId)),
                 ItemStackProvider.of(TFCItems.WOOL)
             ));
             add(new ScrapingRecipe(
-                Ingredient.of(TFCItems.HIDES.get(HideItemType.SOAKED).get(size)),
+                net.dries007.tfc.data.Accessors.ingredient(TFCItems.HIDES.get(HideItemType.SOAKED).get(size)),
                 ItemStackProvider.of(TFCItems.HIDES.get(HideItemType.SCRAPED).get(size)),
                 Helpers.identifier("item/hide/%s/soaked".formatted(sizeId)),
                 Helpers.identifier("item/hide/%s/scraped".formatted(sizeId)),
@@ -287,7 +297,7 @@ public final class BuiltinRecipes extends VanillaRecipeProvider implements
     @Override
     public void add(String prefix, String name, Recipe<?> recipe)
     {
-        output.accept(Helpers.identifier((prefix + "/" + name).toLowerCase(Locale.ROOT)), recipe, null);
+        output.accept(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.RECIPE, Helpers.identifier((prefix + "/" + name).toLowerCase(Locale.ROOT))), recipe, null);
     }
 
     @Override
@@ -303,6 +313,17 @@ public final class BuiltinRecipes extends VanillaRecipeProvider implements
     }
 
     @Override
+    public void removeRenamed(String legacyName, List<String> currentNames)
+    {
+        final Identifier legacy = Identifier.withDefaultNamespace(legacyName);
+        assert !vanillaRecipes.containsKey(legacy) : "Review revived legacy recipe " + legacy;
+        assert !currentNames.isEmpty() : "No native successors for " + legacy;
+        remove(currentNames.toArray(String[]::new)); // Every current ID retains the ordinary native existence/duplicate guards.
+        assert !removedRecipes.contains(legacy) && !replacedRecipes.contains(legacy) : "Duplicate legacy recipe " + legacy;
+        removedRecipes.add(legacy); // Keep the existing disabled-resource ID for old packs.
+    }
+
+    @Override
     public void replace(String name, Recipe<?> recipe)
     {
         final Identifier id = Identifier.withDefaultNamespace(name);
@@ -310,9 +331,9 @@ public final class BuiltinRecipes extends VanillaRecipeProvider implements
 
         assert vanillaRecipes.containsKey(id) : "Recipe " + id + " was not a legal vanilla recipe to replace";
         assert !removedRecipes.contains(id) && !replacedRecipes.contains(id) : "Recipe " + id + " was already replaced or removed";
-        assert ItemStack.isSameItemSameComponents(before = recipe.getResultItem(lookup), after = vanillaRecipes.get(id).getResultItem(lookup)) : "Recipe " + id + " is replacing a recipe that outputs " + before + " with " + after + " - it should use a different recipe";
+        assert ItemStack.isSameItemSameComponents(before = net.dries007.tfc.data.Accessors.resultOf(recipe, lookup), after = net.dries007.tfc.data.Accessors.resultOf(vanillaRecipes.get(id), lookup)) : "Recipe " + id + " is replacing a recipe that outputs " + before + " with " + after + " - it should use a different recipe";
 
         replacedRecipes.add(id);
-        output.accept(id, recipe, null);
+        output.accept(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.RECIPE, id), recipe, null);
     }
 }

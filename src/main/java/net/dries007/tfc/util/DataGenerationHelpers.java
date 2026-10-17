@@ -56,6 +56,7 @@ public interface DataGenerationHelpers
     class Builder
     {
         final BiConsumer<String, Recipe<?>> onFinish;
+        final java.util.function.Function<TagKey<Item>, Ingredient> tagIngredients;
         @Nullable String name = null;
 
         final List<ItemStackModifier> remainder = new ArrayList<>(); // For advanced recipes, remainder modifiers
@@ -69,6 +70,12 @@ public interface DataGenerationHelpers
 
         public Builder(BiConsumer<String, Recipe<?>> onFinish)
         {
+            this(RecipeHelpers::ingredient, onFinish);
+        }
+
+        public Builder(java.util.function.Function<TagKey<Item>, Ingredient> tagIngredients, BiConsumer<String, Recipe<?>> onFinish)
+        {
+            this.tagIngredients = tagIngredients;
             this.onFinish = onFinish;
         }
 
@@ -166,7 +173,7 @@ public interface DataGenerationHelpers
 
         public Builder input(TagKey<Item> item) {return input(item, 1);}
 
-        public Builder input(TagKey<Item> item, int count) {return input(RecipeHelpers.ingredient(item), count);}
+        public Builder input(TagKey<Item> item, int count) {return input(tagIngredients.apply(item), count);}
 
         public Builder input(Ingredient item) {return input(item, 1);}
 
@@ -178,7 +185,7 @@ public interface DataGenerationHelpers
 
         public Builder inputIsPrimary(ItemLike item) {return inputIsPrimary(Ingredient.of(item));}
 
-        public Builder inputIsPrimary(TagKey<Item> item) {return inputIsPrimary(RecipeHelpers.ingredient(item));}
+        public Builder inputIsPrimary(TagKey<Item> item) {return inputIsPrimary(tagIngredients.apply(item));}
 
         public Builder inputIsPrimary(Ingredient item)
         {
@@ -187,7 +194,7 @@ public interface DataGenerationHelpers
             return input(item);
         }
 
-        public Builder input(char key, TagKey<Item> input) {return input(key, RecipeHelpers.ingredient(input));}
+        public Builder input(char key, TagKey<Item> input) {return input(key, tagIngredients.apply(input));}
 
         public Builder input(char key, ItemLike input) {return input(key, Ingredient.of(input));}
 

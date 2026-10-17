@@ -7,6 +7,15 @@
 package net.dries007.tfc.data.providers;
 
 import java.util.concurrent.CompletableFuture;
+import net.minecraft.data.CachedOutput;
+import net.minecraft.data.DataProvider;
+import net.minecraft.resources.FileToIdConverter;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.tags.TagFile;
+import java.util.function.Predicate;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.tags.BiomeTagsProvider;
@@ -21,12 +30,39 @@ import static net.dries007.tfc.common.TFCTags.Biomes.*;
 
 public class BuiltinBiomeTags extends BiomeTagsProvider implements Accessors
 {
+    private final ResourceManager existing;
+
     public BuiltinBiomeTags(
         GatherDataEvent event,
         CompletableFuture<HolderLookup.Provider> lookup
     )
     {
-        super(event.getGenerator().getPackOutput(), lookup, TerraFirmaCraft.MOD_ID, event.getExistingFileHelper());
+        super(event.getGenerator().getPackOutput(), lookup, TerraFirmaCraft.MOD_ID);
+        existing = event.getResourceManager(PackType.SERVER_DATA);
+    }
+
+    @Override
+    public CompletableFuture<?> run(CachedOutput cache)
+    {
+        return createContentsProvider().thenCompose(provider -> {
+            final var lookup = provider.lookupOrThrow(Registries.BIOME);
+            final var biomeFiles = FileToIdConverter.registry(Registries.BIOME);
+            final var tagFiles = FileToIdConverter.json("tags/" + Registries.elementsDirPath(Registries.BIOME));
+            // These biomes are authored by the Python generator in the existing pack. Preserve the previous
+            // required-file check without manufacturing registry values or turning required entries optional.
+            final Predicate<Identifier> elementExists = id -> lookup.get(ResourceKey.create(Registries.BIOME, id)).isPresent()
+                || existing.getResource(biomeFiles.idToFile(id)).isPresent();
+            final Predicate<Identifier> tagExists = id -> builders.containsKey(id) || existing.getResource(tagFiles.idToFile(id)).isPresent();
+            return CompletableFuture.allOf(builders.entrySet().stream().map(entry -> {
+                final var builder = entry.getValue();
+                final var entries = builder.build();
+                final var missing = java.util.stream.Stream.concat(entries.stream(), builder.getRemoveEntries())
+                    .filter(e -> e.getId().getNamespace().equals(modId) && !e.verifyIfPresent(elementExists, tagExists)).toList();
+                if (!missing.isEmpty()) throw new IllegalArgumentException("Missing references for biome tag " + entry.getKey() + ": " + missing);
+                return DataProvider.saveStable(cache, provider, TagFile.CODEC,
+                    new TagFile(entries, builder.shouldReplace(), builder.getRemoveEntries().toList()), pathProvider.json(entry.getKey()));
+            }).toArray(CompletableFuture[]::new));
+        });
     }
 
     @Override

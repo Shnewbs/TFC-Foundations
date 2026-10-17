@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "E": {
-      "type": "tfc:and",
+      "neoforge:ingredient_type": "tfc:and",
       "children": [
         {
           "item": "minecraft:egg"
@@ -14,7 +14,7 @@
       ]
     },
     "F": {
-      "type": "tfc:and",
+      "neoforge:ingredient_type": "tfc:and",
       "children": [
         {
           "tag": "c:foods/flour"
@@ -25,15 +25,13 @@
       ]
     },
     "M": {
-      "type": "tfc:fluid_content",
+      "neoforge:ingredient_type": "tfc:fluid_content",
       "fluid": {
         "amount": 100,
         "fluid": "minecraft:water"
       }
     },
-    "S": {
-      "tag": "tfc:foods/sweeteners"
-    }
+    "S": "#tfc:foods/sweeteners"
   },
   "pattern": [
     " M ",
@@ -41,7 +39,6 @@
     "FFF"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:cake"
   }
 }

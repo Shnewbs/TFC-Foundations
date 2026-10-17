@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "tfc:rock/smooth/marble"
-    }
+    "#": "tfc:rock/smooth/marble"
   },
   "pattern": [
     "###",

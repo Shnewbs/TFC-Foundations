@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "tfc:wood/axle/palm"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/palm"
-    },
-    "P": {
-      "item": "tfc:wood/planks/palm"
-    }
+    "A": "tfc:wood/axle/palm",
+    "L": "tfc:wood/lumber/palm",
+    "P": "tfc:wood/planks/palm"
   },
   "pattern": [
     "LPL",
@@ -18,7 +12,6 @@
     "LPL"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/water_wheel/palm"
   }
 }

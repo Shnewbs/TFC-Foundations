@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:ceramic/unfired_mold_table"
-    }
+    "tfc:ceramic/unfired_mold_table"
   ],
   "result": {
     "count": 5,

@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/aspen"
-    },
-    "S": {
-      "tag": "c:rods/wooden"
-    }
+    "L": "tfc:wood/lumber/aspen",
+    "S": "#c:rods/wooden"
   },
   "pattern": [
     "  S",
@@ -15,7 +11,6 @@
     "SLL"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/sluice/aspen"
   }
 }

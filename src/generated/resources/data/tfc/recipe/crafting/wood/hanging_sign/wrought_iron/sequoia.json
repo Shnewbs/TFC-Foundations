@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": {
-      "item": "tfc:metal/chain/wrought_iron"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/sequoia"
-    }
+    "C": "tfc:metal/chain/wrought_iron",
+    "L": "tfc:wood/lumber/sequoia"
   },
   "pattern": [
     "C C",

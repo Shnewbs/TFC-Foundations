@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "X": {
-      "item": "tfc:rock/raw/gneiss"
-    },
-    "Y": {
-      "item": "tfc:mortar"
-    }
+    "X": "tfc:rock/raw/gneiss",
+    "Y": "tfc:mortar"
   },
   "pattern": [
     "XYX",

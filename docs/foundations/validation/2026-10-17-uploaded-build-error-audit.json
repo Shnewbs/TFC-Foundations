@@ -1,0 +1,348 @@
+{
+  "input_log_sha256": "0eb9367a6033db7d7a8185383d8bd7c9b4ced1454de776049a0b80f95d34f607",
+  "input_gradle_report_sha256": "162239b55927a5eee1f6771ea33e44ca972ddf54467067a85033605d0b3263ff",
+  "published_baseline": "7b5715acd23da8b97ed012c1b66d666e50c0de96",
+  "reported_main_errors": 44,
+  "local_main_compilation": {
+    "source_count": 1699,
+    "exit_code": 0,
+    "displayed_errors": 0,
+    "timed_out": false,
+    "annotation_processing": false,
+    "note": "Diagnostic main compilation only. Error counts can hide cascading or later failures; no gameplay or full Gradle success is implied."
+  },
+  "errors": [
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blockentities/BarrelBlockEntity.java",
+      "reported_line": 253,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blockentities/BarrelBlockEntity.java",
+      "reported_line": 441,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blockentities/CharcoalForgeBlockEntity.java",
+      "reported_line": 318,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blockentities/CrucibleBlockEntity.java",
+      "reported_line": 250,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/capabilities/ItemCapabilities.java",
+      "reported_line": 60,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/container/BarrelContainer.java",
+      "reported_line": 74,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blockentities/BlastFurnaceBlockEntity.java",
+      "reported_line": 198,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/client/screen/MoldLikeAlloyScreen.java",
+      "reported_line": 58,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/container/MoldLikeAlloyContainer.java",
+      "reported_line": 54,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/container/MoldLikeAlloyContainer.java",
+      "reported_line": 128,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/container/ScribingTableContainer.java",
+      "reported_line": 49,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/container/ScribingTableContainer.java",
+      "reported_line": 99,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/devices/PlacedItemBlock.java",
+      "reported_line": 167,
+      "error": "method does not override or implement a method from a supertype",
+      "symbol": null,
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/rock/AqueductBlock.java",
+      "reported_line": 173,
+      "error": "method does not override or implement a method from a supertype",
+      "symbol": null,
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/fluids/FluidHelpers.java",
+      "reported_line": 120,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/fluids/FluidHelpers.java",
+      "reported_line": 173,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/fluids/FluidHelpers.java",
+      "reported_line": 182,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/fluids/FluidHelpers.java",
+      "reported_line": 355,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/fluids/FluidHelpers.java",
+      "reported_line": 568,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/fluids/FluidHelpers.java",
+      "reported_line": 578,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/blocks/soil/IMudBlock.java",
+      "reported_line": 51,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/capabilities/BlockCapabilities.java",
+      "reported_line": 33,
+      "error": "cannot find symbol",
+      "symbol": "variable ItemHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/capabilities/BlockCapabilities.java",
+      "reported_line": 34,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/capabilities/ItemCapabilities.java",
+      "reported_line": 61,
+      "error": "cannot find symbol",
+      "symbol": "variable ItemHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/component/food/FoodCapability.java",
+      "reported_line": 259,
+      "error": "cannot find symbol",
+      "symbol": "method getResultItem(RegistryAccess)",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/component/TFCComponents.java",
+      "reported_line": 157,
+      "error": "cannot find symbol",
+      "symbol": "method modifyDefaultComponentsFrom(DataComponentPatch)",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/ai/predator/PackPredator.java",
+      "reported_line": 185,
+      "error": "cannot find symbol",
+      "symbol": "variable WOLF_HOWL",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/ai/prey/PestFeastBehavior.java",
+      "reported_line": 38,
+      "error": "cannot find symbol",
+      "symbol": "variable ItemHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/entities/livestock/DairyAnimal.java",
+      "reported_line": 46,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/items/BarrelBlockItem.java",
+      "reported_line": 98,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/items/FluidContainerItem.java",
+      "reported_line": 82,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/items/GlassBottleItem.java",
+      "reported_line": 51,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/items/JugItem.java",
+      "reported_line": 44,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/recipes/ingredients/FluidContentIngredient.java",
+      "reported_line": 64,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/common/recipes/InstantFluidBarrelRecipe.java",
+      "reported_line": 97,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/compat/jei/category/CastingRecipeCategory.java",
+      "reported_line": 52,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/ChannelFlow.java",
+      "reported_line": 351,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/Helpers.java",
+      "reported_line": 1204,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/loot/CopyFluidFunction.java",
+      "reported_line": 37,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/loot/CopyFluidFunction.java",
+      "reported_line": 38,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/loot/CopyFluidFunction.java",
+      "reported_line": 55,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/loot/CopyFluidFunction.java",
+      "reported_line": 56,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/tooltip/BlockEntityTooltips.java",
+      "reported_line": 520,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    },
+    {
+      "file": "src/main/java/net/dries007/tfc/util/tooltip/EntityTooltips.java",
+      "reported_line": 163,
+      "error": "cannot find symbol",
+      "symbol": "variable FluidHandler",
+      "resolution": "fixed in current local source; javac exit 0"
+    }
+  ],
+  "limits": [
+    "Compiler and test evidence do not certify Minecraft startup/world/save/gameplay success.",
+    "Older GitHub source ZIPs must be replaced with the repaired source checkpoint."
+  ],
+  "full_gradle_build": {
+    "log": "transfer-snapshot-full-final-3.log",
+    "result": "BUILD SUCCESSFUL",
+    "seconds": 47,
+    "tests": {
+      "tests": 226,
+      "skipped": 12,
+      "failures": 0,
+      "errors": 0
+    }
+  },
+  "native_data_generation": {
+    "log": "transfer-native-datagen-12.log",
+    "result": "BUILD SUCCESSFUL",
+    "seconds": 29
+  },
+  "api_probes": {
+    "runners_passed": 36,
+    "runners_failed": 0
+  }
+}

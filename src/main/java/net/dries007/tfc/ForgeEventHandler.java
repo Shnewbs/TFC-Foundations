@@ -7,6 +7,8 @@
 package net.dries007.tfc;
 
 import com.mojang.logging.LogUtils;
+import net.neoforged.neoforge.event.DefaultDataComponentsBoundEvent;
+import net.dries007.tfc.compat.patchouli.PatchouliIntegration;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -201,6 +203,7 @@ import net.dries007.tfc.world.chunkdata.ChunkData;
 
 public final class ForgeEventHandler
 {
+    private static final ThreadLocal<Runnable> PENDING_COMPONENT_RELOAD = new ThreadLocal<>();
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
     private static final BlockHitResult FAKE_MISS = BlockHitResult.miss(Vec3.ZERO, Direction.UP, BlockPos.ZERO);
@@ -248,6 +251,7 @@ public final class ForgeEventHandler
         bus.addListener(ForgeEventHandler::addReloadListeners);
         bus.addListener(ForgeEventHandler::onDataPackSync);
         bus.addListener(ForgeEventHandler::onTagsUpdated);
+        bus.addListener(ForgeEventHandler::onDefaultComponentsBound);
         bus.addListener(ForgeEventHandler::onBoneMeal);
         bus.addListener(EventPriority.HIGHEST, ForgeEventHandler::onSelectClimateModel);
         bus.addListener(ForgeEventHandler::onAnimalTame);
@@ -1359,18 +1363,20 @@ public final class ForgeEventHandler
         }
     }
 
-    /**
-     * This is when tags are safe to be loaded, so we can do post reload actions that involve querying ingredients.
-     * It is fired on both logical server and client after resources are reloaded (or, sent from server).
-     * In addition, during the first load on a server in {@link Main}, the server won't exist yet at all.
-     * In that case, we need to rely on the fact that {@link AddServerReloadListenersEvent} will be fired before that point, and we can capture the server's recipe manager there.
-     */
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public static void onTagsUpdated(TagsUpdatedEvent event)
+    /** Native tags are applied immediately before components; defer stack-dependent work until both are bound. */
+    public static void onTagsUpdated(TagsUpdatedEvent.ServerDataLoad event)
     {
-        if (event.shouldUpdateStaticData() && event.getUpdateCause() == TagsUpdatedEvent.UpdateCause.SERVER_DATA_LOAD)
+        PENDING_COMPONENT_RELOAD.set(() -> Helpers.updateReloadableData(event.getRegistries(), event.getServerResources().getRecipeManager().recipeMap()));
+    }
+
+    public static void onDefaultComponentsBound(DefaultDataComponentsBoundEvent event)
+    {
+        final Runnable reload = PENDING_COMPONENT_RELOAD.get();
+        PENDING_COMPONENT_RELOAD.remove();
+        if (event.shouldUpdateStaticData())
         {
-            Helpers.updateReloadableData(event.getRegistries(), Helpers.getUnsafeRecipeMap());
+            if (reload != null) reload.run();
+            PatchouliIntegration.registerMultiBlocks();
         }
     }
 

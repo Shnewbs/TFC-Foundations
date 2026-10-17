@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/blackwood"
-    },
-    "P": {
-      "item": "tfc:wood/planks/blackwood"
-    }
+    "L": "tfc:wood/lumber/blackwood",
+    "P": "tfc:wood/planks/blackwood"
   },
   "pattern": [
     "PLP",

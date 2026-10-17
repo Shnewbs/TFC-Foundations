@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "tfc:wood/axle/rosewood"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/rosewood"
-    },
-    "S": {
-      "item": "tfc:wood/stripped_log/rosewood"
-    }
+    "A": "tfc:wood/axle/rosewood",
+    "L": "tfc:wood/lumber/rosewood",
+    "S": "tfc:wood/stripped_log/rosewood"
   },
   "pattern": [
     " S ",

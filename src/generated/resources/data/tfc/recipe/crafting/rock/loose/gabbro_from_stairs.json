@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:rock/cobble/gabbro_stairs"
-    }
+    "tfc:rock/cobble/gabbro_stairs"
   ],
   "result": {
     "count": 3,

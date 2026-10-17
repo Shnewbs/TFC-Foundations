@@ -10,6 +10,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
@@ -87,8 +88,8 @@ public class VesselTest implements TestSetup
     {
         final ItemStack stack = new ItemStack(TFCItems.VESSEL);
 
-        assertNotNull(stack.getCapability(Capabilities.ItemHandler.ITEM));
-        assertNotNull(stack.getCapability(Capabilities.FluidHandler.ITEM));
+        assertNotNull(ItemAccess.forStack(stack).getCapability(Capabilities.Item.ITEM));
+        assertNotNull(ItemAccess.forStack(stack).getCapability(Capabilities.Fluid.ITEM));
         assertNotNull(stack.getCapability(ItemCapabilities.MOLD));
         assertNotNull(stack.getCapability(ItemCapabilities.HEAT));
     }

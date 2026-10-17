@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "D": {
-      "item": "minecraft:red_dye"
-    },
-    "H": {
-      "tag": "tfc:high_quality_cloth"
-    },
-    "L": {
-      "tag": "tfc:lumber"
-    }
+    "D": "minecraft:red_dye",
+    "H": "#tfc:high_quality_cloth",
+    "L": "#tfc:lumber"
   },
   "pattern": [
     "DDD",
@@ -18,7 +12,6 @@
     "LLL"
   ],
   "result": {
-    "count": 1,
     "id": "minecraft:red_bed"
   }
 }

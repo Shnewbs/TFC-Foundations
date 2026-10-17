@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "X": {
-      "tag": "c:rods/wooden"
-    }
+    "X": "#c:rods/wooden"
   },
   "pattern": [
     "XXX",
@@ -12,7 +10,6 @@
     "XXX"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:stick_bunch"
   }
 }

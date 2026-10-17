@@ -64,9 +64,9 @@ public interface PotRecipes extends Recipes
             fluidOf(SimpleFluid.TALLOW),
             hours(2), 600f, true);
 
-        potX5(AndIngredient.of(Ingredient.of(Items.EGG), NotRottenIngredient.INSTANCE), TFCItems.FOOD.get(Food.BOILED_EGG), hours(1), true);
-        potX5(AndIngredient.of(Ingredient.of(TFCItems.FOOD.get(Food.RICE_GRAIN)), NotRottenIngredient.INSTANCE), TFCItems.FOOD.get(Food.COOKED_RICE), hours(1), true);
-        potX5(AndIngredient.of(Ingredient.of(TFCItems.FOOD.get(Food.LENTIL)), NotRottenIngredient.INSTANCE), TFCItems.FOOD.get(Food.COOKED_LENTIL), hours(1), true);
+        potX5(AndIngredient.of(net.dries007.tfc.data.Accessors.ingredient(Items.EGG), NotRottenIngredient.INSTANCE), TFCItems.FOOD.get(Food.BOILED_EGG), hours(1), true);
+        potX5(AndIngredient.of(net.dries007.tfc.data.Accessors.ingredient(TFCItems.FOOD.get(Food.RICE_GRAIN)), NotRottenIngredient.INSTANCE), TFCItems.FOOD.get(Food.COOKED_RICE), hours(1), true);
+        potX5(AndIngredient.of(net.dries007.tfc.data.Accessors.ingredient(TFCItems.FOOD.get(Food.LENTIL)), NotRottenIngredient.INSTANCE), TFCItems.FOOD.get(Food.COOKED_LENTIL), hours(1), true);
 
         soup(3);
         soup(4);
@@ -83,7 +83,7 @@ public interface PotRecipes extends Recipes
     private void pot(ItemLike item, int count, Fluid outputFluid, int duration, float temperature, boolean usesAllFluid)
     {
         add(nameOf(outputFluid), new SimplePotRecipe(new PotRecipe(
-            Collections.nCopies(count, Ingredient.of(item)),
+            Collections.nCopies(count, net.dries007.tfc.data.Accessors.ingredient(item)),
             SizedFluidIngredient.of(Fluids.WATER, 1000),
             duration, temperature),
             new FluidStack(outputFluid, 1000), List.of(),
@@ -110,14 +110,14 @@ public interface PotRecipes extends Recipes
         for (int n = 2; n <= 4; n++)
             add("jam_" + name + "_" + n, new JamPotRecipe(new PotRecipe(
                 Helpers.immutableAdd(Collections.nCopies(n,
-                        AndIngredient.of(Ingredient.of(TFCItems.FOOD.get(fruit)), NotRottenIngredient.INSTANCE)),
-                    Ingredient.of(TFCTags.Items.SWEETENERS)),
+                        AndIngredient.of(net.dries007.tfc.data.Accessors.ingredient(TFCItems.FOOD.get(fruit)), NotRottenIngredient.INSTANCE)),
+                    net.dries007.tfc.data.Accessors.ingredient(TFCTags.Items.SWEETENERS)),
                 SizedFluidIngredient.of(Fluids.WATER, 100),
                 500, 300f
             ), new ItemStack(TFCItems.UNSEALED_FRUIT_PRESERVES.get(fruit), n), new ItemStack(TFCItems.FRUIT_PRESERVES.get(fruit), n), Helpers.identifier("block/jar/" + name)));
         for (int n = 1; n <= 5; n++)
         {
-            final Ingredient ingredient = AndIngredient.of(Ingredient.of(new ItemStack(TFCItems.FRUIT_PRESERVES.get(fruit))), LacksTraitIngredient.of(FoodTraits.CANNED), NotRottenIngredient.INSTANCE);
+            final Ingredient ingredient = AndIngredient.of(net.dries007.tfc.data.Accessors.ingredient(new ItemStack(TFCItems.FRUIT_PRESERVES.get(fruit))), LacksTraitIngredient.of(FoodTraits.CANNED), NotRottenIngredient.INSTANCE);
             add("jam_" + name + "_canning_" + n, new SimplePotRecipe(new PotRecipe(
                 Collections.nCopies(n, ingredient),
                 SizedFluidIngredient.of(Fluids.WATER, 100 * n),
@@ -132,7 +132,7 @@ public interface PotRecipes extends Recipes
     private void soup(int count)
     {
         add("soup_" + count, new SoupPotRecipe(new PotRecipe(
-            Collections.nCopies(count, AndIngredient.of(Ingredient.of(TFCTags.Items.USABLE_IN_SOUP), NotRottenIngredient.INSTANCE)),
+            Collections.nCopies(count, AndIngredient.of(net.dries007.tfc.data.Accessors.ingredient(TFCTags.Items.USABLE_IN_SOUP), NotRottenIngredient.INSTANCE)),
             SizedFluidIngredient.of(Fluids.WATER, 100),
             hours(1), 300f)));
     }

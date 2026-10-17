@@ -22,9 +22,11 @@ import net.dries007.tfc.util.registry.RegistryHolder;
 
 public final class TFCIngredients
 {
-    public static final SizedIngredient EMPTY_ITEM = new SizedIngredient(Ingredient.of(), 1);
+    public static final SizedIngredient EMPTY_ITEM = new SizedIngredient(EmptyIngredient.INSTANCE.toVanilla(), 1);
 
     public static final DeferredRegister<IngredientType<?>> TYPES = DeferredRegister.create(NeoForgeRegistries.INGREDIENT_TYPES, TerraFirmaCraft.MOD_ID);
+
+    public static final Id<EmptyIngredient> EMPTY = register("empty", EmptyIngredient.CODEC, EmptyIngredient.STREAM_CODEC);
 
     public static final Id<RottenIngredient> ROTTEN = register("rotten", RottenIngredient.CODEC, RottenIngredient.STREAM_CODEC);
     public static final Id<NotRottenIngredient> NOT_ROTTEN = register("not_rotten", NotRottenIngredient.CODEC, NotRottenIngredient.STREAM_CODEC);

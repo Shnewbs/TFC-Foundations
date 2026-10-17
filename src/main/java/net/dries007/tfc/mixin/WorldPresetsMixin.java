@@ -6,7 +6,7 @@
 
 package net.dries007.tfc.mixin;
 
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.WorldDimensions;
@@ -23,7 +23,7 @@ import net.dries007.tfc.util.Helpers;
 public abstract class WorldPresetsMixin
 {
     @Inject(method = "createNormalWorldDimensions", at = @At("HEAD"), cancellable = true)
-    private static void useTFCWorldAsDefault(RegistryAccess registryAccess, CallbackInfoReturnable<WorldDimensions> cir)
+    private static void useTFCWorldAsDefault(HolderLookup.Provider registryAccess, CallbackInfoReturnable<WorldDimensions> cir)
     {
         cir.setReturnValue(registryAccess.lookupOrThrow(Registries.WORLD_PRESET)
             .getOrThrow(ResourceKey.create(Registries.WORLD_PRESET, Helpers.resourceLocation(TFCConfig.COMMON.defaultWorldPreset.get())))

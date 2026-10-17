@@ -2,19 +2,14 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "X": {
-      "tag": "c:stones/raw"
-    },
-    "Y": {
-      "tag": "c:stones/smooth"
-    }
+    "X": "#c:stones/raw",
+    "Y": "#c:stones/smooth"
   },
   "pattern": [
     "YYY",
     "XXX"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:quern"
   }
 }

@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/douglas_fir"
-    },
-    "P": {
-      "item": "tfc:wood/planks/douglas_fir"
-    },
-    "S": {
-      "tag": "c:rods/wooden"
-    }
+    "L": "tfc:wood/lumber/douglas_fir",
+    "P": "tfc:wood/planks/douglas_fir",
+    "S": "#c:rods/wooden"
   },
   "pattern": [
     "PPP",

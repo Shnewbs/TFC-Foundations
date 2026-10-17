@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/mangrove"
-    },
-    "P": {
-      "item": "tfc:wood/planks/mangrove"
-    },
-    "S": {
-      "tag": "c:rods/wooden"
-    }
+    "L": "tfc:wood/lumber/mangrove",
+    "P": "tfc:wood/planks/mangrove",
+    "S": "#c:rods/wooden"
   },
   "pattern": [
     "PPP",

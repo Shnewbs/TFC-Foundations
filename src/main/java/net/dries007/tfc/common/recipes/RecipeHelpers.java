@@ -258,6 +258,11 @@ public final class RecipeHelpers
         return translateOptionalMatch(recipe.getIngredients(), inventory, recipe.getWidth(), recipe.getHeight(), targetIndex);
     }
 
+    public static int translateMatch(AdvancedShapedRecipe recipe, int targetIndex, CraftingInput inventory)
+    {
+        return translateOptionalMatch(recipe.getIngredients(), inventory, recipe.getWidth(), recipe.getHeight(), targetIndex);
+    }
+
     public static int translateMatch(NonNullList<Ingredient> recipeItems, CraftingInput input, int width, int height, int targetIndex)
     {
         // Preserve the old overload for integrations still supplying concrete ingredients.

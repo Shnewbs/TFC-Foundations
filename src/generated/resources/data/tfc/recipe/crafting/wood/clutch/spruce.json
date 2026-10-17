@@ -2,21 +2,11 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "tfc:wood/axle/spruce"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/spruce"
-    },
-    "M": {
-      "item": "tfc:brass_mechanisms"
-    },
-    "R": {
-      "tag": "c:dusts/redstone"
-    },
-    "S": {
-      "item": "tfc:wood/stripped_log/spruce"
-    }
+    "A": "tfc:wood/axle/spruce",
+    "L": "tfc:wood/lumber/spruce",
+    "M": "tfc:brass_mechanisms",
+    "R": "#c:dusts/redstone",
+    "S": "tfc:wood/stripped_log/spruce"
   },
   "pattern": [
     "LSL",

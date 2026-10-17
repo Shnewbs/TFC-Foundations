@@ -39,9 +39,9 @@ public interface HeatRecipes extends Recipes
 
     default void heatRecipes()
     {
-        add("from_stick", Ingredient.of(Tags.Items.RODS_WOODEN), ItemStackProvider.of(TFCItems.TORCH, 2), 60);
-        add("from_bundle", Ingredient.of(TFCItems.STICK_BUNCH), ItemStackProvider.of(TFCItems.TORCH, 18), 60);
-        add(Ingredient.of(TFCItems.KAOLIN_CLAY), ItemStackProvider.of(new ItemStack(TFCItems.POWDERS.get(Powder.KAOLINITE)), new ChanceModifier(0.2f)), 500);
+        add("from_stick", net.dries007.tfc.data.Accessors.ingredient(Tags.Items.RODS_WOODEN), ItemStackProvider.of(TFCItems.TORCH, 2), 60);
+        add("from_bundle", net.dries007.tfc.data.Accessors.ingredient(TFCItems.STICK_BUNCH), ItemStackProvider.of(TFCItems.TORCH, 18), 60);
+        add(net.dries007.tfc.data.Accessors.ingredient(TFCItems.KAOLIN_CLAY), ItemStackProvider.of(new ItemStack(TFCItems.POWDERS.get(Powder.KAOLINITE)), new ChanceModifier(0.2f)), 500);
 
         add(Items.CLAY, Items.TERRACOTTA, POTTERY);
         add(TFCItems.UNFIRED_BRICK, Items.BRICK, POTTERY);
@@ -126,15 +126,15 @@ public interface HeatRecipes extends Recipes
         add(TFCBlocks.PLANTS.get(Plant.GIANT_KELP_FLOWER), TFCItems.FOOD.get(Food.DRIED_KELP), 200);
         add("from_seaweed", notRotten(TFCItems.FOOD.get(Food.DRIED_SEAWEED)), ItemStackProvider.of(TFCItems.POWDERS.get(Powder.SODA_ASH), 3), 500);
         add("from_kelp", notRotten(TFCItems.FOOD.get(Food.DRIED_KELP)), ItemStackProvider.of(TFCItems.POWDERS.get(Powder.SODA_ASH), 3), 500);
-        add("from_groundcover_seaweed", Ingredient.of(TFCBlocks.GROUNDCOVER.get(GroundcoverBlockType.SEAWEED)), ItemStackProvider.of(TFCItems.POWDERS.get(Powder.SODA_ASH), 3), 500);
+        add("from_groundcover_seaweed", net.dries007.tfc.data.Accessors.ingredient(TFCBlocks.GROUNDCOVER.get(GroundcoverBlockType.SEAWEED)), ItemStackProvider.of(TFCItems.POWDERS.get(Powder.SODA_ASH), 3), 500);
         add(notRotten(Items.EGG), ItemStackProvider.of(new ItemStack(TFCItems.FOOD.get(Food.COOKED_EGG)), CopyFoodModifier.INSTANCE), 200);
-        add("melt", Ingredient.of(TFCItems.BLOWPIPE_WITH_GLASS), ItemStackProvider.of(TFCItems.BLOWPIPE), 1500);
-        add("melt", Ingredient.of(TFCItems.CERAMIC_BLOWPIPE_WITH_GLASS), ItemStackProvider.of(TFCItems.CERAMIC_BLOWPIPE), 1500);
+        add("melt", net.dries007.tfc.data.Accessors.ingredient(TFCItems.BLOWPIPE_WITH_GLASS), ItemStackProvider.of(TFCItems.BLOWPIPE), 1500);
+        add("melt", net.dries007.tfc.data.Accessors.ingredient(TFCItems.CERAMIC_BLOWPIPE_WITH_GLASS), ItemStackProvider.of(TFCItems.CERAMIC_BLOWPIPE), 1500);
         add(TFCItems.POWDERS.get(Powder.FLUX), TFCItems.POWDERS.get(Powder.LIME), 840);
         add(TFCItems.CACTUS_WOOD, TFCItems.DRIED_CACTUS_WOOD, 700);
 
-        burnFood("bread", Ingredient.of(TFCTags.Items.BREAD), 700);
-        burnFood("meat", Ingredient.of(TFCTags.Items.COOKED_MEATS), 900);
+        burnFood("bread", net.dries007.tfc.data.Accessors.ingredient(TFCTags.Items.BREAD), 700);
+        burnFood("meat", net.dries007.tfc.data.Accessors.ingredient(TFCTags.Items.COOKED_MEATS), 900);
 
 
         for (Ore ore : Ore.values())
@@ -155,7 +155,7 @@ public interface HeatRecipes extends Recipes
         Helpers.mapOf(Metal.class, Metal::allParts, metal ->
             Helpers.mapOf(Wood.class, wood -> TFCItems.HANGING_SIGNS.get(wood).get(metal)).values()
         ).forEach((metal, items) -> add("hanging_sign/" + metal.name(), new HeatingRecipe(
-            Ingredient.of(items.stream().map(ItemStack::new)),
+            net.dries007.tfc.data.Accessors.ingredient(items.stream()),
             ItemStackProvider.empty(),
             new FluidStack(meltFluidFor(metal), 4),
             temperatureOf(metal), false)));
@@ -177,17 +177,17 @@ public interface HeatRecipes extends Recipes
 
     private Ingredient notRotten(ItemLike input)
     {
-        return AndIngredient.of(Ingredient.of(input), NotRottenIngredient.INSTANCE);
+        return AndIngredient.of(net.dries007.tfc.data.Accessors.ingredient(input), NotRottenIngredient.INSTANCE);
     }
 
     private void addOres(Ore ore, Metal metal)
     {
         final float temperature = temperatureOf(metal);
 
-        add(Ingredient.of(TFCBlocks.SMALL_ORES.get(ore)), new FluidStack(fluidOf(metal), 10), temperature);
-        add(Ingredient.of(TFCItems.GRADED_ORES.get(ore).get(Ore.Grade.POOR)), new FluidStack(fluidOf(metal), 15), temperature);
-        add(Ingredient.of(TFCItems.GRADED_ORES.get(ore).get(Ore.Grade.NORMAL)), new FluidStack(fluidOf(metal), 25), temperature);
-        add(Ingredient.of(TFCItems.GRADED_ORES.get(ore).get(Ore.Grade.RICH)), new FluidStack(fluidOf(metal), 35), temperature);
+        add(net.dries007.tfc.data.Accessors.ingredient(TFCBlocks.SMALL_ORES.get(ore)), new FluidStack(fluidOf(metal), 10), temperature);
+        add(net.dries007.tfc.data.Accessors.ingredient(TFCItems.GRADED_ORES.get(ore).get(Ore.Grade.POOR)), new FluidStack(fluidOf(metal), 15), temperature);
+        add(net.dries007.tfc.data.Accessors.ingredient(TFCItems.GRADED_ORES.get(ore).get(Ore.Grade.NORMAL)), new FluidStack(fluidOf(metal), 25), temperature);
+        add(net.dries007.tfc.data.Accessors.ingredient(TFCItems.GRADED_ORES.get(ore).get(Ore.Grade.RICH)), new FluidStack(fluidOf(metal), 35), temperature);
     }
 
     private void addFood(Food input, Food output)
@@ -202,7 +202,7 @@ public interface HeatRecipes extends Recipes
 
     private void add(ItemLike input, ItemLike output, float temperature)
     {
-        add(Ingredient.of(input), ItemStackProvider.of(output), temperature);
+        add(net.dries007.tfc.data.Accessors.ingredient(input), ItemStackProvider.of(output), temperature);
     }
 
     private void add(Ingredient input, FluidStack output, float temperature)

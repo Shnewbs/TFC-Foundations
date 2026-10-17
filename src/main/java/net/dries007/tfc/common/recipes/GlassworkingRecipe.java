@@ -36,7 +36,7 @@ public record GlassworkingRecipe(
 {
     public static final MapCodec<GlassworkingRecipe> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
         GlassOperation.REGISTRY.byNameCodec().listOf().fieldOf("operations").forGetter(c -> c.operations),
-        Ingredient.CODEC.fieldOf("batch").forGetter(c -> c.batchItem),
+        net.dries007.tfc.common.recipes.LegacyIngredientCodecs.ITEM.fieldOf("batch").forGetter(c -> c.batchItem),
         ItemStack.CODEC.fieldOf("result").forGetter(c -> c.resultItem)
     ).apply(i, GlassworkingRecipe::new));
 

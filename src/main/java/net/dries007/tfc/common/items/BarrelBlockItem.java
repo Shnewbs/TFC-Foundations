@@ -25,6 +25,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.common.blocks.devices.BarrelBlock;
 import net.dries007.tfc.common.blocks.devices.SealableDeviceBlock;
 import net.dries007.tfc.common.fluids.FluidHelpers;
@@ -95,7 +96,7 @@ public class BarrelBlockItem extends TooltipBlockItem implements Rackable
     private InteractionResult tryInteractWithFluid(Level level, Player player, InteractionHand hand)
     {
         final ItemStack stack = player.getItemInHand(hand);
-        final @Nullable IFluidHandler handler = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        final @Nullable IFluidHandler handler = TransferAccess.fluidHandler(stack);
         if (handler == null)
         {
             return InteractionResult.PASS;

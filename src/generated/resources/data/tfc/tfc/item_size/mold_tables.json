@@ -1,12 +1,15 @@
 {
-  "ingredient": [
-    {
-      "item": "tfc:ceramic/unfired_mold_table"
-    },
-    {
-      "item": "tfc:mold_table"
-    }
-  ],
+  "ingredient": {
+    "type": "neoforge:compound",
+    "children": [
+      {
+        "item": "tfc:ceramic/unfired_mold_table"
+      },
+      {
+        "item": "tfc:mold_table"
+      }
+    ]
+  },
   "size": "huge",
   "weight": "heavy"
 }

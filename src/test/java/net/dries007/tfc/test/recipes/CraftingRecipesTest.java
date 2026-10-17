@@ -60,9 +60,10 @@ public class CraftingRecipesTest implements TestSetup
                 }
 
                 final Stream<ItemStack> stacks = recipe
-                    .getIngredients()
+                    .placementInfo().ingredients()
                     .stream()
-                    .flatMap(ingredient -> Arrays.stream(ingredient.getItems()));
+                    .flatMap(ingredient -> ingredient.items())
+                    .map(ItemStack::new);
 
                 return stacks.anyMatch(stack -> stack.isDamageableItem() && stack.is(Tags.Items.TOOLS));
             })

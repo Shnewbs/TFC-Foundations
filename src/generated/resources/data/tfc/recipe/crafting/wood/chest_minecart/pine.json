@@ -2,15 +2,10 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:wood/chest/pine"
-    },
-    {
-      "item": "minecraft:minecart"
-    }
+    "tfc:wood/chest/pine",
+    "minecraft:minecart"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/chest_minecart/pine"
   }
 }

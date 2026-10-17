@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "D": {
-      "tag": "minecraft:dirt"
-    },
-    "L": {
-      "tag": "tfc:lumber"
-    }
+    "D": "#minecraft:dirt",
+    "L": "#tfc:lumber"
   },
   "pattern": [
     "L L",
@@ -15,7 +11,6 @@
     "LLL"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:composter"
   }
 }

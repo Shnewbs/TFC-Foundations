@@ -14,6 +14,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
+import net.dries007.tfc.common.recipes.ingredients.EmptyIngredient;
 import net.dries007.tfc.common.recipes.IRecipePredicate;
 
 /**
@@ -27,7 +28,7 @@ public record HeatDefinition(
 ) implements IRecipePredicate<ItemStack>
 {
     public static final Codec<HeatDefinition> CODEC = RecordCodecBuilder.create(i -> i.group(
-        Ingredient.CODEC.fieldOf("ingredient").forGetter(c -> c.ingredient),
+        net.dries007.tfc.common.recipes.LegacyIngredientCodecs.ITEM.fieldOf("ingredient").forGetter(c -> c.ingredient),
         Codec.FLOAT.fieldOf("heat_capacity").forGetter(c -> c.heatCapacity),
         Codec.FLOAT.optionalFieldOf("forging_temperature", 0f).forGetter(c -> c.forgingTemperature),
         Codec.FLOAT.optionalFieldOf("welding_temperature", 0f).forGetter(c -> c.weldingTemperature)
@@ -41,7 +42,7 @@ public record HeatDefinition(
         HeatDefinition::new
     );
 
-    public static final HeatDefinition DEFAULT = new HeatDefinition(Ingredient.of(), 0f, 0f, 0f);
+    public static final HeatDefinition DEFAULT = new HeatDefinition(EmptyIngredient.INSTANCE.toVanilla(), 0f, 0f, 0f);
 
     @Override
     public boolean matches(ItemStack input)

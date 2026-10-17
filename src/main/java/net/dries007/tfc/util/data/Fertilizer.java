@@ -28,7 +28,7 @@ public record Fertilizer(
     float potassium
 ) {
     public static final Codec<Fertilizer> CODEC = RecordCodecBuilder.create(i -> i.group(
-        Ingredient.CODEC.fieldOf("ingredient").forGetter(c -> c.ingredient),
+        net.dries007.tfc.common.recipes.LegacyIngredientCodecs.ITEM.fieldOf("ingredient").forGetter(c -> c.ingredient),
         Codec.FLOAT.optionalFieldOf("nitrogen", 0f).forGetter(c -> c.nitrogen),
         Codec.FLOAT.optionalFieldOf("phosphorus", 0f).forGetter(c -> c.phosphorus),
         Codec.FLOAT.optionalFieldOf("potassium", 0f).forGetter(c -> c.potassium)

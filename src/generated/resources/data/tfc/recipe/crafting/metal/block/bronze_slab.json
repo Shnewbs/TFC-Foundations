@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "tag": "c:storage_blocks/bronze"
-    }
+    "B": "#c:storage_blocks/bronze"
   },
   "pattern": [
     "BBB"

@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "tag": "tfc:lumber"
-    },
-    "S": {
-      "tag": "c:rods/wooden"
-    }
+    "L": "#tfc:lumber",
+    "S": "#c:rods/wooden"
   },
   "pattern": [
     "LL",
@@ -15,7 +11,6 @@
     "S "
   ],
   "result": {
-    "count": 1,
     "id": "tfc:paddle"
   }
 }

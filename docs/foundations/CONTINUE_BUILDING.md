@@ -1,5 +1,34 @@
 # Continue development in another environment
 
+## 2026-10-17 UTC — Uploaded build report resolved; full build succeeds
+
+The uploaded Windows log contains 44 main compiler errors from published
+checkpoint `7b5715acd23da8b97ed012c1b66d666e50c0de96`. All 44 are resolved in
+this source: 39 retired item/fluid capability references, two block removal
+callbacks, recipe result access, native item component defaults and the wolf
+howl sound. Native transactions retain TFC inventory, fluid, temperature,
+container replacement and rollback behavior.
+
+Verification of the repaired tree: diagnostic javac compiles 1,699 sources
+with zero errors (exit 0, no timeout); pinned full Gradle build succeeds
+(47 seconds); 226 JUnit tests are recorded, **214 passed and 12 skipped**,
+with zero failures/errors. All 36 API runners pass. Native data generation
+also succeeds (29 seconds). The regenerated recipe corpus uses NeoForge's
+registered `neoforge:never` condition to keep vanilla recipes disabled.
+Generated-resource audit records 2,679 syntax-equivalent changes, one guide
+config formatting difference and the required new vanilla override/tag files.
+The per-error audit is in
+`docs/foundations/validation/2026-10-17-uploaded-build-error-audit.json`.
+
+An actual `TFC-Foundations-26.1.2-0.0.0.jar` is produced (69,055,991 bytes;
+SHA-256 `c0d05d2fc648b6bd2155a205658582a7e20893f2c4e8a8e6ecdd5ae8858d940d`).
+It is an unverified development build, **not a playable release**. Client and
+dedicated-server startup, actual GPU/resource reload, world generation,
+save/reload, multiplayer and survival progression remain unverified. A native
+runtime launch attempt stopped during loader/display initialization; it did
+not establish startup or gameplay success. Dependencies and candidate 0.0.0
+remain pinned. No new branch is created; the independent 26.x track is unchanged.
+
 ## 2026-10-17 UTC — Native item models, predicates and color layers
 
 Continued directly on `26.1.2` from `d6ed9c94556e8ce15d41d27aee965cdab3a916f3`, whose published checkpoint records 93 main compiler errors. Current pinned Java 25 full Gradle and diagnostic javac report **44 main errors**, diagnostic source count **1,680**, exit 1 with no timeout. This is a diagnostic count, not a completion percentage. Main compilation still blocks data/test compilation and packaging; **no playable JAR**. Dependency pins, candidate `0.0.0`, gameplay/resource IDs, branch policy and upstream licenses remain unchanged.

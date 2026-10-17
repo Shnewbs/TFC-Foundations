@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "tfc:wood/axle/oak"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/oak"
-    },
-    "P": {
-      "item": "tfc:wood/planks/oak"
-    }
+    "A": "tfc:wood/axle/oak",
+    "L": "tfc:wood/lumber/oak",
+    "P": "tfc:wood/planks/oak"
   },
   "pattern": [
     "LPL",
@@ -18,7 +12,6 @@
     "LPL"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/water_wheel/oak"
   }
 }

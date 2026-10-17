@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:dirt/fluvisol"
-    },
-    {
-      "tag": "c:gravels"
-    }
+    "tfc:dirt/fluvisol",
+    "#c:gravels"
   ],
   "result": {
     "count": 2,

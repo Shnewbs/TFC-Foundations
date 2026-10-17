@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "tfc:wood/axle/douglas_fir"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/douglas_fir"
-    },
-    "P": {
-      "item": "tfc:wood/planks/douglas_fir"
-    }
+    "A": "tfc:wood/axle/douglas_fir",
+    "L": "tfc:wood/lumber/douglas_fir",
+    "P": "tfc:wood/planks/douglas_fir"
   },
   "pattern": [
     "LPL",
@@ -18,7 +12,6 @@
     "LPL"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/water_wheel/douglas_fir"
   }
 }

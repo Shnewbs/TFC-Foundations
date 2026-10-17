@@ -8,26 +8,26 @@ package net.dries007.tfc.test.item;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.junit.jupiter.api.Test;
 
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.common.component.TFCComponents;
 import net.dries007.tfc.common.component.fluid.FluidComponent;
 import net.dries007.tfc.common.items.TFCItems;
 
 import static net.dries007.tfc.test.TestAssertions.*;
 
-public class WoodenBucketTest
+public class WoodenBucketTest implements net.dries007.tfc.test.TestSetup
 {
     @Test
     public void testFillAndDrain()
     {
         final ItemStack bucket = new ItemStack(TFCItems.WOODEN_BUCKET);
         final ItemStack before = bucket.copy();
-        final IFluidHandlerItem handler = bucket.getCapability(Capabilities.FluidHandler.ITEM);
+        final IFluidHandlerItem handler = TransferAccess.fluidHandler(bucket);
 
         assertNotNull(handler);
         assertEquals(before, handler.getContainer());

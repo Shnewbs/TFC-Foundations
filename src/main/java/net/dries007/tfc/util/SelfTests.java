@@ -113,7 +113,7 @@ public final class SelfTests
     @SuppressWarnings({"ConstantConditions", "deprecation"})
     public static void runWorldVersionTest()
     {
-        assert SharedConstants.WORLD_VERSION == 3955 : "If this fails, you need to update the world version here, AND in resources/generate_trees.py, then run `python resources trees`. This updates them and avoids triggering DFU when placed!";
+        assert SharedConstants.WORLD_VERSION == 4790 : "If this fails, you need to update the world version here, AND in resources/generate_trees.py, then run `python resources trees`. This updates them and avoids triggering DFU when placed!";
     }
 
     public static void runClientSelfTests()

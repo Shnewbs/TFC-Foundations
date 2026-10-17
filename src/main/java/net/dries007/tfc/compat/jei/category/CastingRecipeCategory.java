@@ -23,6 +23,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.common.component.heat.Heat;
 import net.dries007.tfc.common.component.heat.HeatCapability;
 import net.dries007.tfc.common.items.TFCItems;
@@ -49,7 +50,7 @@ public class CastingRecipeCategory extends BaseRecipeCategory<CastingRecipe>
             for (FluidStack fluid : collapse(recipe.getFluidIngredient()))
             {
                 final ItemStack filled = input.copy();
-                final @Nullable IFluidHandler fluidHandler = filled.getCapability(Capabilities.FluidHandler.ITEM);
+                final @Nullable IFluidHandler fluidHandler = TransferAccess.fluidHandler(filled);
                 if (fluidHandler != null)
                 {
                     fluidHandler.fill(fluid, IFluidHandler.FluidAction.EXECUTE);

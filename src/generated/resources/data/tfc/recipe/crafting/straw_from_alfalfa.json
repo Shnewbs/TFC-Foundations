@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:alfalfa"
-    }
+    "tfc:alfalfa"
   ],
   "result": {
     "count": 2,

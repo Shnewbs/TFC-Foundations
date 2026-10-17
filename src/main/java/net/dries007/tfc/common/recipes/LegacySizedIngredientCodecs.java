@@ -25,10 +25,10 @@ import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 public final class LegacySizedIngredientCodecs
 {
     public static final Codec<SizedIngredient> FLAT_ITEM = FlatIngredientCodec.flat(
-        Ingredient.CODEC, SizedIngredient::ingredient, SizedIngredient::count,
+        net.dries007.tfc.common.recipes.LegacyIngredientCodecs.ITEM, SizedIngredient::ingredient, SizedIngredient::count,
         SizedIngredient::new, "count", 1);
     public static final Codec<SizedFluidIngredient> FLAT_FLUID = FlatIngredientCodec.flat(
-        FluidIngredient.CODEC, SizedFluidIngredient::ingredient, SizedFluidIngredient::amount,
+        net.dries007.tfc.common.recipes.LegacyIngredientCodecs.FLUID, SizedFluidIngredient::ingredient, SizedFluidIngredient::amount,
         SizedFluidIngredient::new, "amount", 1000);
 
     private LegacySizedIngredientCodecs() {}

@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/white_cedar"
-    },
-    "M": {
-      "item": "tfc:brass_mechanisms"
-    }
+    "L": "tfc:wood/lumber/white_cedar",
+    "M": "tfc:brass_mechanisms"
   },
   "pattern": [
     " L ",

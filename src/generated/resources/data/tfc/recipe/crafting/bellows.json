@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "tag": "tfc:lumber"
-    },
-    "R": {
-      "tag": "c:leathers"
-    }
+    "L": "#tfc:lumber",
+    "R": "#c:leathers"
   },
   "pattern": [
     "LLL",
@@ -15,7 +11,6 @@
     "LLL"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:bellows"
   }
 }

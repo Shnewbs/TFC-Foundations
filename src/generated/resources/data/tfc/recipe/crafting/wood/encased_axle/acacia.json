@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "tfc:wood/axle/acacia"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/acacia"
-    },
-    "S": {
-      "item": "tfc:wood/stripped_log/acacia"
-    }
+    "A": "tfc:wood/axle/acacia",
+    "L": "tfc:wood/lumber/acacia",
+    "S": "tfc:wood/stripped_log/acacia"
   },
   "pattern": [
     " S ",

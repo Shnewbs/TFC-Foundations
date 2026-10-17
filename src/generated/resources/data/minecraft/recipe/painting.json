@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "H": {
-      "tag": "tfc:high_quality_cloth"
-    },
-    "S": {
-      "tag": "c:rods/wooden"
-    }
+    "H": "#tfc:high_quality_cloth",
+    "S": "#c:rods/wooden"
   },
   "pattern": [
     "SSS",
@@ -15,7 +11,6 @@
     "SSS"
   ],
   "result": {
-    "count": 1,
     "id": "minecraft:painting"
   }
 }

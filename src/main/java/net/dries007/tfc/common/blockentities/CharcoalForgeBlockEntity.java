@@ -27,6 +27,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.client.TFCSounds;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.TFCBlocks;
@@ -315,7 +316,7 @@ public class CharcoalForgeBlockEntity extends TickableInventoryBlockEntity<ItemS
         }
         else
         {
-            if (!Helpers.mightHaveCapability(stack, Capabilities.FluidHandler.ITEM)) return false;
+            if (!TransferAccess.mightHaveFluidHandler(stack)) return false;
             return HeatCapability.has(stack);
         }
     }

@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "M": {
-      "item": "tfc:mortar"
-    },
-    "X": {
-      "item": "tfc:brick/granite"
-    }
+    "M": "tfc:mortar",
+    "X": "tfc:brick/granite"
   },
   "pattern": [
     "X X",

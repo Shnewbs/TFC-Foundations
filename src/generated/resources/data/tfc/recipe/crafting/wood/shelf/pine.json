@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/pine"
-    },
-    "P": {
-      "item": "tfc:wood/planks/pine"
-    },
-    "S": {
-      "tag": "c:rods/wooden"
-    }
+    "L": "tfc:wood/lumber/pine",
+    "P": "tfc:wood/planks/pine",
+    "S": "#c:rods/wooden"
   },
   "pattern": [
     "PPP",

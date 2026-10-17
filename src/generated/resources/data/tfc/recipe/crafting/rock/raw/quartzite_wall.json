@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "tfc:rock/raw/quartzite"
-    }
+    "#": "tfc:rock/raw/quartzite"
   },
   "pattern": [
     "###",

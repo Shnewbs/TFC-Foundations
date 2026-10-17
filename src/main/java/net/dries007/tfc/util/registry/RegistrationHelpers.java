@@ -63,10 +63,10 @@ public final class RegistrationHelpers
     public static <T extends Block> DeferredHolder<Block, T> registerBlock(DeferredRegister<Block> blocks, DeferredRegister<Item> items, String name, Supplier<T> blockSupplier, @Nullable Function<T, ? extends BlockItem> blockItemFactory)
     {
         final String actualName = name.toLowerCase(Locale.ROOT);
-        final DeferredHolder<Block, T> block = blocks.register(actualName, blockSupplier);
+        final DeferredHolder<Block, T> block = blocks.register(actualName, id -> RegistrationContext.block(id, blockSupplier));
         if (blockItemFactory != null)
         {
-            items.register(actualName, () -> blockItemFactory.apply(block.get()));
+            items.register(actualName, id -> RegistrationContext.item(id, () -> blockItemFactory.apply(block.get())));
         }
         return block;
     }

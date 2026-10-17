@@ -34,7 +34,7 @@ import net.dries007.tfc.util.Helpers;
 public class PotRecipe implements ISimpleRecipe<IPotInventory>
 {
     public static final MapCodec<PotRecipe> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-        Ingredient.CODEC.listOf(0, 5).fieldOf("ingredients").forGetter(c -> c.itemIngredients),
+        net.dries007.tfc.common.recipes.LegacyIngredientCodecs.ITEM.listOf(0, 5).fieldOf("ingredients").forGetter(c -> c.itemIngredients),
         LegacySizedIngredientCodecs.FLAT_FLUID.fieldOf("fluid_ingredient").forGetter(c -> c.fluidIngredient),
         Codec.INT.fieldOf("duration").forGetter(c -> c.duration),
         Codec.FLOAT.fieldOf("temperature").forGetter(c -> c.temperature)

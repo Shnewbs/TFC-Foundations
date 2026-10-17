@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/hickory"
-    },
-    "P": {
-      "item": "tfc:wood/log/hickory"
-    }
+    "L": "tfc:wood/lumber/hickory",
+    "P": "tfc:wood/log/hickory"
   },
   "pattern": [
     "PLP",

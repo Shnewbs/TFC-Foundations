@@ -2,33 +2,15 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:powder/saltpeter"
-    },
-    {
-      "item": "tfc:powder/saltpeter"
-    },
-    {
-      "item": "tfc:powder/saltpeter"
-    },
-    {
-      "item": "tfc:powder/saltpeter"
-    },
-    {
-      "item": "tfc:powder/sulfur"
-    },
-    {
-      "item": "tfc:powder/sulfur"
-    },
-    {
-      "item": "tfc:powder/charcoal"
-    },
-    {
-      "item": "tfc:powder/charcoal"
-    },
-    {
-      "item": "tfc:powder/graphite"
-    }
+    "tfc:powder/saltpeter",
+    "tfc:powder/saltpeter",
+    "tfc:powder/saltpeter",
+    "tfc:powder/saltpeter",
+    "tfc:powder/sulfur",
+    "tfc:powder/sulfur",
+    "tfc:powder/charcoal",
+    "tfc:powder/charcoal",
+    "tfc:powder/graphite"
   ],
   "result": {
     "count": 12,

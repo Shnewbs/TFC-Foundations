@@ -19,7 +19,8 @@ import com.google.common.base.Predicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.tags.ItemTagsProvider;
+import net.neoforged.neoforge.common.data.BlockTagCopyingItemTagProvider;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.data.tags.VanillaItemTagsProvider;
 import net.minecraft.resources.ResourceKey;
@@ -35,7 +36,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.common.data.internal.NeoForgeItemTagsProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
@@ -60,32 +60,30 @@ import net.dries007.tfc.util.Metal;
 
 import static net.dries007.tfc.common.TFCTags.Items.*;
 
-public class BuiltinItemTags extends TagsProvider<Item> implements Accessors
+public class BuiltinItemTags extends net.minecraft.data.tags.KeyTagProvider<Item> implements Accessors
 {
     private static final Field TAGS_TO_COPY = Helpers.uncheck(() -> {
-        final Field field = ItemTagsProvider.class.getDeclaredField("tagsToCopy");
+        final Field field = BlockTagCopyingItemTagProvider.class.getDeclaredField("tagsToCopy");
         field.setAccessible(true);
         return field;
     });
 
-    private final ExistingFileHelper.IResourceType resourceType;
-    private final Function<HolderLookup.Provider, ItemTagsProvider> vanillaItemTags;
-    private final Function<HolderLookup.Provider, ItemTagsProvider> neoItemTags;
+    private final Function<HolderLookup.Provider, NeoForgeItemTagsProvider> neoItemTags;
     private final CompletableFuture<TagsProvider.TagLookup<Block>> blockTags;
     private final Map<TagKey<Block>, TagKey<Item>> tagsToCopy = new HashMap<>();
 
     @SuppressWarnings("UnstableApiUsage")
     public BuiltinItemTags(GatherDataEvent event, CompletableFuture<HolderLookup.Provider> lookup, CompletableFuture<TagLookup<Block>> blockTags)
     {
-        super(event.getGenerator().getPackOutput(), Registries.ITEM, lookup, TerraFirmaCraft.MOD_ID, event.getExistingFileHelper());
+        this(event.getGenerator().getPackOutput(), lookup, blockTags);
+    }
+
+    public BuiltinItemTags(PackOutput output, CompletableFuture<HolderLookup.Provider> lookup, CompletableFuture<TagLookup<Block>> blockTags)
+    {
+        super(output, Registries.ITEM, lookup, TerraFirmaCraft.MOD_ID);
         this.blockTags = blockTags;
-        this.resourceType = new ExistingFileHelper.ResourceType(PackType.SERVER_DATA, ".json", Registries.tagsDirPath(registryKey));
-        this.vanillaItemTags = provider -> new VanillaItemTagsProvider(event.getGenerator().getPackOutput(), lookup, blockTags)
-        {{
-            addTags(provider);
-        }};
         this.neoItemTags = provider -> {
-            final var tags = new NeoForgeItemTagsProvider(event.getGenerator().getPackOutput(), lookup, blockTags, event.getExistingFileHelper());
+            final var tags = new NeoForgeItemTagsProvider(output, lookup, blockTags);
             tags.addTags(provider);
             return tags;
         };
@@ -98,8 +96,12 @@ public class BuiltinItemTags extends TagsProvider<Item> implements Accessors
 
         // Uses the vanilla and neo builders to establish which tags need to be copied,
         // and our tag provider knows not to copy empty tags, so it saves us some effort
-        this.tagsToCopy.putAll(Helpers.uncheck(() -> TAGS_TO_COPY.get(vanillaItemTags.apply(provider))));
+        collectVanillaBlockItemCopies();
+        copy(TagKey.create(Registries.BLOCK, Identifier.withDefaultNamespace("tall_flowers")));
         this.tagsToCopy.putAll(Helpers.uncheck(() -> TAGS_TO_COPY.get(neoItemTags.apply(provider))));
+
+        tag(TagKey.create(Registries.ITEM, Identifier.withDefaultNamespace("dyeable")))
+            .add(Items.LEATHER_HELMET, Items.LEATHER_CHESTPLATE, Items.LEATHER_LEGGINGS, Items.LEATHER_BOOTS, Items.LEATHER_HORSE_ARMOR, Items.WOLF_ARMOR);
 
         // ===== Common Tags ===== //
 
@@ -413,7 +415,7 @@ public class BuiltinItemTags extends TagsProvider<Item> implements Accessors
         // Common `#c:tools/???`
         tag(Tags.Items.TOOLS_SHIELD).add(TFCItems.METAL_ITEMS, Metal.ItemType.SHIELD);
         tag(Tags.Items.TOOLS_FISHING_ROD).add(TFCItems.METAL_ITEMS, Metal.ItemType.FISHING_ROD);
-        tag(Tags.Items.TOOLS_SPEAR)
+        tag(commonTagOf(Registries.ITEM, "tools/spear"))
             .add(TFCItems.METAL_ITEMS, Metal.ItemType.JAVELIN)
             .add(TFCItems.ROCK_TOOLS, RockCategory.ItemType.JAVELIN)
             .add(TFCItems.OBSIDIAN_JAVELIN);
@@ -652,7 +654,7 @@ public class BuiltinItemTags extends TagsProvider<Item> implements Accessors
             ItemTags.PICKAXES,
             Tags.Items.TOOLS_BOW,
             Tags.Items.TOOLS_CROSSBOW,
-            Tags.Items.TOOLS_SPEAR,
+            commonTagOf(Registries.ITEM, "tools/spear"),
             TOOLS_KNIFE,
             TOOLS_CHISEL);
         tag(DEALS_CRUSHING_DAMAGE).addTags(
@@ -865,7 +867,6 @@ public class BuiltinItemTags extends TagsProvider<Item> implements Accessors
     @Override
     protected TagBuilder getOrCreateRawBuilder(TagKey<Item> tag)
     {
-        if (existingFileHelper != null) existingFileHelper.trackGenerated(tag.location(), resourceType);
         return this.builders.computeIfAbsent(tag.location(), key -> new TagBuilder()
         {
             @Override
@@ -882,6 +883,20 @@ public class BuiltinItemTags extends TagsProvider<Item> implements Accessors
         final TagKey<Item> commonTag = commonTagOf(metal, type);
         tag(commonTag).add(TFCItems.METAL_ITEMS.get(metal).get(type));
         tag(baseTag).addTag(commonTag);
+    }
+
+    private void collectVanillaBlockItemCopies()
+    {
+        class Collector extends net.minecraft.data.tags.BlockItemTagsProvider
+        {
+            @Override protected net.minecraft.data.tags.TagAppender<Block, Block> tag(TagKey<Block> block, TagKey<Item> item)
+            {
+                tagsToCopy.put(block, item);
+                return net.minecraft.data.tags.TagAppender.<Block>forBuilder(TagBuilder.create()).map(value -> value.builtInRegistryHolder().key());
+            }
+            void collect() { run(); }
+        }
+        new Collector().collect();
     }
 
     private void copy(TagKey<Block> blockTag)
@@ -917,7 +932,7 @@ public class BuiltinItemTags extends TagsProvider<Item> implements Accessors
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    static class ItemTagAppender extends TagAppender<Item> implements Accessors
+    static class ItemTagAppender extends net.dries007.tfc.data.TfcTagAppender<Item> implements Accessors
     {
         ItemTagAppender(TagBuilder builder)
         {

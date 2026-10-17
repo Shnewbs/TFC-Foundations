@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.common.blockentities;
 
+
 import com.google.common.collect.ImmutableList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -28,6 +29,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.common.capabilities.DelegateItemHandler;
 import net.dries007.tfc.common.capabilities.InventoryItemHandler;
 import net.dries007.tfc.common.capabilities.PartialFluidHandler;
@@ -247,7 +249,7 @@ public class CrucibleBlockEntity extends TickableInventoryBlockEntity<CrucibleBl
     @Override
     public boolean isItemValid(int slot, ItemStack stack)
     {
-        return HeatCapability.has(stack) && (slot != SLOT_OUTPUT || Helpers.mightHaveCapability(stack, Capabilities.FluidHandler.ITEM));
+        return HeatCapability.has(stack) && (slot != SLOT_OUTPUT || TransferAccess.mightHaveFluidHandler(stack));
     }
 
     @Override
@@ -378,12 +380,15 @@ public class CrucibleBlockEntity extends TickableInventoryBlockEntity<CrucibleBl
         private final CrucibleBlockEntity crucible;
         private final InventoryItemHandler inventory;
         private final FluidAlloy alloy;
+        private final net.dries007.tfc.common.capabilities.transfer.TransferJournal<FluidAlloy> transfers;
 
         CrucibleInventory(InventoryBlockEntity<?> entity)
         {
             this.crucible = (CrucibleBlockEntity) entity;
             this.inventory = new InventoryItemHandler(entity, SLOTS);
             this.alloy = FluidAlloy.empty();
+            this.transfers = new net.dries007.tfc.common.capabilities.transfer.TransferJournal<>(alloy::copy, alloy::copyFrom,
+                original -> crucible.markForSync(), crucible::markForSync);
         }
 
         @Override
@@ -441,10 +446,11 @@ public class CrucibleBlockEntity extends TickableInventoryBlockEntity<CrucibleBl
         @Override
         public int fill(FluidStack resource, IFluidHandler.FluidAction action)
         {
+            if (action.execute()) transfers.beforeChange();
             final int filled = alloy.fill(resource, action, INFO);
             if (filled > 0 && action.execute())
             {
-                crucible.markForSync();
+                transfers.changed();
             }
             return filled;
         }
@@ -455,10 +461,11 @@ public class CrucibleBlockEntity extends TickableInventoryBlockEntity<CrucibleBl
             if (isMolten())
             {
                 assert crucible.level != null;
+                if (action.execute()) transfers.beforeChange();
                 final FluidStack result = alloy.drain(crucible.level, maxDrain, action);
                 if (action.execute())
                 {
-                    crucible.markForSync();
+                    transfers.changed();
                 }
                 return result;
             }

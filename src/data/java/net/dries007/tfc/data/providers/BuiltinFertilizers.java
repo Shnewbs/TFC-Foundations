@@ -46,6 +46,6 @@ public class BuiltinFertilizers extends DataManagerProvider<Fertilizer> implemen
 
     private void add(ItemLike input, float n, float p, float k)
     {
-        add(nameOf(input), new Fertilizer(Ingredient.of(input), n, p, k));
+        add(nameOf(input), new Fertilizer(net.dries007.tfc.data.Accessors.ingredient(input), n, p, k));
     }
 }

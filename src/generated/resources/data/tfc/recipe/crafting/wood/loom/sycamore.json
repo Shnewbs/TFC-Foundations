@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/sycamore"
-    },
-    "S": {
-      "tag": "c:rods/wooden"
-    }
+    "L": "tfc:wood/lumber/sycamore",
+    "S": "#c:rods/wooden"
   },
   "pattern": [
     "LLL",
@@ -15,7 +11,6 @@
     "L L"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/loom/sycamore"
   }
 }

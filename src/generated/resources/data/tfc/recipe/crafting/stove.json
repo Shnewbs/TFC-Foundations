@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "S": {
-      "tag": "c:sheets/cast_iron"
-    }
+    "S": "#c:sheets/cast_iron"
   },
   "pattern": [
     " S ",
@@ -12,7 +10,6 @@
     " S "
   ],
   "result": {
-    "count": 1,
     "id": "tfc:stove"
   }
 }

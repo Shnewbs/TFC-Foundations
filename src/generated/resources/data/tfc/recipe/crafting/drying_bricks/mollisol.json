@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:mud/mollisol"
-    },
-    {
-      "item": "tfc:straw"
-    }
+    "tfc:mud/mollisol",
+    "tfc:straw"
   ],
   "result": {
     "count": 4,

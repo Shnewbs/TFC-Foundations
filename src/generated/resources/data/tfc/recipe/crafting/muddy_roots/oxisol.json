@@ -2,15 +2,10 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:mud/oxisol"
-    },
-    {
-      "item": "tfc:tree_roots"
-    }
+    "tfc:mud/oxisol",
+    "tfc:tree_roots"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:muddy_roots/oxisol"
   }
 }

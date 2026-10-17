@@ -12,7 +12,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -70,7 +71,7 @@ public abstract class SnowLayerBlockMixin extends Block implements ISlowEntities
     }
 
     @Inject(method = "updateShape", at = @At(value = "RETURN"), cancellable = true)
-    private void updateShapeSurviveOnLeavesWithSingleLayer(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos, CallbackInfoReturnable<BlockState> cir)
+    private void updateShapeSurviveOnLeavesWithSingleLayer(BlockState stateIn, LevelReader level, ScheduledTickAccess ticks, BlockPos currentPos, Direction facing, BlockPos facingPos, BlockState facingState, RandomSource random, CallbackInfoReturnable<BlockState> cir)
     {
         // If we can't survive, see if we can survive with only one layer, to allow the above leaves check to pass instead
         if (Helpers.isBlock(cir.getReturnValue(), Blocks.AIR) && stateIn.getValue(SnowLayerBlock.LAYERS) > 1)

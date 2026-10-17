@@ -18,6 +18,7 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.common.entities.ai.TFCBrain;
 import net.dries007.tfc.common.entities.ai.pet.MoveOntoBlockBehavior;
 import net.dries007.tfc.common.entities.prey.Pest;
@@ -35,7 +36,7 @@ public class PestFeastBehavior extends MoveOntoBlockBehavior<Pest>
     {
         final Level level = mob.level();
         final BlockPos pos = mob.blockPosition();
-        final @Nullable IItemHandler itemHandler = Helpers.getCapability(Capabilities.ItemHandler.BLOCK, level, pos);
+        final @Nullable IItemHandler itemHandler = TransferAccess.itemHandler(level, pos);
         if (itemHandler != null)
         {
             for (int slot = 0; slot < itemHandler.getSlots(); slot++)

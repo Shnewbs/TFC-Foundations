@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "tfc:wood/axle/aspen"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/aspen"
-    },
-    "P": {
-      "item": "tfc:wood/planks/aspen"
-    }
+    "A": "tfc:wood/axle/aspen",
+    "L": "tfc:wood/lumber/aspen",
+    "P": "tfc:wood/planks/aspen"
   },
   "pattern": [
     "LPL",
@@ -18,7 +12,6 @@
     "LPL"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/water_wheel/aspen"
   }
 }

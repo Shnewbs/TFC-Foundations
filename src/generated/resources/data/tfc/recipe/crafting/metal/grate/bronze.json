@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "tfc:metal/bars/bronze"
-    }
+    "B": "tfc:metal/bars/bronze"
   },
   "pattern": [
     " B ",
@@ -12,7 +10,6 @@
     " B "
   ],
   "result": {
-    "count": 1,
     "id": "tfc:metal/grate/bronze"
   }
 }

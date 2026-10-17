@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/douglas_fir"
-    },
-    "S": {
-      "item": "tfc:wood/stripped_log/douglas_fir"
-    }
+    "L": "tfc:wood/lumber/douglas_fir",
+    "S": "tfc:wood/stripped_log/douglas_fir"
   },
   "pattern": [
     "SLS",
@@ -15,7 +11,6 @@
     "SLS"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/crate/douglas_fir"
   }
 }

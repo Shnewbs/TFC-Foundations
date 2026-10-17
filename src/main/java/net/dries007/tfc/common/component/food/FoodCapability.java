@@ -256,7 +256,10 @@ public final class FoodCapability
     {
         for (RecipeHolder<?> recipe : manager.values())
         {
-            final @Nullable ItemStack stack = recipe.value().getResultItem(registryAccess);
+            // Native recipes hold immutable ItemStackTemplates; display stacks are marked by SlotDisplayMixin.
+            // Retain the legacy hook for TFC/custom machine recipes with mutable result accessors.
+            if (!(recipe.value() instanceof net.dries007.tfc.common.recipes.ISimpleRecipe<?> simple)) continue;
+            final @Nullable ItemStack stack = simple.getResultItem(registryAccess);
             if (stack != null)
             {
                 setTransientNonDecaying(stack);

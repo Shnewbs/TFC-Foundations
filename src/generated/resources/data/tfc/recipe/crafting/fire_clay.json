@@ -2,36 +2,17 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:powder/kaolinite"
-    },
-    {
-      "item": "tfc:powder/kaolinite"
-    },
-    {
-      "item": "tfc:powder/kaolinite"
-    },
-    {
-      "item": "tfc:powder/kaolinite"
-    },
-    {
-      "item": "tfc:powder/graphite"
-    },
-    {
-      "item": "tfc:powder/graphite"
-    },
-    {
-      "item": "tfc:powder/graphite"
-    },
-    {
-      "item": "tfc:powder/graphite"
-    },
-    {
-      "item": "minecraft:clay_ball"
-    }
+    "tfc:powder/kaolinite",
+    "tfc:powder/kaolinite",
+    "tfc:powder/kaolinite",
+    "tfc:powder/kaolinite",
+    "tfc:powder/graphite",
+    "tfc:powder/graphite",
+    "tfc:powder/graphite",
+    "tfc:powder/graphite",
+    "minecraft:clay_ball"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:fire_clay"
   }
 }

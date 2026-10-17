@@ -32,6 +32,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.client.ClimateRenderCache;
 import net.dries007.tfc.common.blockentities.AbstractFirepitBlockEntity;
 import net.dries007.tfc.common.blockentities.AnemometerBlockEntity;
@@ -517,7 +518,7 @@ public final class BlockEntityTooltips
                     }
                     else
                     {
-                        final IFluidHandler fluidHandler = Helpers.getCapability(Capabilities.FluidHandler.BLOCK, lamp);
+                        final IFluidHandler fluidHandler = TransferAccess.fluidHandler(lamp);
                         if (fluidHandler != null)
                         {
                             final int fluid = fluidHandler.getFluidInTank(0).getAmount();

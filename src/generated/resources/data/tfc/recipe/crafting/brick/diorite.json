@@ -1,14 +1,17 @@
 {
   "type": "tfc:advanced_shapeless_crafting",
   "ingredients": [
-    [
-      {
-        "item": "tfc:rock/loose/diorite"
-      },
-      {
-        "item": "tfc:rock/mossy_loose/diorite"
-      }
-    ],
+    {
+      "type": "neoforge:compound",
+      "children": [
+        {
+          "item": "tfc:rock/loose/diorite"
+        },
+        {
+          "item": "tfc:rock/mossy_loose/diorite"
+        }
+      ]
+    },
     {
       "tag": "c:tools/chisel"
     }

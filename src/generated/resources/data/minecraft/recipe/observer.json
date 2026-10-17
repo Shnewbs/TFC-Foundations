@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": {
-      "tag": "c:cobblestones/normal"
-    },
-    "M": {
-      "item": "tfc:brass_mechanisms"
-    },
-    "R": {
-      "tag": "c:dusts/redstone"
-    }
+    "C": "#c:cobblestones/normal",
+    "M": "tfc:brass_mechanisms",
+    "R": "#c:dusts/redstone"
   },
   "pattern": [
     "CCC",
@@ -18,7 +12,6 @@
     "CCC"
   ],
   "result": {
-    "count": 1,
     "id": "minecraft:observer"
   }
 }

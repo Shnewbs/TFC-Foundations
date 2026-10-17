@@ -19,7 +19,7 @@ public interface Recipes extends Accessors
 
     default String nameOf(Recipe<?> recipe)
     {
-        return nameOf(recipe.getResultItem(lookup()).getItem());
+        return nameOf(net.dries007.tfc.data.Accessors.resultOf(recipe, lookup()).getItem());
     }
 
     default void add(Recipe<?> recipe)
@@ -35,6 +35,8 @@ public interface Recipes extends Accessors
     void add(String prefix, String name, Recipe<?> recipe);
 
     void remove(String... names);
+
+    void removeRenamed(String legacyName, java.util.List<String> currentNames);
 
     void replace(String name, Recipe<?> recipe);
 }

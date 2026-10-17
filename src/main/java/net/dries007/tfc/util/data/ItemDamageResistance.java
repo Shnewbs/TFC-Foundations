@@ -27,7 +27,7 @@ public record ItemDamageResistance(
 ) implements IRecipePredicate<ItemStack>
 {
     public static final Codec<ItemDamageResistance> CODEC = RecordCodecBuilder.create(i -> i.group(
-        Ingredient.CODEC.fieldOf("ingredient").forGetter(c -> c.ingredient),
+        net.dries007.tfc.common.recipes.LegacyIngredientCodecs.ITEM.fieldOf("ingredient").forGetter(c -> c.ingredient),
         PhysicalDamage.CODEC.forGetter(c -> c.damages)
     ).apply(i, ItemDamageResistance::new));
 

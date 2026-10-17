@@ -1,12 +1,15 @@
 {
-  "ingredient": [
-    {
-      "item": "minecraft:bowl"
-    },
-    {
-      "item": "tfc:ceramic/bowl"
-    }
-  ],
+  "ingredient": {
+    "type": "neoforge:compound",
+    "children": [
+      {
+        "item": "minecraft:bowl"
+      },
+      {
+        "item": "tfc:ceramic/bowl"
+      }
+    ]
+  },
   "size": "small",
   "weight": "light"
 }

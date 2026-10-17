@@ -29,7 +29,7 @@ public class QuernRecipe extends ItemRecipe
     public static final IndirectHashCollection<Item, QuernRecipe> CACHE = IndirectHashCollection.createForRecipe(QuernRecipe::getValidItems, TFCRecipeTypes.QUERN);
 
     public static final MapCodec<QuernRecipe> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-        Ingredient.CODEC.fieldOf("ingredient").forGetter(c -> c.ingredient),
+        net.dries007.tfc.common.recipes.LegacyIngredientCodecs.ITEM.fieldOf("ingredient").forGetter(c -> c.ingredient),
         ItemStackProvider.CODEC.fieldOf("result").forGetter(c -> c.result)
     ).apply(i, QuernRecipe::new));
 

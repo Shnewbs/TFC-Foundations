@@ -2,15 +2,10 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:wood/axle/blackwood"
-    },
-    {
-      "tag": "c:ingots/steel"
-    }
+    "tfc:wood/axle/blackwood",
+    "#c:ingots/steel"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/bladed_axle/blackwood"
   }
 }

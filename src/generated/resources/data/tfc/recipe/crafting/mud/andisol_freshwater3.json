@@ -3,21 +3,15 @@
   "category": "misc",
   "ingredients": [
     {
-      "type": "tfc:fluid_content",
+      "neoforge:ingredient_type": "tfc:fluid_content",
       "fluid": {
         "amount": 100,
         "fluid": "minecraft:water"
       }
     },
-    {
-      "item": "tfc:dirt/andisol"
-    },
-    {
-      "item": "tfc:dirt/andisol"
-    },
-    {
-      "item": "tfc:dirt/andisol"
-    }
+    "tfc:dirt/andisol",
+    "tfc:dirt/andisol",
+    "tfc:dirt/andisol"
   ],
   "result": {
     "count": 3,

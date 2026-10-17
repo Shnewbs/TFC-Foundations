@@ -2,11 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
+    "tfc:treated_hide",
     {
-      "item": "tfc:treated_hide"
-    },
-    {
-      "type": "tfc:and",
+      "neoforge:ingredient_type": "tfc:and",
       "children": [
         {
           "item": "minecraft:egg"
@@ -17,7 +15,7 @@
       ]
     },
     {
-      "type": "tfc:and",
+      "neoforge:ingredient_type": "tfc:and",
       "children": [
         {
           "tag": "c:foods/flour"
@@ -27,9 +25,7 @@
         }
       ]
     },
-    {
-      "item": "tfc:powder/lime"
-    }
+    "tfc:powder/lime"
   ],
   "result": {
     "count": 2,

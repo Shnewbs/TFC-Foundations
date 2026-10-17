@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "X": {
-      "item": "tfc:wood/log/chestnut"
-    }
+    "X": "tfc:wood/log/chestnut"
   },
   "pattern": [
     "XX",

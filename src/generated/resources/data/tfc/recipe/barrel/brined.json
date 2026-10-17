@@ -8,20 +8,23 @@
   "input_item": {
     "type": "tfc:and",
     "children": [
-      [
-        {
-          "tag": "c:foods/fruit"
-        },
-        {
-          "tag": "c:foods/vegetable"
-        },
-        {
-          "tag": "c:foods/meat"
-        },
-        {
-          "tag": "c:foods/fish"
-        }
-      ],
+      {
+        "type": "neoforge:compound",
+        "children": [
+          {
+            "tag": "c:foods/fruit"
+          },
+          {
+            "tag": "c:foods/vegetable"
+          },
+          {
+            "tag": "c:foods/meat"
+          },
+          {
+            "tag": "c:foods/fish"
+          }
+        ]
+      },
       {
         "type": "tfc:not_rotten"
       },

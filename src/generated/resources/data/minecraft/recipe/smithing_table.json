@@ -2,22 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "D": {
-      "tag": "c:dyes/black"
-    },
-    "S": {
-      "tag": "c:sheets/wrought_iron"
-    },
-    "W": {
-      "tag": "c:player_workstations/crafting_tables"
-    }
+    "D": "#c:dyes/black",
+    "S": "#c:sheets/wrought_iron",
+    "W": "#c:player_workstations/crafting_tables"
   },
   "pattern": [
     "DD",
     "WS"
   ],
   "result": {
-    "count": 1,
     "id": "minecraft:smithing_table"
   }
 }

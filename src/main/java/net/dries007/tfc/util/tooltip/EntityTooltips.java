@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.util.tooltip;
 
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.entities.ai.predator.PackPredator;
 import net.dries007.tfc.common.entities.ai.prey.TFCOcelot;
@@ -160,7 +162,7 @@ public final class EntityTooltips
             if (entity instanceof TFCChestedHorse chested && !chested.getChestItem().isEmpty())
             {
                 final MutableComponent component = chested.getChestItem().getHoverName().copy();
-                final IFluidHandlerItem fluidHandler = chested.getChestItem().getCapability(Capabilities.FluidHandler.ITEM);
+                final IFluidHandlerItem fluidHandler = TransferAccess.fluidHandler(chested.getChestItem());
                 if (fluidHandler != null && !fluidHandler.getFluidInTank(0).isEmpty())
                 {
                     component.append(", ").append(Tooltips.fluidUnitsOf(fluidHandler.getFluidInTank(0)));

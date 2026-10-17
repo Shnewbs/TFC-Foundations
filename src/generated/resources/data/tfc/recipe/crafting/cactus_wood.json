@@ -2,12 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:plant/barrel_cactus"
-    }
+    "tfc:plant/barrel_cactus"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:cactus_wood"
   }
 }

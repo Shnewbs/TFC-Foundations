@@ -7,6 +7,7 @@
 package net.dries007.tfc.common.recipes;
 
 import java.util.Optional;
+import java.util.List;
 import java.util.function.Function;
 
 import org.jetbrains.annotations.VisibleForTesting;
@@ -29,7 +30,12 @@ import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
-import net.minecraft.world.item.crafting.ShapelessRecipe;
+import net.minecraft.world.item.crafting.NormalCraftingRecipe;
+import net.minecraft.world.item.crafting.PlacementInfo;
+import net.minecraft.world.item.crafting.display.ShapelessCraftingRecipeDisplay;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
+import net.minecraft.world.level.Level;
 
 import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
 
@@ -40,11 +46,11 @@ import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
  *     <li>It uses an {@link ItemStackProvider} to compute the remaining items, allowing damaging inputs or other functions</li>
  * </ul>
  */
-public class AdvancedShapelessRecipe extends ShapelessRecipe
+public class AdvancedShapelessRecipe extends NormalCraftingRecipe
 {
     public static final MapCodec<AdvancedShapelessRecipe> CODEC = RecordCodecBuilder.<AdvancedShapelessRecipe>mapCodec(i -> i.group(
         // This part of the codec is identical to the shapeless recipe codec
-        Ingredient.CODEC
+        net.dries007.tfc.common.recipes.LegacyIngredientCodecs.ITEM
             .listOf()
             .fieldOf("ingredients")
             .flatXmap(list -> {
@@ -59,7 +65,7 @@ public class AdvancedShapelessRecipe extends ShapelessRecipe
             .forGetter(AdvancedShapelessRecipe::getIngredients),
         ItemStackProvider.CODEC.fieldOf("result").forGetter(c -> c.result),
         ItemStackProvider.CODEC.optionalFieldOf("remainder").forGetter(c -> c.remainder),
-        Ingredient.CODEC.optionalFieldOf("primary_ingredient").forGetter(c -> c.primaryIngredient)
+        net.dries007.tfc.common.recipes.LegacyIngredientCodecs.ITEM.optionalFieldOf("primary_ingredient").forGetter(c -> c.primaryIngredient)
     ).apply(i, AdvancedShapelessRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, AdvancedShapelessRecipe> STREAM_CODEC = StreamCodec.composite(
@@ -73,16 +79,17 @@ public class AdvancedShapelessRecipe extends ShapelessRecipe
     );
 
     private final NonNullList<Ingredient> originalIngredients;
+    private final boolean isSimple;
     private final ItemStackProvider result;
     private final Optional<ItemStackProvider> remainder;
     private final Optional<Ingredient> primaryIngredient;
 
     public AdvancedShapelessRecipe(NonNullList<Ingredient> ingredients, ItemStackProvider result, Optional<ItemStackProvider> remainder, Optional<Ingredient> primaryIngredient)
     {
-        super(new Recipe.CommonInfo(true), new CraftingRecipe.CraftingBookInfo(CraftingBookCategory.MISC, ""),
-            new ItemStackTemplate(Items.AIR), ingredients);
+        super(new Recipe.CommonInfo(true), new CraftingRecipe.CraftingBookInfo(CraftingBookCategory.MISC, ""));
 
         this.originalIngredients = NonNullList.copyOf(ingredients);
+        this.isSimple = ingredients.stream().allMatch(Ingredient::isSimple);
 
         this.result = result;
         this.remainder = remainder;
@@ -93,12 +100,17 @@ public class AdvancedShapelessRecipe extends ShapelessRecipe
     public ItemStack assemble(CraftingInput input)
     {
         RecipeHelpers.setCraftingInput(input);
-        final ItemStack output = result.getSingleStack(getPrimaryInput(input).copy());
-        RecipeHelpers.clearCraftingInput();
-        return output;
+        try
+        {
+            return result.getSingleStack(getPrimaryInput(input).copy());
+        }
+        finally
+        {
+            RecipeHelpers.clearCraftingInput();
+        }
     }
 
-        public ItemStack getResultItem(HolderLookup.Provider registries)
+    public ItemStack getResultItem(HolderLookup.Provider registries)
     {
         return result.getEmptyStack();
     }
@@ -108,9 +120,14 @@ public class AdvancedShapelessRecipe extends ShapelessRecipe
     {
         return remainder.map(remainder -> {
                 RecipeHelpers.setCraftingInput(input);
-                final var remain = RecipeHelpers.getRemainderItemsWithProvider(input, remainder, getPrimaryInput(input));
-                RecipeHelpers.clearCraftingInput();
-                return remain;
+                try
+                {
+                    return RecipeHelpers.getRemainderItemsWithProvider(input, remainder, getPrimaryInput(input));
+                }
+                finally
+                {
+                    RecipeHelpers.clearCraftingInput();
+                }
             })
             .orElseGet(() -> super.getRemainingItems(input));
     }
@@ -137,22 +154,56 @@ public class AdvancedShapelessRecipe extends ShapelessRecipe
     }
 
     @Override
+    protected PlacementInfo createPlacementInfo()
+    {
+        return PlacementInfo.create(originalIngredients);
+    }
+
+    @Override
+    public boolean matches(CraftingInput input, Level level)
+    {
+        if (input.ingredientCount() != originalIngredients.size()) return false;
+        if (!isSimple)
+        {
+            final var nonEmptyItems = new java.util.ArrayList<ItemStack>(input.ingredientCount());
+            for (ItemStack item : input.items()) if (!item.isEmpty()) nonEmptyItems.add(item);
+            return net.neoforged.neoforge.common.util.RecipeMatcher.findMatches(nonEmptyItems, originalIngredients) != null;
+        }
+        return input.size() == 1 && originalIngredients.size() == 1
+            ? originalIngredients.getFirst().test(input.getItem(0))
+            : input.stackedContents().canCraft(this, null);
+    }
+
+    @Override
+    public List<RecipeDisplay> display()
+    {
+        return List.of(new ShapelessCraftingRecipeDisplay(originalIngredients.stream().map(Ingredient::display).toList(),
+            resultDisplay(), new SlotDisplay.ItemSlotDisplay(Items.CRAFTING_TABLE)));
+    }
+
+    private SlotDisplay resultDisplay()
+    {
+        // Preserve the provider's existing empty-input preview for guide pages. JEI also supplies input-aware alternatives.
+        final ItemStack output = result.getEmptyStack();
+        return output.isEmpty() ? SlotDisplay.Empty.INSTANCE
+            : new SlotDisplay.ItemStackSlotDisplay(ItemStackTemplate.fromNonEmptyStack(output));
+    }
+
+    @Override
     public boolean isSpecial()
     {
         return result.dependsOnInput();
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public RecipeSerializer<ShapelessRecipe> getSerializer()
+    public RecipeSerializer<AdvancedShapelessRecipe> getSerializer()
     {
-        // The inherited vanilla serializer signature is invariant.
-        return (RecipeSerializer<ShapelessRecipe>) (RecipeSerializer<?>) TFCRecipeSerializers.ADVANCED_SHAPELESS_CRAFTING.get();
+        return TFCRecipeSerializers.ADVANCED_SHAPELESS_CRAFTING.get();
     }
 
     public ItemStackProvider getResult()
     {
-        return result; // todo this doesn't actually take into account setting the crafting container.
+        return result;
     }
 
     @VisibleForTesting

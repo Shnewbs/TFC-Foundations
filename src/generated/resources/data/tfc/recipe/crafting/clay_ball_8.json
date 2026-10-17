@@ -2,32 +2,16 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
+    "tfc:hardened_clay",
+    "tfc:hardened_clay",
+    "tfc:hardened_clay",
+    "tfc:hardened_clay",
+    "tfc:hardened_clay",
+    "tfc:hardened_clay",
+    "tfc:hardened_clay",
+    "tfc:hardened_clay",
     {
-      "item": "tfc:hardened_clay"
-    },
-    {
-      "item": "tfc:hardened_clay"
-    },
-    {
-      "item": "tfc:hardened_clay"
-    },
-    {
-      "item": "tfc:hardened_clay"
-    },
-    {
-      "item": "tfc:hardened_clay"
-    },
-    {
-      "item": "tfc:hardened_clay"
-    },
-    {
-      "item": "tfc:hardened_clay"
-    },
-    {
-      "item": "tfc:hardened_clay"
-    },
-    {
-      "type": "tfc:fluid_content",
+      "neoforge:ingredient_type": "tfc:fluid_content",
       "fluid": {
         "amount": 1000,
         "fluid": "minecraft:water"

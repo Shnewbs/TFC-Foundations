@@ -58,27 +58,27 @@ public class BuiltinFuels extends DataManagerProvider<Fuel> implements Accessors
         add(Wood.WILLOW, 603, 1000, 0.95f);
 
         add(TFCItems.DRIED_CACTUS_WOOD, 603, 1000, 0.95f);
-        add("coal", Ingredient.of(Items.COAL, TFCItems.ORES.get(Ore.BITUMINOUS_COAL)), 2000, 1415, 1f);
+        add("coal", net.dries007.tfc.data.Accessors.ingredient(Items.COAL, TFCItems.ORES.get(Ore.BITUMINOUS_COAL)), 2000, 1415, 1f);
         add(TFCItems.ORES.get(Ore.LIGNITE), 2200, 1350, 1f);
         add(Items.CHARCOAL, 1800, 1350, 1f);
         add(TFCBlocks.PEAT, 2500, 600, 1f);
         add(TFCItems.STICK_BUNDLE, 600, 900, 0.8f);
         add(TFCBlocks.GROUNDCOVER.get(GroundcoverBlockType.DRIFTWOOD), 400, 650, 0.4f);
         add(TFCBlocks.GROUNDCOVER.get(GroundcoverBlockType.PINECONE), 220, 150, 0.15f);
-        add("paper", Ingredient.of(TFCTags.Items.BOOKS), 150, 199, 0.7f);
-        add("leaves", Ingredient.of(ItemTags.LEAVES), 600, 100, 0.25f);
+        add("paper", net.dries007.tfc.data.Accessors.ingredient(TFCTags.Items.BOOKS), 150, 199, 0.7f);
+        add("leaves", net.dries007.tfc.data.Accessors.ingredient(ItemTags.LEAVES), 600, 100, 0.25f);
     }
 
     private void add(Wood wood, float temperature, int duration, float purity)
     {
         final Map<Wood.BlockType, TFCBlocks.Id<Block>> blocks = TFCBlocks.WOODS.get(wood);
-        add(wood.getSerializedName() + "_logs", Ingredient.of(logsTagOf(Registries.ITEM, wood)), duration, temperature, purity);
-        add(wood.getSerializedName() + "_planks", Ingredient.of(blocks.get(Wood.BlockType.PLANKS)), (int) (duration * 0.4f), temperature + 50f, purity);
+        add(wood.getSerializedName() + "_logs", net.dries007.tfc.data.Accessors.ingredient(logsTagOf(Registries.ITEM, wood)), duration, temperature, purity);
+        add(wood.getSerializedName() + "_planks", net.dries007.tfc.data.Accessors.ingredient(blocks.get(Wood.BlockType.PLANKS)), (int) (duration * 0.4f), temperature + 50f, purity);
     }
 
     private void add(ItemLike item, int duration, float temperature, float purity)
     {
-        add(nameOf(item), new Fuel(Ingredient.of(item), duration, temperature, purity));
+        add(nameOf(item), new Fuel(net.dries007.tfc.data.Accessors.ingredient(item), duration, temperature, purity));
     }
 
     private void add(String name, Ingredient item, int duration, float temperature, float purity)

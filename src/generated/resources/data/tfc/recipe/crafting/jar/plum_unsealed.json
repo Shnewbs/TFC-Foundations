@@ -3,7 +3,7 @@
   "category": "misc",
   "ingredients": [
     {
-      "type": "tfc:and",
+      "neoforge:ingredient_type": "tfc:and",
       "children": [
         {
           "item": "tfc:jar/plum"
@@ -15,7 +15,6 @@
     }
   ],
   "result": {
-    "count": 1,
     "id": "tfc:jar/plum_unsealed"
   }
 }

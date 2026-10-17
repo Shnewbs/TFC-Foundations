@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:mud/aridisol"
-    },
-    {
-      "item": "tfc:straw"
-    }
+    "tfc:mud/aridisol",
+    "tfc:straw"
   ],
   "result": {
     "count": 4,

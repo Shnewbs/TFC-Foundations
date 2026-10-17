@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "tfc:smooth_sandstone/brown"
-    }
+    "#": "tfc:smooth_sandstone/brown"
   },
   "pattern": [
     "#  ",

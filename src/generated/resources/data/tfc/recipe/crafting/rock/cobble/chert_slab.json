@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "tfc:rock/cobble/chert"
-    }
+    "#": "tfc:rock/cobble/chert"
   },
   "pattern": [
     "###"

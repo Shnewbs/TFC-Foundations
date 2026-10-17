@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:dirt/podzol"
-    },
-    {
-      "tag": "c:gravels"
-    }
+    "tfc:dirt/podzol",
+    "#c:gravels"
   ],
   "result": {
     "count": 2,

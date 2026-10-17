@@ -51,7 +51,7 @@ public class SaladContainer extends Container implements ISlotCallback
         this.inventory = new InventoryItemHandler(this, 7)
         {
             @Override
-            protected void onContentsChanged(int slot) {}
+            protected void onCommittedContentsChanged(int slot) {}
         };
     }
 

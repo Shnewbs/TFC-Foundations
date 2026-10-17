@@ -2,21 +2,11 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "tfc:wood/axle/mangrove"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/mangrove"
-    },
-    "M": {
-      "item": "tfc:brass_mechanisms"
-    },
-    "R": {
-      "tag": "c:dusts/redstone"
-    },
-    "S": {
-      "item": "tfc:wood/stripped_log/mangrove"
-    }
+    "A": "tfc:wood/axle/mangrove",
+    "L": "tfc:wood/lumber/mangrove",
+    "M": "tfc:brass_mechanisms",
+    "R": "#c:dusts/redstone",
+    "S": "tfc:wood/stripped_log/mangrove"
   },
   "pattern": [
     "LSL",

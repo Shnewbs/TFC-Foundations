@@ -30,7 +30,7 @@ import net.neoforged.neoforge.common.crafting.IntersectionIngredient;
  */
 public record AndIngredient(List<Ingredient> children) implements ICustomIngredient
 {
-    public static final MapCodec<AndIngredient> CODEC = Ingredient.CODEC.listOf()
+    public static final MapCodec<AndIngredient> CODEC = net.dries007.tfc.common.recipes.LegacyIngredientCodecs.ITEM.listOf()
         .xmap(AndIngredient::new, AndIngredient::children)
         .fieldOf("children");
     public static final StreamCodec<RegistryFriendlyByteBuf, AndIngredient> STREAM_CODEC = Ingredient.CONTENTS_STREAM_CODEC

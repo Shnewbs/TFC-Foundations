@@ -51,7 +51,7 @@ public record Drinkable(
     List<Effect> effects
 ) {
     public static final Codec<Drinkable> CODEC = RecordCodecBuilder.create(i -> i.group(
-        FluidIngredient.CODEC.fieldOf("ingredient").forGetter(c -> c.ingredient),
+        net.dries007.tfc.common.recipes.LegacyIngredientCodecs.FLUID.fieldOf("ingredient").forGetter(c -> c.ingredient),
         Codec.FLOAT.optionalFieldOf("consume_chance", 0f).forGetter(c -> c.consumeChance),
         Codec.BOOL.optionalFieldOf("may_drink_when_full", false).forGetter(c -> c.mayDrinkWhenFull),
         FoodData.MAP_CODEC.forGetter(c -> c.food),

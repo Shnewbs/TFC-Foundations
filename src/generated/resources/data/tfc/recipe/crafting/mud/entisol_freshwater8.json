@@ -3,36 +3,20 @@
   "category": "misc",
   "ingredients": [
     {
-      "type": "tfc:fluid_content",
+      "neoforge:ingredient_type": "tfc:fluid_content",
       "fluid": {
         "amount": 100,
         "fluid": "minecraft:water"
       }
     },
-    {
-      "item": "tfc:dirt/entisol"
-    },
-    {
-      "item": "tfc:dirt/entisol"
-    },
-    {
-      "item": "tfc:dirt/entisol"
-    },
-    {
-      "item": "tfc:dirt/entisol"
-    },
-    {
-      "item": "tfc:dirt/entisol"
-    },
-    {
-      "item": "tfc:dirt/entisol"
-    },
-    {
-      "item": "tfc:dirt/entisol"
-    },
-    {
-      "item": "tfc:dirt/entisol"
-    }
+    "tfc:dirt/entisol",
+    "tfc:dirt/entisol",
+    "tfc:dirt/entisol",
+    "tfc:dirt/entisol",
+    "tfc:dirt/entisol",
+    "tfc:dirt/entisol",
+    "tfc:dirt/entisol",
+    "tfc:dirt/entisol"
   ],
   "result": {
     "count": 8,

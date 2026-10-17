@@ -8,6 +8,7 @@ package net.dries007.tfc.test.item;
 
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,7 @@ public class MoldTest implements TestSetup
     {
         final ItemStack stack = new ItemStack(TFCItems.MOLDS.get(Metal.ItemType.INGOT));
 
-        assertNotNull(stack.getCapability(Capabilities.FluidHandler.ITEM));
+        assertNotNull(ItemAccess.forStack(stack).getCapability(Capabilities.Fluid.ITEM));
         assertNotNull(stack.getCapability(ItemCapabilities.HEAT));
         assertNotNull(stack.getCapability(ItemCapabilities.MOLD));
     }

@@ -1,0 +1,9 @@
+{
+  "remove": [
+    "#c:sands",
+    "#minecraft:sand"
+  ],
+  "values": [
+    "#minecraft:bamboo_plantable_on"
+  ]
+}

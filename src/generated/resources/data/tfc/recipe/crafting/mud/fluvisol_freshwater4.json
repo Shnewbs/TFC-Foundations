@@ -3,24 +3,16 @@
   "category": "misc",
   "ingredients": [
     {
-      "type": "tfc:fluid_content",
+      "neoforge:ingredient_type": "tfc:fluid_content",
       "fluid": {
         "amount": 100,
         "fluid": "minecraft:water"
       }
     },
-    {
-      "item": "tfc:dirt/fluvisol"
-    },
-    {
-      "item": "tfc:dirt/fluvisol"
-    },
-    {
-      "item": "tfc:dirt/fluvisol"
-    },
-    {
-      "item": "tfc:dirt/fluvisol"
-    }
+    "tfc:dirt/fluvisol",
+    "tfc:dirt/fluvisol",
+    "tfc:dirt/fluvisol",
+    "tfc:dirt/fluvisol"
   ],
   "result": {
     "count": 4,

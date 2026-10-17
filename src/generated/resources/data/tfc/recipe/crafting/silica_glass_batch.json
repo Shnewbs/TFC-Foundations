@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "tfc:glass_potash"
-    },
-    {
-      "item": "tfc:powder/lime"
-    },
-    {
-      "tag": "c:sands/silica"
-    }
+    "#tfc:glass_potash",
+    "tfc:powder/lime",
+    "#c:sands/silica"
   ],
   "result": {
     "count": 4,

@@ -29,7 +29,9 @@ class TagIngredientContracts(unittest.TestCase):
         self.assertIn('public Builder input(ItemLike item, int count) {return input(Ingredient.of(item), count);}',s)
         self.assertIn('public Builder inputIsPrimary(ItemLike item) {return inputIsPrimary(Ingredient.of(item));}',s)
         self.assertIn('public Builder input(char key, ItemLike input) {return input(key, Ingredient.of(input));}',s)
-        for snippet in ('input(RecipeHelpers.ingredient(item), count)', 'inputIsPrimary(RecipeHelpers.ingredient(item))', 'input(key, RecipeHelpers.ingredient(input))'):
+        self.assertIn('this(RecipeHelpers::ingredient, onFinish);', s)
+        self.assertIn('this.tagIngredients = tagIngredients;', s)
+        for snippet in ('input(tagIngredients.apply(item), count)', 'inputIsPrimary(tagIngredients.apply(item))', 'input(key, tagIngredients.apply(input))'):
             self.assertIn(snippet,s)
 
     def test_tags_and_predator_food_are_unmodified(self):

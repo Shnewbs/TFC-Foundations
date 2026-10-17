@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "tfc:wood/bookshelf/ash"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/ash"
-    }
+    "B": "tfc:wood/bookshelf/ash",
+    "L": "tfc:wood/lumber/ash"
   },
   "pattern": [
     "LLL",
@@ -15,7 +11,6 @@
     " L "
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/lectern/ash"
   }
 }

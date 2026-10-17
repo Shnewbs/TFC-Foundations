@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:dirt/alfisol"
-    },
-    {
-      "tag": "c:gravels"
-    }
+    "tfc:dirt/alfisol",
+    "#c:gravels"
   ],
   "result": {
     "count": 2,

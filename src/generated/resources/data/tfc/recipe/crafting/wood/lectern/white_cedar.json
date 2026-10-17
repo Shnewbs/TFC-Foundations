@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "tfc:wood/bookshelf/white_cedar"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/white_cedar"
-    }
+    "B": "tfc:wood/bookshelf/white_cedar",
+    "L": "tfc:wood/lumber/white_cedar"
   },
   "pattern": [
     "LLL",
@@ -15,7 +11,6 @@
     " L "
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/lectern/white_cedar"
   }
 }

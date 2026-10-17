@@ -45,7 +45,7 @@ public interface CastingRecipes extends Recipes
     private void casting(String name, ItemLike item, Metal metal, ItemLike result, int units, float chance)
     {
         add(name, new CastingRecipe(
-            Ingredient.of(item),
+            net.dries007.tfc.data.Accessors.ingredient(item),
             SizedFluidIngredient.of(fluidOf(metal), units),
             ItemStackProvider.of(result),
             chance

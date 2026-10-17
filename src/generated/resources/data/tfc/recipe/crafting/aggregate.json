@@ -2,30 +2,14 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "c:sands"
-    },
-    {
-      "tag": "c:sands"
-    },
-    {
-      "tag": "c:sands"
-    },
-    {
-      "tag": "c:sands"
-    },
-    {
-      "tag": "c:gravels"
-    },
-    {
-      "tag": "c:gravels"
-    },
-    {
-      "tag": "c:gravels"
-    },
-    {
-      "tag": "c:gravels"
-    }
+    "#c:sands",
+    "#c:sands",
+    "#c:sands",
+    "#c:sands",
+    "#c:gravels",
+    "#c:gravels",
+    "#c:gravels",
+    "#c:gravels"
   ],
   "result": {
     "count": 8,

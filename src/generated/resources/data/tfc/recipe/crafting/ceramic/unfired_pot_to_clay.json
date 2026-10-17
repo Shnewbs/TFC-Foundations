@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:ceramic/unfired_pot"
-    }
+    "tfc:ceramic/unfired_pot"
   ],
   "result": {
     "count": 5,

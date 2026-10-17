@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.common.container;
 
+
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -17,6 +18,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.common.capabilities.InventoryItemHandler;
 import net.dries007.tfc.common.component.heat.HeatCapability;
 import net.dries007.tfc.common.component.heat.IHeat;
@@ -51,7 +53,7 @@ public class MoldLikeAlloyContainer extends ItemStackContainer implements ISlotC
         if (mold != null && mold.isMolten())
         {
             final ItemStack outputStack = inventory.getStackInSlot(0);
-            final @Nullable IFluidHandler outputFluidCap = outputStack.getCapability(Capabilities.FluidHandler.ITEM);
+            final @Nullable IFluidHandler outputFluidCap = TransferAccess.fluidHandler(outputStack);
             if (outputFluidCap != null)
             {
                 final FluidStack drained = mold.drain(1, IFluidHandler.FluidAction.SIMULATE);
@@ -125,7 +127,7 @@ public class MoldLikeAlloyContainer extends ItemStackContainer implements ISlotC
     @Override
     public boolean isItemValid(int slot, ItemStack stack)
     {
-        return Helpers.mightHaveCapability(stack, Capabilities.FluidHandler.ITEM);
+        return TransferAccess.mightHaveFluidHandler(stack);
     }
 
     public IItemHandler getInventory()

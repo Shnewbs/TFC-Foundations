@@ -1,14 +1,17 @@
 {
   "type": "tfc:advanced_shapeless_crafting",
   "ingredients": [
-    [
-      {
-        "item": "tfc:rock/loose/slate"
-      },
-      {
-        "item": "tfc:rock/mossy_loose/slate"
-      }
-    ],
+    {
+      "type": "neoforge:compound",
+      "children": [
+        {
+          "item": "tfc:rock/loose/slate"
+        },
+        {
+          "item": "tfc:rock/mossy_loose/slate"
+        }
+      ]
+    },
     {
       "tag": "c:tools/chisel"
     }

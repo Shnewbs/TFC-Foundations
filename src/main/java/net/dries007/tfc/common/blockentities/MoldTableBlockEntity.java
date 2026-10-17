@@ -33,6 +33,7 @@ import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.model.data.ModelData;
 import org.apache.commons.lang3.tuple.Pair;
 
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.capabilities.DelegateItemHandler;
 import net.dries007.tfc.common.capabilities.InventoryItemHandler;
@@ -489,9 +490,14 @@ public class MoldTableBlockEntity extends TickableInventoryBlockEntity<MoldTable
             inventory.deserialize(nbt.childOrEmpty("inventory"));
         }
 
+        public void prepareFluidMutation()
+        {
+            inventory.prepareExternalMutation();
+        }
+
         private Optional<IFluidHandler> getMoldFluidHandler()
         {
-            return Optional.ofNullable(moldTable.getMoldStack().getCapability(ItemCapabilities.FLUID));
+            return Optional.ofNullable(TransferAccess.fluidHandler(moldTable.getMoldStack()));
         }
 
         private Optional<IHeat> getMoldHeatHandler()
@@ -596,7 +602,7 @@ public class MoldTableBlockEntity extends TickableInventoryBlockEntity<MoldTable
                             if (!outputItem.isEmpty())
                             {
                                 outputItem.setCount(Math.min(outputItem.getMaxStackSize(),
-                                    multiplier * outputItem.getCount()));
+                                    (int) Math.min(Integer.MAX_VALUE, (long) multiplier * outputItem.getCount())));
                             }
 
                             // Amount of fluid that would be consumed

@@ -14,6 +14,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
+import net.dries007.tfc.common.recipes.ingredients.EmptyIngredient;
 import net.dries007.tfc.common.recipes.IRecipePredicate;
 
 public record FoodDefinition(
@@ -23,7 +24,7 @@ public record FoodDefinition(
 ) implements IRecipePredicate<ItemStack>
 {
     public static final Codec<FoodDefinition> CODEC = RecordCodecBuilder.create(i -> i.group(
-        Ingredient.CODEC.fieldOf("ingredient").forGetter(c -> c.ingredient),
+        net.dries007.tfc.common.recipes.LegacyIngredientCodecs.ITEM.fieldOf("ingredient").forGetter(c -> c.ingredient),
         FoodData.MAP_CODEC.forGetter(c -> c.food),
         Codec.BOOL.optionalFieldOf("edible", true).forGetter(c -> c.edible)
     ).apply(i, FoodDefinition::new));
@@ -35,7 +36,7 @@ public record FoodDefinition(
         FoodDefinition::new
     );
 
-    public static final FoodDefinition DEFAULT = new FoodDefinition(Ingredient.of(), FoodData.EMPTY, true);
+    public static final FoodDefinition DEFAULT = new FoodDefinition(EmptyIngredient.INSTANCE.toVanilla(), FoodData.EMPTY, true);
 
     @Override
     public boolean matches(ItemStack input)

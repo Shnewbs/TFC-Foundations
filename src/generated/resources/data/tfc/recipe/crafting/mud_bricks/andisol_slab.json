@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "tfc:mud_bricks/andisol"
-    }
+    "#": "tfc:mud_bricks/andisol"
   },
   "pattern": [
     "###"

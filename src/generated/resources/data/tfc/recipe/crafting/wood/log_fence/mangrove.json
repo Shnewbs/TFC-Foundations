@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/mangrove"
-    },
-    "P": {
-      "item": "tfc:wood/log/mangrove"
-    }
+    "L": "tfc:wood/lumber/mangrove",
+    "P": "tfc:wood/log/mangrove"
   },
   "pattern": [
     "PLP",

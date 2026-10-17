@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "tfc:wood/axle/willow"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/willow"
-    },
-    "P": {
-      "item": "tfc:wood/planks/willow"
-    }
+    "A": "tfc:wood/axle/willow",
+    "L": "tfc:wood/lumber/willow",
+    "P": "tfc:wood/planks/willow"
   },
   "pattern": [
     "LPL",
@@ -18,7 +12,6 @@
     "LPL"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/water_wheel/willow"
   }
 }

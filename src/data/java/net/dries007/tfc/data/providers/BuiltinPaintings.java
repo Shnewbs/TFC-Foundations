@@ -41,6 +41,6 @@ public class BuiltinPaintings
 
     private void register(ResourceKey<PaintingVariant> key, int width, int height)
     {
-        context.register(key, new PaintingVariant(width, height, key.location()));
+        context.register(key, new PaintingVariant(width, height, key.identifier(), java.util.Optional.empty(), java.util.Optional.empty()));
     }
 }

@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "F": {
-      "tag": "c:feathers"
-    },
-    "S": {
-      "tag": "c:rods/wooden"
-    },
-    "X": {
-      "item": "tfc:groundcover/obsidian_shard"
-    }
+    "F": "#c:feathers",
+    "S": "#c:rods/wooden",
+    "X": "tfc:groundcover/obsidian_shard"
   },
   "pattern": [
     "X",

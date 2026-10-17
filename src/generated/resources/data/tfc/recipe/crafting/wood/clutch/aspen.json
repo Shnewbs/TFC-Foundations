@@ -2,21 +2,11 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "tfc:wood/axle/aspen"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/aspen"
-    },
-    "M": {
-      "item": "tfc:brass_mechanisms"
-    },
-    "R": {
-      "tag": "c:dusts/redstone"
-    },
-    "S": {
-      "item": "tfc:wood/stripped_log/aspen"
-    }
+    "A": "tfc:wood/axle/aspen",
+    "L": "tfc:wood/lumber/aspen",
+    "M": "tfc:brass_mechanisms",
+    "R": "#c:dusts/redstone",
+    "S": "tfc:wood/stripped_log/aspen"
   },
   "pattern": [
     "LSL",

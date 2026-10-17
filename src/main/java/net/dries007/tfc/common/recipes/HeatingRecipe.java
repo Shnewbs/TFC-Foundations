@@ -36,7 +36,7 @@ public class HeatingRecipe implements INoopInputRecipe, IRecipePredicate<ItemSta
     public static final IndirectHashCollection<Item, HeatingRecipe> CACHE = IndirectHashCollection.createForRecipe(r -> RecipeHelpers.itemKeys(r.ingredient), TFCRecipeTypes.HEATING);
 
     public static final MapCodec<HeatingRecipe> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-        Ingredient.CODEC.fieldOf("ingredient").forGetter(c -> c.ingredient),
+        net.dries007.tfc.common.recipes.LegacyIngredientCodecs.ITEM.fieldOf("ingredient").forGetter(c -> c.ingredient),
         ItemStackProvider.CODEC.optionalFieldOf("result_item", ItemStackProvider.empty()).forGetter(c -> c.outputItem),
         FluidStack.CODEC.optionalFieldOf("result_fluid", FluidStack.EMPTY).forGetter(c -> c.outputFluid),
         Codec.FLOAT.fieldOf("temperature").forGetter(c -> c.temperature),

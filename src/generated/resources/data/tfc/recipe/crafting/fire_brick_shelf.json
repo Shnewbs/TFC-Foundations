@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:ceramic/fire_brick"
-    },
-    "S": {
-      "tag": "c:rods/cast_iron"
-    }
+    "L": "tfc:ceramic/fire_brick",
+    "S": "#c:rods/cast_iron"
   },
   "pattern": [
     "LLL",

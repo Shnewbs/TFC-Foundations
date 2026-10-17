@@ -2,16 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "X": {
-      "item": "tfc:rock/mossy_loose/dacite"
-    }
+    "X": "tfc:rock/mossy_loose/dacite"
   },
   "pattern": [
     "XX",
     "XX"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:rock/mossy_cobble/dacite"
   }
 }

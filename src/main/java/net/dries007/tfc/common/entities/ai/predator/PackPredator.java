@@ -182,7 +182,7 @@ public class PackPredator extends Predator implements Temptable
         final long time = level().getOverworldClockTime() % 24000;
         if (!howled && isHowlingWolf && time > 18000 && time < 19000 && random.nextInt(10) == 0)
         {
-            playSound(SoundEvents.WOLF_HOWL, getSoundVolume() * 1.2f, getVoicePitch());
+            playSound(TFCSounds.WOLF_HOWL.get(), getSoundVolume() * 1.2f, getVoicePitch());
             howled = true;
         }
         if (time > 19000)

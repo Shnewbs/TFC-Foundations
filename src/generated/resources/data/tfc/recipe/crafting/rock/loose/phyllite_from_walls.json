@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:rock/cobble/phyllite_wall"
-    }
+    "tfc:rock/cobble/phyllite_wall"
   ],
   "result": {
     "count": 4,

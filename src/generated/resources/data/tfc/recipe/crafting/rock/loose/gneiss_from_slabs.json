@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:rock/cobble/gneiss_slab"
-    }
+    "tfc:rock/cobble/gneiss_slab"
   ],
   "result": {
     "count": 2,

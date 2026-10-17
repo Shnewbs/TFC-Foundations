@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.common.container;
 
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -15,6 +16,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import org.jetbrains.annotations.Nullable;
 
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.common.blockentities.BarrelBlockEntity;
 import net.dries007.tfc.common.blocks.devices.BarrelBlock;
 import net.dries007.tfc.common.blocks.devices.SealableDeviceBlock;
@@ -71,7 +73,7 @@ public class BarrelContainer extends BlockEntityContainer<BarrelBlockEntity> imp
         }
 
         final @Nullable IHeat heat = HeatCapability.get(stack);
-        final int containerSlot = stack.getCapability(Capabilities.FluidHandler.ITEM) != null
+        final int containerSlot = TransferAccess.fluidHandler(stack) != null
             && heat != null
             && heat.getTemperature() == 0 ? BarrelBlockEntity.SLOT_FLUID_CONTAINER_IN : BarrelBlockEntity.SLOT_ITEM;
 

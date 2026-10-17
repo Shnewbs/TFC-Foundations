@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "tfc:wood/planks/mangrove"
-    }
+    "#": "tfc:wood/planks/mangrove"
   },
   "pattern": [
     "#  ",

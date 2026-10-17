@@ -28,7 +28,7 @@ public abstract class HeightmapMixin
     private Predicate<BlockState> isOpaque;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void inject$init(String key, int usage, String opaque, Heightmap.Usage usageType, Predicate<BlockState> predicate, CallbackInfo ci)
+    private void inject$init(String key, int ordinal, int id, String opaque, Heightmap.Usage usageType, Predicate<BlockState> predicate, CallbackInfo ci)
     {
         if (key.equals("MOTION_BLOCKING"))
         {

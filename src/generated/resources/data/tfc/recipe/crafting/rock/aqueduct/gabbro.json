@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "M": {
-      "item": "tfc:mortar"
-    },
-    "X": {
-      "item": "tfc:brick/gabbro"
-    }
+    "M": "tfc:mortar",
+    "X": "tfc:brick/gabbro"
   },
   "pattern": [
     "X X",

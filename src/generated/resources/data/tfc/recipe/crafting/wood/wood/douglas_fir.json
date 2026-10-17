@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "X": {
-      "item": "tfc:wood/log/douglas_fir"
-    }
+    "X": "tfc:wood/log/douglas_fir"
   },
   "pattern": [
     "XX",

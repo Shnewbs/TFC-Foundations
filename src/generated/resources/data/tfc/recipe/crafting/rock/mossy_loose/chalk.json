@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:rock/mossy_cobble/chalk"
-    }
+    "tfc:rock/mossy_cobble/chalk"
   ],
   "result": {
     "count": 4,

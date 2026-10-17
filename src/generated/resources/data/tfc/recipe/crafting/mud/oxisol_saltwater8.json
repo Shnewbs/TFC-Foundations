@@ -3,36 +3,20 @@
   "category": "misc",
   "ingredients": [
     {
-      "type": "tfc:fluid_content",
+      "neoforge:ingredient_type": "tfc:fluid_content",
       "fluid": {
         "amount": 100,
         "fluid": "tfc:salt_water"
       }
     },
-    {
-      "item": "tfc:dirt/oxisol"
-    },
-    {
-      "item": "tfc:dirt/oxisol"
-    },
-    {
-      "item": "tfc:dirt/oxisol"
-    },
-    {
-      "item": "tfc:dirt/oxisol"
-    },
-    {
-      "item": "tfc:dirt/oxisol"
-    },
-    {
-      "item": "tfc:dirt/oxisol"
-    },
-    {
-      "item": "tfc:dirt/oxisol"
-    },
-    {
-      "item": "tfc:dirt/oxisol"
-    }
+    "tfc:dirt/oxisol",
+    "tfc:dirt/oxisol",
+    "tfc:dirt/oxisol",
+    "tfc:dirt/oxisol",
+    "tfc:dirt/oxisol",
+    "tfc:dirt/oxisol",
+    "tfc:dirt/oxisol",
+    "tfc:dirt/oxisol"
   ],
   "result": {
     "count": 8,

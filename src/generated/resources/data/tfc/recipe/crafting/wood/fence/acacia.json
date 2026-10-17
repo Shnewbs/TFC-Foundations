@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/acacia"
-    },
-    "P": {
-      "item": "tfc:wood/planks/acacia"
-    }
+    "L": "tfc:wood/lumber/acacia",
+    "P": "tfc:wood/planks/acacia"
   },
   "pattern": [
     "PLP",

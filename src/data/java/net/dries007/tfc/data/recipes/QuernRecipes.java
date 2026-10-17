@@ -32,9 +32,9 @@ public interface QuernRecipes extends Recipes
     {
         add(notRotten(TFCItems.FOOD.get(Food.OLIVE)), TFCItems.OLIVE_PASTE, 2);
         add(TFCItems.CROP_SEEDS.get(Crop.CANOLA), TFCItems.CANOLA_PASTE, 2);
-        add(Ingredient.of(TFCTags.Items.FLUXSTONE), TFCItems.POWDERS.get(Powder.FLUX), 2);
+        add(net.dries007.tfc.data.Accessors.ingredient(TFCTags.Items.FLUXSTONE), TFCItems.POWDERS.get(Powder.FLUX), 2);
         add("from_borax", TFCItems.ORES.get(Ore.BORAX), TFCItems.POWDERS.get(Powder.FLUX), 6);
-        add(Ingredient.of(
+        add(net.dries007.tfc.data.Accessors.ingredient(
             TFCItems.ORES.get(Ore.CINNABAR),
             TFCItems.ORES.get(Ore.CRYOLITE)
         ), Items.REDSTONE, 8);
@@ -58,7 +58,7 @@ public interface QuernRecipes extends Recipes
             add("normal", items.get(Ore.Grade.NORMAL), TFCItems.ORE_POWDERS.get(ore), 5);
             add("rich", items.get(Ore.Grade.RICH), TFCItems.ORE_POWDERS.get(ore), 7);
         });
-        TFCItems.GEMS.forEach((gem, item) -> add(Ingredient.of(item, TFCItems.ORES.get(gem)), TFCItems.ORE_POWDERS.get(gem), 4));
+        TFCItems.GEMS.forEach((gem, item) -> add(net.dries007.tfc.data.Accessors.ingredient(item, TFCItems.ORES.get(gem)), TFCItems.ORE_POWDERS.get(gem), 4));
         addDye(Items.WHITE_DYE, Plant.HOUSTONIA, Plant.OXEYE_DAISY, Plant.PRIMROSE, Plant.SNAPDRAGON_WHITE, Plant.TRILLIUM, Plant.SPANISH_MOSS, Plant.TULIP_WHITE, Plant.WHITE_WATER_LILY, Plant.LILY_OF_THE_VALLEY, Plant.EDELWEISS, Plant.BEACHGRASS);
         addDye(Items.ORANGE_DYE, Plant.BUTTERFLY_MILKWEED, Plant.CANNA, Plant.NASTURTIUM, Plant.STRELITZIA, Plant.TULIP_ORANGE, Plant.WATER_CANNA, Plant.MARIGOLD, Plant.FLAME_VINE, Plant.PALASH, Plant.QANTU);
         addDye(Items.MAGENTA_DYE, Plant.ATHYRIUM_FERN, Plant.MORNING_GLORY, Plant.PULSATILLA, Plant.LILAC, Plant.SILVER_SPURFLOWER, Plant.AZALEA);
@@ -76,7 +76,7 @@ public interface QuernRecipes extends Recipes
 
     private Ingredient notRotten(ItemLike input)
     {
-        return AndIngredient.of(Ingredient.of(input), NotRottenIngredient.INSTANCE);
+        return AndIngredient.of(net.dries007.tfc.data.Accessors.ingredient(input), NotRottenIngredient.INSTANCE);
     }
 
     private void addGrain(Food grain, Food flour)
@@ -86,17 +86,17 @@ public interface QuernRecipes extends Recipes
 
     private void addDye(ItemLike item, Plant... plants)
     {
-        add(Ingredient.of(Arrays.stream(plants).map(TFCBlocks.PLANTS::get).toArray(ItemLike[]::new)), item, 2);
+        add(net.dries007.tfc.data.Accessors.ingredient(Arrays.stream(plants).map(TFCBlocks.PLANTS::get).toArray(ItemLike[]::new)), item, 2);
     }
 
     private void add(ItemLike input, ItemLike output, int count)
     {
-        add(Ingredient.of(input), output, count);
+        add(net.dries007.tfc.data.Accessors.ingredient(input), output, count);
     }
 
     private void add(String suffix, ItemLike input, ItemLike output, int count)
     {
-        add(suffix, Ingredient.of(input), output, count);
+        add(suffix, net.dries007.tfc.data.Accessors.ingredient(input), output, count);
     }
 
     private void add(Ingredient input, ItemLike output, int count)

@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.common.container;
 
+
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -22,6 +23,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.client.TFCSounds;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.wood.ScribingTableBlock;
@@ -46,7 +48,7 @@ public class ScribingTableContainer extends ItemCombinerMenu
 
     public static FluidStack getInkFluid(ItemStack stack)
     {
-        final @Nullable IFluidHandlerItem fluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        final @Nullable IFluidHandlerItem fluidHandler = TransferAccess.fluidHandler(stack);
         return fluidHandler == null ? FluidStack.EMPTY : getInkFluid(fluidHandler);
     }
 
@@ -96,7 +98,7 @@ public class ScribingTableContainer extends ItemCombinerMenu
         inputSlots.setItem(0, ItemStack.EMPTY);
 
         final ItemStack dye = inputSlots.getItem(1);
-        final @Nullable IFluidHandlerItem dyeFluidHandler = dye.getCapability(Capabilities.FluidHandler.ITEM);
+        final @Nullable IFluidHandlerItem dyeFluidHandler = TransferAccess.fluidHandler(dye);
         final ItemStack resultDye;
         if (dyeFluidHandler != null)
         {

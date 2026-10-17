@@ -2,19 +2,14 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": {
-      "item": "tfc:wool_cloth"
-    },
-    "L": {
-      "tag": "tfc:lumber"
-    }
+    "C": "tfc:wool_cloth",
+    "L": "#tfc:lumber"
   },
   "pattern": [
     "LLL",
     " CC"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:windmill_blade/white"
   }
 }

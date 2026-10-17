@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/white_cedar"
-    },
-    "S": {
-      "tag": "c:rods/wooden"
-    }
+    "L": "tfc:wood/lumber/white_cedar",
+    "S": "#c:rods/wooden"
   },
   "pattern": [
     "LLL",
@@ -15,7 +11,6 @@
     "L L"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/loom/white_cedar"
   }
 }

@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "I": {
-      "tag": "c:rods/wrought_iron"
-    },
-    "P": {
-      "tag": "c:stones/pressure_plate"
-    },
-    "R": {
-      "tag": "c:dusts/redstone"
-    }
+    "I": "#c:rods/wrought_iron",
+    "P": "#c:stones/pressure_plate",
+    "R": "#c:dusts/redstone"
   },
   "pattern": [
     "I I",

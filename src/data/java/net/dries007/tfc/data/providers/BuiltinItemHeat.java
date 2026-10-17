@@ -65,17 +65,17 @@ public class BuiltinItemHeat extends DataManagerProvider<HeatDefinition> impleme
             {
                 add(metal, "block", ingredientOf(
                     ingredientOf(metal, Metal.BlockType.BLOCK),
-                    Ingredient.of(blocks.get(Metal.BlockType.EXPOSED_BLOCK)),
-                    Ingredient.of(blocks.get(Metal.BlockType.WEATHERED_BLOCK)),
-                    Ingredient.of(blocks.get(Metal.BlockType.OXIDIZED_BLOCK))
+                    net.dries007.tfc.data.Accessors.ingredient(blocks.get(Metal.BlockType.EXPOSED_BLOCK)),
+                    net.dries007.tfc.data.Accessors.ingredient(blocks.get(Metal.BlockType.WEATHERED_BLOCK)),
+                    net.dries007.tfc.data.Accessors.ingredient(blocks.get(Metal.BlockType.OXIDIZED_BLOCK))
                 ), units(Metal.BlockType.BLOCK));
-                add(metal, "block_slab", Ingredient.of(
+                add(metal, "block_slab", net.dries007.tfc.data.Accessors.ingredient(
                     blocks.get(Metal.BlockType.BLOCK_SLAB),
                     blocks.get(Metal.BlockType.EXPOSED_BLOCK_SLAB),
                     blocks.get(Metal.BlockType.WEATHERED_BLOCK_SLAB),
                     blocks.get(Metal.BlockType.OXIDIZED_BLOCK_SLAB)
                 ), units(Metal.BlockType.BLOCK_SLAB));
-                add(metal, "block_stairs", Ingredient.of(
+                add(metal, "block_stairs", net.dries007.tfc.data.Accessors.ingredient(
                     blocks.get(Metal.BlockType.BLOCK_STAIRS),
                     blocks.get(Metal.BlockType.EXPOSED_BLOCK_STAIRS),
                     blocks.get(Metal.BlockType.WEATHERED_BLOCK_STAIRS),
@@ -84,7 +84,7 @@ public class BuiltinItemHeat extends DataManagerProvider<HeatDefinition> impleme
 
                 if (Metal.BlockType.GRATE.has(metal))
                 {
-                    add(metal, "grates", Ingredient.of(
+                    add(metal, "grates", net.dries007.tfc.data.Accessors.ingredient(
                         blocks.get(Metal.BlockType.GRATE),
                         blocks.get(Metal.BlockType.WEATHERED_GRATE),
                         blocks.get(Metal.BlockType.EXPOSED_GRATE),
@@ -109,7 +109,7 @@ public class BuiltinItemHeat extends DataManagerProvider<HeatDefinition> impleme
             if (metal.allParts())
             {
                 Collection<TFCItems.ItemId> items = Helpers.mapOf(Wood.class, wood -> TFCItems.HANGING_SIGNS.get(wood).get(metal)).values();
-                add(metal, "hanging_sign", Ingredient.of(items.stream().map(ItemStack::new)), 4);
+                add(metal, "hanging_sign", net.dries007.tfc.data.Accessors.ingredient(items.stream()), 4);
             }
         });
         TFCItems.METAL_ITEMS.forEach((metal, items) -> {
@@ -126,12 +126,12 @@ public class BuiltinItemHeat extends DataManagerProvider<HeatDefinition> impleme
                     .map(items::get)
                     .filter(Objects::nonNull)
                     .toArray(ItemLike[]::new);
-                if (parts.length > 0) add(metal, "parts_" + amount, Ingredient.of(parts), amount);
+                if (parts.length > 0) add(metal, "parts_" + amount, net.dries007.tfc.data.Accessors.ingredient(parts), amount);
             }
         });
 
         TFCItems.GRADED_ORES.forEach((ore, blocks) ->
-            add(ore.name(), Ingredient.of(
+            add(ore.name(), net.dries007.tfc.data.Accessors.ingredient(
                 TFCBlocks.SMALL_ORES.get(ore),
                 blocks.get(Ore.Grade.POOR),
                 blocks.get(Ore.Grade.NORMAL),
@@ -184,15 +184,15 @@ public class BuiltinItemHeat extends DataManagerProvider<HeatDefinition> impleme
         add(TFCItems.KAOLIN_CLAY, 2.0f);
         add(TFCItems.CACTUS_WOOD, 1.0f);
         add(ingredientOf(
-            Ingredient.of(Items.TERRACOTTA),
-            Ingredient.of(Items.WHITE_TERRACOTTA),
-            Ingredient.of(TFCTags.Items.COLORED_TERRACOTTA)
+            net.dries007.tfc.data.Accessors.ingredient(Items.TERRACOTTA),
+            net.dries007.tfc.data.Accessors.ingredient(Items.WHITE_TERRACOTTA),
+            net.dries007.tfc.data.Accessors.ingredient(TFCTags.Items.COLORED_TERRACOTTA)
         ), 0.5f);
         add(TFCTags.Items.DOUGH, 1.0f);
         add(TFCTags.Items.BREAD, 1.0f);
         add(TFCTags.Items.MEATS, 1.0f);
         add(TFCTags.Items.FISH, 1.0f);
-        add(Ingredient.of(
+        add(net.dries007.tfc.data.Accessors.ingredient(
             TFCItems.FOOD.get(Food.FRESH_SEAWEED),
             TFCItems.FOOD.get(Food.DRIED_SEAWEED),
             TFCItems.FOOD.get(Food.DRIED_KELP),
@@ -208,23 +208,23 @@ public class BuiltinItemHeat extends DataManagerProvider<HeatDefinition> impleme
     private void addAndMeltIron(ItemLike item, int units)
     {
         meltingRecipes.add(new MeltingRecipe(item, Metal.CAST_IRON, units));
-        add(nameOf(item), Ingredient.of(item), Metal.WROUGHT_IRON, units);
+        add(nameOf(item), net.dries007.tfc.data.Accessors.ingredient(item), Metal.WROUGHT_IRON, units);
     }
 
     private void addAndMelt(ItemLike item, Metal metal, int units)
     {
         meltingRecipes.add(new MeltingRecipe(item, metal, units));
-        add(nameOf(item), Ingredient.of(item), metal, units);
+        add(nameOf(item), net.dries007.tfc.data.Accessors.ingredient(item), metal, units);
     }
 
     private void add(ItemLike item, float heatCapacity)
     {
-        add(Ingredient.of(item), heatCapacity);
+        add(net.dries007.tfc.data.Accessors.ingredient(item), heatCapacity);
     }
 
     private void add(TagKey<Item> item, float heatCapacity)
     {
-        add(Ingredient.of(item), heatCapacity);
+        add(net.dries007.tfc.data.Accessors.ingredient(item), heatCapacity);
     }
 
     private void add(Ingredient item, float heatCapacity)

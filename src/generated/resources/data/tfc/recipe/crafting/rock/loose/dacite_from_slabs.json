@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:rock/cobble/dacite_slab"
-    }
+    "tfc:rock/cobble/dacite_slab"
   ],
   "result": {
     "count": 2,

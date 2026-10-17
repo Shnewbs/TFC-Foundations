@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "tfc:wood/axle/mangrove"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/mangrove"
-    },
-    "P": {
-      "item": "tfc:wood/planks/mangrove"
-    }
+    "A": "tfc:wood/axle/mangrove",
+    "L": "tfc:wood/lumber/mangrove",
+    "P": "tfc:wood/planks/mangrove"
   },
   "pattern": [
     "LPL",
@@ -18,7 +12,6 @@
     "LPL"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/water_wheel/mangrove"
   }
 }

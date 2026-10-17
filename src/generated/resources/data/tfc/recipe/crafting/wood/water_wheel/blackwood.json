@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "tfc:wood/axle/blackwood"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/blackwood"
-    },
-    "P": {
-      "item": "tfc:wood/planks/blackwood"
-    }
+    "A": "tfc:wood/axle/blackwood",
+    "L": "tfc:wood/lumber/blackwood",
+    "P": "tfc:wood/planks/blackwood"
   },
   "pattern": [
     "LPL",
@@ -18,7 +12,6 @@
     "LPL"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/water_wheel/blackwood"
   }
 }

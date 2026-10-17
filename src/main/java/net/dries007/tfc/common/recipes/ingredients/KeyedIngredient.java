@@ -10,6 +10,9 @@ import java.util.Collection;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -30,6 +33,12 @@ import net.dries007.tfc.util.collections.IndirectHashCollection;
 public interface KeyedIngredient extends Predicate<ItemStack>
 {
     Collection<Item> keys();
+
+    /** Register interactions before data packs load; enumerate the live tag when caches reload. */
+    static KeyedIngredient of(TagKey<Item> tag)
+    {
+        return of(stack -> stack.is(tag), () -> BuiltInRegistries.ITEM.getOrThrow(tag).stream().map(Holder::value).toList());
+    }
 
     static KeyedIngredient of(Ingredient ingredient)
     {

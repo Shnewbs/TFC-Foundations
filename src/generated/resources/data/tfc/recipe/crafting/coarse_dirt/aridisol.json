@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:dirt/aridisol"
-    },
-    {
-      "tag": "c:gravels"
-    }
+    "tfc:dirt/aridisol",
+    "#c:gravels"
   ],
   "result": {
     "count": 2,

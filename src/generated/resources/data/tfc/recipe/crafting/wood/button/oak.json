@@ -2,12 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:wood/planks/oak"
-    }
+    "tfc:wood/planks/oak"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/button/oak"
   }
 }

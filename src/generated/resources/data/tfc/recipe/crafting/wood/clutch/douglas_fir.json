@@ -2,21 +2,11 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "tfc:wood/axle/douglas_fir"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/douglas_fir"
-    },
-    "M": {
-      "item": "tfc:brass_mechanisms"
-    },
-    "R": {
-      "tag": "c:dusts/redstone"
-    },
-    "S": {
-      "item": "tfc:wood/stripped_log/douglas_fir"
-    }
+    "A": "tfc:wood/axle/douglas_fir",
+    "L": "tfc:wood/lumber/douglas_fir",
+    "M": "tfc:brass_mechanisms",
+    "R": "#c:dusts/redstone",
+    "S": "tfc:wood/stripped_log/douglas_fir"
   },
   "pattern": [
     "LSL",

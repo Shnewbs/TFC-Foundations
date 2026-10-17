@@ -28,6 +28,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.common.component.TFCComponents;
 import net.dries007.tfc.common.component.fluid.FluidComponent;
 import net.dries007.tfc.common.component.fluid.FluidContainerInfo;
@@ -79,7 +80,7 @@ public class FluidContainerItem extends Item
         }
 
         // Fallback behavior
-        final @Nullable IFluidHandler handler = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        final @Nullable IFluidHandler handler = TransferAccess.fluidHandler(stack);
         if (handler == null)
         {
             return InteractionResult.PASS;

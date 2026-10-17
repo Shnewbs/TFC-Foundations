@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:rock/cobble/schist_slab"
-    }
+    "tfc:rock/cobble/schist_slab"
   ],
   "result": {
     "count": 2,

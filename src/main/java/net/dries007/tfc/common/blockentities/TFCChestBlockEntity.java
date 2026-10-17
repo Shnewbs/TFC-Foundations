@@ -86,6 +86,23 @@ public class TFCChestBlockEntity extends ChestBlockEntity implements PestContain
     }
 
     @Nullable
+    public net.neoforged.neoforge.transfer.ResourceHandler<net.neoforged.neoforge.transfer.item.ItemResource> getResourceHandler(@Nullable Direction direction)
+    {
+        if (level == null || !(getBlockState().getBlock() instanceof ChestBlock chest)) return null;
+        return chest.combine(getBlockState(), level, getBlockPos(), true).apply(new net.minecraft.world.level.block.DoubleBlockCombiner.Combiner<ChestBlockEntity, net.neoforged.neoforge.transfer.ResourceHandler<net.neoforged.neoforge.transfer.item.ItemResource>>() {
+            @Override public net.neoforged.neoforge.transfer.ResourceHandler<net.neoforged.neoforge.transfer.item.ItemResource> acceptDouble(ChestBlockEntity first, ChestBlockEntity second)
+            {
+                return new net.neoforged.neoforge.transfer.CombinedResourceHandler<>(net.neoforged.neoforge.transfer.item.VanillaContainerWrapper.of(first), net.neoforged.neoforge.transfer.item.VanillaContainerWrapper.of(second));
+            }
+            @Override public net.neoforged.neoforge.transfer.ResourceHandler<net.neoforged.neoforge.transfer.item.ItemResource> acceptSingle(ChestBlockEntity single)
+            {
+                return net.neoforged.neoforge.transfer.item.VanillaContainerWrapper.of(single);
+            }
+            @Override public net.neoforged.neoforge.transfer.ResourceHandler<net.neoforged.neoforge.transfer.item.ItemResource> acceptNone() { return null; }
+        });
+    }
+
+    @Nullable
     public IItemHandler getInventoryHandler(@Nullable Direction direction)
     {
         if (inventoryHandler != null)

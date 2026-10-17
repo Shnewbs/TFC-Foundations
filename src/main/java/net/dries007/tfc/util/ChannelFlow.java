@@ -37,6 +37,7 @@ import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.common.blockentities.ChannelBlockEntity;
 import net.dries007.tfc.common.blockentities.CrucibleBlockEntity;
 import net.dries007.tfc.common.blockentities.MoldTableBlockEntity;
@@ -348,7 +349,7 @@ public class ChannelFlow
         if (!fluidStack.isEmpty())
         {
             final ItemStack stack = inventory.getStackInSlot(slot);
-            final @Nullable IFluidHandler fluidCap = stack.getCapability(Capabilities.FluidHandler.ITEM);
+            final @Nullable IFluidHandler fluidCap = TransferAccess.fluidHandler(stack);
             if (fluidCap != null)
             {
                 int filled = fluidCap.fill(fluidStack, IFluidHandler.FluidAction.SIMULATE);

@@ -2,18 +2,10 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "G": {
-      "item": "tfc:wood/log/mangrove"
-    },
-    "L": {
-      "tag": "c:leathers"
-    },
-    "P": {
-      "item": "tfc:wood/planks/mangrove"
-    },
-    "S": {
-      "tag": "c:tools/shear"
-    }
+    "G": "tfc:wood/log/mangrove",
+    "L": "#c:leathers",
+    "P": "tfc:wood/planks/mangrove",
+    "S": "#c:tools/shear"
   },
   "pattern": [
     " LS",
@@ -21,7 +13,6 @@
     "G G"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/sewing_table/mangrove"
   }
 }

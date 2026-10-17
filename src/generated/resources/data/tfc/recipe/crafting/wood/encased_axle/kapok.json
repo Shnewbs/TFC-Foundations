@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "tfc:wood/axle/kapok"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/kapok"
-    },
-    "S": {
-      "item": "tfc:wood/stripped_log/kapok"
-    }
+    "A": "tfc:wood/axle/kapok",
+    "L": "tfc:wood/lumber/kapok",
+    "S": "tfc:wood/stripped_log/kapok"
   },
   "pattern": [
     " S ",

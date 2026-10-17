@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "tag": "tfc:double_sheets/any_bronze"
-    }
+    "B": "#tfc:double_sheets/any_bronze"
   },
   "pattern": [
     "BBB",
@@ -12,7 +10,6 @@
     "BBB"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:bloomery"
   }
 }

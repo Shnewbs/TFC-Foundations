@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "tag": "tfc:lumber"
-    },
-    "R": {
-      "tag": "c:dyes/red"
-    },
-    "S": {
-      "tag": "c:strings"
-    }
+    "L": "#tfc:lumber",
+    "R": "#c:dyes/red",
+    "S": "#c:strings"
   },
   "pattern": [
     "LSL",
@@ -18,7 +12,6 @@
     "LLL"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:powderkeg"
   }
 }

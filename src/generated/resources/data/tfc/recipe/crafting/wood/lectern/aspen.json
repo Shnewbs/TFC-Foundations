@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "tfc:wood/bookshelf/aspen"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/aspen"
-    }
+    "B": "tfc:wood/bookshelf/aspen",
+    "L": "tfc:wood/lumber/aspen"
   },
   "pattern": [
     "LLL",
@@ -15,7 +11,6 @@
     " L "
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/lectern/aspen"
   }
 }

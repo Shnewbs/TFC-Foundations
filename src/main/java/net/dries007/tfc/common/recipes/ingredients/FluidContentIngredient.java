@@ -25,6 +25,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.fluids.FluidHelpers;
 import net.dries007.tfc.common.recipes.RecipeHelpers;
@@ -61,7 +62,7 @@ public record FluidContentIngredient(SizedFluidIngredient fluid) implements ICus
             .flatMap(fluid -> Helpers.allItems(TFCTags.Items.FLUID_ITEM_INGREDIENT_EMPTY_CONTAINERS)
                 .map(item -> {
                     final ItemStack stack = new ItemStack(item);
-                    final IFluidHandlerItem fluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
+                    final IFluidHandlerItem fluidHandler = TransferAccess.fluidHandler(stack);
                     if (fluidHandler != null)
                     {
                         // Attempt to fill with the current fluid

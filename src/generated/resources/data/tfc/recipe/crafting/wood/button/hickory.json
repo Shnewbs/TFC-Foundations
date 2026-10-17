@@ -2,12 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:wood/planks/hickory"
-    }
+    "tfc:wood/planks/hickory"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/button/hickory"
   }
 }

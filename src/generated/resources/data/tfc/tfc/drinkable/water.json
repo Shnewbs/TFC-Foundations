@@ -1,11 +1,14 @@
 {
-  "ingredient": [
-    {
-      "fluid": "minecraft:water"
-    },
-    {
-      "fluid": "tfc:river_water"
-    }
-  ],
+  "ingredient": {
+    "type": "neoforge:compound",
+    "children": [
+      {
+        "fluid": "minecraft:water"
+      },
+      {
+        "fluid": "tfc:river_water"
+      }
+    ]
+  },
   "water": 10.0
 }

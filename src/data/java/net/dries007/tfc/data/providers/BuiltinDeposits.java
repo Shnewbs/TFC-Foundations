@@ -33,7 +33,7 @@ public class BuiltinDeposits extends DataManagerProvider<Deposit>
             final String rockId = rock.getSerializedName();
             final String typeId = type.name().toLowerCase(Locale.ROOT);
             add("%s/%s".formatted(typeId, rockId), new Deposit(
-                Ingredient.of(block),
+                net.dries007.tfc.data.Accessors.ingredient(block),
                 ResourceKey.create(Registries.LOOT_TABLE, Helpers.identifier("deposit/%s_%s".formatted(typeId, rockId))),
                 List.of(
                     Helpers.identifier("item/pan/%s/%s_full".formatted(typeId, rockId)),

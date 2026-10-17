@@ -33,7 +33,7 @@ public record Deposit(
 ) implements IRecipePredicate<ItemStack>
 {
     public static final Codec<Deposit> CODEC = RecordCodecBuilder.create(i -> i.group(
-        Ingredient.CODEC.fieldOf("ingredient").forGetter(c -> c.ingredient),
+        net.dries007.tfc.common.recipes.LegacyIngredientCodecs.ITEM.fieldOf("ingredient").forGetter(c -> c.ingredient),
         ResourceKey.codec(Registries.LOOT_TABLE).fieldOf("loot_table").forGetter(c -> c.lootTable),
         Identifier.CODEC.listOf().optionalFieldOf("model_stages", List.of()).forGetter(c -> c.modelStages)
     ).apply(i, Deposit::new));

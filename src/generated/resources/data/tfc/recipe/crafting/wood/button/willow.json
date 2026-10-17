@@ -2,12 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:wood/planks/willow"
-    }
+    "tfc:wood/planks/willow"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/button/willow"
   }
 }

@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "tfc:mud"
-    },
-    {
-      "item": "minecraft:clay_ball"
-    }
+    "#tfc:mud",
+    "minecraft:clay_ball"
   ],
   "result": {
     "count": 2,

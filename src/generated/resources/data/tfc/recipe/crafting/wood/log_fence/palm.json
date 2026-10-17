@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/palm"
-    },
-    "P": {
-      "item": "tfc:wood/log/palm"
-    }
+    "L": "tfc:wood/lumber/palm",
+    "P": "tfc:wood/log/palm"
   },
   "pattern": [
     "PLP",

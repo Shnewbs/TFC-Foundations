@@ -2,16 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "X": {
-      "item": "tfc:wood/planks/willow"
-    }
+    "X": "tfc:wood/planks/willow"
   },
   "pattern": [
     "XX",
     "XX"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/workbench/willow"
   }
 }

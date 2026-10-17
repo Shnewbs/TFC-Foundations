@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "tfc:rock_knapping"
-    },
-    {
-      "item": "minecraft:music_disc_11"
-    }
+    "#tfc:rock_knapping",
+    "minecraft:music_disc_11"
   ],
   "result": {
     "count": 8,

@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": {
-      "item": "tfc:metal/chain/black_bronze"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/sycamore"
-    }
+    "C": "tfc:metal/chain/black_bronze",
+    "L": "tfc:wood/lumber/sycamore"
   },
   "pattern": [
     "C C",

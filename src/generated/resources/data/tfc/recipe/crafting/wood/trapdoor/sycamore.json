@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/sycamore"
-    }
+    "L": "tfc:wood/lumber/sycamore"
   },
   "pattern": [
     "LLL",

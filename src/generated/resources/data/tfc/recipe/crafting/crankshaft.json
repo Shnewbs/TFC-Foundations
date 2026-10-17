@@ -2,22 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "tag": "tfc:axles"
-    },
-    "M": {
-      "item": "tfc:brass_mechanisms"
-    },
-    "S": {
-      "tag": "c:sheets/brass"
-    }
+    "A": "#tfc:axles",
+    "M": "tfc:brass_mechanisms",
+    "S": "#c:sheets/brass"
   },
   "pattern": [
     "AM",
     " S"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:crankshaft"
   }
 }

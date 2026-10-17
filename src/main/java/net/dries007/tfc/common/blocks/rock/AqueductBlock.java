@@ -170,8 +170,7 @@ public class AqueductBlock extends HorizontalDirectionalBlock implements IFluidL
         level.scheduleTick(pos, this, LONG_TICK_DELAY);
     }
 
-    @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving)
+    public void handleStateRemoval(BlockState state, Level level, BlockPos pos, BlockState newState)
     {
         if (newState.getBlock() != this && // When replacing with another block, aka air
             state.getValue(getFluidProperty()).getFluid() != Fluids.EMPTY && // And the aqueduct currently has fluid

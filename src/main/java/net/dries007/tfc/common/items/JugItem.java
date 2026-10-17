@@ -25,6 +25,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.client.TFCSounds;
 import net.dries007.tfc.common.player.IPlayerInfo;
 import net.dries007.tfc.common.player.PlayerInfo;
@@ -41,7 +42,7 @@ public class JugItem extends FluidContainerItem
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity)
     {
-        final @Nullable IFluidHandler handler = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        final @Nullable IFluidHandler handler = TransferAccess.fluidHandler(stack);
         if (handler != null)
         {
             final FluidStack drained = handler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE);

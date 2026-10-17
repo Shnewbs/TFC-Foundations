@@ -2,24 +2,20 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "S": [
-      {
-        "tag": "c:rods/wooden"
-      },
-      {
-        "item": "minecraft:bone"
-      }
-    ],
-    "X": {
-      "item": "tfc:stone/knife_head/sedimentary"
-    }
+    "S": {
+      "neoforge:ingredient_type": "neoforge:compound",
+      "children": [
+        "#c:rods/wooden",
+        "minecraft:bone"
+      ]
+    },
+    "X": "tfc:stone/knife_head/sedimentary"
   },
   "pattern": [
     "X",
     "S"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:stone/knife/sedimentary"
   }
 }

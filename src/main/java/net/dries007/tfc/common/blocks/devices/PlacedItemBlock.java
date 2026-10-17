@@ -164,28 +164,17 @@ public class PlacedItemBlock extends DeviceBlock implements IForgeBlockExtension
         return updateState;
     }
 
-    @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving)
+    /** Called after the section changes but while the original block entity is still available. */
+    public void handleStateRemoval(BlockState state, Level level, BlockPos pos, BlockState newState)
     {
-        // By default, this properly handles when a block is replaced with another block (dumping all contents)
-        // However, we also need to handle when the state updates, and the inventory slots are no longer available.
-        // So, rather than calling `beforeRemove` -> `ejectInventory` in the super method, we call `ejectIfNeeded`.
-        //
-        // N.B. Use the extension block entity, since we want both shelves and placed items to use this functionality
         level.getBlockEntity(pos, getExtendedProperties().<PlacedItemBlockEntity>blockEntity())
             .ifPresent(entity -> entity.ejectInventoryIfNeeded(newState));
-
-        // Default super() behavior
-        if (state.hasBlockEntity() && (!Helpers.isBlock(state, newState.getBlock()) || !newState.hasBlockEntity()))
-        {
-            level.removeBlockEntity(pos);
-        }
     }
 
     @Override
     protected void beforeRemove(InventoryBlockEntity<?> entity)
     {
-        // No-op - we don't want to call ejectInventory()
+        // The state-change bridge already ejects only invalid slots (or every slot on replacement).
     }
 
     @Override

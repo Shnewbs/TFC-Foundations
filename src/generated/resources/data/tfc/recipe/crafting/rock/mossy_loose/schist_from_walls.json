@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:rock/mossy_cobble/schist_wall"
-    }
+    "tfc:rock/mossy_cobble/schist_wall"
   ],
   "result": {
     "count": 4,

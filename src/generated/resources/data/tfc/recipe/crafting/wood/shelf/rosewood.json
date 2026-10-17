@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/rosewood"
-    },
-    "P": {
-      "item": "tfc:wood/planks/rosewood"
-    },
-    "S": {
-      "tag": "c:rods/wooden"
-    }
+    "L": "tfc:wood/lumber/rosewood",
+    "P": "tfc:wood/planks/rosewood",
+    "S": "#c:rods/wooden"
   },
   "pattern": [
     "PPP",

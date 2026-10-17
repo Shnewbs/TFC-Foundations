@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.common.entities.livestock;
 
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
@@ -24,6 +25,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.Nullable;
 
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.client.TFCSounds;
 import net.dries007.tfc.common.fluids.FluidHelpers;
 import net.dries007.tfc.config.animals.ProducingMammalConfig;
@@ -43,7 +45,7 @@ public abstract class DairyAnimal extends ProducingMammal
     {
         final ItemStack held = player.getItemInHand(hand);
         // Without copying the stack the dest handler is the same as the input handler, and gets filled with fluid
-        final @Nullable IFluidHandlerItem destFluidItemHandler = held.copy().getCapability(Capabilities.FluidHandler.ITEM);
+        final @Nullable IFluidHandlerItem destFluidItemHandler = TransferAccess.fluidHandler(held.copy());
 
         if (!held.isEmpty() && destFluidItemHandler != null)
         {

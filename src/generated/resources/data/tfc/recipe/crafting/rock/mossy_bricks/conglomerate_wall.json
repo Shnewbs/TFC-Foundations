@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "tfc:rock/mossy_bricks/conglomerate"
-    }
+    "#": "tfc:rock/mossy_bricks/conglomerate"
   },
   "pattern": [
     "###",

@@ -2,18 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "G": {
-      "tag": "tfc:metal_grates"
-    },
-    "M": {
-      "item": "tfc:brass_mechanisms"
-    }
+    "G": "#tfc:metal_grates",
+    "M": "tfc:brass_mechanisms"
   },
   "pattern": [
     "MGM"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:lobster_trap"
   }
 }

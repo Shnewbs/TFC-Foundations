@@ -6,7 +6,6 @@
 
 package net.dries007.tfc.common.component;
 
-import java.lang.reflect.Field;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentPatch;
@@ -21,7 +20,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.event.ModifyDefaultComponentsEvent;
-import net.neoforged.neoforge.internal.RegistrationEvents;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.Nullable;
@@ -103,8 +101,8 @@ public final class TFCComponents
      * of food, and in normal gameplay, these will only miss stacks created before the initial resource reload, which in TFC of the past, would not
      * have had correct food/size properties anyway.
      * <p>
-     * All this to say, we use the Neo provided modification event infrastructure, with a little bit of reflection to avoid the safeguards Neo
-     * puts in place to prevent exactly what we are doing.
+     * The native item holder now owns default components. Rebind its map and invalidate the native default-resource cache;
+     * the existing item-copy hook refreshes old stack prototypes. No reflective registration guard is used.
      *
      * @see ModifyDefaultComponentsEvent
      */
@@ -117,7 +115,6 @@ public final class TFCComponents
         // A default instance, which is used in vanilla to signal an item is edible.
         final FoodProperties food = new FoodProperties.Builder().build();
 
-        setAllowComponentModifications(true);
         for (Item item : BuiltInRegistries.ITEM)
         {
             final ItemStack stack = new ItemStack(item);
@@ -147,25 +144,17 @@ public final class TFCComponents
                 }
             }
         }
-        setAllowComponentModifications(false);
         LOG.info("Modified default components of {} items after resource reload", count);
     }
 
-    @SuppressWarnings({"UnstableApiUsage", "deprecation"})
+    @SuppressWarnings("deprecation")
     private static void modifyDefaultComponentsFrom(Item item, DataComponentPatch patch)
     {
-        item.modifyDefaultComponentsFrom(patch);
-    }
-
-    private static final Field CAN_MODIFY_COMPONENTS = Helpers.uncheck(() -> {
-        @SuppressWarnings("UnstableApiUsage") final Field field = RegistrationEvents.class.getDeclaredField("canModifyComponents");
-        field.setAccessible(true);
-        return field;
-    });
-
-    private static void setAllowComponentModifications(boolean value)
-    {
-        Helpers.uncheck(() -> CAN_MODIFY_COMPONENTS.set(null, value));
+        final var components = new net.minecraft.core.component.PatchedDataComponentMap(item.components());
+        components.applyPatch(patch);
+        item.builtInRegistryHolder().bindComponents(net.minecraft.core.component.DataComponentMap.builder().addAll(components).build());
+        // Native ItemResource caches its default stack independently of the holder.
+        item.resetDefaultResource();
     }
 
     private static <T> Id<T> register(String name, Codec<T> codec, StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec)

@@ -3,16 +3,11 @@
   "category": "misc",
   "ingredients": [
     [
-      {
-        "item": "tfc:powder/malachite"
-      },
-      {
-        "item": "tfc:powder/bismuthinite"
-      }
+      "tfc:powder/malachite",
+      "tfc:powder/bismuthinite"
     ]
   ],
   "result": {
-    "count": 1,
     "id": "minecraft:green_dye"
   }
 }

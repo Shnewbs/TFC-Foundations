@@ -70,7 +70,12 @@ import static net.dries007.tfc.TerraFirmaCraft.*;
 public final class DataEntryPoint
 {
     @SubscribeEvent
-    public static void gatherData(GatherDataEvent event)
+    public static void gatherClientData(GatherDataEvent.Client event) { gatherData(event); }
+
+    @SubscribeEvent
+    public static void gatherServerData(GatherDataEvent.Server event) { gatherData(event); }
+
+    private static void gatherData(GatherDataEvent event)
     {
         final PackOutput output = event.getGenerator().getPackOutput();
 
@@ -82,7 +87,7 @@ public final class DataEntryPoint
                 .add(Registries.WORLD_PRESET, BuiltinWorldPreset::load)
                 .add(Registries.PAINTING_VARIANT, BuiltinPaintings::new)
                 .add(Registries.DAMAGE_TYPE, BuiltinDamageTypes::new)
-            , Set.of(MOD_ID, "minecraft"))).getRegistryProvider();
+            , Set.of(MOD_ID, "minecraft"))).getRegistryProvider().thenApply(ComponentAwareLookup::bindDefaultComponents);
         final var fluidHeat = add(event, new BuiltinFluidHeat(output, lookup)).output();
         final var itemHeat = add(event, new BuiltinItemHeat(output, lookup, fluidHeat));
 
@@ -168,7 +173,7 @@ public final class DataEntryPoint
 
     private static <T> void tags(GatherDataEvent event, ResourceKey<Registry<T>> registry, CompletableFuture<HolderLookup.Provider> lookup, BiConsumer<HolderLookup.Provider, TagLookup<T>> callback)
     {
-        add(event, new TagsProvider<T>(event.getGenerator().getPackOutput(), registry, lookup, MOD_ID, event.getExistingFileHelper())
+        add(event, new net.minecraft.data.tags.KeyTagProvider<T>(event.getGenerator().getPackOutput(), registry, lookup, MOD_ID)
         {
             @Override
             protected void addTags(HolderLookup.Provider provider)
@@ -181,6 +186,6 @@ public final class DataEntryPoint
     @FunctionalInterface
     interface TagLookup<T>
     {
-        TagsProvider.TagAppender<T> tag(TagKey<T> tag);
+        net.minecraft.data.tags.TagAppender<ResourceKey<T>, T> tag(TagKey<T> tag);
     }
 }

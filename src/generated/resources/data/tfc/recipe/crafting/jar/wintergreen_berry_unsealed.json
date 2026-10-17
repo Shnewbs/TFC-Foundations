@@ -3,7 +3,7 @@
   "category": "misc",
   "ingredients": [
     {
-      "type": "tfc:and",
+      "neoforge:ingredient_type": "tfc:and",
       "children": [
         {
           "item": "tfc:jar/wintergreen_berry"
@@ -15,7 +15,6 @@
     }
   ],
   "result": {
-    "count": 1,
     "id": "tfc:jar/wintergreen_berry_unsealed"
   }
 }

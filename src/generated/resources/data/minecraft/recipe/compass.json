@@ -2,25 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "tag": "c:bowls"
-    },
-    "L": {
-      "item": "tfc:lens"
-    },
+    "B": "#c:bowls",
+    "L": "tfc:lens",
     "R": [
-      {
-        "item": "tfc:ore/small_magnetite"
-      },
-      {
-        "item": "tfc:ore/poor_magnetite"
-      },
-      {
-        "item": "tfc:ore/normal_magnetite"
-      },
-      {
-        "item": "tfc:ore/rich_magnetite"
-      }
+      "tfc:ore/small_magnetite",
+      "tfc:ore/poor_magnetite",
+      "tfc:ore/normal_magnetite",
+      "tfc:ore/rich_magnetite"
     ]
   },
   "pattern": [
@@ -29,7 +17,6 @@
     "B"
   ],
   "result": {
-    "count": 1,
     "id": "minecraft:compass"
   }
 }

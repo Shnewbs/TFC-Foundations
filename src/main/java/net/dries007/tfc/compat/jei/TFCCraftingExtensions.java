@@ -15,15 +15,18 @@ import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICraftingCategoryExtension;
 import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration;
-import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
 import net.dries007.tfc.common.recipes.AdvancedShapelessRecipe;
+import net.dries007.tfc.common.recipes.AdvancedShapedRecipe;
+import net.dries007.tfc.common.recipes.RecipeHelpers;
+import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
 import net.dries007.tfc.common.recipes.outputs.ExtraProductModifier;
 
-// todo: advanced shaped recipes?
 public final class TFCCraftingExtensions
 {
     // NeoForge 26.1 exposes item holders; JEI still displays ItemStacks.
@@ -43,101 +46,110 @@ public final class TFCCraftingExtensions
 
     public static void register(IVanillaCategoryExtensionRegistration registry)
     {
+        registry.getCraftingCategory().addExtension(AdvancedShapedRecipe.class, new ICraftingCategoryExtension<>()
+        {
+            @Override
+            public List<SlotDisplay> getIngredients(RecipeHolder<AdvancedShapedRecipe> holder)
+            {
+                return holder.value().getIngredients().stream().map(i -> i.map(Ingredient::display).orElse(SlotDisplay.Empty.INSTANCE)).toList();
+            }
+
+            @Override
+            public int getWidth(RecipeHolder<AdvancedShapedRecipe> holder) { return holder.value().getWidth(); }
+
+            @Override
+            public int getHeight(RecipeHolder<AdvancedShapedRecipe> holder) { return holder.value().getHeight(); }
+
+            @Override
+            public void setRecipe(RecipeHolder<AdvancedShapedRecipe> holder, IRecipeLayoutBuilder builder, ICraftingGridHelper helper, IFocusGroup focuses)
+            {
+                final AdvancedShapedRecipe recipe = holder.value();
+                TFCCraftingExtensions.setRecipe(builder, helper, recipe.getIngredients().stream().map(i -> i.map(TFCCraftingExtensions::previewItems).orElse(List.of())).toList(),
+                    recipe.getResult(), recipe.getRemainder(), recipe.getInputSlot(), recipe.getWidth(), recipe.getHeight());
+            }
+        });
         registry.getCraftingCategory().addExtension(AdvancedShapelessRecipe.class, new ICraftingCategoryExtension<>()
         {
             @Override
-            public List<net.minecraft.world.item.crafting.display.SlotDisplay> getIngredients(RecipeHolder<AdvancedShapelessRecipe> holder)
+            public List<SlotDisplay> getIngredients(RecipeHolder<AdvancedShapelessRecipe> holder)
             {
                 return holder.value().getIngredients().stream().map(Ingredient::display).toList();
             }
 
             @Override
-            public void setRecipe(RecipeHolder<AdvancedShapelessRecipe> recipeHolder, IRecipeLayoutBuilder builder, ICraftingGridHelper helper, IFocusGroup focuses)
+            public void setRecipe(RecipeHolder<AdvancedShapelessRecipe> holder, IRecipeLayoutBuilder builder, ICraftingGridHelper helper, IFocusGroup focuses)
             {
-                final AdvancedShapelessRecipe recipe = recipeHolder.value();
-                final NonNullList<Ingredient> ingredients = recipe.getIngredients();
-                final List<List<ItemStack>> inputs = ingredients.stream()
-                    .map(TFCCraftingExtensions::previewItems)
-                    .toList();
-
-                final Optional<Ingredient> primaryIngredient = recipe.getPrimaryIngredient();
-                if (primaryIngredient.isEmpty() || primaryIngredient.get().isEmpty())
-                {
-                    // todo: this appears to be unused in any recipe as of 1.21, can it be removed?
-//
-//                    final CraftingInput vanillaInput = CraftingInput.of(3, 3, templateInput);
-//                    final List<ItemStack> outputItemNoPrimary = Collections.singletonList(recipe.assemble(vanillaInput, registry));
-//                    helper.createAndSetOutputs(builder, JEIIntegration.ITEM_STACK, outputItemNoPrimary);
-                    helper.createAndSetInputs(builder, JEIIntegration.ITEM_STACK, inputs, 0, 0);
-                    return;
-                }
-
-                // locate a matching ingredient to the primary ingredient
-                final List<ItemStack> primaryItems = previewItems(primaryIngredient.get());
+                final AdvancedShapelessRecipe recipe = holder.value();
+                final List<List<ItemStack>> inputs = recipe.getIngredients().stream().map(TFCCraftingExtensions::previewItems).toList();
+                final Optional<Ingredient> primary = recipe.getPrimaryIngredient();
                 int primaryIndex = -1;
-                for (int i = 0; i < inputs.size(); i++)
+                if (primary.isPresent())
                 {
-                    final List<ItemStack> testItems = inputs.get(i);
-                    if (testItems.size() != primaryItems.size()) continue;
-                    boolean valid = true;
-                    for (int j = 0; j < testItems.size(); j++)
+                    final List<ItemStack> primaryItems = previewItems(primary.get());
+                    for (int i = 0; i < inputs.size(); i++)
                     {
-                        if (testItems.get(j).getItem() != primaryItems.get(j).getItem())
+                        final List<ItemStack> items = inputs.get(i);
+                        if (items.size() == primaryItems.size() && java.util.stream.IntStream.range(0, items.size())
+                            .allMatch(j -> ItemStack.isSameItemSameComponents(items.get(j), primaryItems.get(j))))
                         {
-                            valid = false;
+                            primaryIndex = i;
                             break;
                         }
                     }
-                    if (valid)
-                    {
-                        primaryIndex = i;
-                        break;
-                    }
                 }
-
-                final List<ItemStack> outputItems = new ArrayList<>();
-                if (primaryIndex != -1)
-                {
-                    for (ItemStack item : inputs.get(primaryIndex))
-                    {
-                        for (ItemStack displayItem : recipe.getResult().displayInputs(item))
-                        {
-                            final ItemStack output = recipe.getResult().getSingleStackDisplayOnly(displayItem);
-                            if (!output.isEmpty())
-                            {
-                                outputItems.add(output);
-                            }
-                        }
-                    }
-                }
-
-                final List<IRecipeSlotBuilder> inputSlots = helper.createAndSetInputs(builder, JEIIntegration.ITEM_STACK, inputs, 0, 0);
-
-                if (outputItems.isEmpty())
-                {
-                    return;
-                }
-
-                final IRecipeSlotBuilder outputSlot = helper.createAndSetOutputs(builder, JEIIntegration.ITEM_STACK, outputItems);
-
-                // a focus link here essentially says, this item causes that output. It requires both slots to have the same number of
-                // items, which is only true if every input produced exactly one output - a result that depends on its input, or that
-                // displays more items than the ingredient itself matches, will not line up, and simply displays without the link.
-                if (outputItems.size() == inputs.get(primaryIndex).size())
-                {
-                    // JEI always creates nine slots, and places shapeless recipes of 1 and 2-4 ingredients in a 1x1 or 2x2 grid
-                    final int slotIndex = inputs.size() == 1 ? 4 : inputs.size() <= 4 ? (primaryIndex / 2) * 3 + primaryIndex % 2 : primaryIndex;
-                    builder.createFocusLink(inputSlots.get(slotIndex), outputSlot);
-                }
-
-                recipe.getRemainder().ifPresent(r -> r.modifiers().forEach(mod -> {
-                    if (mod instanceof ExtraProductModifier(ItemStack remainder))
-                    {
-                        builder.addOutputSlot(60, 0).addItemStack(remainder);
-                    }
-                }));
+                TFCCraftingExtensions.setRecipe(builder, helper, inputs, recipe.getResult(), recipe.getRemainder(), primaryIndex, 0, 0);
             }
         });
     }
 
+    private static void setRecipe(IRecipeLayoutBuilder builder, ICraftingGridHelper helper, List<List<ItemStack>> inputs,
+        ItemStackProvider result, Optional<ItemStackProvider> remainder, int primaryIndex, int width, int height)
+    {
+        final List<IRecipeSlotBuilder> inputSlots = helper.createAndSetInputs(builder, JEIIntegration.ITEM_STACK, inputs, width, height);
+        final int gridWidth = width != 0 ? width : inputs.size() == 1 ? 1 : inputs.size() <= 4 ? 2 : 3;
+        final int gridHeight = height != 0 ? height : gridWidth;
+        final List<ItemStack> outputItems = new ArrayList<>();
+        if (!result.dependsOnInput())
+        {
+            final ItemStack output = result.getEmptyStack();
+            if (!output.isEmpty()) outputItems.add(output);
+        }
+        else if (primaryIndex >= 0 && primaryIndex < inputs.size())
+        {
+            final List<ItemStack> grid = new ArrayList<>();
+            for (int i = 0; i < gridWidth * gridHeight; i++)
+            {
+                grid.add(i < inputs.size() && !inputs.get(i).isEmpty() ? inputs.get(i).getFirst().copy() : ItemStack.EMPTY);
+            }
+            for (ItemStack item : inputs.get(primaryIndex))
+            {
+                for (ItemStack displayItem : result.displayInputs(item))
+                {
+                    grid.set(primaryIndex, displayItem.copy());
+                    RecipeHelpers.setCraftingInput(CraftingInput.of(gridWidth, gridHeight, List.copyOf(grid)));
+                    try
+                    {
+                        final ItemStack output = result.getSingleStackDisplayOnly(displayItem);
+                        if (!output.isEmpty()) outputItems.add(output);
+                    }
+                    finally
+                    {
+                        RecipeHelpers.clearCraftingInput();
+                    }
+                }
+            }
+        }
+        if (!outputItems.isEmpty())
+        {
+            final IRecipeSlotBuilder outputSlot = helper.createAndSetOutputs(builder, JEIIntegration.ITEM_STACK, outputItems);
+            // Focus links require a one-to-one sequence, including any component-aware display expansion.
+            if (result.dependsOnInput() && primaryIndex >= 0 && outputItems.size() == inputs.get(primaryIndex).size())
+            {
+                builder.createFocusLink(inputSlots.get(helper.getCraftingIndex(primaryIndex, gridWidth, gridHeight)), outputSlot);
+            }
+        }
+        remainder.ifPresent(r -> r.modifiers().forEach(mod -> {
+            if (mod instanceof ExtraProductModifier(ItemStack extra)) builder.addOutputSlot(60, 0).addItemStack(extra);
+        }));
+    }
 }

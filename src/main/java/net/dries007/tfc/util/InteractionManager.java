@@ -119,7 +119,7 @@ public final class InteractionManager
 
     public static void registerDefaultInteractions()
     {
-        registerBlock(RecipeHelpers.ingredient(TFCTags.Items.THATCH_BED_HIDES), (stack, context) -> {
+        registerBlock(KeyedIngredient.of(TFCTags.Items.THATCH_BED_HIDES), (stack, context) -> {
             final Level level = context.getLevel();
             final Player player = context.getPlayer();
             if (!level.isClientSide() && player != null && player.mayBuild())
@@ -235,7 +235,7 @@ public final class InteractionManager
         // - holding log, targeting log pile, shift click = insert one
         // - holding log, targeting log pile, shift double click = insert all
         final BlockItemPlacement logPilePlacement = new BlockItemPlacement(Items.AIR, TFCBlocks.LOG_PILE);
-        registerBlock(RecipeHelpers.ingredient(TFCTags.Items.LOG_PILE_LOGS), (stack, context) -> {
+        registerBlock(KeyedIngredient.of(TFCTags.Items.LOG_PILE_LOGS), (stack, context) -> {
             final Player player = context.getPlayer();
             if (player != null && player.mayBuild() && player.isShiftKeyDown())
             {
@@ -347,10 +347,10 @@ public final class InteractionManager
         final BlockItemPlacement ingotPilePlacement = new BlockItemPlacement(Items.AIR, TFCBlocks.INGOT_PILE);
         final BlockItemPlacement doubleIngotPilePlacement = new BlockItemPlacement(Items.AIR, TFCBlocks.DOUBLE_INGOT_PILE);
 
-        registerBlock(RecipeHelpers.ingredient(Tags.Items.INGOTS), (stack, context) -> doIngotPiling(ingotPilePlacement, stack, context, (IngotPileBlock) TFCBlocks.INGOT_PILE.get(), IngotPileBlock.COUNT, 64));
-        registerBlock(RecipeHelpers.ingredient(TFCTags.Items.DOUBLE_INGOTS), (stack, context) -> doIngotPiling(doubleIngotPilePlacement, stack, context, (IngotPileBlock) TFCBlocks.DOUBLE_INGOT_PILE.get(), DoubleIngotPileBlock.DOUBLE_COUNT, 36));
+        registerBlock(KeyedIngredient.of(Tags.Items.INGOTS), (stack, context) -> doIngotPiling(ingotPilePlacement, stack, context, (IngotPileBlock) TFCBlocks.INGOT_PILE.get(), IngotPileBlock.COUNT, 64));
+        registerBlock(KeyedIngredient.of(TFCTags.Items.DOUBLE_INGOTS), (stack, context) -> doIngotPiling(doubleIngotPilePlacement, stack, context, (IngotPileBlock) TFCBlocks.DOUBLE_INGOT_PILE.get(), DoubleIngotPileBlock.DOUBLE_COUNT, 36));
 
-        registerBlock(RecipeHelpers.ingredient(TFCTags.Items.USABLE_IN_MOLD_TABLE), (stack, context) -> {
+        registerBlock(KeyedIngredient.of(TFCTags.Items.USABLE_IN_MOLD_TABLE), (stack, context) -> {
 
             final Player player = context.getPlayer();
             if (player != null && player.mayBuild())
@@ -367,7 +367,7 @@ public final class InteractionManager
             return InteractionResult.PASS;
         });
 
-        register(RecipeHelpers.ingredient(TFCTags.Items.SALAD_BOWLS), Target.BOTH, (stack, context) -> {
+        register(KeyedIngredient.of(TFCTags.Items.SALAD_BOWLS), Target.BOTH, (stack, context) -> {
             // Only open salads when shift key is down
             // Normally when consuming bowl food (like salads), you'll be holding right click down causing the salad gui to immediately open
             // That feels bad to use, so we require shift to open salads - better in the common case

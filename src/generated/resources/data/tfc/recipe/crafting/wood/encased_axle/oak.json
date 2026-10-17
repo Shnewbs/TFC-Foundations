@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "tfc:wood/axle/oak"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/oak"
-    },
-    "S": {
-      "item": "tfc:wood/stripped_log/oak"
-    }
+    "A": "tfc:wood/axle/oak",
+    "L": "tfc:wood/lumber/oak",
+    "S": "tfc:wood/stripped_log/oak"
   },
   "pattern": [
     " S ",

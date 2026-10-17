@@ -119,20 +119,20 @@ public class TFCEntities
 
     // Misc
 
-    public static final Id<TFCFallingBlockEntity> FALLING_BLOCK = register("falling_block", EntityType.Builder.<TFCFallingBlockEntity>of(TFCFallingBlockEntity::new, MobCategory.MISC).sized(0.98f, 0.98f));
-    public static final Id<TFCFishingHook> FISHING_BOBBER = register("fishing_bobber", EntityType.Builder.<TFCFishingHook>of(TFCFishingHook::new, MobCategory.MISC).noSave().noSummon().sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(5));
-    public static final Id<GlowArrow> GLOW_ARROW = register("glow_arrow", EntityType.Builder.<GlowArrow>of(GlowArrow::new, MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20));
-    public static final Id<ThrownJavelin> THROWN_JAVELIN = register("thrown_javelin", EntityType.Builder.<ThrownJavelin>of(ThrownJavelin::new, MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20));
-    public static final Id<Seat> SEAT = register("seat", EntityType.Builder.of(Seat::new, MobCategory.MISC).sized(0.1F, 0.1F).clientTrackingRange(4).updateInterval(20));
-    public static final Id<TFCMinecartChest> CHEST_MINECART = register("chest_minecart", EntityType.Builder.of(TFCMinecartChest::new, MobCategory.MISC).sized(0.98F, 0.7F).passengerAttachments(0.1875F).clientTrackingRange(8));
-    public static final Id<HoldingMinecart> HOLDING_MINECART = register("holding_minecart", EntityType.Builder.<HoldingMinecart>of(HoldingMinecart::new, MobCategory.MISC).sized(0.98F, 0.7F).passengerAttachments(0.1875F).clientTrackingRange(8));
-    public static final Id<RopeKnot> ROPE_KNOT = register("rope_knot", EntityType.Builder.<RopeKnot>of(RopeKnot::new, MobCategory.MISC).noSave().sized(0.375F, 0.5F).eyeHeight(0.0625F).clientTrackingRange(10).updateInterval(Integer.MAX_VALUE));
+    public static final Id<TFCFallingBlockEntity> FALLING_BLOCK = register("falling_block", EntityType.Builder.<TFCFallingBlockEntity>of(TFCFallingBlockEntity::new, MobCategory.MISC).noLootTable().sized(0.98f, 0.98f));
+    public static final Id<TFCFishingHook> FISHING_BOBBER = register("fishing_bobber", EntityType.Builder.<TFCFishingHook>of(TFCFishingHook::new, MobCategory.MISC).noLootTable().noSave().noSummon().sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(5));
+    public static final Id<GlowArrow> GLOW_ARROW = register("glow_arrow", EntityType.Builder.<GlowArrow>of(GlowArrow::new, MobCategory.MISC).noLootTable().sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20));
+    public static final Id<ThrownJavelin> THROWN_JAVELIN = register("thrown_javelin", EntityType.Builder.<ThrownJavelin>of(ThrownJavelin::new, MobCategory.MISC).noLootTable().sized(0.5F, 0.5F).clientTrackingRange(4).updateInterval(20));
+    public static final Id<Seat> SEAT = register("seat", EntityType.Builder.of(Seat::new, MobCategory.MISC).noLootTable().sized(0.1F, 0.1F).clientTrackingRange(4).updateInterval(20));
+    public static final Id<TFCMinecartChest> CHEST_MINECART = register("chest_minecart", EntityType.Builder.of(TFCMinecartChest::new, MobCategory.MISC).noLootTable().sized(0.98F, 0.7F).passengerAttachments(0.1875F).clientTrackingRange(8));
+    public static final Id<HoldingMinecart> HOLDING_MINECART = register("holding_minecart", EntityType.Builder.<HoldingMinecart>of(HoldingMinecart::new, MobCategory.MISC).noLootTable().sized(0.98F, 0.7F).passengerAttachments(0.1875F).clientTrackingRange(8));
+    public static final Id<RopeKnot> ROPE_KNOT = register("rope_knot", EntityType.Builder.<RopeKnot>of(RopeKnot::new, MobCategory.MISC).noLootTable().noSave().sized(0.375F, 0.5F).eyeHeight(0.0625F).clientTrackingRange(10).updateInterval(Integer.MAX_VALUE));
 
     public static final Map<Wood, Id<TFCChestBoat>> CHEST_BOATS = Helpers.mapOf(Wood.class, wood ->
-        register("chest_boat/" + wood.name(), EntityType.Builder.<TFCChestBoat>of((type, level) -> new TFCChestBoat(type, level, TFCItems.BOATS.get(wood)), MobCategory.MISC).sized(1.375F, 0.5625F).clientTrackingRange(10))
+        register("chest_boat/" + wood.name(), EntityType.Builder.<TFCChestBoat>of((type, level) -> new TFCChestBoat(type, level, TFCItems.BOATS.get(wood)), MobCategory.MISC).noLootTable().sized(1.375F, 0.5625F).clientTrackingRange(10))
     );
     public static final Map<Wood, Id<TFCBoat>> BOATS = Helpers.mapOf(Wood.class, wood ->
-        register("boat/" + wood.name(), EntityType.Builder.<TFCBoat>of((type, level) -> new TFCBoat(type, level, CHEST_BOATS.get(wood), TFCItems.BOATS.get(wood)), MobCategory.MISC).sized(1.375F, 0.5625F).clientTrackingRange(10))
+        register("boat/" + wood.name(), EntityType.Builder.<TFCBoat>of((type, level) -> new TFCBoat(type, level, CHEST_BOATS.get(wood), TFCItems.BOATS.get(wood)), MobCategory.MISC).noLootTable().sized(1.375F, 0.5625F).clientTrackingRange(10))
     );
 
 

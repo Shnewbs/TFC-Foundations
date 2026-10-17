@@ -6,6 +6,8 @@
 
 package net.dries007.tfc.common.recipes;
 
+
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.common.recipes.input.NoopInput;
 
 import net.minecraft.world.item.crafting.Recipe;
@@ -94,7 +96,7 @@ public class InstantFluidBarrelRecipe extends BarrelRecipe
             // If we match a slot in the input slot, we continue, otherwise we assume matching the fluid IO slots
             final boolean inputIsItemSlot = matches(inventory.getStackInSlot(BarrelBlockEntity.SLOT_ITEM), primaryFluid);
             final ItemStack originalStack = Helpers.removeStack(inventory, inputIsItemSlot ? BarrelBlockEntity.SLOT_ITEM : BarrelBlockEntity.SLOT_FLUID_CONTAINER_IN);
-            final IFluidHandlerItem fluidHandler = originalStack.copyWithCount(1).getCapability(Capabilities.FluidHandler.ITEM);
+            final IFluidHandlerItem fluidHandler = TransferAccess.fluidHandler(originalStack.copyWithCount(1));
 
             if (fluidHandler == null)
             {

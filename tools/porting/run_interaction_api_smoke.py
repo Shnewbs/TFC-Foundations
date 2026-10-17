@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 
 SOURCE = Path('src/main/java/net/dries007/tfc/util/InteractionManager.java')
-RECIPE_HELPERS = Path('src/main/java/net/dries007/tfc/common/recipes/RecipeHelpers.java')
+KEYED_INGREDIENT = Path('src/main/java/net/dries007/tfc/common/recipes/ingredients/KeyedIngredient.java')
 # Accepted upstream 08bda4bd: shelf rollback and failed pot placement result.
 BEFORE_HASH = '13f5d915883421fc41e3589b9b9090807cb8baaa4dd071fbbc18ac5e2359ee51'
 TAGS = (
@@ -25,12 +25,12 @@ class InteractionApiContracts(unittest.TestCase):
         cls.source = SOURCE.read_text()
 
     def test_all_six_tag_interactions_still_use_lazy_holder_backed_tags(self):
-        self.assertEqual(self.source.count('RecipeHelpers.ingredient('), 6)
+        self.assertEqual(self.source.count('KeyedIngredient.of(TFCTags.') + self.source.count('KeyedIngredient.of(Tags.'), 6)
         for tag in TAGS:
-            self.assertIn(f'RecipeHelpers.ingredient({tag})', self.source)
-            self.assertNotIn(f'Ingredient.of({tag})', self.source)
-        helpers = RECIPE_HELPERS.read_text()
-        self.assertIn('Ingredient.of(BuiltInRegistries.ITEM.getOrThrow(tag))', helpers)
+            self.assertIn(f'KeyedIngredient.of({tag})', self.source)
+            self.assertNotRegex(self.source, r'(?<![\w.])Ingredient\.of\(' + re.escape(tag) + r'\)')
+        helpers = KEYED_INGREDIENT.read_text()
+        self.assertIn('() -> BuiltInRegistries.ITEM.getOrThrow(tag).stream().map(Holder::value).toList()', helpers)
 
     def test_optional_block_entity_interaction_fallthrough(self):
         self.assertEqual(self.source.count('.<InteractionResult>map('), 2)
@@ -47,10 +47,12 @@ class InteractionApiContracts(unittest.TestCase):
         self.assertNotIn('LivingEntity.getSlotForHand', self.source)
 
     def test_reviewed_upstream_survival_interaction_body_under_api_renames(self):
-        # Restore precisely the eleven removed symbols and a now-unused import.
+        # Restore the native API routes and a now-unused import.
         # This freezes inventory splitting, recipe action order, placement flags,
         # sounds and client/server action results, not just the method names.
-        s = self.source.replace('RecipeHelpers.ingredient(', 'Ingredient.of(')
+        s = self.source
+        for tag in TAGS:
+            s = s.replace('KeyedIngredient.of(' + tag + ')', 'Ingredient.of(' + tag + ')')
         s = s.replace('.<InteractionResult>map(', '.map(')
         s = s.replace('buffer.writeIdentifier(', 'buffer.writeResourceLocation(')
         s = s.replace('context.getHand().asEquipmentSlot()', 'LivingEntity.getSlotForHand(context.getHand())')

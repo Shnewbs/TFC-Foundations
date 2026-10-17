@@ -7,6 +7,7 @@
 package net.dries007.tfc.common.recipes;
 
 import java.util.Optional;
+import java.util.List;
 
 import org.jetbrains.annotations.VisibleForTesting;
 
@@ -26,7 +27,13 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.item.crafting.NormalCraftingRecipe;
+import net.minecraft.world.item.crafting.PlacementInfo;
+import net.minecraft.world.item.crafting.display.ShapedCraftingRecipeDisplay;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 
 import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
@@ -35,12 +42,12 @@ import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
  * A shaped recipe type which uses {@link ItemStackProvider} as it's output mechanism
  * It also requires that the recipe specify which (of the crafting grid) inputs is responsible for the item stack provider's "input" stack.
  */
-public class AdvancedShapedRecipe extends ShapedRecipe
+public class AdvancedShapedRecipe extends NormalCraftingRecipe
 {
     public static final MapCodec<AdvancedShapedRecipe> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
         // Copied from ShapedRecipe.Serializer.CODEC, as we want to avoid the "result" field as a strict item stack
-        ShapedRecipePattern.MAP_CODEC.forGetter(c -> c.pattern),
-        Codec.BOOL.optionalFieldOf("show_notification", true).forGetter(ShapedRecipe::showNotification),
+        LegacyIngredientCodecs.SHAPED_PATTERN.forGetter(c -> c.pattern),
+        Codec.BOOL.optionalFieldOf("show_notification", true).forGetter(AdvancedShapedRecipe::showNotification),
         ItemStackProvider.CODEC.fieldOf("result").forGetter(c -> c.result),
         ItemStackProvider.CODEC.optionalFieldOf("remainder").forGetter(c -> c.remainder),
         Codec.INT.optionalFieldOf("input_row", 0).forGetter(c -> c.inputRow),
@@ -49,7 +56,7 @@ public class AdvancedShapedRecipe extends ShapedRecipe
 
     public static final StreamCodec<RegistryFriendlyByteBuf, AdvancedShapedRecipe> STREAM_CODEC = StreamCodec.composite(
         ShapedRecipePattern.STREAM_CODEC, c -> c.pattern,
-        ByteBufCodecs.BOOL, ShapedRecipe::showNotification,
+        ByteBufCodecs.BOOL, AdvancedShapedRecipe::showNotification,
         ItemStackProvider.STREAM_CODEC, c -> c.result,
         ByteBufCodecs.optional(ItemStackProvider.STREAM_CODEC), c -> c.remainder,
         ByteBufCodecs.VAR_INT, c -> c.inputRow,
@@ -57,16 +64,15 @@ public class AdvancedShapedRecipe extends ShapedRecipe
         AdvancedShapedRecipe::new
     );
 
+    public final ShapedRecipePattern pattern;
     private final ItemStackProvider result;
     private final Optional<ItemStackProvider> remainder;
     private final int inputSlot, inputRow, inputColumn;
 
     public AdvancedShapedRecipe(ShapedRecipePattern pattern, boolean showNotification, ItemStackProvider result, Optional<ItemStackProvider> remainder, int inputRow, int inputColumn)
     {
-        // Vanilla 26.1.2 uses metadata records and an immutable output template.
-        // The actual dynamic TFC output is computed in assemble(), not from that template.
-        super(new Recipe.CommonInfo(showNotification), new CraftingRecipe.CraftingBookInfo(CraftingBookCategory.MISC, ""),
-            pattern, new ItemStackTemplate(Items.AIR));
+        super(new Recipe.CommonInfo(showNotification), new CraftingRecipe.CraftingBookInfo(CraftingBookCategory.MISC, ""));
+        this.pattern = pattern;
 
         this.result = result;
         this.remainder = remainder;
@@ -79,14 +85,19 @@ public class AdvancedShapedRecipe extends ShapedRecipe
     public ItemStack assemble(CraftingInput input)
     {
         RecipeHelpers.setCraftingInput(input);
-        final int matchSlot = RecipeHelpers.translateMatch(this, inputSlot, input);
-        final ItemStack inputStack = matchSlot != -1 ? input.getItem(matchSlot).copy() : ItemStack.EMPTY;
-        final ItemStack output = result.getSingleStack(inputStack);
-        RecipeHelpers.clearCraftingInput();
-        return output;
+        try
+        {
+            final int matchSlot = RecipeHelpers.translateMatch(this, inputSlot, input);
+            final ItemStack inputStack = matchSlot != -1 ? input.getItem(matchSlot).copy() : ItemStack.EMPTY;
+            return result.getSingleStack(inputStack);
+        }
+        finally
+        {
+            RecipeHelpers.clearCraftingInput();
+        }
     }
 
-        public ItemStack getResultItem(HolderLookup.Provider registries)
+    public ItemStack getResultItem(HolderLookup.Provider registries)
     {
         return result.getEmptyStack();
     }
@@ -96,13 +107,56 @@ public class AdvancedShapedRecipe extends ShapedRecipe
     {
         return remainder.map(remainder -> {
                 RecipeHelpers.setCraftingInput(input);
-                final int matchSlot = RecipeHelpers.translateMatch(this, inputSlot, input);
-                final ItemStack inputStack = matchSlot != -1 ? input.getItem(matchSlot).copy() : ItemStack.EMPTY;
-                final var remain = RecipeHelpers.getRemainderItemsWithProvider(input, remainder, inputStack);
-                RecipeHelpers.clearCraftingInput();
-                return remain;
+                try
+                {
+                    final int matchSlot = RecipeHelpers.translateMatch(this, inputSlot, input);
+                    final ItemStack inputStack = matchSlot != -1 ? input.getItem(matchSlot).copy() : ItemStack.EMPTY;
+                    return RecipeHelpers.getRemainderItemsWithProvider(input, remainder, inputStack);
+                }
+                finally
+                {
+                    RecipeHelpers.clearCraftingInput();
+                }
             })
             .orElseGet(() -> super.getRemainingItems(input));
+    }
+
+    public int getWidth() { return pattern.width(); }
+
+    public int getHeight() { return pattern.height(); }
+
+    public List<Optional<Ingredient>> getIngredients() { return pattern.ingredients(); }
+
+    public ItemStackProvider getResult() { return result; }
+
+    public int getInputSlot() { return inputSlot; }
+
+    @Override
+    protected PlacementInfo createPlacementInfo()
+    {
+        return PlacementInfo.createFromOptionals(pattern.ingredients());
+    }
+
+    @Override
+    public boolean matches(CraftingInput input, Level level)
+    {
+        return pattern.matches(input);
+    }
+
+    @Override
+    public List<RecipeDisplay> display()
+    {
+        return List.of(new ShapedCraftingRecipeDisplay(getWidth(), getHeight(),
+            pattern.ingredients().stream().map(i -> i.map(Ingredient::display).orElse(SlotDisplay.Empty.INSTANCE)).toList(),
+            resultDisplay(), new SlotDisplay.ItemSlotDisplay(Items.CRAFTING_TABLE)));
+    }
+
+    private SlotDisplay resultDisplay()
+    {
+        // Preserve the provider's existing empty-input preview for guide pages. JEI also supplies input-aware alternatives.
+        final ItemStack output = result.getEmptyStack();
+        return output.isEmpty() ? SlotDisplay.Empty.INSTANCE
+            : new SlotDisplay.ItemStackSlotDisplay(ItemStackTemplate.fromNonEmptyStack(output));
     }
 
     @Override
@@ -112,12 +166,9 @@ public class AdvancedShapedRecipe extends ShapedRecipe
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public RecipeSerializer<ShapedRecipe> getSerializer()
+    public RecipeSerializer<AdvancedShapedRecipe> getSerializer()
     {
-        // Vanilla's concrete ShapedRecipe return is invariant even for recipe subclasses.
-        // The registered serializer still encodes only AdvancedShapedRecipe instances.
-        return (RecipeSerializer<ShapedRecipe>) (RecipeSerializer<?>) TFCRecipeSerializers.ADVANCED_SHAPED_CRAFTING.get();
+        return TFCRecipeSerializers.ADVANCED_SHAPED_CRAFTING.get();
     }
 
     @VisibleForTesting

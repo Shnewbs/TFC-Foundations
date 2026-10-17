@@ -3,27 +3,17 @@
   "category": "misc",
   "ingredients": [
     {
-      "type": "tfc:fluid_content",
+      "neoforge:ingredient_type": "tfc:fluid_content",
       "fluid": {
         "amount": 100,
         "fluid": "tfc:salt_water"
       }
     },
-    {
-      "item": "tfc:dirt/mollisol"
-    },
-    {
-      "item": "tfc:dirt/mollisol"
-    },
-    {
-      "item": "tfc:dirt/mollisol"
-    },
-    {
-      "item": "tfc:dirt/mollisol"
-    },
-    {
-      "item": "tfc:dirt/mollisol"
-    }
+    "tfc:dirt/mollisol",
+    "tfc:dirt/mollisol",
+    "tfc:dirt/mollisol",
+    "tfc:dirt/mollisol",
+    "tfc:dirt/mollisol"
   ],
   "result": {
     "count": 5,

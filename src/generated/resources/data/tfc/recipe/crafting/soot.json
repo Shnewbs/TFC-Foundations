@@ -2,18 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:glue"
-    },
-    {
-      "item": "tfc:powder/charcoal"
-    },
-    {
-      "item": "tfc:powder/wood_ash"
-    }
+    "tfc:glue",
+    "tfc:powder/charcoal",
+    "tfc:powder/wood_ash"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:soot"
   }
 }

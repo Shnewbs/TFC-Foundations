@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "tfc:wood/axle/white_cedar"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/white_cedar"
-    },
-    "S": {
-      "item": "tfc:wood/stripped_log/white_cedar"
-    }
+    "A": "tfc:wood/axle/white_cedar",
+    "L": "tfc:wood/lumber/white_cedar",
+    "S": "tfc:wood/stripped_log/white_cedar"
   },
   "pattern": [
     " S ",

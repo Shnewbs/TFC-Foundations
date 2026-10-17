@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/willow"
-    },
-    "S": {
-      "item": "tfc:wood/stripped_log/willow"
-    }
+    "L": "tfc:wood/lumber/willow",
+    "S": "tfc:wood/stripped_log/willow"
   },
   "pattern": [
     "SLS",
@@ -15,7 +11,6 @@
     "SLS"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/crate/willow"
   }
 }

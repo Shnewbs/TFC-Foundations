@@ -12,6 +12,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.neoforged.neoforge.client.event.ClientResourceLoadFinishedEvent;
+import net.dries007.tfc.util.SelfTests;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;
@@ -128,6 +130,7 @@ public class ClientForgeEventHandler
 
         bus.addListener(net.dries007.tfc.client.overworld.LevelRendererExtension::extract);
 
+        bus.addListener(ClientForgeEventHandler::onResourceLoadFinished);
         bus.addListener(ClientForgeEventHandler::onRenderGameOverlayPost);
         bus.addListener(ClientForgeEventHandler::onItemTooltip);
         bus.addListener(ClientForgeEventHandler::onInitGuiPost);
@@ -146,6 +149,11 @@ public class ClientForgeEventHandler
         bus.addListener(ClientForgeEventHandler::onScreenOpen);
     }
 
+
+    public static void onResourceLoadFinished(ClientResourceLoadFinishedEvent event)
+    {
+        if (event.isInitial()) SelfTests.runClientSelfTests();
+    }
 
     public static void registerDebugEntries(RegisterDebugEntriesEvent event)
     {

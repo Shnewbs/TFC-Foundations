@@ -43,7 +43,8 @@ public class BuiltinDrinkables extends DataManagerProvider<Drinkable> implements
             FoodData.ofDrink(-1, 0),
             new Effect(TFCEffects.THIRST.holder(), 600, 1, 0.25f));
         add("alcohol",
-            FluidIngredient.tag(TFCTags.Fluids.ALCOHOLS),
+            FluidIngredient.of(net.minecraft.core.registries.BuiltInRegistries.FLUID.get(TFCTags.Fluids.ALCOHOLS)
+                .orElseGet(() -> net.minecraft.core.HolderSet.emptyNamed(net.minecraft.core.registries.BuiltInRegistries.FLUID, TFCTags.Fluids.ALCOHOLS))),
             true,
             FoodData.ofDrink(5, 4000));
         add("milk",

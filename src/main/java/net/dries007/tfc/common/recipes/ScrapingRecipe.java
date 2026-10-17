@@ -30,7 +30,7 @@ public class ScrapingRecipe extends ItemRecipe
     public static final IndirectHashCollection<Item, ScrapingRecipe> CACHE = IndirectHashCollection.createForRecipe(ScrapingRecipe::getValidItems, TFCRecipeTypes.SCRAPING);
 
     public static final MapCodec<ScrapingRecipe> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-        Ingredient.CODEC.fieldOf("ingredient").forGetter(c -> c.ingredient),
+        net.dries007.tfc.common.recipes.LegacyIngredientCodecs.ITEM.fieldOf("ingredient").forGetter(c -> c.ingredient),
         ItemStackProvider.CODEC.fieldOf("result").forGetter(c -> c.result),
         Identifier.CODEC.fieldOf("input_texture").forGetter(c -> c.inputTexture),
         Identifier.CODEC.fieldOf("output_texture").forGetter(c -> c.outputTexture),

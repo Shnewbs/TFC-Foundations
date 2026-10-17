@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/rosewood"
-    }
+    "L": "tfc:wood/lumber/rosewood"
   },
   "pattern": [
     "L L",
@@ -12,7 +10,6 @@
     "LLL"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/barrel/rosewood"
   }
 }

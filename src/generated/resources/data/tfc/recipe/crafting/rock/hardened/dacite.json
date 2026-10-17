@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "X": {
-      "item": "tfc:rock/raw/dacite"
-    },
-    "Y": {
-      "item": "tfc:mortar"
-    }
+    "X": "tfc:rock/raw/dacite",
+    "Y": "tfc:mortar"
   },
   "pattern": [
     "XYX",

@@ -2,15 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/birch"
-    }
+    "L": "tfc:wood/lumber/birch"
   },
   "pattern": [
     "LL"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/pressure_plate/birch"
   }
 }

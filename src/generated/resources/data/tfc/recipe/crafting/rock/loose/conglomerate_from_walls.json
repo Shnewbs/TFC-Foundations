@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:rock/cobble/conglomerate_wall"
-    }
+    "tfc:rock/cobble/conglomerate_wall"
   ],
   "result": {
     "count": 4,

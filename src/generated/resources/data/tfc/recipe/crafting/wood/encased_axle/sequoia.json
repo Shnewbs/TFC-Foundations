@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "tfc:wood/axle/sequoia"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/sequoia"
-    },
-    "S": {
-      "item": "tfc:wood/stripped_log/sequoia"
-    }
+    "A": "tfc:wood/axle/sequoia",
+    "L": "tfc:wood/lumber/sequoia",
+    "S": "tfc:wood/stripped_log/sequoia"
   },
   "pattern": [
     " S ",

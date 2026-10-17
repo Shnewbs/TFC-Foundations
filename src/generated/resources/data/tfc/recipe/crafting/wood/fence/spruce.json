@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/spruce"
-    },
-    "P": {
-      "item": "tfc:wood/planks/spruce"
-    }
+    "L": "tfc:wood/lumber/spruce",
+    "P": "tfc:wood/planks/spruce"
   },
   "pattern": [
     "PLP",

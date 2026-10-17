@@ -2,15 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/rosewood"
-    }
+    "L": "tfc:wood/lumber/rosewood"
   },
   "pattern": [
     "LL"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/pressure_plate/rosewood"
   }
 }

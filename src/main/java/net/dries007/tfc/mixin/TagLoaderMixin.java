@@ -6,7 +6,6 @@
 
 package net.dries007.tfc.mixin;
 
-import java.util.Collection;
 import java.util.List;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.tags.TagEntry;
@@ -19,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.dries007.tfc.util.SelfTests;
 
 /**
- * Promote tag loading errors into full errors in a self test env. This targets the call to {@link TagLoader#build(TagEntry.Lookup, List)},
+ * Promote tag loading errors into full errors in a self test env. This targets the call to {@link TagLoader#tryBuildTag(TagEntry.Lookup, List)},
  * which returns an {@link Either#left()} if a tag loading error has occurred.
  * <p>
  * The slightly indirect targeting here is to work around having to target the exact error log message, which is patched by both Neo + Lex Forge
@@ -29,8 +28,8 @@ import net.dries007.tfc.util.SelfTests;
 @Mixin(TagLoader.class)
 public abstract class TagLoaderMixin
 {
-    @Inject(method = "build(Lnet/minecraft/tags/TagEntry$Lookup;Ljava/util/List;)Lcom/mojang/datafixers/util/Either;", at = @At("RETURN"), require = 0)
-    private <T> void setStateToErrored(TagEntry.Lookup<T> lookup, List<TagLoader.EntryWithSource> entries, CallbackInfoReturnable<Either<Collection<TagLoader.EntryWithSource>, Collection<T>>> cir)
+    @Inject(method = "tryBuildTag(Lnet/minecraft/tags/TagEntry$Lookup;Ljava/util/List;)Lcom/mojang/datafixers/util/Either;", at = @At("RETURN"))
+    private <T> void setStateToErrored(TagEntry.Lookup<T> lookup, List<TagLoader.EntryWithSource> entries, CallbackInfoReturnable<Either<List<TagLoader.EntryWithSource>, List<T>>> cir)
     {
         if (cir.getReturnValue().left().isPresent()) SelfTests.reportExternalError();
     }

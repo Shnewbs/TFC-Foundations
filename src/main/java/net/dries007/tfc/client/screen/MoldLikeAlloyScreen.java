@@ -6,6 +6,7 @@
 
 package net.dries007.tfc.client.screen;
 
+
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -16,6 +17,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.Nullable;
 
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.common.component.mold.IMold;
 import net.dries007.tfc.common.container.MoldLikeAlloyContainer;
 import net.dries007.tfc.config.TFCConfig;
@@ -55,7 +57,7 @@ public class MoldLikeAlloyScreen extends TFCContainerScreen<MoldLikeAlloyContain
                 }
 
                 final ItemStack outputStack = this.menu.getInventory().getStackInSlot(0);
-                final @Nullable IFluidHandlerItem outputFluidHandler = outputStack.getCapability(Capabilities.FluidHandler.ITEM);
+                final @Nullable IFluidHandlerItem outputFluidHandler = TransferAccess.fluidHandler(outputStack);
 
                 if (outputFluidHandler != null && !outputFluidHandler.isFluidValid(0, fluid))
                 {

@@ -3,16 +3,11 @@
   "category": "misc",
   "ingredients": [
     [
-      {
-        "item": "tfc:powder/native_copper"
-      },
-      {
-        "item": "tfc:powder/sylvite"
-      }
+      "tfc:powder/native_copper",
+      "tfc:powder/sylvite"
     ]
   ],
   "result": {
-    "count": 1,
     "id": "minecraft:orange_dye"
   }
 }

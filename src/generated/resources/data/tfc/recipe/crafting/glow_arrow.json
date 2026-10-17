@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "minecraft:arrow"
-    },
-    "G": {
-      "item": "minecraft:glow_ink_sac"
-    }
+    "A": "minecraft:arrow",
+    "G": "minecraft:glow_ink_sac"
   },
   "pattern": [
     "AAA",

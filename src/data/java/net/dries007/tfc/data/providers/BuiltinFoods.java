@@ -251,11 +251,11 @@ public class BuiltinFoods extends DataManagerProvider<FoodDefinition> implements
 
     private void add(ItemLike item, FoodData food, boolean edible)
     {
-        add(nameOf(item).replace("food/", ""), new FoodDefinition(Ingredient.of(item), food, edible));
+        add(nameOf(item).replace("food/", ""), new FoodDefinition(net.dries007.tfc.data.Accessors.ingredient(item), food, edible));
     }
 
     private void add(TagKey<Item> tag, FoodData food, boolean edible)
     {
-        add(tag.location().getPath().replace("foods/", ""), new FoodDefinition(Ingredient.of(tag), food, edible));
+        add(tag.location().getPath().replace("foods/", ""), new FoodDefinition(net.dries007.tfc.data.Accessors.ingredient(tag), food, edible));
     }
 }

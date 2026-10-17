@@ -2,12 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:canola"
-    }
+    "tfc:canola"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:straw"
   }
 }

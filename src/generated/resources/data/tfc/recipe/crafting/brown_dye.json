@@ -2,12 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:powder/garnierite"
-    }
+    "tfc:powder/garnierite"
   ],
   "result": {
-    "count": 1,
     "id": "minecraft:brown_dye"
   }
 }

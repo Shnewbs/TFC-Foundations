@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:rock/mossy_cobble/phyllite"
-    }
+    "tfc:rock/mossy_cobble/phyllite"
   ],
   "result": {
     "count": 4,

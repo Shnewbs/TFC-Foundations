@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "tag": "tfc:lumber"
-    },
-    "R": {
-      "tag": "c:rods/wooden"
-    },
-    "S": {
-      "tag": "c:ingots/wrought_iron"
-    }
+    "L": "#tfc:lumber",
+    "R": "#c:rods/wooden",
+    "S": "#c:ingots/wrought_iron"
   },
   "pattern": [
     "S",

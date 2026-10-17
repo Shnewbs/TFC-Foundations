@@ -2,15 +2,10 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:mud/alfisol"
-    },
-    {
-      "item": "tfc:tree_roots"
-    }
+    "tfc:mud/alfisol",
+    "tfc:tree_roots"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:muddy_roots/alfisol"
   }
 }

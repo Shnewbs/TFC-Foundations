@@ -12,8 +12,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
-import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,7 +20,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.dries007.tfc.common.player.IPlayerInfo;
 import net.dries007.tfc.common.player.PlayerBridge;
@@ -52,12 +49,6 @@ public abstract class PlayerMixin extends Entity implements PlayerBridge
     {
         this.tfc$playerInfo = new PlayerInfo((Player) (Object) this);
         this.foodData = this.tfc$playerInfo;
-    }
-
-    @Inject(method = "eat", at = @At("HEAD"))
-    private void eatWithMoreInfo(Level level, ItemStack food, FoodProperties foodProperties, CallbackInfoReturnable<ItemStack> cir)
-    {
-        IPlayerInfo.get((Player) (Object) this).eat(food);
     }
 
     /**

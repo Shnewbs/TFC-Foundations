@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "tfc:rock/bricks/dolomite"
-    }
+    "#": "tfc:rock/bricks/dolomite"
   },
   "pattern": [
     "###"

@@ -1,14 +1,17 @@
 {
   "type": "tfc:advanced_shapeless_crafting",
   "ingredients": [
-    [
-      {
-        "item": "tfc:rock/loose/chert"
-      },
-      {
-        "item": "tfc:rock/mossy_loose/chert"
-      }
-    ],
+    {
+      "type": "neoforge:compound",
+      "children": [
+        {
+          "item": "tfc:rock/loose/chert"
+        },
+        {
+          "item": "tfc:rock/mossy_loose/chert"
+        }
+      ]
+    },
     {
       "tag": "c:tools/chisel"
     }

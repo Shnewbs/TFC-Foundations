@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "tag": "c:double_ingots/wrought_iron"
-    }
+    "#": "#c:double_ingots/wrought_iron"
   },
   "pattern": [
     "###",
@@ -12,7 +10,6 @@
     "###"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:metal/anvil/wrought_iron"
   }
 }

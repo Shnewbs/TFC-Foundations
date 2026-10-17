@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "tfc:rock/cracked_bricks/basalt"
-    }
+    "#": "tfc:rock/cracked_bricks/basalt"
   },
   "pattern": [
     "#  ",

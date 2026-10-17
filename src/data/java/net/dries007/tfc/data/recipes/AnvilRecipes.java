@@ -79,8 +79,8 @@ public interface AnvilRecipes extends Recipes
             }
         }
 
-        anvil(Ingredient.of(TFCItems.RAW_IRON_BLOOM), ItemStackProvider.of(TFCItems.REFINED_IRON_BLOOM), 2, false, hitX3);
-        anvil(Ingredient.of(TFCItems.REFINED_IRON_BLOOM), ItemStackProvider.of(TFCItems.METAL_ITEMS.get(Metal.WROUGHT_IRON).get(ItemType.INGOT)), 2, false, hitX3);
+        anvil(net.dries007.tfc.data.Accessors.ingredient(TFCItems.RAW_IRON_BLOOM), ItemStackProvider.of(TFCItems.REFINED_IRON_BLOOM), 2, false, hitX3);
+        anvil(net.dries007.tfc.data.Accessors.ingredient(TFCItems.REFINED_IRON_BLOOM), ItemStackProvider.of(TFCItems.METAL_ITEMS.get(Metal.WROUGHT_IRON).get(ItemType.INGOT)), 2, false, hitX3);
 
         anvil(Metal.PIG_IRON, Metal.HIGH_CARBON_STEEL);
         anvil(Metal.HIGH_CARBON_STEEL, Metal.STEEL);

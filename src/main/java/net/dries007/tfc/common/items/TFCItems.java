@@ -33,6 +33,7 @@ import net.minecraft.world.item.SpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import net.dries007.tfc.util.registry.RegistrationContext;
 import net.dries007.tfc.common.Lore;
 import net.dries007.tfc.common.TFCCreativeTabs;
 import net.dries007.tfc.common.TFCTags;
@@ -440,12 +441,12 @@ public final class TFCItems
 
     private static ItemId register(String name, Properties properties)
     {
-        return new ItemId(ITEMS.register(name.toLowerCase(Locale.ROOT), () -> new Item(properties)));
+        return register(name, () -> new Item(properties));
     }
 
     private static ItemId register(String name, Supplier<Item> item)
     {
-        return new ItemId(ITEMS.register(name.toLowerCase(Locale.ROOT), item));
+        return new ItemId(ITEMS.register(name.toLowerCase(Locale.ROOT), id -> RegistrationContext.item(id, item)));
     }
 
     public record ItemId(DeferredHolder<Item, Item> holder) implements RegistryHolder<Item, Item>, ItemLike

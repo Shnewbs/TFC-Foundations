@@ -293,6 +293,7 @@ if (modIsInCI) {
 
 tasks {
     test {
+        systemProperty("tfc.test.projectDir", project.projectDir.absolutePath)
         useJUnitPlatform()
         testLogging {
             events("failed", "standardError")

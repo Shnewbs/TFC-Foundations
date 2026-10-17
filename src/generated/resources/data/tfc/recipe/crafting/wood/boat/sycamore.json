@@ -2,16 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "P": {
-      "item": "tfc:wood/planks/sycamore"
-    }
+    "P": "tfc:wood/planks/sycamore"
   },
   "pattern": [
     "P P",
     "PPP"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/boat/sycamore"
   }
 }

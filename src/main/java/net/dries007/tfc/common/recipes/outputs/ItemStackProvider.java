@@ -23,6 +23,12 @@ public record ItemStackProvider(
     ItemStack stack,
     List<ItemStackModifier> modifiers
 ) {
+    public ItemStackProvider
+    {
+        stack = FoodCapability.setTransientNonDecaying(stack);
+        modifiers = List.copyOf(modifiers);
+    }
+
     public static final Codec<ItemStackProvider> CODEC = Codec.either(
         RecordCodecBuilder.<ItemStackProvider>create(i -> i.group(
             ItemStack.CODEC.optionalFieldOf("stack", ItemStack.EMPTY).forGetter(c -> c.stack),
@@ -80,7 +86,7 @@ public record ItemStackProvider(
 
     public static ItemStackProvider of(ItemStack stack, List<ItemStackModifier> modifiers)
     {
-        return new ItemStackProvider(FoodCapability.setTransientNonDecaying(stack), modifiers);
+        return new ItemStackProvider(stack, modifiers);
     }
 
     /**

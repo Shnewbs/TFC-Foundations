@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "G": {
-      "tag": "c:sheets/gold"
-    },
-    "M": {
-      "item": "tfc:brass_mechanisms"
-    },
-    "R": {
-      "tag": "c:dusts/redstone"
-    }
+    "G": "#c:sheets/gold",
+    "M": "tfc:brass_mechanisms",
+    "R": "#c:dusts/redstone"
   },
   "pattern": [
     "GRG",
@@ -18,7 +12,6 @@
     "GRG"
   ],
   "result": {
-    "count": 1,
     "id": "minecraft:clock"
   }
 }

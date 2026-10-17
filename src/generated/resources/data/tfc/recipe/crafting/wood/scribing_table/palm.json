@@ -2,18 +2,10 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "D": {
-      "tag": "c:dyes/black"
-    },
-    "F": {
-      "tag": "c:feathers"
-    },
-    "S": {
-      "item": "tfc:wood/planks/palm_slab"
-    },
-    "W": {
-      "item": "tfc:wood/planks/palm"
-    }
+    "D": "#c:dyes/black",
+    "F": "#c:feathers",
+    "S": "tfc:wood/planks/palm_slab",
+    "W": "tfc:wood/planks/palm"
   },
   "pattern": [
     "F D",
@@ -21,7 +13,6 @@
     "W W"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:wood/scribing_table/palm"
   }
 }

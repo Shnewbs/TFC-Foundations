@@ -34,6 +34,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blocks.MoltenBlock;
 import net.dries007.tfc.common.blocks.devices.BlastFurnaceBlock;
@@ -195,7 +196,7 @@ public class BlastFurnaceBlockEntity extends TickableInventoryBlockEntity<BlastF
         if (!entity.outputFluidTank.isEmpty())
         {
             // If we have output fluid, then try and transfer some, including heat, to the block below
-            final @Nullable IFluidHandler belowFluidHandler = level.getCapability(Capabilities.FluidHandler.BLOCK, pos.below(), Direction.UP);
+            final @Nullable IFluidHandler belowFluidHandler = TransferAccess.fluidHandler(level, pos.below(), Direction.UP);
             if (belowFluidHandler != null && FluidHelpers.transferExact(entity.outputFluidTank, belowFluidHandler, 1))
             {
                 // And if transfer happened, provide heat to the container below
@@ -236,7 +237,7 @@ public class BlastFurnaceBlockEntity extends TickableInventoryBlockEntity<BlastF
         fuelStacks = new ArrayList<>();
 
         inputFluid = FluidStack.EMPTY;
-        outputFluidTank = new FluidTank(TFCConfig.SERVER.blastFurnaceFluidCapacity.get());
+        outputFluidTank = new net.dries007.tfc.common.capabilities.InventoryFluidTank(TFCConfig.SERVER.blastFurnaceFluidCapacity.get(), new net.dries007.tfc.common.capabilities.FluidTankCallback() { @Override public void fluidTankChanged() { markForSync(); } });
 
         syncedData = new SyncableContainerData()
             .add(() -> lastKnownCapacity, value -> lastKnownCapacity = value)
@@ -653,7 +654,7 @@ public class BlastFurnaceBlockEntity extends TickableInventoryBlockEntity<BlastF
         }
     }
 
-    public static class BlastFurnaceInventory extends ItemStackHandler implements DelegateFluidHandler
+    public static class BlastFurnaceInventory extends net.dries007.tfc.common.capabilities.transfer.TransactionalItemStackHandler implements DelegateFluidHandler
     {
         private final BlastFurnaceBlockEntity blastFurnace;
 

@@ -2,18 +2,10 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "tag": "tfc:looms"
-    },
-    "M": {
-      "item": "tfc:brass_mechanisms"
-    },
-    "R": {
-      "tag": "c:rods/wooden"
-    },
-    "S": {
-      "tag": "c:sheets/steel"
-    }
+    "L": "#tfc:looms",
+    "M": "tfc:brass_mechanisms",
+    "R": "#c:rods/wooden",
+    "S": "#c:sheets/steel"
   },
   "pattern": [
     "SRS",
@@ -21,7 +13,6 @@
     "MLM"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:power_loom"
   }
 }

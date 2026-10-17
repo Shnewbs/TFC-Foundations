@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "tfc:wood/axle/mangrove"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/mangrove"
-    },
-    "S": {
-      "item": "tfc:wood/stripped_log/mangrove"
-    }
+    "A": "tfc:wood/axle/mangrove",
+    "L": "tfc:wood/lumber/mangrove",
+    "S": "tfc:wood/stripped_log/mangrove"
   },
   "pattern": [
     " S ",

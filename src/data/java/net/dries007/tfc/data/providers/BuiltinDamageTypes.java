@@ -32,6 +32,6 @@ public class BuiltinDamageTypes
 
     private void register(ResourceKey<DamageType> type, float exhaustion, DamageEffects effects)
     {
-        context.register(type, new DamageType(type.location().getNamespace() + "." + type.location().getPath(), DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, exhaustion, effects, DeathMessageType.DEFAULT));
+        context.register(type, new DamageType(type.identifier().getNamespace() + "." + type.identifier().getPath(), DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, exhaustion, effects, DeathMessageType.DEFAULT));
     }
 }

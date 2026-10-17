@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/ash"
-    },
-    "P": {
-      "item": "tfc:wood/planks/ash"
-    },
-    "S": {
-      "tag": "c:rods/wooden"
-    }
+    "L": "tfc:wood/lumber/ash",
+    "P": "tfc:wood/planks/ash",
+    "S": "#c:rods/wooden"
   },
   "pattern": [
     "PPP",

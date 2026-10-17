@@ -1,14 +1,17 @@
 {
   "type": "tfc:advanced_shapeless_crafting",
   "ingredients": [
-    [
-      {
-        "item": "tfc:rock/loose/gneiss"
-      },
-      {
-        "item": "tfc:rock/mossy_loose/gneiss"
-      }
-    ],
+    {
+      "type": "neoforge:compound",
+      "children": [
+        {
+          "item": "tfc:rock/loose/gneiss"
+        },
+        {
+          "item": "tfc:rock/mossy_loose/gneiss"
+        }
+      ]
+    },
     {
       "tag": "c:tools/chisel"
     }

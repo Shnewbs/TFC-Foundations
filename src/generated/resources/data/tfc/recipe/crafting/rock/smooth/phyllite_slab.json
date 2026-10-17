@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "#": {
-      "item": "tfc:rock/smooth/phyllite"
-    }
+    "#": "tfc:rock/smooth/phyllite"
   },
   "pattern": [
     "###"

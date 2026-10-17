@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "tag": "c:storage_blocks/wrought_iron"
-    }
+    "B": "#c:storage_blocks/wrought_iron"
   },
   "pattern": [
     "B  ",

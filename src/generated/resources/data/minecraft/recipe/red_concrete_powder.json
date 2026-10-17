@@ -2,33 +2,15 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "c:gravels"
-    },
-    {
-      "tag": "c:gravels"
-    },
-    {
-      "tag": "c:gravels"
-    },
-    {
-      "tag": "c:gravels"
-    },
-    {
-      "tag": "c:sands"
-    },
-    {
-      "tag": "c:sands"
-    },
-    {
-      "tag": "c:sands"
-    },
-    {
-      "tag": "c:sands"
-    },
-    {
-      "item": "minecraft:red_dye"
-    }
+    "#c:gravels",
+    "#c:gravels",
+    "#c:gravels",
+    "#c:gravels",
+    "#c:sands",
+    "#c:sands",
+    "#c:sands",
+    "#c:sands",
+    "minecraft:red_dye"
   ],
   "result": {
     "count": 8,

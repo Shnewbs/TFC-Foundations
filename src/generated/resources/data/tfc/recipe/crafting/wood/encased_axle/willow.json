@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "tfc:wood/axle/willow"
-    },
-    "L": {
-      "item": "tfc:wood/lumber/willow"
-    },
-    "S": {
-      "item": "tfc:wood/stripped_log/willow"
-    }
+    "A": "tfc:wood/axle/willow",
+    "L": "tfc:wood/lumber/willow",
+    "S": "tfc:wood/stripped_log/willow"
   },
   "pattern": [
     " S ",

@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": {
-      "item": "tfc:wood/lumber/aspen"
-    },
-    "P": {
-      "item": "tfc:wood/planks/aspen"
-    },
-    "S": {
-      "tag": "c:rods/wooden"
-    }
+    "L": "tfc:wood/lumber/aspen",
+    "P": "tfc:wood/planks/aspen",
+    "S": "#c:rods/wooden"
   },
   "pattern": [
     "PPP",

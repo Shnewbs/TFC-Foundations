@@ -1,15 +1,18 @@
 {
-  "ingredient": [
-    {
-      "tag": "tfc:scribing_tables"
-    },
-    {
-      "tag": "tfc:sewing_tables"
-    },
-    {
-      "item": "minecraft:loom"
-    }
-  ],
+  "ingredient": {
+    "type": "neoforge:compound",
+    "children": [
+      {
+        "tag": "tfc:scribing_tables"
+      },
+      {
+        "tag": "tfc:sewing_tables"
+      },
+      {
+        "item": "minecraft:loom"
+      }
+    ]
+  },
   "size": "large",
   "weight": "light"
 }

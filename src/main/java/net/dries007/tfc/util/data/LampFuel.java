@@ -31,7 +31,7 @@ public record LampFuel(
     int burnRate
 ) {
     public static final Codec<LampFuel> CODEC = RecordCodecBuilder.create(i -> i.group(
-        FluidIngredient.CODEC.fieldOf("fluid").forGetter(c -> c.fluid),
+        net.dries007.tfc.common.recipes.LegacyIngredientCodecs.FLUID.fieldOf("fluid").forGetter(c -> c.fluid),
         BlockIngredient.CODEC.fieldOf("lamps").forGetter(c -> c.lamps),
         Codec.INT.fieldOf("burn_rate").forGetter(c -> c.burnRate)
     ).apply(i, LampFuel::new));

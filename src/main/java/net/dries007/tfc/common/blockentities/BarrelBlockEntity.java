@@ -40,6 +40,7 @@ import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import net.dries007.tfc.common.capabilities.transfer.TransferAccess;
 import net.dries007.tfc.client.TFCSounds;
 import net.dries007.tfc.client.particle.FluidParticleOption;
 import net.dries007.tfc.client.particle.TFCParticles;
@@ -250,7 +251,7 @@ public class BarrelBlockEntity extends TickableInventoryBlockEntity<BarrelBlockE
     {
         return switch (slot)
         {
-            case SLOT_FLUID_CONTAINER_IN -> Helpers.mightHaveCapability(stack, Capabilities.FluidHandler.ITEM);
+            case SLOT_FLUID_CONTAINER_IN -> TransferAccess.mightHaveFluidHandler(stack);
             case SLOT_ITEM ->
             {
                 // We only want to deny heavy/huge (aka things that can hold inventory).
@@ -438,7 +439,7 @@ public class BarrelBlockEntity extends TickableInventoryBlockEntity<BarrelBlockE
             final BlockPos faucetPos = pos.relative(facing);
             if (level.getBlockState(faucetPos).isAir())
             {
-                final @Nullable IFluidHandler fluidHandler = level.getCapability(Capabilities.FluidHandler.BLOCK, faucetPos.below(), Direction.UP);
+                final @Nullable IFluidHandler fluidHandler = TransferAccess.fluidHandler(level, faucetPos.below(), Direction.UP);
 
                 if (fluidHandler != null && FluidHelpers.transferExact(this.inventory.tank, fluidHandler, 1))
                 {

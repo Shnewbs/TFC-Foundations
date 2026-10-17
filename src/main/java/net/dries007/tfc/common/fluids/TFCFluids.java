@@ -68,6 +68,7 @@ public final class TFCFluids
             .block(TFCBlocks.SALT_WATER)
             .bucket(TFCItems.FLUID_BUCKETS.get(FluidId.SALT_WATER)),
         waterLike()
+            .isWaterLike(true) // Native water/eye flags, splash/fall and swimming behavior replace the old entity hook.
             .descriptionId("fluid.tfc.salt_water"),
         MixingFluid.Source::new,
         MixingFluid.Flowing::new
@@ -79,6 +80,7 @@ public final class TFCFluids
             .block(TFCBlocks.SPRING_WATER)
             .bucket(TFCItems.FLUID_BUCKETS.get(FluidId.SPRING_WATER)),
         waterLike()
+            .isWaterLike(true)
             .descriptionId("fluid.tfc.spring_water"),
         MixingFluid.Source::new,
         MixingFluid.Flowing::new

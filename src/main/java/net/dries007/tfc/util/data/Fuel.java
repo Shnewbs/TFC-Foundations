@@ -29,7 +29,7 @@ public record Fuel(
 ) implements IRecipePredicate<ItemStack>
 {
     public static final Codec<Fuel> CODEC = RecordCodecBuilder.create(i -> i.group(
-        Ingredient.CODEC.fieldOf("ingredient").forGetter(c -> c.ingredient),
+        net.dries007.tfc.common.recipes.LegacyIngredientCodecs.ITEM.fieldOf("ingredient").forGetter(c -> c.ingredient),
         Codec.INT.fieldOf("duration").forGetter(c -> c.duration),
         Codec.FLOAT.fieldOf("temperature").forGetter(c -> c.temperature),
         Codec.FLOAT.optionalFieldOf("purity", 1f).forGetter(c -> c.purity)

@@ -34,7 +34,7 @@ import net.dries007.tfc.util.collections.IndirectHashCollection;
 public class CastingRecipe implements INoopInputRecipe, IRecipePredicate<IMold>
 {
     public static final MapCodec<CastingRecipe> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-        Ingredient.CODEC.fieldOf("mold").forGetter(c -> c.ingredient),
+        net.dries007.tfc.common.recipes.LegacyIngredientCodecs.ITEM.fieldOf("mold").forGetter(c -> c.ingredient),
         LegacySizedIngredientCodecs.FLAT_FLUID.fieldOf("fluid").forGetter(c -> c.fluidIngredient),
         ItemStackProvider.CODEC.fieldOf("result").forGetter(c -> c.result),
         Codec.FLOAT.optionalFieldOf("break_chance", 1f).forGetter(c -> c.breakChance)

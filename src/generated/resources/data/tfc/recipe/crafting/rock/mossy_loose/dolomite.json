@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:rock/mossy_cobble/dolomite"
-    }
+    "tfc:rock/mossy_cobble/dolomite"
   ],
   "result": {
     "count": 4,

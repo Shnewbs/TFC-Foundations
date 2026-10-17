@@ -50,7 +50,7 @@ import net.dries007.tfc.common.recipes.outputs.ItemStackProvider;
 import net.dries007.tfc.common.recipes.outputs.RemoveDyeModifier;
 import net.dries007.tfc.common.recipes.outputs.RemoveTraitModifier;
 
-import static net.minecraft.world.item.crafting.Ingredient.*;
+import static net.dries007.tfc.data.Accessors.ingredient;
 
 public interface BarrelRecipes extends Recipes
 {
@@ -86,7 +86,7 @@ public interface BarrelRecipes extends Recipes
             .output(TFCItems.JUTE_FIBER)
             .sealed(hours(6));
         barrel()
-            .input(notRotten(of(TFCItems.FOOD.get(Food.SUGARCANE))))
+            .input(notRotten(ingredient(TFCItems.FOOD.get(Food.SUGARCANE))))
             .input(Fluids.WATER, 600)
             .output(Items.SUGAR)
             .sealed(hours(6));
@@ -100,25 +100,25 @@ public interface BarrelRecipes extends Recipes
             .input(Fluids.WATER, 200)
             .output(TFCItems.SOAKED_PAPYRUS_STRIP)
             .sealed(hours(6));
-        alcohol(of(TFCItems.FOOD.get(Food.BARLEY_FLOUR)), SimpleFluid.BEER);
-        alcohol(of(TFCItems.FOOD.get(Food.RED_APPLE), TFCItems.FOOD.get(Food.GREEN_APPLE)), SimpleFluid.CIDER);
-        alcohol(of(Items.SUGAR), SimpleFluid.RUM);
-        alcohol(of(TFCItems.FOOD.get(Food.RICE_FLOUR)), SimpleFluid.SAKE);
-        alcohol(of(TFCItems.FOOD.get(Food.POTATO)), SimpleFluid.VODKA);
-        alcohol(of(TFCItems.FOOD.get(Food.WHEAT_FLOUR)), SimpleFluid.WHISKEY);
-        alcohol(of(TFCItems.FOOD.get(Food.MAIZE_FLOUR)), SimpleFluid.CORN_WHISKEY);
-        alcohol(of(TFCItems.FOOD.get(Food.RYE_FLOUR)), SimpleFluid.RYE_WHISKEY);
+        alcohol(ingredient(TFCItems.FOOD.get(Food.BARLEY_FLOUR)), SimpleFluid.BEER);
+        alcohol(ingredient(TFCItems.FOOD.get(Food.RED_APPLE), TFCItems.FOOD.get(Food.GREEN_APPLE)), SimpleFluid.CIDER);
+        alcohol(ingredient(Items.SUGAR), SimpleFluid.RUM);
+        alcohol(ingredient(TFCItems.FOOD.get(Food.RICE_FLOUR)), SimpleFluid.SAKE);
+        alcohol(ingredient(TFCItems.FOOD.get(Food.POTATO)), SimpleFluid.VODKA);
+        alcohol(ingredient(TFCItems.FOOD.get(Food.WHEAT_FLOUR)), SimpleFluid.WHISKEY);
+        alcohol(ingredient(TFCItems.FOOD.get(Food.MAIZE_FLOUR)), SimpleFluid.CORN_WHISKEY);
+        alcohol(ingredient(TFCItems.FOOD.get(Food.RYE_FLOUR)), SimpleFluid.RYE_WHISKEY);
         barrel()
-            .input(notRotten(of(TFCTags.Items.FRUITS)))
+            .input(notRotten(ingredient(TFCTags.Items.FRUITS)))
             .input(TFCTags.Fluids.ALCOHOLS, 250)
             .output(fluidOf(SimpleFluid.VINEGAR), 250)
             .sealed(hours(6));
 
         final Ingredient foods = ingredientOf(
-            Ingredient.of(TFCTags.Items.FRUITS),
-            Ingredient.of(TFCTags.Items.VEGETABLES),
-            Ingredient.of(TFCTags.Items.MEATS),
-            Ingredient.of(TFCTags.Items.FISH)
+            net.dries007.tfc.data.Accessors.ingredient(TFCTags.Items.FRUITS),
+            net.dries007.tfc.data.Accessors.ingredient(TFCTags.Items.VEGETABLES),
+            net.dries007.tfc.data.Accessors.ingredient(TFCTags.Items.MEATS),
+            net.dries007.tfc.data.Accessors.ingredient(TFCTags.Items.FISH)
         );
         barrel("brined")
             .input(AndIngredient.of(
@@ -213,13 +213,13 @@ public interface BarrelRecipes extends Recipes
         for (DyeColor color : DyeColor.values())
             barrel(color.name() + "_dyeable")
                 .input(fluidOf(color), 25)
-                .input(Ingredient.of(ItemTags.DYEABLE))
+                .input(net.dries007.tfc.data.Accessors.ingredient(net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ITEM, net.minecraft.resources.Identifier.withDefaultNamespace("dyeable"))))
                 .output(ItemStackProvider.of(CopyInputModifier.INSTANCE, DyeLeatherModifier.of(color)))
                 .sealed(hours(1));
 
         barrel("bleach_dyeable")
             .input(fluidOf(SimpleFluid.LYE), 25)
-            .input(Ingredient.of(ItemTags.DYEABLE))
+            .input(net.dries007.tfc.data.Accessors.ingredient(net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ITEM, net.minecraft.resources.Identifier.withDefaultNamespace("dyeable"))))
             .output(ItemStackProvider.of(CopyInputModifier.INSTANCE, RemoveDyeModifier.INSTANCE))
             .sealed(hours(1));
 
@@ -255,7 +255,7 @@ public interface BarrelRecipes extends Recipes
             .output(ItemStackProvider.of(Items.CLAY_BALL, 4))
             .instant();
         barrel()
-            .input(Ingredient.of(TFCItems.POWDERS.get(Powder.LIME), TFCItems.POWDERS.get(Powder.FLUX)))
+            .input(net.dries007.tfc.data.Accessors.ingredient(TFCItems.POWDERS.get(Powder.LIME), TFCItems.POWDERS.get(Powder.FLUX)))
             .input(Fluids.WATER, 500)
             .output(fluidOf(SimpleFluid.LIMEWATER), 500)
             .instant();
@@ -277,16 +277,16 @@ public interface BarrelRecipes extends Recipes
         cooling(fluidOf(SimpleFluid.CANOLA_OIL), -40f);
         barrel("clean_bowl")
             .input(ingredientOf(
-                Ingredient.of(TFCTags.Items.SOUPS),
-                Ingredient.of(TFCTags.Items.SALADS)
+                net.dries007.tfc.data.Accessors.ingredient(TFCTags.Items.SOUPS),
+                net.dries007.tfc.data.Accessors.ingredient(TFCTags.Items.SALADS)
             ))
             .input(Fluids.WATER, 100)
             .output(ItemStackProvider.of(EmptyBowlModifier.INSTANCE))
             .instant();
         barrel("clean_jar")
             .input(ingredientOf(
-                Ingredient.of(TFCTags.Items.PRESERVES),
-                Ingredient.of(TFCTags.Items.SEALED_PRESERVES)
+                net.dries007.tfc.data.Accessors.ingredient(TFCTags.Items.PRESERVES),
+                net.dries007.tfc.data.Accessors.ingredient(TFCTags.Items.SEALED_PRESERVES)
             ))
             .input(Fluids.WATER, 100)
             .output(TFCItems.EMPTY_JAR)
@@ -386,7 +386,7 @@ public interface BarrelRecipes extends Recipes
 
     private BarrelRecipe.Builder barrel()
     {
-        return new BarrelRecipe.Builder(r -> {
+        return new BarrelRecipe.Builder(net.dries007.tfc.data.Accessors::ingredient, net.dries007.tfc.data.Accessors::fluidIngredient, r -> {
             if (!r.getResultItem().isEmpty()) add("barrel", nameOf(r.getResultItem().getItem()), r);
             else if (!r.getOutputFluid().isEmpty()) add("barrel", nameOf(r.getOutputFluid().getFluid()), r);
             else throw new IllegalStateException("Barrel recipe requires a custom name!");
@@ -395,6 +395,6 @@ public interface BarrelRecipes extends Recipes
 
     private BarrelRecipe.Builder barrel(String name)
     {
-        return new BarrelRecipe.Builder(r -> add("barrel", name, r));
+        return new BarrelRecipe.Builder(net.dries007.tfc.data.Accessors::ingredient, net.dries007.tfc.data.Accessors::fluidIngredient, r -> add("barrel", name, r));
     }
 }

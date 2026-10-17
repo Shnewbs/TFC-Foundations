@@ -69,7 +69,7 @@ public class AnvilRecipe implements ISimpleRecipe<AnvilRecipe.Inventory>
     }
 
     public static final MapCodec<AnvilRecipe> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-        Ingredient.CODEC.fieldOf("ingredient").forGetter(c -> c.input),
+        net.dries007.tfc.common.recipes.LegacyIngredientCodecs.ITEM.fieldOf("ingredient").forGetter(c -> c.input),
         Codec.INT.optionalFieldOf("tier", 0).forGetter(c -> c.minTier),
         ForgeRule.CODEC.listOf().fieldOf("rules")
             .validate(rules -> ForgeRule.isConsistent(rules)

@@ -47,18 +47,53 @@ import net.dries007.tfc.util.data.FluidHeat;
 
 public interface Accessors
 {
+    static Ingredient ingredient(TagKey<Item> tag)
+    {
+        // Datagen serializes the named holder reference; it must not flatten an unbound tag to an empty item list.
+        return Ingredient.of(BuiltInRegistries.ITEM.get(tag).orElseGet(() -> net.minecraft.core.HolderSet.emptyNamed(BuiltInRegistries.ITEM, tag)));
+    }
+
+    static net.neoforged.neoforge.fluids.crafting.FluidIngredient fluidIngredient(TagKey<Fluid> tag)
+    {
+        return net.neoforged.neoforge.fluids.crafting.FluidIngredient.of(BuiltInRegistries.FLUID.get(tag)
+            .orElseGet(() -> net.minecraft.core.HolderSet.emptyNamed(BuiltInRegistries.FLUID, tag)));
+    }
+
+    static Ingredient ingredient(ItemLike... items) { return Ingredient.of(items); }
+    static Ingredient ingredient(java.util.stream.Stream<? extends ItemLike> items) { return Ingredient.of(items); }
+    static Ingredient ingredient(net.minecraft.core.HolderSet<Item> items) { return Ingredient.of(items); }
+
+    static Ingredient ingredient(ItemStack stack) { return Ingredient.of(stack.getItem()); }
+
+    static ItemStack resultOf(net.minecraft.world.item.crafting.Recipe<?> recipe, net.minecraft.core.HolderLookup.Provider registries)
+    {
+        if (recipe instanceof net.dries007.tfc.common.recipes.ISimpleRecipe<?> simple) return simple.getResultItem(registries);
+        if (recipe instanceof net.dries007.tfc.common.recipes.AdvancedShapedRecipe shaped) return shaped.getResultItem(registries);
+        if (recipe instanceof net.dries007.tfc.common.recipes.AdvancedShapelessRecipe shapeless) return shapeless.getResultItem(registries);
+        // Naming an output must not resolve unrelated ingredient previews while datagen tags are placeholders.
+        if (recipe instanceof net.minecraft.world.item.crafting.ShapedRecipe shaped)
+            return ((net.dries007.tfc.mixin.accessor.ShapedRecipeAccessor) shaped).accessor$getResult().create();
+        if (recipe instanceof net.minecraft.world.item.crafting.ShapelessRecipe shapeless)
+            return shapeless.result() == null ? ItemStack.EMPTY : shapeless.result().create();
+        final var context = new net.minecraft.util.context.ContextMap.Builder()
+            .withParameter(net.minecraft.world.item.crafting.display.SlotDisplayContext.REGISTRIES, registries)
+            .create(net.minecraft.world.item.crafting.display.SlotDisplayContext.CONTEXT);
+        return recipe.display().stream().map(display -> display.result().resolveForFirstStack(context))
+            .filter(stack -> !stack.isEmpty()).findFirst().orElse(ItemStack.EMPTY);
+    }
+
     default Ingredient ingredientOf(Metal metal, Metal.ItemType type)
     {
         return type.isCommonTagPart()
-            ? Ingredient.of(commonTagOf(metal, type))
-            : Ingredient.of(TFCItems.METAL_ITEMS.get(metal).get(type).get());
+            ? Accessors.ingredient(commonTagOf(metal, type))
+            : Accessors.ingredient(TFCItems.METAL_ITEMS.get(metal).get(type).get());
     }
 
     default Ingredient ingredientOf(Metal metal, Metal.BlockType type)
     {
         return type == Metal.BlockType.BLOCK
-            ? Ingredient.of(storageBlockTagOf(Registries.ITEM, metal))
-            : Ingredient.of(TFCBlocks.METALS.get(metal).get(type).get());
+            ? Accessors.ingredient(storageBlockTagOf(Registries.ITEM, metal))
+            : Accessors.ingredient(TFCBlocks.METALS.get(metal).get(type).get());
     }
 
     default Ingredient ingredientOf(Ingredient... values)
@@ -112,7 +147,7 @@ public interface Accessors
     default Item itemOf(Identifier name)
     {
         assert BuiltInRegistries.ITEM.containsKey(name) : "No item '" + name + "'";
-        return BuiltInRegistries.ITEM.get(name);
+        return BuiltInRegistries.ITEM.getOptional(name).orElseThrow();
     }
 
     default Fluid fluidOf(DyeColor color)
@@ -133,10 +168,7 @@ public interface Accessors
     default String nameOf(Ingredient ingredient)
     {
         if (ingredient.getCustomIngredient() instanceof CompoundIngredient ing) return nameOf(ing.children().get(0));
-        final Ingredient.Value value = ingredient.getValues()[0];
-        if (value instanceof Ingredient.TagValue(TagKey<Item> tag)) return tag.location().getPath();
-        if (value instanceof Ingredient.ItemValue(ItemStack item)) return nameOf(item.getItem());
-        throw new AssertionError("Unknown ingredient value");
+        return ingredient.getValues().unwrap().map(tag -> tag.location().getPath(), values -> nameOf(values.getFirst().value()));
     }
 
     default String nameOf(Fluid fluid)
@@ -242,7 +274,7 @@ public interface Accessors
             }
 
             @Override
-            public int getMinBuildHeight()
+            public int getMinY()
             {
                 return 0;
             }

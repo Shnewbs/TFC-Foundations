@@ -37,7 +37,7 @@ public record MealModifier(FoodData baseFood, List<MealPortion> portions) implem
     public static final MapCodec<MealModifier> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
         FoodData.CODEC.fieldOf("food").forGetter(c -> c.baseFood),
         RecordCodecBuilder.<MealPortion>create(j -> j.group(
-            Ingredient.CODEC.optionalFieldOf("ingredient").forGetter(c -> c.ingredient),
+            net.dries007.tfc.common.recipes.LegacyIngredientCodecs.ITEM.optionalFieldOf("ingredient").forGetter(c -> c.ingredient),
             Codec.FLOAT.optionalFieldOf("nutrient_modifier", 1f).forGetter(c -> c.nutrientModifier),
             Codec.FLOAT.optionalFieldOf("water_modifier", 1f).forGetter(c -> c.waterModifier),
             Codec.FLOAT.optionalFieldOf("saturation_modifier", 1f).forGetter(c -> c.saturationModifier)

@@ -2,15 +2,10 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tfc:mud/entisol"
-    },
-    {
-      "item": "tfc:tree_roots"
-    }
+    "tfc:mud/entisol",
+    "tfc:tree_roots"
   ],
   "result": {
-    "count": 1,
     "id": "tfc:muddy_roots/entisol"
   }
 }

@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "D": {
-      "item": "tfc:blank_disc"
-    },
-    "O": {
-      "item": "tfc:powder/opal"
-    }
+    "D": "tfc:blank_disc",
+    "O": "tfc:powder/opal"
   },
   "pattern": [
     "OOO",
@@ -15,7 +11,6 @@
     "OOO"
   ],
   "result": {
-    "count": 1,
     "id": "minecraft:music_disc_precipice"
   }
 }

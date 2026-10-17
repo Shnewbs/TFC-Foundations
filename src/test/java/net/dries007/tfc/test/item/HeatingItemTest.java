@@ -26,8 +26,8 @@ public class HeatingItemTest implements TestSetup
     @Test
     public void testCookMeat()
     {
-        BuiltInRegistries.ITEM.getTag(TFCTags.Items.RAW_MEATS).orElseThrow().stream()
-            .filter(holder -> !Objects.requireNonNull(holder.getKey()).location().getNamespace().equals("minecraft"))
+        BuiltInRegistries.ITEM.get(TFCTags.Items.RAW_MEATS).orElseThrow().stream()
+            .filter(holder -> !holder.unwrapKey().orElseThrow().identifier().getNamespace().equals("minecraft"))
             .map(Holder::value)
             .forEach(item -> {
             final ItemStack stack = item.getDefaultInstance();

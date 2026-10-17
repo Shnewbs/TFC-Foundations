@@ -8,14 +8,17 @@
   "input_item": {
     "type": "tfc:and",
     "children": [
-      [
-        {
-          "item": "tfc:food/red_apple"
-        },
-        {
-          "item": "tfc:food/green_apple"
-        }
-      ],
+      {
+        "type": "neoforge:compound",
+        "children": [
+          {
+            "item": "tfc:food/red_apple"
+          },
+          {
+            "item": "tfc:food/green_apple"
+          }
+        ]
+      },
       {
         "type": "tfc:not_rotten"
       }
