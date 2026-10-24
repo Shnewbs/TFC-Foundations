@@ -1,5 +1,18 @@
 # Continue development in another environment
 
+## Current branch workflow — 2026-10-24
+
+The user's current instruction supersedes the older direct-to-version/no-feature
+branch instructions in historical checkpoints below. Keep the complete mod on
+`26.1.2` and `26.x`; develop system changes on `feature/<target>/<system>`.
+Read [BRANCH_POLICY.md](BRANCH_POLICY.md) and
+[FEATURE_BRANCHES.json](FEATURE_BRANCHES.json) before choosing a branch.
+Each feature must build against its integration target without an unmerged
+sibling. Shared prerequisites land in the target first; refresh features from
+there. The 26.x port remains independently validated, with no 26.1.2 code copied
+by the branch setup. Run the branch-history guard in addition to, not instead
+of, the existing build and runtime gates. Use `[skip ci]` while quota is suspended.
+
 ## 2026-10-17 UTC — Publish outstanding upstream source integration
 
 Imported the TerraFirmaCraft `1.21.x` delta from `e9d9a88a187d5a33064e2d86b2803f54238cadd6` through `c3b4d9536b82e5a9746dd793c586720a74108057` (42 commits) directly onto the existing `26.x` branch. This completes publication that was previously reported as prepared locally. It is a source port, not an ancestry merge. Upstream authors and EUPL notices are retained in the integration audit. Minecraft 26.3, NeoForge 26.3.0.58-beta and all dependency pins remain unchanged; Patchouli remains unresolved.

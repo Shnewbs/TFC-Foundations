@@ -1,0 +1,339 @@
+{
+  "schema_version": 1,
+  "policy_date": "2026-10-24",
+  "branch_pattern": "feature/{target}/{system}",
+  "integration_targets": [
+    "26.1.2",
+    "26.x"
+  ],
+  "model": "complete-mod-independent-changes",
+  "source_baselines": {
+    "26.1.2": "fa586e95149db8356f1d3c6438d3c1ccd8575a46",
+    "26.x": "64bc0554bf820464cbefb57c551b3007b6298a1f"
+  },
+  "entry_point_note": "Navigation anchors, not exclusive file ownership or standalone modules. Related assets, generators, tests and guide changes belong to the same feature. Cross-system shared files require coordination.",
+  "systems": [
+    {
+      "id": "core",
+      "title": "Shared platform",
+      "scope": "Registries, configuration, lifecycle, network, persistence and common API contracts.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/TerraFirmaCraft.java",
+        "src/main/java/net/dries007/tfc/util/registry",
+        "src/main/java/net/dries007/tfc/network"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "cave-ins",
+      "title": "Cave-ins and supports",
+      "scope": "Collapse propagation, support beams, collapse recipes and events.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/util/tracker/Collapse.java",
+        "src/main/java/net/dries007/tfc/util/data/Support.java",
+        "src/main/java/net/dries007/tfc/common/recipes/CollapseRecipe.java",
+        "src/main/java/net/dries007/tfc/common/blocks/wood/HorizontalSupportBlock.java"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "gravity",
+      "title": "Gravity and landslides",
+      "scope": "Falling blocks, landslide rules, settling, collision and falling entity saves.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/common/entities/misc/TFCFallingBlockEntity.java",
+        "src/main/java/net/dries007/tfc/common/recipes/LandslideRecipe.java",
+        "src/main/java/net/dries007/tfc/common/blocks/rock/IFallableBlock.java",
+        "src/main/java/net/dries007/tfc/mixin/FallingBlockMixin.java"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "food",
+      "title": "Food and nutrition",
+      "scope": "Food components, spoilage, preservation, nutrients, meals and food synchronization.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/common/component/food",
+        "src/main/java/net/dries007/tfc/common/recipes/FoodCombiningCraftingRecipe.java",
+        "src/main/java/net/dries007/tfc/network/StackFoodPacket.java"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "animals",
+      "title": "Animals and AI",
+      "scope": "Livestock, breeding, domestication, predators, prey, aquatic animals and behavior.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/common/entities/livestock",
+        "src/main/java/net/dries007/tfc/common/entities/ai",
+        "src/main/java/net/dries007/tfc/common/entities/predator",
+        "src/main/java/net/dries007/tfc/common/entities/prey",
+        "src/main/java/net/dries007/tfc/common/entities/aquatic",
+        "src/main/java/net/dries007/tfc/config/animals"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "player-survival",
+      "title": "Player survival",
+      "scope": "Thirst, health, exhaustion, effects and player survival state.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/common/player",
+        "src/main/java/net/dries007/tfc/common/effect",
+        "src/main/java/net/dries007/tfc/util/data/Drinkable.java"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "farming",
+      "title": "Farming",
+      "scope": "Crops, farmland, nutrients, fertilizer, compost and crop harvests.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/common/blocks/crop",
+        "src/main/java/net/dries007/tfc/common/blockentities/FarmlandBlockEntity.java",
+        "src/main/java/net/dries007/tfc/util/data/Fertilizer.java"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "ecology",
+      "title": "Ecology and vegetation",
+      "scope": "Wild plants, trees, forests, groundcover, plant growth and regeneration.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/common/blocks/plant",
+        "src/main/java/net/dries007/tfc/world/feature/plant",
+        "src/main/java/net/dries007/tfc/world/feature/tree",
+        "src/main/java/net/dries007/tfc/common/blockentities/TickingPlantBlockEntity.java"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "climate-calendar",
+      "title": "Climate and calendar",
+      "scope": "Seasons, temperature, rainfall models, weather and calendar persistence.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/util/calendar",
+        "src/main/java/net/dries007/tfc/util/climate",
+        "src/main/java/net/dries007/tfc/network/CalendarUpdatePacket.java"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "worldgen",
+      "title": "Terrain and worldgen",
+      "scope": "Terrain blending, biomes, caves, rivers, coasts, aquifers, structures and presets.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/world/TFCChunkGenerator.java",
+        "src/main/java/net/dries007/tfc/world/biome",
+        "src/main/java/net/dries007/tfc/world/carver",
+        "src/main/java/net/dries007/tfc/world/river",
+        "src/main/java/net/dries007/tfc/world/settings"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "geology-ores",
+      "title": "Geology and ores",
+      "scope": "Rock layers, ore veins, deposits, prospecting and mineral distribution.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/world/feature/vein",
+        "src/main/java/net/dries007/tfc/common/blocks/rock/Rock.java",
+        "src/main/java/net/dries007/tfc/common/items/PropickItem.java",
+        "src/main/java/net/dries007/tfc/util/data/Deposit.java"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "volcanoes",
+      "title": "Volcanoes",
+      "scope": "Volcanic terrain, cinder cones, crater fluids and geothermal placement.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/world/volcano",
+        "src/main/java/net/dries007/tfc/world/feature/FloodFillLakeFeature.java"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "terralith",
+      "title": "Terralith compatibility",
+      "scope": "Optional compatible terrain detail; retain TFC geology, climate, ecology and progression.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/world/noise/NoiseSampler.java"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "earth",
+      "title": "Earth generation",
+      "scope": "Earth coordinate/elevation groundwork and future original Earth generation.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/world/earth"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "metallurgy",
+      "title": "Metallurgy",
+      "scope": "Alloys, casting, forging, welding, bloomery and blast furnace progression.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/common/component/forge",
+        "src/main/java/net/dries007/tfc/common/component/mold",
+        "src/main/java/net/dries007/tfc/common/recipes/AlloyRecipe.java",
+        "src/main/java/net/dries007/tfc/common/recipes/AnvilRecipe.java",
+        "src/main/java/net/dries007/tfc/common/recipes/BloomeryRecipe.java"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "heat-fire",
+      "title": "Heat and fire",
+      "scope": "Heat components, fuels, firepits, charcoal, kilns and heating recipes.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/common/component/heat",
+        "src/main/java/net/dries007/tfc/common/recipes/HeatingRecipe.java",
+        "src/main/java/net/dries007/tfc/util/data/Fuel.java",
+        "src/main/java/net/dries007/tfc/common/blockentities/FirepitBlockEntity.java"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "glassworking",
+      "title": "Glassworking",
+      "scope": "Glass operations, blowpipes, glass basins and glassworking recipes.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/common/component/glass",
+        "src/main/java/net/dries007/tfc/common/recipes/GlassworkingRecipe.java",
+        "src/main/java/net/dries007/tfc/common/blockentities/GlassBasinBlockEntity.java"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "crafting",
+      "title": "Crafting and processing",
+      "scope": "Recipe infrastructure, knapping, pottery, textiles, quern, scraping and output providers.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/common/recipes",
+        "src/main/java/net/dries007/tfc/util/data/KnappingType.java",
+        "src/main/java/net/dries007/tfc/common/blockentities/LoomBlockEntity.java"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "fluids",
+      "title": "Fluids",
+      "scope": "Fluid definitions, water behavior, fluid components, tanks and fluid transactions.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/common/fluids",
+        "src/main/java/net/dries007/tfc/common/component/fluid",
+        "src/main/java/net/dries007/tfc/common/capabilities/InventoryFluidTank.java"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "storage",
+      "title": "Storage and inventories",
+      "scope": "Inventories, containers, vessels, chests, item sizes, encumbrance and item transactions.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/common/container",
+        "src/main/java/net/dries007/tfc/common/component/item",
+        "src/main/java/net/dries007/tfc/common/component/size",
+        "src/main/java/net/dries007/tfc/common/capabilities/InventoryItemHandler.java"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "machines",
+      "title": "Machines and power",
+      "scope": "Rotational networks, shafts, gears, water wheels, windmills and powered devices.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/common/blocks/rotation",
+        "src/main/java/net/dries007/tfc/common/blockentities/rotation",
+        "src/main/java/net/dries007/tfc/util/rotation"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "tools-combat",
+      "title": "Tools and combat",
+      "scope": "Tools, weapons, armor, damage, fishing, hunting and equipment behavior.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/common/items/ToolItem.java",
+        "src/main/java/net/dries007/tfc/common/items/JavelinItem.java",
+        "src/main/java/net/dries007/tfc/common/items/TFCFishingRodItem.java",
+        "src/main/java/net/dries007/tfc/util/data/EntityDamageResistance.java"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "building",
+      "title": "Building and decoration",
+      "scope": "Construction blocks, woodwork, furniture, ropes, lights and decorative behavior.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/common/blocks/wood",
+        "src/main/java/net/dries007/tfc/common/blocks/WattleBlock.java",
+        "src/main/java/net/dries007/tfc/common/blocks/WeatheringBlock.java"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "transport",
+      "title": "Transport",
+      "scope": "Boats, minecarts, seats, vehicle inventories and movement.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/common/entities/misc/TFCBoat.java",
+        "src/main/java/net/dries007/tfc/common/entities/misc/TFCChestBoat.java",
+        "src/main/java/net/dries007/tfc/common/entities/misc/HoldingMinecart.java"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "rendering",
+      "title": "Rendering and textures",
+      "scope": "Models, atlases, materials, entities, block entities, particles, sky and weather visuals.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/client/model",
+        "src/main/java/net/dries007/tfc/client/render",
+        "src/main/java/net/dries007/tfc/client/particle",
+        "src/main/java/net/dries007/tfc/client/overworld"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "interface-guide",
+      "title": "Interface and guide",
+      "scope": "Screens, controls, HUD, accessibility, translations, creative tabs and Patchouli pages.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/client/screen",
+        "src/main/java/net/dries007/tfc/compat/patchouli",
+        "src/main/java/net/dries007/tfc/common/TFCCreativeTabs.java"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "integrations",
+      "title": "Other mod integrations",
+      "scope": "JEI, EMI, Jade, One Probe, Vivecraft and other optional adapters.",
+      "entry_points": [
+        "src/main/java/net/dries007/tfc/compat/jei",
+        "src/main/java/net/dries007/tfc/compat/emi",
+        "src/main/java/net/dries007/tfc/compat/jade",
+        "src/main/java/net/dries007/tfc/compat/theoneprobe",
+        "src/main/java/net/dries007/tfc/compat/vivecraft"
+      ],
+      "requires_unmerged_features": []
+    },
+    {
+      "id": "build-validation",
+      "title": "Build and validation",
+      "scope": "Build tools, dependency checks, generators, test harnesses and validation records.",
+      "entry_points": [
+        "build.gradle.kts",
+        "tools/porting",
+        "src/test",
+        "src/data",
+        "resources"
+      ],
+      "requires_unmerged_features": []
+    }
+  ]
+}

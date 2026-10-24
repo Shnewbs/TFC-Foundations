@@ -1,5 +1,34 @@
 # TFC Foundations — Work Log
 
+## 2026-10-24 — Independent system feature branches
+
+The user replaced the old no-feature-branches policy and explicitly selected
+independent Git changes with the full mod retained on each branch. The registry
+maps 28 systems to `feature/26.1.2/<system>` and `feature/26.x/<system>`: cave-ins,
+gravity, food, animals, player survival, farming, ecology, climate/calendar,
+worldgen, geology/ores, volcanoes, Terralith, Earth, metallurgy, heat/fire,
+glassworking, crafting, fluids, storage, machines, tools/combat, building,
+transport, rendering, interface/guide, integrations, core and build/validation.
+Initial refs share their matching version's documentation/tooling checkpoint;
+there are no new gameplay changes or separate installable modules.
+
+Feature changes must build and merge against the version baseline without
+unmerged sibling work. Shared prerequisites are integrated first, then feature
+branches refresh from the version branch. Existing integrated fixes and history
+are preserved; no code is removed to manufacture feature diffs. The policy,
+agent instructions and continuation entry now describe this workflow.
+
+Validation: eight real-Git regression tests pass for independent changes,
+stacked sibling rejection, accepted integrated shared changes, stale bases,
+unknown versions/systems, missing refs, forbidden declared dependencies and
+shallow-history rejection. All 98 navigation anchors resolve on 26.1.2.
+The branch guard is a history check; it cannot prove semantic independence or
+replace build/runtime tests. This checkpoint changes documentation and Python
+tooling only. No Gradle build or new JAR is claimed; the 26.1.2 source baseline
+is `fa586e95149db8356f1d3c6438d3c1ccd8575a46`, and the 26.x source baseline is
+`64bc0554bf820464cbefb57c551b3007b6298a1f`. Existing per-version build/runtime
+limits remain. Publication uses `[skip ci]`.
+
 ## 2026-10-17 UTC — Publish outstanding upstream source integration
 
 Imported the TerraFirmaCraft `1.21.x` delta from `e9d9a88a187d5a33064e2d86b2803f54238cadd6` through `c3b4d9536b82e5a9746dd793c586720a74108057` (42 commits) directly onto the existing `26.x` branch. This completes publication that was previously reported as prepared locally. It is a source port, not an ancestry merge. Upstream authors and EUPL notices are retained in the integration audit. Minecraft 26.3, NeoForge 26.3.0.58-beta and all dependency pins remain unchanged; Patchouli remains unresolved.
