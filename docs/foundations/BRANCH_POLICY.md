@@ -1,25 +1,19 @@
-# Independent system branches — 2026-10-24
+# Standalone system mods — 2026-10-24 clarification
 
-The user replaced the earlier no-feature-branches rule and clarified that the
-intended model is **independent Git changes with the complete mod on every
-branch**. Systems are not separate installable mods. Existing gameplay is not
-removed from the integration base or reconstructed by merging feature branches.
-Existing integrated fixes and history remain intact.
+The user clarified the goal with a concrete example: install only the cave-in
+mod in a modpack. Each gameplay branch must therefore produce an independently
+installable system JAR, without requiring TFC or another extracted system.
+The previous interpretation (complete-mod branches with independent Git changes)
+was incorrect. The 56 existing refs are development lanes, not 56 completed mods.
 
-## Version targets and branch names
+`26.1.2` and `26.x` remain separate version integration tracks. Work lives on
+`feature/<target>/<system>`. Keep the upstream full-mod source and its history;
+create each independent build in `standalone/<system>` with its own settings,
+source set, mod ID, resources, tests and runtime metadata. Do not compile against
+or bundle the complete TFC source set. Core/build-validation are infrastructure
+lanes; they are not marketed as separate gameplay mods.
 
-- `26.1.2`: first playable integration target.
-- `26.x`: independent 26.3/future 26.4 integration target; it does not inherit
-  26.1.2 code or validation automatically.
-- `feature/<target>/<system>`: one development lane for each system below.
-
-Both target families have the same system names. Each initial feature ref points
-to its matching version's policy checkpoint. Creating these refs does not claim
-that new system rewrites have been implemented or that the 26.x port builds.
-The machine-readable registry is [FEATURE_BRANCHES.json](FEATURE_BRANCHES.json).
-Navigation entry points are examples, not restrictive directory ownership.
-
-## Systems
+## Systems to extract
 
 | System suffix | Responsibility |
 | --- | --- |
@@ -52,68 +46,37 @@ Navigation entry points are examples, not restrictive directory ownership.
 | `integrations` | JEI, EMI, Jade, One Probe, Vivecraft and other optional adapters. |
 | `build-validation` | Build tools, dependency checks, generators, test harnesses and validation records. |
 
-## Independence rules
+## Runtime independence
 
-1. Start and refresh a feature from its matching integration branch. Do not
-   branch from or merge an unmerged sibling feature. A cave-in change must build
-   with the gravity implementation already in the integration base, without
-   needing the gravity branch. The same applies to food/animals and other pairs.
-2. If several systems need a new interface, codec or shared helper, make that
-   a small core change, validate it and integrate it first. Then refresh the
-   feature branches. Do not duplicate shared infrastructure to avoid a dependency.
-3. Keep a feature's behavior, resources, recipe/tag changes, datagen inputs,
-   generated outputs, tests and relevant guide pages together. Rendering changes
-   specific to an animal can stay in the animal change; generic renderer changes
-   belong to the rendering lane. Shared registration/configuration/event files
-   remain one implementation and need coordinated edits.
-4. Validate each branch against the integration base plus **only its own delta**.
-   Run the pinned full build and relevant native client/server, resource reload,
-   save and gameplay gates. Record exact results; history checks cannot discover
-   a semantic dependency introduced by a cherry-pick or copied source.
-5. Merge verified features into their matching integration target. After a merge,
-   refresh affected siblings from the integration branch. Prefer merging the
-   target into published feature branches; do not rewrite published history or
-   force-push to keep a lane current. Do not cherry-pick across version families
-   without adapting and independently validating the destination.
-6. The old fixes are already integrated. They are retained as baseline behavior,
-   rather than undone to manufacture feature diffs. No separate system rewrite
-   is part of the branch-setup checkpoint.
+- A system JAR requires only its matching Minecraft/NeoForge runtime, unless
+  the user expressly approves an additional mandatory dependency.
+- Include essential local mechanics in the system itself: cave-ins contains
+  falling/support behavior and must not require the separate gravity mod.
+- Connect separate systems through optional adapters or small API contracts;
+  absence of food, animals, gravity or any other sibling must not crash startup.
+- Configure ordinary and modded blocks/items through datapacks/configuration.
+  Cave-ins starts with working vanilla rules. Inventory item weight is not a
+  prerequisite for collapsible blocks and structural supports.
+- Preserve EUPL notices and upstream attribution. Standalone namespaces must
+  avoid collisions with the full mod. Do not promise automatic old-save migration.
+- Native startup with TFC absent, resource reload, actual gameplay, bounded work,
+  saves/restarts and dependency/JAR-content audits are required per system.
+  An empty scaffold, branch ref, copied source or algorithm-only test is incomplete.
 
-## Local branch-history check
+## Git workflow
 
-Fetch current remote refs first; this checker is read-only and never fetches,
-creates branches, merges, or pushes:
+Start each branch from its matching version baseline; do not stack feature
+branches. Shared build/policy prerequisites land in the baseline first. Merge
+only verified changes into the matching version; never infer 26.x success from
+a 26.1.2 result. The branch-history guard remains a useful additional check:
 
 ```sh
 git fetch origin
 python3 tools/porting/check_feature_branches.py --remote origin
-python3 tools/porting/check_feature_branches.py --remote origin --branch feature/26.1.2/food
 python3 -m unittest discover -s tools/porting -p 'test_feature_branches.py'
 ```
 
-The guard validates the registry and expected refs, matching version ancestry,
-refresh against the current integration target, and absence of commits shared
-with an unmerged sibling. After a shared change lands in the target it is allowed
-on all siblings. Missing refs, unknown system names and stale branches fail.
-A pass is a Git-history check, not a successful Gradle build or gameplay test.
-Use a full-history fetch; shallow clones cannot establish these relationships.
-
-Actions quota remains suspended: use `[skip ci]` for publication until restored.
-The current documentation-only setup needs no replacement JAR; unchanged source
-retains its prior validation and limitations. Future code changes must pass their
-own gates before integration.
-
-## Historical consolidation audit (superseded policy)
-
-The following record explains the earlier cleanup; its branch restrictions were
-superseded on 2026-10-24 and must not be applied to current development.
-
-### Branch cleanup — 2026-10-13 UTC
-
-Requested policy: develop directly on `26.1.2` and `26.x`. Do not create task, repair, validation, or transport branches. A new Minecraft target is the only reason to add a long-lived branch.
-
-Audited source head: `c1d13325d61a501f639f8752eab5103bc38ab7f5`. Sixteen `port/26.1.2-*` refs are redundant. Ten tips are ancestors of the source head. The remaining six refs share five unique commits whose changed files were compared with the current source. Their bush codecs, height bounds, item-tag holder enumeration, fluid tags, iron chain state, recipe keys, ash color and sloping rail placement are retained. Later camera, command permission, pathfinding, identifier and shared rail helper migrations are retained as well.
-
-The consolidation commit preserves the three divergent tip histories (`c02eb940adb93ba39ed7804be3b57c899f63e915`, `d37330e2f51722c2d6b24754bbf2eb4cd38494e5`, and `3417ccc3657d99eb6c5e496c3c1ae0aafd5863e4`) as additional parents. No gameplay source is reverted or altered by consolidation. All sixteen old branch tips are then reachable from `26.1.2`; deleting the names does not discard their commits.
-
-Only `26.1.2` and `26.x` should remain after cleanup. No open pull requests were present at the audit. Cleanup is not a compiler or runtime validation.
+It checks ancestry, not runtime dependency isolation. Publish with `[skip ci]`
+while Actions quota is suspended. Record extraction state honestly in the
+registry and per-system README/evidence; do not mark other branches complete
+when only cave-ins has been extracted.

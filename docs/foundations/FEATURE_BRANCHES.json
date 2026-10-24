@@ -6,12 +6,12 @@
     "26.1.2",
     "26.x"
   ],
-  "model": "complete-mod-independent-changes",
+  "model": "standalone-system-mods",
   "source_baselines": {
     "26.1.2": "fa586e95149db8356f1d3c6438d3c1ccd8575a46",
     "26.x": "64bc0554bf820464cbefb57c551b3007b6298a1f"
   },
-  "entry_point_note": "Navigation anchors, not exclusive file ownership or standalone modules. Related assets, generators, tests and guide changes belong to the same feature. Cross-system shared files require coordination.",
+  "entry_point_note": "Original TFC navigation anchors for extraction, not proof of independent artifacts. Runtime dependencies must be audited separately. The full source tree is retained; standalone builds use only their own project.",
   "systems": [
     {
       "id": "core",
@@ -22,7 +22,9 @@
         "src/main/java/net/dries007/tfc/util/registry",
         "src/main/java/net/dries007/tfc/network"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "infrastructure",
+      "extraction_status": "not-started"
     },
     {
       "id": "cave-ins",
@@ -34,7 +36,12 @@
         "src/main/java/net/dries007/tfc/common/recipes/CollapseRecipe.java",
         "src/main/java/net/dries007/tfc/common/blocks/wood/HorizontalSupportBlock.java"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/cave-ins",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "gravity",
@@ -46,7 +53,12 @@
         "src/main/java/net/dries007/tfc/common/blocks/rock/IFallableBlock.java",
         "src/main/java/net/dries007/tfc/mixin/FallingBlockMixin.java"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/gravity",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "food",
@@ -57,7 +69,12 @@
         "src/main/java/net/dries007/tfc/common/recipes/FoodCombiningCraftingRecipe.java",
         "src/main/java/net/dries007/tfc/network/StackFoodPacket.java"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/food",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "animals",
@@ -71,7 +88,12 @@
         "src/main/java/net/dries007/tfc/common/entities/aquatic",
         "src/main/java/net/dries007/tfc/config/animals"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/animals",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "player-survival",
@@ -82,7 +104,12 @@
         "src/main/java/net/dries007/tfc/common/effect",
         "src/main/java/net/dries007/tfc/util/data/Drinkable.java"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/player-survival",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "farming",
@@ -93,7 +120,12 @@
         "src/main/java/net/dries007/tfc/common/blockentities/FarmlandBlockEntity.java",
         "src/main/java/net/dries007/tfc/util/data/Fertilizer.java"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/farming",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "ecology",
@@ -105,7 +137,12 @@
         "src/main/java/net/dries007/tfc/world/feature/tree",
         "src/main/java/net/dries007/tfc/common/blockentities/TickingPlantBlockEntity.java"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/ecology",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "climate-calendar",
@@ -116,7 +153,12 @@
         "src/main/java/net/dries007/tfc/util/climate",
         "src/main/java/net/dries007/tfc/network/CalendarUpdatePacket.java"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/climate-calendar",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "worldgen",
@@ -129,7 +171,12 @@
         "src/main/java/net/dries007/tfc/world/river",
         "src/main/java/net/dries007/tfc/world/settings"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/worldgen",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "geology-ores",
@@ -141,7 +188,12 @@
         "src/main/java/net/dries007/tfc/common/items/PropickItem.java",
         "src/main/java/net/dries007/tfc/util/data/Deposit.java"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/geology-ores",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "volcanoes",
@@ -151,7 +203,12 @@
         "src/main/java/net/dries007/tfc/world/volcano",
         "src/main/java/net/dries007/tfc/world/feature/FloodFillLakeFeature.java"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/volcanoes",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "terralith",
@@ -160,7 +217,12 @@
       "entry_points": [
         "src/main/java/net/dries007/tfc/world/noise/NoiseSampler.java"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/terralith",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "earth",
@@ -169,7 +231,12 @@
       "entry_points": [
         "src/main/java/net/dries007/tfc/world/earth"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/earth",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "metallurgy",
@@ -182,7 +249,12 @@
         "src/main/java/net/dries007/tfc/common/recipes/AnvilRecipe.java",
         "src/main/java/net/dries007/tfc/common/recipes/BloomeryRecipe.java"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/metallurgy",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "heat-fire",
@@ -194,7 +266,12 @@
         "src/main/java/net/dries007/tfc/util/data/Fuel.java",
         "src/main/java/net/dries007/tfc/common/blockentities/FirepitBlockEntity.java"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/heat-fire",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "glassworking",
@@ -205,7 +282,12 @@
         "src/main/java/net/dries007/tfc/common/recipes/GlassworkingRecipe.java",
         "src/main/java/net/dries007/tfc/common/blockentities/GlassBasinBlockEntity.java"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/glassworking",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "crafting",
@@ -216,7 +298,12 @@
         "src/main/java/net/dries007/tfc/util/data/KnappingType.java",
         "src/main/java/net/dries007/tfc/common/blockentities/LoomBlockEntity.java"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/crafting",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "fluids",
@@ -227,7 +314,12 @@
         "src/main/java/net/dries007/tfc/common/component/fluid",
         "src/main/java/net/dries007/tfc/common/capabilities/InventoryFluidTank.java"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/fluids",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "storage",
@@ -239,7 +331,12 @@
         "src/main/java/net/dries007/tfc/common/component/size",
         "src/main/java/net/dries007/tfc/common/capabilities/InventoryItemHandler.java"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/storage",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "machines",
@@ -250,7 +347,12 @@
         "src/main/java/net/dries007/tfc/common/blockentities/rotation",
         "src/main/java/net/dries007/tfc/util/rotation"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/machines",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "tools-combat",
@@ -262,7 +364,12 @@
         "src/main/java/net/dries007/tfc/common/items/TFCFishingRodItem.java",
         "src/main/java/net/dries007/tfc/util/data/EntityDamageResistance.java"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/tools-combat",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "building",
@@ -273,7 +380,12 @@
         "src/main/java/net/dries007/tfc/common/blocks/WattleBlock.java",
         "src/main/java/net/dries007/tfc/common/blocks/WeatheringBlock.java"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/building",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "transport",
@@ -284,7 +396,12 @@
         "src/main/java/net/dries007/tfc/common/entities/misc/TFCChestBoat.java",
         "src/main/java/net/dries007/tfc/common/entities/misc/HoldingMinecart.java"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/transport",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "rendering",
@@ -296,7 +413,12 @@
         "src/main/java/net/dries007/tfc/client/particle",
         "src/main/java/net/dries007/tfc/client/overworld"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/rendering",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "interface-guide",
@@ -307,7 +429,12 @@
         "src/main/java/net/dries007/tfc/compat/patchouli",
         "src/main/java/net/dries007/tfc/common/TFCCreativeTabs.java"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/interface-guide",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "integrations",
@@ -320,7 +447,12 @@
         "src/main/java/net/dries007/tfc/compat/theoneprobe",
         "src/main/java/net/dries007/tfc/compat/vivecraft"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "standalone-gameplay",
+      "extraction_status": "not-started",
+      "standalone_project": "standalone/integrations",
+      "required_tfc_dependency": false,
+      "required_sibling_mods": []
     },
     {
       "id": "build-validation",
@@ -333,7 +465,10 @@
         "src/data",
         "resources"
       ],
-      "requires_unmerged_features": []
+      "requires_unmerged_features": [],
+      "role": "infrastructure",
+      "extraction_status": "not-started"
     }
-  ]
+  ],
+  "clarification": "2026-10-24: User wants independently installable system JARs, not only independently mergeable full-mod branches."
 }

@@ -27,7 +27,7 @@ On Windows, use `gradlew.bat build --no-daemon`. A fresh build downloads its req
 
 ## Project records
 
-- [Independent system branches](docs/foundations/BRANCH_POLICY.md) — full-mod feature lanes for every system, based on the matching version branch.
+- [Independent system branches](docs/foundations/BRANCH_POLICY.md) — independent system-mod extraction lanes, based on the matching version branch; branch creation alone is not a standalone mod.
 - [Current status and next actions](PROJECT_STATUS.md)
 - [Roadmap and release gates](docs/foundations/ROADMAP.md)
 - [Resume building on another computer or agent](docs/foundations/CONTINUE_BUILDING.md)
