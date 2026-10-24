@@ -1,5 +1,34 @@
 # TFC Foundations — Work Log
 
+## 2026-10-24 — First standalone cave-in alpha
+
+`feature/26.1.2/cave-ins` now has an independent `standalone/cave-ins` build.
+Its 31,026-byte JAR requires only matching Minecraft/NeoForge: no
+TFC, shared Foundations core, gravity mod, Patchouli, JEI or item-weight mod.
+The full TFC source and IDs remain unchanged. Supports/collapsible materials
+are datapack tags; pending queues are level attachments and work has explicit
+per-level probe/fall/queue bounds. Native falling entities use vanilla landing
+and rendering; block entities, unbreakable blocks and immune tags are excluded.
+
+Pinned Java 25/NeoForge 26.1.2.114 build passes: 16 tests, zero failures/errors/
+skips. Native packaged-JAR server validation passes nine checks: roof falling/
+landing, beam support, tagged chest exclusion, tagged immune-block exclusion,
+untagged-material exclusion, tag reload enabling dirt, real explosion-triggered
+falls, queued collapse surviving save/full restart, and supported roof retention.
+The FML catalog contains only cave-ins, Minecraft and NeoForge. Saved-chunk NBT
+confirms the queued roof was still stone before restart and its landed material
+after restart. All 11 production classes match the packaged compiled bytes;
+no TFC/test classes, bundled dependencies or additional mod requirements exist.
+
+SHA-256: `3c7bcfe21a99ec7493e1ed66550e785bdf4194cb718dcdee7dfd6a540d6a8abf`.
+Exact results, source/class hashes, host NeoForm/FML accommodations, scope
+changes and untested gates are in `validation/2026-10-24-standalone-caveins.json`.
+This is an alpha candidate, not full TFC cave-in parity or release certification.
+Real-player mining, graphical/multiplayer play, third-party cancellation/claim
+behavior and profiling remain open. Other system branches and 26.x are still
+unextracted. This change is published on the cave-in branch, not merged into
+the full-mod version targets. Actions remain suspended; `[skip ci]` is used.
+
 ## 2026-10-24 — Standalone-mod clarification
 
 The user clarified that each gameplay branch must produce an independently

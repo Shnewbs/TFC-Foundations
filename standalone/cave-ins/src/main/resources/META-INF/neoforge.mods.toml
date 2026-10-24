@@ -1,0 +1,22 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="EUPL-1.2"
+issueTrackerURL="https://github.com/Shnewbs/TFC-Foundations/issues"
+[[mods]]
+modId="foundations_caveins"
+version="${modVersion}"
+displayName="Foundations Cave-Ins"
+authors="Shnewbs; see NOTICE.md for upstream attribution"
+description="Standalone configurable cave-ins and structural supports. No TFC or other Foundations system required."
+[[dependencies.foundations_caveins]]
+modId="neoforge"
+type="required"
+versionRange="[${neoForgeVersion},)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.foundations_caveins]]
+modId="minecraft"
+type="required"
+versionRange="[${minecraftVersion}]"
+ordering="NONE"
+side="BOTH"

@@ -18,6 +18,16 @@
 !/tools/porting/*.json
 !/tools/porting/*.gradle
 
+# Standalone system source projects; never their downloaded/generated runtime files.
+!/standalone/**/src/**
+!/standalone/**/build.gradle.kts
+!/standalone/**/settings.gradle.kts
+!/standalone/**/gradle.properties
+!/standalone/**/*.md
+/standalone/**/.gradle/
+/standalone/**/build/
+/standalone/**/run/
+
 # Resource generation
 !/resources/**/*.py
 !/resources/**/*.bbmodel

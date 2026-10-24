@@ -38,10 +38,20 @@
       ],
       "requires_unmerged_features": [],
       "role": "standalone-gameplay",
-      "extraction_status": "not-started",
+      "extraction_status": "in-progress",
       "standalone_project": "standalone/cave-ins",
       "required_tfc_dependency": false,
-      "required_sibling_mods": []
+      "required_sibling_mods": [],
+      "validation_by_target": {
+        "26.1.2": {
+          "status": "alpha-server-validated",
+          "artifact": "Foundations-Cave-Ins-26.1.2-0.1.0-alpha.1.jar",
+          "evidence": "docs/foundations/validation/2026-10-24-standalone-caveins.json"
+        },
+        "26.x": {
+          "status": "not-started"
+        }
+      }
     },
     {
       "id": "gravity",

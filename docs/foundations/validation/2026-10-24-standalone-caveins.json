@@ -1,0 +1,124 @@
+{
+  "date": "2026-10-24 America/Los_Angeles",
+  "branch": "feature/26.1.2/cave-ins",
+  "parent_source_commit": "cc95f2d94f5b5366216eed565784a0b7909b51b0",
+  "status": "first standalone alpha; remaining system extractions incomplete",
+  "runtime": {
+    "minecraft": "26.1.2",
+    "neoforge": "26.1.2.114",
+    "java": "Eclipse Temurin 25.0.5+8",
+    "gradle": "9.2.1"
+  },
+  "build": {
+    "result": "PASS",
+    "tests": {
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "independent_project": true,
+    "required_tfc": false,
+    "required_sibling_mods": []
+  },
+  "artifact": {
+    "filename": "Foundations-Cave-Ins-26.1.2-0.1.0-alpha.1.jar",
+    "bytes": 31026,
+    "sha256": "3c7bcfe21a99ec7493e1ed66550e785bdf4194cb718dcdee7dfd6a540d6a8abf",
+    "production_class_count": 11,
+    "compiled_classes_match": true,
+    "required_mods": [
+      "neoforge",
+      "minecraft"
+    ],
+    "no_tfc_or_sibling_classes": true,
+    "no_test_classes_or_bundled_jars": true,
+    "class_sha256": {
+      "dev/shnewbs/foundations/caveins/CaveInConfig.class": "ad1b6e45b62ed94570cbe74eeafd1aa34113646c07eb509590b316f0af4e6588",
+      "dev/shnewbs/foundations/caveins/CaveIns.class": "39544d4c9358eb0a4b71d70b3ec78c72ac23e0ca24bfd37e8a4427349e727c5a",
+      "dev/shnewbs/foundations/caveins/CollapseEngine$Job.class": "59846dfbe652c0f3c01ce6c381a82f2e66ccd8bb537d855f24fb71d42e04e268",
+      "dev/shnewbs/foundations/caveins/CollapseEngine$JobState.class": "810fbf55309bc3618aa6e3ac1cea166f7268a0d07fa80ec6c8ad35ee8614a146",
+      "dev/shnewbs/foundations/caveins/CollapseEngine$Limits.class": "f9bec4bc5e48330b3cd915f0347a92bfce86ef93d3ebbed29f391566b92f50ef",
+      "dev/shnewbs/foundations/caveins/CollapseEngine$Pos.class": "1d26b2142c5da0adba98f60b27b50c8af84c403ef8275f58944ef32921183f9f",
+      "dev/shnewbs/foundations/caveins/CollapseEngine$TickResult.class": "429c318ce9737ba23d59dee8edaf3893f636a6ed7bb2deed40fac262c78a9fb0",
+      "dev/shnewbs/foundations/caveins/CollapseEngine$World.class": "e3d68c1d071f2ed70884c204c12fcfa84d485343ba2488a1004f79ac54471305",
+      "dev/shnewbs/foundations/caveins/CollapseEngine.class": "af9a761fa5e0f0ed8f796a331e0d6d09736b39e41b6e0709146b81d5d90ac730",
+      "dev/shnewbs/foundations/caveins/CollapseTracker.class": "7eb0aecbd7f11dfd70eb0ae10226119d27a0eb2f00ccbec6587a6cc78a5777d8",
+      "dev/shnewbs/foundations/caveins/NativeWorld.class": "72ed783e2de64b50403ad6f9616b54f74bb97d9ac0687af86e08b6df9d25bb64"
+    }
+  },
+  "native_packaged_jar": {
+    "jar": "Foundations-Cave-Ins-26.1.2-0.1.0-alpha.1.jar",
+    "runtime_mods_expected": [
+      "minecraft",
+      "neoforge",
+      "foundations_caveins"
+    ],
+    "checks": [
+      "unsupported_roof_falls_and_lands",
+      "support_beam_preserves_roof",
+      "block_entity_excluded_even_when_tagged",
+      "immune_block_excluded_even_when_tagged",
+      "untagged_material_stays",
+      "datapack_reload_enables_material",
+      "explosion_event_triggers_falling_blocks",
+      "queued_collapse_survives_restart",
+      "supported_roof_survives_restart"
+    ],
+    "pending_roof_before_restart": "minecraft:stone",
+    "final_blocks": {
+      "unsupported_landed": "minecraft:stone",
+      "supported_roof": "minecraft:stone",
+      "chest": "minecraft:chest",
+      "reloaded_material": "minecraft:dirt",
+      "persisted_landing": "minecraft:stone"
+    }
+  },
+  "observed_mod_catalog": [
+    "Foundations Cave-Ins 0.1.0-alpha.1 (foundations_caveins)",
+    "Minecraft 26.1.2 (minecraft)",
+    "NeoForge 26.1.2.114 (neoforge)"
+  ],
+  "host_qualifications": [
+    "Pinned NeoForm Runtime 2.0.31 uses the existing opt-in java.home process-executable fallback for this restricted host; upstream game patches and pins unchanged.",
+    "FML uses its exact bundled DevAgent instrumentation class via the existing prepare_fml_dev_agent.py helper; transformations are enabled.",
+    "Native validation uses an offline disposable flat dedicated world and the packaged JAR, with main class/resource output removed from the launch classpath.",
+    "Blocked Yggdrasil public-key retrieval is a nonfatal network error in this offline test environment."
+  ],
+  "not_yet_verified": [
+    "Graphical client and two-client multiplayer",
+    "Actual player mining event gameplay (event API compiles; native explosion hook is exercised)",
+    "Native entity-join cancellation restoration with a third-party event handler",
+    "Third-party modpacks, region-protection adapters and simultaneous TFC installation",
+    "Performance timings, native neighbor-update cost and full survival progression",
+    "NeoForge 26.1.2.122 and the independent 26.x target"
+  ],
+  "scope_differences_from_tfc": [
+    "Native falling entities retain source state and vanilla collision/landing behavior.",
+    "No rock-to-rubble conversion recipes, fake-collapse warning effects, crushing through partial blocks, or custom support-beam assets in this alpha.",
+    "Supports are checked throughout propagation. Optional heavy/light block tags affect impact damage; item inventory weight is not required."
+  ],
+  "source_sha256": {
+    "standalone/cave-ins/build.gradle.kts": "2f4dd9f7b204a09a4e79a45e784c400576ef1129aacc1a6294ee7ba7c0192922",
+    "standalone/cave-ins/gradle.properties": "215ae4f532fc2c16ae51bff4815a187cf34159ccb6325bd006364448c7c1a1f9",
+    "standalone/cave-ins/settings.gradle.kts": "0bf14684fca359c0f017294db4ac958eeb50ae61bf8dc5cad89cddb0283625c1",
+    "standalone/cave-ins/src/main/java/dev/shnewbs/foundations/caveins/CaveInConfig.java": "6740edafa0557990994c69c14024aa2e4c018d671d23b70b49d677e6bcc31cb8",
+    "standalone/cave-ins/src/main/java/dev/shnewbs/foundations/caveins/CaveIns.java": "04931435ef0ae3d934f8ee428233b836d752933672a8ef9e4b692c5ca429443a",
+    "standalone/cave-ins/src/main/java/dev/shnewbs/foundations/caveins/CollapseEngine.java": "cb5af81daf956130670c3ad563da82faa0dcf36b1ad485e16adde1182568001d",
+    "standalone/cave-ins/src/main/java/dev/shnewbs/foundations/caveins/CollapseTracker.java": "8a4aa3f616ec685b710512c51b57324a7bc9577cc380f7f17bdd8d2c323ebb23",
+    "standalone/cave-ins/src/main/java/dev/shnewbs/foundations/caveins/NativeWorld.java": "9f23e8f93668f6142198c4fa45629ed286c460eb586466657841324ed0353f72",
+    "standalone/cave-ins/src/main/resources/META-INF/neoforge.mods.toml": "aa427fa153417271e3d4e7cf577b7f6363db77736630744d2bcf81600bfd7f4d",
+    "standalone/cave-ins/src/main/resources/data/foundations_caveins/tags/block/collapsible.json": "9c00079dbe0f3da73735840a40c6a74c3c4badbd323e3d111100e956f896b8c3",
+    "standalone/cave-ins/src/main/resources/data/foundations_caveins/tags/block/heavy_blocks.json": "a4b338a6a2c64cc8062f8ed237f8a2f2707dc28143f8a3b355ced02fbbd07673",
+    "standalone/cave-ins/src/main/resources/data/foundations_caveins/tags/block/immune.json": "33cb712a504de3d61404df3100329464e4bce7b31c2ebb347b8af2b8c2bfd2d1",
+    "standalone/cave-ins/src/main/resources/data/foundations_caveins/tags/block/light_blocks.json": "0c615d27d6e7932dab70603593b0d4b2098f06e605c17c7e8549a677ec84ef94",
+    "standalone/cave-ins/src/main/resources/data/foundations_caveins/tags/block/supports.json": "69d39dff48c0e4b1caf74ed7d43bc337a14c24040184bef80346525588770432",
+    "standalone/cave-ins/src/main/resources/data/foundations_caveins/tags/block/triggers_collapse.json": "57a0de49d32dbed3f6431b450950afbd0e13163e7d3b3d17f002f21a5f010e83",
+    "standalone/cave-ins/src/test/java/dev/shnewbs/foundations/caveins/CollapseEngineTest.java": "f93d9345be87031acf527b74c09adb3cc95221d86e0fb630d7037411b86a2bc8",
+    "standalone/cave-ins/src/test/java/dev/shnewbs/foundations/caveins/PersistenceCodecTest.java": "49def0694754bf07c9eeaae5db75b5817aedf2694d92968aa3d9bf5ebfa93b4a"
+  },
+  "native_log_sha256": {
+    "caveins-server-restart.log": "23d97fe547cfe669f93008b912ba7e1e7ea9a2c1186d633d2055997a51f995c7",
+    "caveins-server-first.log": "30d49532a928c07a9c312dfde5a0efb865bc63b25de424926b8df19f07afa83b"
+  }
+}
