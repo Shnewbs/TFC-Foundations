@@ -40,6 +40,7 @@
 !/CHANGELOG.md
 !/PROJECT_STATUS.md
 !/docs/foundations/**/*.md
+!/docs/foundations/FEATURE_BRANCHES.json
 !/docs/foundations/validation/*.json
 !/CodeStyle.xml
 

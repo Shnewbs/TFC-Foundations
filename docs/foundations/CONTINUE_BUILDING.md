@@ -1,5 +1,18 @@
 # Continue development in another environment
 
+## Current branch workflow — 2026-10-24
+
+The user's current instruction supersedes the older direct-to-version/no-feature
+branch instructions in historical checkpoints below. Keep the complete mod on
+`26.1.2` and `26.x`; develop system changes on `feature/<target>/<system>`.
+Read [BRANCH_POLICY.md](BRANCH_POLICY.md) and
+[FEATURE_BRANCHES.json](FEATURE_BRANCHES.json) before choosing a branch.
+Each feature must build against its integration target without an unmerged
+sibling. Shared prerequisites land in the target first; refresh features from
+there. The 26.x port remains independently validated, with no 26.1.2 code copied
+by the branch setup. Run the branch-history guard in addition to, not instead
+of, the existing build and runtime gates. Use `[skip ci]` while quota is suspended.
+
 ## 2026-10-17 UTC — Natural landscapes and live-world loading
 
 The optional **TerraFirmaCraft — Natural** preset (`tfc:natural`) adds smooth,
