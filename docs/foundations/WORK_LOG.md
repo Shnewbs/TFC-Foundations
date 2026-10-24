@@ -1,5 +1,19 @@
 # TFC Foundations — Work Log
 
+## 2026-10-24 — Standalone-mod clarification
+
+The user clarified that each gameplay branch must produce an independently
+installable mod: a modpack can install cave-ins without TFC or other systems.
+The earlier complete-mod Git-only interpretation was incorrect and is superseded.
+The 56 refs remain development lanes. Extraction is not completed by creating
+refs or scaffolds. Independent projects live under `standalone/<system>`; local
+falling/support mechanics belong inside cave-ins, with optional integrations.
+Core/build-validation are infrastructure lanes. Existing full TFC source, IDs,
+assets, history and prior validation are preserved. No standalone JAR or native
+standalone startup is claimed by this policy checkpoint. Cave-ins is the first
+implementation target, followed by remaining gameplay systems and separate
+per-version validation. Actions quota remains suspended; use `[skip ci]`.
+
 ## 2026-10-24 — Independent system feature branches
 
 The user replaced the old no-feature-branches policy and explicitly selected

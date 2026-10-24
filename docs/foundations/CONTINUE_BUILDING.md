@@ -1,17 +1,15 @@
 # Continue development in another environment
 
-## Current branch workflow — 2026-10-24
+## Current branch workflow — 2026-10-24 clarification
 
-The user's current instruction supersedes the older direct-to-version/no-feature
-branch instructions in historical checkpoints below. Keep the complete mod on
-`26.1.2` and `26.x`; develop system changes on `feature/<target>/<system>`.
-Read [BRANCH_POLICY.md](BRANCH_POLICY.md) and
-[FEATURE_BRANCHES.json](FEATURE_BRANCHES.json) before choosing a branch.
-Each feature must build against its integration target without an unmerged
-sibling. Shared prerequisites land in the target first; refresh features from
-there. The 26.x port remains independently validated, with no 26.1.2 code copied
-by the branch setup. Run the branch-history guard in addition to, not instead
-of, the existing build and runtime gates. Use `[skip ci]` while quota is suspended.
+Extract independently installable system mods on `feature/<target>/<system>`.
+Each uses its own `standalone/<system>` project and must work without TFC or a
+sibling system installed. The former complete-mod-only interpretation below is
+historical and superseded. Core/build-validation are infrastructure lanes.
+Read [BRANCH_POLICY.md](BRANCH_POLICY.md) and [FEATURE_BRANCHES.json](FEATURE_BRANCHES.json).
+Do not equate branch setup with an implemented standalone JAR. Test native
+startup/gameplay without TFC, resource reload and persistence per system, plus
+Git independence. Keep full TFC source/history and the two version tracks intact.
 
 ## 2026-10-17 UTC — Natural landscapes and live-world loading
 
